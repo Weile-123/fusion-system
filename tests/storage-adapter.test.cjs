@@ -47,10 +47,21 @@ function fakeIndexedDB() {
   };
 }
 
-function storageFor(window) {
-  vm.runInNewContext(adapter, { window, Promise });
+function storageFor(window, timers = {}) {
+  vm.runInNewContext(adapter, { window, Promise, setTimeout: timers.setTimeout || setTimeout, clearTimeout: timers.clearTimeout || clearTimeout });
   return window.FusionStorage;
 }
+
+test('storage initialization falls back when a platform request never resolves', async () => {
+  const store = storageFor({ ColorboxAI: { storage: {
+    getValue() { return new Promise(() => {}); },
+    setValue() { return Promise.resolve({ ok: true }); }
+  } } }, {
+    setTimeout(callback) { queueMicrotask(callback); return 1; },
+    clearTimeout() {}
+  });
+  assert.equal(await store.load(), null);
+});
 
 test('local preview saves and restores a run after a page reload', async () => {
   const indexedDB = fakeIndexedDB();

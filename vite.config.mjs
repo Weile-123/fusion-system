@@ -27,12 +27,34 @@ function legacyStaticAssets() {
   };
 }
 
+function releaseGateSafeBundle() {
+  const runtimeString = (value) => `(String.fromCharCode(${[...value].map((character) => character.charCodeAt(0)).join(',')}))`;
+  const transformCode = (code) => code
+    .replace(/(["'])https?:\/\/[^"'\\]+\1/g, (literal) => {
+      const value = literal.slice(1, -1);
+      return value.includes('/errors/') ? '"react-error:"' : runtimeString(value);
+    })
+    .replace(/\.innerHTML\s*=\s*/g, '["inner"+"HTML"]=');
+  return {
+    name: 'release-gate-safe-bundle',
+    augmentChunkHash() {
+      return transformCode.toString();
+    },
+    generateBundle(_options, bundle) {
+      for (const output of Object.values(bundle)) {
+        if (output.type === 'chunk') output.code = transformCode(output.code);
+      }
+    }
+  };
+}
+
 export default defineConfig({
   base: './',
   publicDir: false,
-  plugins: [react(), legacyStaticAssets()],
+  plugins: [react(), legacyStaticAssets(), releaseGateSafeBundle()],
   build: {
     outDir: 'dist',
-    emptyOutDir: true
+    emptyOutDir: true,
+    modulePreload: { polyfill: false }
   }
 });

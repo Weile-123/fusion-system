@@ -14,4 +14,5 @@ import '../h5/styles/catalog.css';
 import '../h5/styles/home.css';
 import '../h5/styles/profile-shop.css';
 import '../h5/styles/recruit-sheet.css';
+import '../h5/styles/career-report.css';
 import '../h5/ssr-card.css';

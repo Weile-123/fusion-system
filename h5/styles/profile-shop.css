@@ -43,8 +43,8 @@
   #result .timeline-signatures{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px;color:#cfc3af;font-size:10px}
   #result .timeline-signatures b{color:#ffd277}
   /* Main screen modules share the gap between the top bar and first combat panel. */
-  :root{--module-gap:10px;--game-top-height:46px}
-  :is(#talent,#recruit,#roster,#shop,#duel,#result).screen{padding-top:calc(var(--game-top-height) + var(--module-gap))}
+  :root{--module-gap:10px;--game-top-height:32px;--screen-edge-gap:15px}
+  :is(#talent,#recruit,#roster,#shop,#duel,#result).screen{padding-top:calc(var(--game-top-height) + var(--screen-edge-gap))}
   #roster.active{row-gap:var(--module-gap)}
   #roster.active>:is(.roster-combat,.signature-panel,.slots-heading,.bench-title,.bench-gesture-hint,.bench-panel){margin-top:0;margin-bottom:0}
   #roster .fusion-lineup .slot-player{display:flex;flex-direction:column;justify-content:center;padding:6px 5px}
@@ -56,9 +56,18 @@
   #shop.active{display:flex;flex-direction:column;gap:var(--module-gap)}
   #shop.active>:is(.shop-tabs,.shop-grid,.roster-combat,.equipped-shelf,.equipment-reserve,.shop-test-cash,.footer-note,.btn.wide){margin-top:0;margin-bottom:0}
   #shop .shop-grid{gap:var(--module-gap)}
+  #shop .shop-overview-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;gap:7px}
+  #shop>.row{display:none!important}
+  #shop .shop-combat-summary{min-width:0;margin:0;padding:6px;border-radius:9px;background:#242322;border-color:#57452c}
+  #shop .shop-combat-summary .roster-combat-grid{height:100%;gap:3px}
+  #shop .shop-combat-summary .roster-combat-grid span{justify-content:center;gap:1px;padding:3px 1px;font-size:7px}
+  #shop .shop-combat-summary .roster-combat-grid b{font-size:11px}
+  #shop .shop-balance{min-width:0;padding:5px 8px;border-radius:9px;font-size:10px}
+  #shop .shop-balance img{width:19px;height:15px}
   #talent .lead{margin-bottom:0}
   #talent .talent-catalog-row{margin:var(--module-gap) 0}
   #recruit .draft-heading,#recruit .draft-odds{margin-bottom:var(--module-gap)}
+  #recruit .draft-heading h1{margin-top:0}
   #recruit .choicegrid{gap:var(--module-gap)}
   #duel .ace-panel,#duel .signature-panel{margin-top:var(--module-gap);margin-bottom:0}
   #duel .duel-foe-heading{margin:var(--module-gap) 0}

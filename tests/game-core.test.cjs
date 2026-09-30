@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const C = require('../h5/game-core.js');
 
 const H5_ROOT = path.join(__dirname, '../h5');
@@ -12,12 +13,23 @@ const readStyles = () => [
   readH5('ssr-card.css')
 ].join('\n');
 
+test('production JavaScript chunks remain valid ES modules', () => {
+  const assets = path.join(__dirname, '../dist/assets');
+  for (const file of fs.readdirSync(assets).filter((name) => name.endsWith('.js'))) {
+    const result = spawnSync(process.execPath, ['--input-type=module', '--check'], {
+      input: fs.readFileSync(path.join(assets, file), 'utf8'),
+      encoding: 'utf8'
+    });
+    assert.equal(result.status, 0, `${file} failed syntax validation:\n${result.stderr}`);
+  }
+});
+
 test('application shell is owned by Vite and React with external styles', () => {
   const html = readRoot('index.html');
   const app = readRoot('src', 'App.jsx');
   const styles = readRoot('src', 'styles.js');
   const tailwind = readH5('styles', 'tailwind.css');
-  const pages = ['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'profile', 'pointshop'];
+  const pages = ['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'];
   assert.doesNotMatch(html, /<style(?:\s|>)/);
   assert.doesNotMatch(html, /<main id=/);
   assert.match(html, /id="root"/);
@@ -44,7 +56,7 @@ test('Vite entry mounts all React screens and preserves the validated game runti
   assert.match(html, /src="\/src\/main\.jsx"/);
   assert.match(main, /createRoot\(document\.getElementById\('root'\)\)/);
   assert.match(app, /id="page-root"/);
-  assert.match(app, /const screens = \['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'profile', 'pointshop'\]/);
+  assert.match(app, /const screens = \['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'\]/);
   assert.match(app, /installReactScreens/);
   assert.match(screens, /function HomeScreen/);
   assert.match(screens, /function TalentScreen/);
@@ -54,6 +66,7 @@ test('Vite entry mounts all React screens and preserves the validated game runti
   assert.doesNotMatch(screens, /fillOpacity=\{morale \/ 3\}/);
   assert.match(screens, /function DuelScreen/);
   assert.match(screens, /function ResultScreen/);
+  assert.match(screens, /function CareerReportScreen/);
   assert.match(screens, /data-act="battle"/);
   assert.match(screens, /function MarkupScreen/);
   assert.match(ui, /Object\.values\(els\)\.forEach\(adoptReactRenderer\)/);
@@ -68,10 +81,13 @@ test('Vite entry mounts all React screens and preserves the validated game runti
 test('React markup conversion and top-bar rendering avoid unsafe HTML injection', () => {
   const screens = readRoot('src', 'react-screens.jsx');
   const ui = readH5('game-ui.js');
-  assert.match(screens, /new DOMParser\(\)\.parseFromString/);
-  assert.match(screens, /function domToReact/);
+  assert.doesNotMatch(screens, /DOMParser|innerHTML|insertAdjacentHTML/);
+  assert.match(screens, /function parseGeneratedMarkup/);
+  assert.match(screens, /const allowedTags = new Set/);
+  assert.match(screens, /const allowedAttributes = new Set/);
+  assert.match(screens, /lowerName === 'src'.*assets/);
   assert.doesNotMatch(screens, /dangerouslySetInnerHTML/);
-  assert.doesNotMatch(ui, /header\.innerHTML/);
+  assert.doesNotMatch(ui, /\.innerHTML\s*=/);
   assert.match(ui, /header\.replaceChildren\(\)/);
   assert.match(ui, /strong\.textContent=String\(value\)/);
 });
@@ -753,6 +769,14 @@ test('selling a bench player pays reference tier base value times current stars'
   assert.equal(run.owned[spare.id], undefined);
 });
 
+test('bench sale controls bind the displayed player id instead of trusting a sorted-list index', () => {
+  const ui = readH5('game-ui.js');
+  assert.match(ui, /data-act="sell-bench" data-id="\$\{id\}" data-index="\$\{index\}"/);
+  assert.match(ui, /if\(action==='sell-bench'\)\{\s*const index=r\?\.bench\.indexOf\(id\)\?\?-1/);
+  assert.match(ui, /data-act="sell-detail" data-id="\$\{s\.id\}" data-index="\$\{detailContext\.key\}"/);
+  assert.match(ui, /if\(action==='sell-detail'\)\{\s*const index=r\.bench\.indexOf\(id\)/);
+});
+
 test('star and training growth use reference percentages and distinguish SSR', () => {
   const normal = C.STARS.find(star => star.tier === 'A');
   const legend = C.STARS.find(star => star.tier === 'SSR');
@@ -1135,8 +1159,8 @@ test('basketball meta upgrades replace the equipment slot with film study', () =
 test('shop screen renders full-detail purchases and two-column equipment cards', () => {
   const css = readStyles();
   const ui = readH5('game-ui.js');
-  assert.match(css, /#shop \.shop-grid\{grid-template-columns:minmax\(0,1fr\)/);
-  assert.match(css, /#shop \.shopitem small\{display:block;overflow:visible;-webkit-line-clamp:unset/);
+  assert.match(css, /#shop \.shop-grid\s*\{\s*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+  assert.match(css, /#shop \.shopitem small\s*\{[^}]*display:\s*block;[^}]*overflow:\s*visible;[^}]*-webkit-line-clamp:\s*unset/);
   assert.match(ui, /<div class="shopPanel shop-grid">/);
   assert.match(ui, /data-act="shop-refresh"/);
   assert.match(ui, /data-act="sell-gear"/);
@@ -1160,7 +1184,7 @@ test('shop screen renders full-detail purchases and two-column equipment cards',
   assert.doesNotMatch(ui, /linearGradient id="\$\{gradientId\}"|fill="url\(#\$\{gradientId\}\)"/);
   assert.doesNotMatch(ui, /jerseyTestRun|toggle-jersey-test|buy-test-jersey|测试球衣样式/);
   assert.match(ui, /class="equipment-slot-list"/);
-  assert.match(css, /#shop \.equipped-shelf \.equipment-slot-list\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css, /#shop \.equipped-shelf \.equipment-slot-list\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(css, /\.shop-tier-b/);
 });
 
@@ -1178,7 +1202,7 @@ test('screen navigation ignores mobile WebView click-through after changing page
   const ui = readH5('game-ui.js');
   assert.match(ui, /const SCREEN_NAVIGATION_ACTIONS=new Set/);
   assert.match(ui, /if\(now<navigationClickLockedUntil\)return/);
-  assert.match(ui, /navigationClickLockedUntil=now\+450/);
+  assert.match(ui, /navigationClickLockedUntil=now\+900/);
   assert.match(ui, /if\(action==='roster'\)\{go\('roster'\);return\}/);
 });
 
@@ -1514,7 +1538,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(ui, /actionButton\('recruit-ad'/);
   assert.match(ui, /连续招募10位球员/);
   assert.match(ui, /S级球员4选1（每回合一次）/);
-  assert.match(ui, /className='recruit-ad-icon'/);
+  assert.match(ui, /class="recruit-ad-icon"/);
   assert.doesNotMatch(ui, /每关免费 1 次/);
   assert.doesNotMatch(ui, /95折/);
   assert.match(ui, /S级球员4选1/);
@@ -1522,6 +1546,10 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(ui, /confirm-recruit-batch/);
   assert.match(ui, /还需处理/);
   assert.match(ui, /pendingPlayerPreview/);
+  assert.doesNotMatch(ui, /当前待处理球员/);
+  assert.match(ui, /升星 · \$\{own\.stars\}★→/);
+  assert.match(ui, /羁绊 · \$\{bond\.item\.name\}/);
+  assert.doesNotMatch(ui, /HOOP LEGEND/);
   assert.match(ui, /data-mode="replace-slot"/);
   assert.match(ui, /决定\$\{s\.name\}的去留/);
   assert.match(css, /pending-sell-new/);
@@ -1564,7 +1592,165 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(ui, /syncScrollViewport\(\);\s*\n\s*\}/);
   assert.match(readRoot('src', 'App.jsx'), /id="batch-action-root" hidden/);
   assert.match(ui, /function renderBatchAction\(batch,batchCount\)/);
+  assert.match(ui, /batchActionRoot\.markup='';batchActionRoot\.hidden=true/);
+  assert.doesNotMatch(ui, /batchActionRoot\.replaceChildren\(/);
   assert.match(css, /#batch-action-root\{position:fixed;z-index:19;left:0;right:0;bottom:0/);
   assert.doesNotMatch(css, /draft-ten-mode \.floatingaction\{|#batch-action-root\{[^}]*backdrop-filter|#batch-action-root\{[^}]*transform:/);
   assert.match(css, /batch-confirm\{[^}]*background:linear-gradient[^}]*!important/);
+});
+
+test('all modal content stays inside the React renderer lifecycle', () => {
+  const ui = readH5('game-ui.js');
+  assert.match(ui, /function renderRecruitSheet\(r\)[\s\S]+?modal\.markup=/);
+  assert.doesNotMatch(ui, /modal\.replaceChildren\(/);
+});
+
+test('duel action dock stays flush while protecting its button from the host bottom edge', () => {
+  const css = readH5('styles/roster-actions.css');
+  assert.match(css, /#duel \.floatingaction\{[^}]*bottom:0[^}]*padding:9px 15px calc\(9px \+ env\(safe-area-inset-bottom\)\)/);
+});
+
+test('screens with the top bar share the horizontal 15px gap without a covering shadow', () => {
+  const catalog = readH5('styles/catalog.css');
+  const duel = readH5('styles/duel.css');
+  const modules = readH5('styles/profile-shop.css');
+  assert.match(modules, /:root\{--module-gap:10px;--game-top-height:32px;--screen-edge-gap:15px\}/);
+  assert.match(modules, /:is\(#talent,#recruit,#roster,#shop,#duel,#result\)\.screen\{padding-top:calc\(var\(--game-top-height\) \+ var\(--screen-edge-gap\)\)\}/);
+  assert.match(catalog, /margin-top: var\(--screen-top-offset, var\(--game-top-height, 32px\)\);[\s\S]*?padding-top: var\(--screen-edge-gap, 15px\)/);
+  assert.match(duel, /\.top\{height:var\(--game-top-height,32px\);padding:0 14px;box-shadow:none\}/);
+});
+
+test('opening screens hide the top bar and its reserved space until the first six players are chosen', () => {
+  const ui = readH5('game-ui.js');
+  const screens = readRoot('src', 'react-screens.jsx');
+  const css = readH5('styles/catalog.css');
+  assert.match(ui, /id==='talent'\|\|id==='recruit'&&!!game\.run&&C\.starterCount\(game\.run\)<6/);
+  assert.match(css, /\.app\.opening-mode \.top\{display:none\}/);
+  assert.match(css, /\.app\.opening-mode\{--screen-top-offset:0px\}/);
+  assert.match(css, /height: calc\(100dvh - var\(--screen-top-offset, var\(--game-top-height, 32px\)\) - var\(--fixed-dock-height, 0px\)\)/);
+  assert.doesNotMatch(screens, /<p className="lead">从 \{totalCount\} 项开局天赋/);
+  assert.doesNotMatch(screens, /className="result-top"/);
+});
+
+test('shop and locker share a compact five-stat header without a title', () => {
+  const ui = readH5('game-ui.js');
+  const css = readH5('styles/profile-shop.css');
+  assert.doesNotMatch(ui, /LOCKER ROOM/);
+  assert.doesNotMatch(ui, /shop-screen-title/);
+  assert.match(ui, /function shopCombatSummary\(r\)/);
+  assert.match(ui, /shop-overview-row">\$\{shopCombatSummary\(liveRun\)\}/);
+  assert.doesNotMatch(ui, /shopTab==='my'\?combatPanel\(liveRun,false\)/);
+  assert.match(css, /#shop \.shop-overview-row\{display:grid;grid-template-columns:minmax\(0,1fr\) auto/);
+  assert.match(css, /#shop \.shop-combat-summary \.roster-combat-grid\{height:100%;gap:3px\}/);
+  assert.match(css, /#shop \.shop-balance\{min-width:0;padding:5px 8px;border-radius:9px;font-size:10px\}/);
+  assert.match(css, /#shop>\.row\{display:none!important\}/);
+  assert.match(ui, /action==='buy-gear'.+save\(\);go\('shop'\);notify\('装备已购买'\)/);
+});
+
+test('top-bar back navigation consumes the pointer gesture before the next screen is drawn', () => {
+  const ui = readH5('game-ui.js');
+  assert.match(ui, /handle\(topBack\.dataset\.act,topBack\);/);
+  assert.match(ui, /button\.classList\.contains\('top-back'\)&&event\.detail>0/);
+  assert.doesNotMatch(ui, /topBackClickSuppressedUntil/);
+  assert.match(ui, /if\(action==='roster'\)\{go\('roster'\);return\}/);
+});
+
+test('roster top action opens the current talent instead of returning home', () => {
+  const ui = readH5('game-ui.js');
+  assert.match(ui, /screen==='roster'\?\['current-talent-open','查看天赋'\]/);
+  assert.doesNotMatch(ui, /<button class="roster-talent-action" data-act="current-talent-open">查看天赋<\/button>/);
+  assert.match(ui, /if\(action==='current-talent-open'\)\{if\(r\)\{showCurrentTalent=true;renderPending\(\)\}return\}/);
+});
+
+test('duel fusion panel uses the rating in place of the portrait and spans five combat stats', () => {
+  const ui = readH5('game-ui.js');
+  const screens = readRoot('src', 'react-screens.jsx');
+  const css = readH5('styles/duel.css');
+  assert.match(ui, /class="ace-rating">\$\{fusion\.rating\}/);
+  assert.match(screens, /className="ace-rating">\{fusion\.rating\}/);
+  assert.doesNotMatch(screens, /className="ace-mark"/);
+  assert.doesNotMatch(screens, /组羁绊生效|综合战力/);
+  assert.doesNotMatch(ui, /<h1 class="title">单挑赛前情报<\/h1>/);
+  assert.doesNotMatch(screens, />单挑赛前情报<\/h1>/);
+  assert.match(css, /\.compact-ace \.ace-combat-wide\{[^}]*grid-column:1\/-1/);
+  assert.match(css, /\.compact-ace \.ace-combat-grid\{grid-template-columns:repeat\(5,minmax\(0,1fr\)\);width:100%\}/);
+  assert.match(css, /#duel \.opponent\{padding:10px;border-radius:13px\}/);
+  assert.match(screens, /className="opponent-name-row"/);
+  assert.doesNotMatch(screens, /className="eyebrow">本关对手/);
+  assert.match(css, /#duel \.opponent-name-row b\{font-size:22px/);
+  assert.match(css, /#duel \.opponent-name-row>strong\{[^}]*margin:0/);
+  assert.match(css, /#duel \.opponent-combat\{margin-bottom:0\}/);
+  assert.match(css, /#duel \.compact-ace \.signature-panel\.embedded\{margin-top:6px;padding-top:6px\}/);
+  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
+});
+
+test('roster action dock remains fixed at the viewport bottom while the roster scrolls', () => {
+  const css = readH5('styles/catalog.css');
+  assert.match(css, /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
+  assert.match(css, /#roster \.roster-dock \{[\s\S]*?position: fixed;[\s\S]*?bottom: 0;/);
+  assert.match(css, /#roster\.active \{[\s\S]*?padding-bottom: 145px/);
+});
+
+test('career settlement can be revived once without duplicating run rewards', () => {
+  const game = C.createGame();
+  const run = C.createRun('win_bonus', 20261001);
+  game.run = run;
+  run.stage = 6;
+  run.wins = 4;
+  run.losses = 3;
+  run.morale = 0;
+  run.lastBattle = { won: false, stage: 6 };
+  const earned = C.finishRun(game);
+  assert.equal(earned, 50);
+  assert.equal(game.profile.legend, 50);
+  assert.equal(game.profile.runs, 1);
+  const cashBefore = run.cash;
+  const bonus = C.reviveRun(game);
+  assert.equal(bonus, C.recruitPackCost(run, 10));
+  assert.equal(run.cash, cashBefore + bonus);
+  assert.equal(run.morale, 3);
+  assert.equal(run.stage, 6);
+  assert.equal(run.lastBattle, null);
+  assert.equal(run.ended, false);
+  assert.equal(game.profile.legend, 0);
+  assert.equal(game.profile.runs, 0);
+  assert.equal(C.reviveRun(game), false);
+});
+
+test('career report exposes settlement details and callback-gated rewards', () => {
+  const ui = readH5('game-ui.js');
+  const screens = readRoot('src', 'react-screens.jsx');
+  const css = readH5('styles/career-report.css');
+  assert.match(ui, /function careerReportSummary\(\)/);
+  assert.match(ui, /function createCareerPoster\(summary\)/);
+  assert.match(ui, /posterPublishSucceeded\(response\)/);
+  assert.match(ui, /if\(!r\.posterRewarded\)\{r\.posterRewarded=true;game\.profile\.legend\+=100/);
+  assert.match(ui, /showRecruitSheet=false;recruitSheetMessage='';showBonds=false/);
+  assert.match(screens, /查看生涯报告/);
+  assert.match(screens, /\{!ended && <div className="panel battle-reward"/);
+  assert.match(screens, /发帖成功奖励100传奇点/);
+  assert.match(screens, /<h2>最终阵容<\/h2>/);
+  assert.match(screens, /未激活羁绊/);
+  assert.match(screens, /未购买装备和球衣/);
+  assert.match(screens, /data-act="report-new">返回首页/);
+  assert.doesNotMatch(screens, /恢复满体力，重打当前关/);
+  assert.doesNotMatch(screens, /根据回调来发放奖励/);
+  assert.match(css, /\.app\.report-mode \.top\{display:none\}/);
+  assert.match(css, /\.career-report-hero\{[^}]*padding:10px/);
+  assert.match(css, /\.career-report-hero h1\{[^}]*font-size:24px/);
+  assert.match(css, /\.career-report-overview\{display:grid;grid-template-columns:/);
+  assert.match(screens, /<span>第 \{summary\.stage\} 关<\/span><h1>\{summary\.goat\}<\/h1>/);
+  assert.match(css, /\.career-report-content\{[^}]*overflow-y:auto/);
+  assert.match(css, /\.career-action-row\{display:grid;grid-template-columns:1fr 1fr/);
+  assert.match(css, /\.career-lineup\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.career-lineup b\{[^}]*text-overflow:ellipsis/);
+  assert.match(screens, /className="career-bond-tag"[^>]*>\{bond\.name\}<\/div>/);
+  assert.doesNotMatch(screens, /\{bond\.description\}<\/span>/);
+  assert.match(screens, /className=\{`career-gear-tag \$\{item\.rarityClass\}`\}/);
+  assert.doesNotMatch(screens, /\{item\.description\}<\/small>/);
+  assert.match(css, /\.career-bonds,\.career-gear\{display:flex;flex-wrap:wrap;gap:5px\}/);
+  assert.match(css, /\.career-gear-tag\.gear-tier-a\{background:linear-gradient/);
+  assert.match(screens, /className="career-settlement-head"/);
+  assert.doesNotMatch(screens, /重打当前关，并获得一次十连招募所需奖金/);
+  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
 });

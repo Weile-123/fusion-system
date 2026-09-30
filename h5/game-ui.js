@@ -3,9 +3,9 @@
   'use strict';
   const C=window.SupFusionGameCore;
   const STORAGE=window.FusionStorage;
-  const els=Object.fromEntries(['home','talent','recruit','roster','shop','duel','result','profile','pointshop'].map(id=>[id,document.getElementById(id)]));
+  const els=Object.fromEntries(['home','talent','recruit','roster','shop','duel','result','report','profile','pointshop'].map(id=>[id,document.getElementById(id)]));
   const batchActionRoot=document.getElementById('batch-action-root');
-  let game=C.createGame(),screen='home',restoring=true,talentOffer=[],selectedTalent='',selectedOffer='',selectedPlace=null,showBonds=false,showStrategyPicker=false,showExpandConfirm=false,showNewJourneyConfirm=false,showTalentCatalog=false,showCurrentTalent=false,showRecruitSheet=false,recruitSheetMessage='',rewardVideoBusy=false,rewardTaskState=null,rewardTaskError='',detailStar='',detailContext=null,gearDetailId='',gearReplaceId='',strategy='collapse',shopTab='boost',shopSlideFrom='boost',rosterTraining=false,pointShopTab='upgrades',pointShopSlideFrom='upgrades',profileTab='stars',profileSlideFrom='stars',batchRevealPending=false,lastJerseyUnlock='',saveQueue=Promise.resolve(),navigationClickLockedUntil=0,batchPointerClickSuppressedUntil=0;
+  let game=C.createGame(),screen='home',restoring=true,talentOffer=[],selectedTalent='',selectedOffer='',selectedPlace=null,showBonds=false,showStrategyPicker=false,showExpandConfirm=false,showNewJourneyConfirm=false,showTalentCatalog=false,showCurrentTalent=false,showRecruitSheet=false,recruitSheetMessage='',rewardVideoBusy=false,rewardTaskState=null,rewardTaskError='',reportReviveBusy=false,reportReviveMessage='',reportPosterBusy=false,reportPosterMessage='',detailStar='',detailContext=null,gearDetailId='',gearReplaceId='',strategy='collapse',shopTab='boost',shopSlideFrom='boost',rosterTraining=false,pointShopTab='upgrades',pointShopSlideFrom='upgrades',profileTab='stars',profileSlideFrom='stars',batchRevealPending=false,lastJerseyUnlock='',playerName='玩家',playerNameNotice='',playerInfoChecked=false,playerInfoRequest=null,saveQueue=Promise.resolve(),navigationClickLockedUntil=0,batchPointerClickSuppressedUntil=0;
   const SCREEN_NAVIGATION_ACTIONS=new Set(['home','profile','pointshop','continue','roster','recruit-normal','recruit-ten','shop','duel']);
   // 色值取自所附队徽的外圈与主要描边；渐变的每一侧仍是同样的边框宽度。
   const TEAM_LOGO_EDGES={atl:['#c8102e','#c8102e'],bkn:['#f5f5f5','#111111'],bos:['#008348','#111111'],cha:['#17176d','#1697cc'],chi:['#ed1c24','#111111'],cle:['#860038','#ffb81c'],dal:['#005da8','#09254b'],den:['#8b3438','#ffbf29'],det:['#0b4da2','#d90846'],gsw:['#1d428a','#ffc72c'],hou:['#002e62','#c62426'],ind:['#082454','#f7cf47'],lac:['#c00000','#002e5e'],lal:['#552583','#fdb927'],mem:['#5d76ae','#f5b324'],mia:['#98002e','#111111'],mil:['#214b39','#e3d6ae'],min:['#0c2340','#9db8ca'],nop:['#e31837','#0b2856'],ny:['#f16621','#16439a'],okc:['#377db9','#f36b4a'],orl:['#2554a4','#111111'],phi:['#1761ad','#ed1b52'],phx:['#111111','#f9a01b'],por:['#bb2337','#111111'],sac:['#4d167e','#65737b'],sas:['#101820','#c4ced4'],tor:['#ce0e2d','#8c8c8c'],utah:['#ffbb38','#315f41'],wsh:['#d50032','#13294b']};
@@ -17,18 +17,30 @@
   const barColor={three:'bar-orange',mid:'bar-gold',drive:'bar-red',handle:'bar-blue',inside:'bar-orange',def:'bar-gold'};
   const $=id=>document.getElementById(id);
   function renderMarkup(element,html){
-    if(window.SupFusionReactScreens?.renderMarkup)window.SupFusionReactScreens.renderMarkup(element,html);
-    else element.innerHTML=html;
+    if(!window.SupFusionReactScreens?.renderMarkup)throw new Error('React screen renderer is unavailable');
+    window.SupFusionReactScreens.renderMarkup(element,String(html));
   }
   function adoptReactRenderer(element){
     if(!element||!window.SupFusionReactScreens?.renderMarkup)return;
-    const descriptor=Object.getOwnPropertyDescriptor(Element.prototype,'innerHTML');
-    Object.defineProperty(element,'innerHTML',{configurable:true,get(){return descriptor.get.call(element)},set(html){renderMarkup(element,String(html))}});
-    element.replaceChildren=(...nodes)=>renderMarkup(element,nodes.map(node=>node?.outerHTML??node?.textContent??String(node)).join(''));
+    Object.defineProperty(element,'markup',{configurable:true,set(html){renderMarkup(element,html)}});
   }
   Object.values(els).forEach(adoptReactRenderer);
   adoptReactRenderer(batchActionRoot);
   function notify(){/* 所有状态变化直接反映在对应页面，不显示浮动提示框。 */}
+  function loadPlayerName(){
+    const getUserInfo=window.ColorboxAI?.auth?.getUserInfo;
+    if(playerInfoChecked||playerInfoRequest||typeof getUserInfo!=='function')return;
+    playerInfoRequest=Promise.resolve().then(()=>getUserInfo.call(window.ColorboxAI.auth)).then(response=>{
+      playerInfoChecked=true;
+      if(response?.code===200){
+        const nickname=response.data?.islogin===1?response.data.nickname:null;
+        playerName=typeof nickname==='string'&&nickname.trim()?nickname.trim().slice(0,30):'玩家';
+      }else playerNameNotice=response?.message||'玩家信息暂时无法读取，已显示“玩家”。';
+    }).catch(()=>{playerInfoChecked=true;playerNameNotice='玩家信息暂时无法读取，已显示“玩家”。'}).finally(()=>{
+      playerInfoRequest=null;
+      if(screen==='result')renderResult();
+    });
+  }
   function save(){
     if(!STORAGE.available())return;
     const snapshot=JSON.parse(JSON.stringify(game));
@@ -96,6 +108,9 @@
     run.benchLimit=safeNumber(source.benchLimit,Math.min(6,run.benchLimit),11,run.benchLimit);
     run.wins=safeNumber(source.wins,0,100000,0);
     run.losses=safeNumber(source.losses,0,100000,0);
+    run.stats={recruits:safeNumber(source.stats?.recruits,0,100000,0),prizeIncome:safeNumber(source.stats?.prizeIncome,0,10000000,0),gearPurchases:safeNumber(source.stats?.gearPurchases,0,100000,0)};
+    run.reviveUsed=source.reviveUsed===true;
+    run.posterRewarded=source.posterRewarded===true;
     run.owned=Object.create(null);
     if(source.owned&&typeof source.owned==='object'){
       for(const [id,own] of Object.entries(source.owned)){
@@ -163,6 +178,8 @@
     C.ensureShop(run);
     run.ended=source.ended===true||run.morale===0;
     run.awarded=source.awarded===true;
+    if(run.awarded&&source.settlement&&typeof source.settlement==='object')run.settlement={points:safeNumber(source.settlement.points,0,100000,0),wins:safeNumber(source.settlement.wins,0,100000,run.wins),clearAward:safeNumber(source.settlement.clearAward,0,1,0)};
+    else if(run.awarded)run.settlement={points:C.legendPoints(run),wins:run.wins,clearAward:C.clearedMainStage(run)>=10?1:0};
     const report=source.lastBattle;
     if(report&&typeof report==='object'){
       const foeId=knownPlayer(report.foe)?report.foe:C.opponent(run).id;
@@ -196,11 +213,12 @@
   function top(){
     const r=game.run;
     const header=document.querySelector('.top');
-    const back=screen==='roster'||screen==='talent'?['home','返回首页']:
+    const back=screen==='roster'?['current-talent-open','查看天赋']:
+      screen==='talent'?['home','返回首页']:
       ['recruit','shop','duel'].includes(screen)?['roster','返回阵容']:
       screen==='result'?['roster','返回阵容']:['home','返回首页'];
     const forcedOpening=screen==='talent'||screen==='recruit'&&r&&C.starterCount(r)<6;
-    const hideBack=forcedOpening||screen==='recruit'||screen==='result';
+    const hideBack=forcedOpening||screen==='recruit'||screen==='result'||screen==='report';
     const liveGoat=r&&!r.ended?Math.max(r.maxGoat||0,C.goatScore(r)):0;
     const morale=Math.max(0,Math.min(3,Number(r?.morale)||0));
     if(window.SupFusionReactScreens?.renderTopBar){
@@ -209,7 +227,8 @@
     }
     const backButton=(action,label)=>{
       const button=document.createElement('button');
-      button.className='top-back';button.dataset.act=action;button.textContent=`← ${label}`;
+      const talentAction=action==='current-talent-open';
+      button.className=`top-back${talentAction?' top-talent':''}`;button.dataset.act=action;button.textContent=talentAction?label:`← ${label}`;
       return button;
     };
     const metric=(label,value,className='')=>{
@@ -224,16 +243,7 @@
       const status=document.createElement('div');status.className='top-status';
       status.append(metric('GOAT',liveGoat,'top-goat'),metric('关卡',r.endless?r.stage:`${r.stage}/10`));
       const life=document.createElement('span');life.className='top-life';
-      const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('class','life-heart');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
-      const heartPath='M12 21s-9-5.5-9-11.7C3 5.6 5.4 3 8.5 3c1.8 0 3 1 3.5 2.1C12.5 4 13.7 3 15.5 3 18.6 3 21 5.6 21 9.3 21 15.5 12 21 12 21Z';
-      const defs=document.createElementNS('http://www.w3.org/2000/svg','defs'),clip=document.createElementNS('http://www.w3.org/2000/svg','clipPath'),clipShape=document.createElementNS('http://www.w3.org/2000/svg','path');
-      clip.setAttribute('id','life-heart-fill-fallback');clipShape.setAttribute('d',heartPath);clip.appendChild(clipShape);defs.appendChild(clip);svg.appendChild(defs);
-      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d',heartPath);path.setAttribute('fill','#4a2729');path.setAttribute('stroke','#ff655c');path.setAttribute('stroke-width','2');path.setAttribute('stroke-linejoin','round');
-      const fill=document.createElementNS('http://www.w3.org/2000/svg','rect'),fillHeight=18*(morale/3);
-      fill.setAttribute('x','2');fill.setAttribute('y',String(21-fillHeight));fill.setAttribute('width','20');fill.setAttribute('height',String(fillHeight));fill.setAttribute('fill','#ff655c');fill.setAttribute('clip-path','url(#life-heart-fill-fallback)');
-      const outline=path.cloneNode();outline.setAttribute('fill','none');svg.append(path,fill,outline);life.append(svg);
+      const heart=document.createElement('span');heart.className='life-heart-fallback';heart.textContent='♥';life.append(heart);
       const moraleText=document.createElement('b');moraleText.textContent=`${morale}/3`;life.appendChild(moraleText);
       status.appendChild(life);header.appendChild(status);
     }else if(!hideBack)header.appendChild(backButton('home','返回首页'));
@@ -248,12 +258,14 @@
     showCurrentTalent=false;
     if(id!=='shop'){gearDetailId='';gearReplaceId=''}
     if(id!=='recruit'){detailStar='';detailContext=null}
-    if(id!=='recruit'&&batchActionRoot){batchActionRoot.hidden=true;batchActionRoot.replaceChildren()}
+    if(id!=='recruit'&&batchActionRoot){batchActionRoot.markup='';batchActionRoot.hidden=true}
     screen=id;
     Object.keys(els).forEach(key=>els[key].classList.toggle('active',key===id));
     document.querySelector('.app').classList.toggle('home-mode',id==='home');
     document.querySelector('.app').classList.toggle('profile-mode',id==='profile');
     document.querySelector('.app').classList.toggle('pointshop-mode',id==='pointshop');
+    document.querySelector('.app').classList.toggle('report-mode',id==='report');
+    document.querySelector('.app').classList.toggle('opening-mode',id==='talent'||id==='recruit'&&!!game.run&&C.starterCount(game.run)<6);
     render();
     top();
     syncScrollViewport();
@@ -267,7 +279,7 @@
     }
   }
   window.addEventListener('resize',syncScrollViewport);
-  function render(){({home:renderHome,talent:renderTalent,recruit:renderRecruit,roster:renderRoster,shop:renderShop,duel:renderDuel,result:renderResult,profile:renderProfile,pointshop:renderPointShop}[screen]||renderHome)();renderPending()}
+  function render(){({home:renderHome,talent:renderTalent,recruit:renderRecruit,roster:renderRoster,shop:renderShop,duel:renderDuel,result:renderResult,report:renderCareerReport,profile:renderProfile,pointshop:renderPointShop}[screen]||renderHome)();renderPending()}
   function runOrHome(){if(!game.run||game.run.ended){go('home');return null}return game.run}
   function renderHome(){
     const r=game.run,active=r&&!r.ended;
@@ -276,7 +288,7 @@
       window.SupFusionReactScreens.renderHome(els.home,{active,stage:r?.stage||1,storageMessage});
       return;
     }
-    els.home.innerHTML=`
+    els.home.markup=`
       <section class="home-hero"><div class="home-orbit" aria-hidden="true"><span>11</span></div><div class="home-eyebrow">BUILD YOUR OWN LEGEND</div>
         <h1>我的球星<br><em>融合系统</em></h1>
         <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
@@ -292,9 +304,9 @@
       window.SupFusionReactScreens.renderTalent(els.talent,{offer:talentOffer,selectedTalent,unlockedCount:C.availableTalents(game.profile).length,totalCount:C.TALENTS.length});
       return;
     }
-    els.talent.innerHTML=`
+    els.talent.markup=`
       <button class="inline-back" data-act="home">← 返回首页</button><div class="eyebrow">NEW RUN · 开局抉择</div>
-      <h1 class="title">选择你的融合路线</h1><p class="lead">从 ${C.TALENTS.length} 项开局天赋中解锁路线，每局随机三选一，效果持续整局。</p>
+      <h1 class="title">选择你的融合路线</h1>
       <div class="talent-catalog-row"><span>已解锁 ${C.availableTalents(game.profile).length}/${C.TALENTS.length}</span><button data-act="talent-catalog">查看全部天赋</button></div>
       <div class="list">${talentOffer.map(t=>`<button class="talent ${selectedTalent===t.id?'selected':''}" data-act="talent" data-id="${t.id}"><b>✦ ${t.name} <small>${t.category}</small></b><span>${t.gain}</span><i>${t.cost==='无'?'无代价':`代价：${t.cost}`}</i></button>`).join('')}</div>
       <div class="floatingaction"><button class="btn wide" data-act="begin">确定天赋，开始四选一招募 →</button></div>`;
@@ -328,7 +340,7 @@
   function renderBatchAction(batch,batchCount){
     if(!batchActionRoot)return;
     batchActionRoot.hidden=!batch;
-    batchActionRoot.innerHTML=batch?`<div class="batch-action-summary">拿走 ${batchCount} 张 · 出售 ${10-batchCount} 张</div><div class="batch-action-row"><button class="btn batch-select-toggle" data-act="toggle-recruit-batch">${batchCount===10?'取消全选':'一键全选'}</button><button class="btn batch-confirm" data-act="confirm-recruit-batch">${batchCount===0?'全部出售':'确认拿走'}</button></div>`:'';
+    batchActionRoot.markup=batch?`<div class="batch-action-summary">拿走 ${batchCount} 张 · 出售 ${10-batchCount} 张</div><div class="batch-action-row"><button class="btn batch-select-toggle" data-act="toggle-recruit-batch">${batchCount===10?'取消全选':'一键全选'}</button><button class="btn batch-confirm" data-act="confirm-recruit-batch">${batchCount===0?'全部出售':'确认拿走'}</button></div>`:'';
   }
   function renderRecruit(){
     const r=runOrHome();if(!r)return;
@@ -341,9 +353,9 @@
     els.recruit.classList.toggle('batch-reveal',batch&&batchRevealPending);
     els.recruit.classList.toggle('draft-rewarded-mode',r.offerMode==='rewarded-s');
     const batchCount=batch?r.batchSelected.filter(Boolean).length:0;
-    els.recruit.innerHTML=`
+    els.recruit.markup=`
       <button class="inline-back" data-act="roster">← 返回融合球场</button>
-      <div class="draft-heading"><div><span class="league-label">HOOP LEGEND</span><h1>DRAFT <small>${batch?`十连招募 · 已选 ${batchCount}/10`:'招募'}</small></h1></div></div>
+      <div class="draft-heading"><div><h1>DRAFT <small>${batch?`十连招募 · 已选 ${batchCount}/10`:'招募'}</small></h1></div></div>
       <div class="draft-odds"><span class="draft-odd" aria-label="SSR 概率 ${pct(odds.ssrGroup)}%"><span class="tier-dot legend-dot"></span>${pct(odds.ssrGroup)}%</span><span class="draft-odd" aria-label="S 概率 ${pct(odds.S)}%"><span class="tier-dot s-dot"></span>${pct(odds.S)}%</span><span class="draft-odd" aria-label="A 概率 ${pct(odds.A)}%"><span class="tier-dot a-dot"></span>${pct(odds.A)}%</span><span class="draft-odd" aria-label="B 概率 ${pct(odds.B)}%"><span class="tier-dot b-dot"></span>${pct(odds.B)}%</span><span class="draft-odd" aria-label="C 概率 ${pct(odds.C)}%"><span class="tier-dot c-dot"></span>${pct(odds.C)}%</span></div>
       ${batch?'<p class="batch-recruit-hint">默认全部拿走 · 点击卡片取消，取消的球员将直接出售</p>':''}
       <div class="choicegrid grid grid-cols-2">${r.offer.map(draftCard).join('')}</div>
@@ -361,13 +373,17 @@
       <span class="slot-body"><strong>${s.name}<small><b class="slot-value">${value}</b>${rosterTraining?` · 训练${effective.train}`:''} · <b class="slot-rank">${effective.stars}<span class="star-icon">★</span></b></small></strong></span></button>${rosterTraining?trainingAction(r,id,'slot-train'):''}</div>`;
   }
   function acePanel(r,fusion){
-    return `<div class="ace-panel panel compact-ace"><div class="ace-overview"><div class="ace-mark"><img src="assets/fusion-ace.png" alt="融合球员概念插画"><span>LV.${r.stage}</span></div><div class="ace-summary"><div class="ace-score"><strong>${fusion.rating}</strong><span><b>综合战力</b><br><em>${C.KNOWN_TALENTS.find(t=>t.id===r.talent)?.name||'自由构筑'}</em></span></div><small>${fusion.bonds.length} 组羁绊生效</small></div></div>
-      <div class="ace-detail"><div class="ace-section-label">融合六项 <small>升星、训练与换位</small></div><div class="ace-stat-grid">${attrOrder.map(a=>`<span>${C.LABELS[a]} <b>${fusion.stats[a]}</b></span>`).join('')}</div>
-      <div class="ace-section-label">单挑战力 <small>技能、羁绊与装备</small></div><div class="ace-combat-grid">${combatOrder.map(key=>`<span>${C.COMBAT_LABELS[key]} <b>${Math.round(fusion.dimensions[key])}</b></span>`).join('')}</div></div>${signaturePanel(r,true)}</div>`;
+    return `<div class="ace-panel panel compact-ace"><strong class="ace-rating">${fusion.rating}</strong>
+      <div class="ace-detail"><div class="ace-section-label">融合六项 <small>升星、训练与换位</small></div><div class="ace-stat-grid">${attrOrder.map(a=>`<span>${C.LABELS[a]} <b>${fusion.stats[a]}</b></span>`).join('')}</div></div>
+      <div class="ace-combat-wide"><div class="ace-section-label">单挑战力 <small>技能、羁绊与装备</small></div><div class="ace-combat-grid">${combatOrder.map(key=>`<span>${C.COMBAT_LABELS[key]} <b>${Math.round(fusion.dimensions[key])}</b></span>`).join('')}</div></div>${signaturePanel(r,true)}</div>`;
   }
   function combatPanel(r,includeSignature=true){
     const fusion=C.fused(r);
     return `<section class="roster-combat panel"><div class="roster-combat-head"><b>单挑战力</b><span>综合 ${fusion.rating}</span></div><div class="roster-combat-grid">${combatOrder.map(key=>`<span>${C.COMBAT_LABELS[key]} <b>${Math.round(fusion.dimensions[key])}</b></span>`).join('')}</div>${includeSignature?signaturePanel(r,true):''}</section>`;
+  }
+  function shopCombatSummary(r){
+    const fusion=C.fused(r);
+    return `<section class="shop-combat-summary panel"><div class="roster-combat-grid">${combatOrder.map(key=>`<span>${C.COMBAT_LABELS[key]} <b>${Math.round(fusion.dimensions[key])}</b></span>`).join('')}</div></section>`;
   }
   function signaturePanel(r,embedded=false){
     const moves=C.signatureMoves(r).filter(Boolean);
@@ -378,7 +394,7 @@
     const s=C.BY_ID[id],effective=C.playerEffectiveStats(r,id),value=effective.stats[s.best];
     return `<div class="bench-card ${tierClass[s.tier]} ${selectedPlace?.kind==='bench'&&selectedPlace.key===index?'selected':''}">
       <button class="bench-player" data-act="place" data-kind="bench" data-key="${index}"><strong>${s.name}</strong><small><span class="bench-rank">${effective.stars} <span class="star-icon">★</span></span>${rosterTraining?` · 训练${effective.train}`:''} · <span class="bench-attr">${C.LABELS[s.best]}</span> <b class="bench-value">${value}</b></small><span class="bench-drag-handle" title="按住此处拖动换位" aria-label="拖动换位"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4h12M3 9h12M3 14h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
-      ${rosterTraining?trainingAction(r,id,'bench-train'):`<button class="bench-sell" data-act="sell-bench" data-index="${index}" ${r.lastBattle?'disabled title="请先进入下一关整备"':''} aria-label="出售 ${s.name}，获得 ${C.saleValue(id,effective.stars,r)} 奖金"><span>出售</span><b>${C.saleValue(id,effective.stars,r)}</b></button>`}
+      ${rosterTraining?trainingAction(r,id,'bench-train'):`<button class="bench-sell" data-act="sell-bench" data-id="${id}" data-index="${index}" ${r.lastBattle?'disabled title="请先进入下一关整备"':''} aria-label="出售 ${s.name}，获得 ${C.saleValue(id,effective.stars,r)} 奖金"><span>出售</span><b>${C.saleValue(id,effective.stars,r)}</b></button>`}
     </div>`;
   }
   function trainingAction(run,id,className){
@@ -393,10 +409,10 @@
     const fusion=C.fused(r);
     const tierOrder={SSR:0,S:1,A:2,B:3,C:4};
     const sortedBench=r.bench.map((id,index)=>({id,index})).sort((a,b)=>tierOrder[C.BY_ID[a.id].tier]-tierOrder[C.BY_ID[b.id].tier]||(r.owned[b.id]?.stars||1)-(r.owned[a.id]?.stars||1)||a.index-b.index);
-    els.roster.innerHTML=`
+    els.roster.markup=`
       <button class="inline-back" data-act="home">← 返回首页</button>
       ${combatPanel(r)}
-      <div class="sectionhead slots-heading"><div class="slots-title-actions"><h2>融合面板</h2><button class="roster-bonds-action" data-act="bonds">查看羁绊(${fusion.bonds.length})</button><button class="roster-talent-action" data-act="current-talent-open">查看天赋</button></div><span>点击查看详情，拖动更换位置</span></div>
+      <div class="sectionhead slots-heading"><div class="slots-title-actions"><h2>融合面板</h2><button class="roster-bonds-action" data-act="bonds">查看羁绊(${fusion.bonds.length})</button></div><span>点击查看详情，拖动更换位置</span></div>
       <div class="fusion-lineup"><div class="lineup-column">${C.SLOTS.slice(0,3).map(s=>rosterSlot(s,r)).join('')}</div><div class="lineup-center"><img src="assets/fusion-player-asian.png" alt="持球的融合球员"></div><div class="lineup-column">${C.SLOTS.slice(3).map(s=>rosterSlot(s,r)).join('')}</div></div>
       <div class="bench-heading-block"><div class="bench-heading-copy"><div class="sectionhead bench-title"><h2>备战席 <span class="bench-count">${r.bench.length} / ${r.benchLimit}</span></h2></div><p class="bench-gesture-hint">滑动列表浏览 · 按住球员左侧把手拖动换位</p></div><div class="bench-title-actions"><button class="roster-expand" data-act="expand-open" ${r.cash<10||r.benchLimit>=10||r.lastBattle?'disabled':''}>扩容</button><button class="roster-training-toggle" data-act="toggle-training">${rosterTraining?'返回':'切换训练'}</button></div></div>
       <div class="bench-panel panel"><div class="bench-grid" id="benchGrid">${sortedBench.length?sortedBench.map(({id,index})=>benchCard(id,index,r)).join(''):'<div class="bench-empty" role="status">暂无备战球员，招募后可加入备战席</div>'}</div></div>
@@ -459,9 +475,9 @@
     const refreshCost=shopTab==='my'?0:C.shopRefreshCost(r,shopTab);
     const refreshButton=shopTab==='my'?'':`<button class="shop-refresh-action" data-act="shop-refresh" ${r.cash<refreshCost?'disabled':''}>${r.cash<refreshCost?'奖金不足':refreshCost===0?'免费刷新':`刷新 · ${cashPrice(refreshCost)}`}</button>`;
     const tabIndex=tabs.findIndex(([id])=>id===shopTab),fromIndex=tabs.findIndex(([id])=>id===shopSlideFrom);
-    els.shop.innerHTML=`<button class="inline-back" data-act="roster">← 返回融合球场</button><div class="row"><div><div class="eyebrow">LOCKER ROOM</div><h1 class="title">${shopTab==='my'?'更衣室':'商店'}</h1></div><span class="pill gold shop-balance"><img src="assets/cash-stack.png" alt="奖金">${r.cash}</span></div>
+    els.shop.markup=`<button class="inline-back" data-act="roster">← 返回融合球场</button><div class="shop-overview-row">${shopCombatSummary(liveRun)}<span class="pill gold shop-balance"><img src="assets/cash-stack.png" alt="奖金">${r.cash}</span></div>
       <div class="tabrow shop-tabs"><div class="shop-tab-track" style="--tab-index:${tabIndex};--from-tab:${fromIndex<0?tabIndex:fromIndex}"><span key="shop-${fromIndex}-${tabIndex}" class="shop-tab-slider" aria-hidden="true"></span>${tabs.map(([id,name])=>`<button class="tab ${shopTab===id?'active':''}" data-act="shop-tab" data-id="${id}">${name}</button>`).join('')}</div>${refreshButton}</div>
-      ${shopTab==='my'?combatPanel(liveRun,false)+equipped+'<button class="shop-test-cash" data-act="test-cash">测试 · 获得 999 奖金</button>':`${equipped}<div class="shopPanel shop-grid">${content||'<div class="emptyline">暂无可用商品或球员。</div>'}</div>`}
+      ${shopTab==='my'?equipped+'<button class="shop-test-cash" data-act="test-cash">测试 · 获得 999 奖金</button>':`${equipped}<div class="shopPanel shop-grid">${content||'<div class="emptyline">暂无可用商品或球员。</div>'}</div>`}
       ${shopTab==='boost'?'<p class="footer-note">赛前强化仅对下一场生效。</p>':''}
       <button class="btn wide" data-act="roster">整备完成，返回球场 →</button>`;
     shopSlideFrom=shopTab;
@@ -471,14 +487,14 @@
     const foe=C.opponent(r),fusion=C.fused(r);
     if(window.SupFusionReactScreens?.renderDuel){
       const moves=C.signatureMoves(r).filter(Boolean).map(move=>({...move,slotLabels:move.slots.map(slot=>C.SLOTS.find(item=>item.id===slot).label)}));
-      window.SupFusionReactScreens.renderDuel(els.duel,{stage:r.stage,fusion:{rating:fusion.rating,bondCount:fusion.bonds.length},talentName:C.KNOWN_TALENTS.find(t=>t.id===r.talent)?.name||'自由构筑',attrStats:attrOrder.map(id=>({id,label:C.LABELS[id],value:fusion.stats[id]})),combatStats:combatOrder.map(id=>({id,label:C.COMBAT_LABELS[id],value:Math.round(fusion.dimensions[id])})),moves,foe,foeCombat:combatOrder.map(id=>({id,label:C.COMBAT_LABELS[id],value:Math.round(foe.dimensions[id])}))});
+      window.SupFusionReactScreens.renderDuel(els.duel,{stage:r.stage,fusion:{rating:fusion.rating},attrStats:attrOrder.map(id=>({id,label:C.LABELS[id],value:fusion.stats[id]})),combatStats:combatOrder.map(id=>({id,label:C.COMBAT_LABELS[id],value:Math.round(fusion.dimensions[id])})),moves,foe,foeCombat:combatOrder.map(id=>({id,label:C.COMBAT_LABELS[id],value:Math.round(foe.dimensions[id])}))});
       return;
     }
-    els.duel.innerHTML=`<button class="inline-back" data-act="roster">← 返回融合球场</button>
-      <div class="eyebrow">STAGE ${String(r.stage).padStart(2,'0')} · 赛前情报</div><h1 class="title">单挑赛前情报</h1>
+    els.duel.markup=`<button class="inline-back" data-act="roster">← 返回融合球场</button>
+      <div class="eyebrow">STAGE ${String(r.stage).padStart(2,'0')} · 赛前情报</div>
       ${acePanel(r,fusion)}
       <div class="sectionhead duel-foe-heading"><h2>本关对手</h2><span>基础战力 ${fusion.rating} : ${foe.rating}</span></div>
-      <div class="panel opponent"><div class="eyebrow">本关对手 · OVR ${foe.rating}${foe.stars>1?` · ${foe.stars}★`:''}</div><strong>${foe.name}</strong>
+      <div class="panel opponent"><div class="opponent-name-row"><strong>${foe.name}</strong><span><small>OVR</small><b>${foe.rating}</b>${foe.stars>1?`<em>${foe.stars}★</em>`:''}</span></div>
         <p>三分 ${foe.stats.three} · 突破 ${foe.stats.drive} · 防守 ${foe.stats.def}</p>
         <div class="opponent-combat">${combatOrder.map(key=>`<span>${C.COMBAT_LABELS[key]} ${Math.round(foe.dimensions[key])}</span>`).join('')}</div>
         <span class="versus">VS</span></div>
@@ -486,27 +502,63 @@
   }
   function renderResult(){
     const r=game.run,report=r?.lastBattle;if(!report){go('home');return}
+    loadPlayerName();
     const won=report.won,ended=r.ended,final=r.stage===10&&won&&!r.endless;
     els.result.classList.toggle('result-loss',!won);
     const beatText=report.beats>0?'战术克制成功':report.beats<0?'本场战术被克制':'双方策略未形成克制';
     if(window.SupFusionReactScreens?.renderResult){
-      window.SupFusionReactScreens.renderResult(els.result,{report,won,ended,final,wins:r.wins,losses:r.losses,beatText,strategyName:C.STRATEGIES[report.strategy].name,strategyEffect:report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌'});
+      window.SupFusionReactScreens.renderResult(els.result,{report,won,ended,final,wins:r.wins,losses:r.losses,beatText,strategyName:C.STRATEGIES[report.strategy].name,strategyEffect:report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌',playerName,playerNameNotice});
       return;
     }
-    const resultAction=ended?`<button class="btn wide" data-act="home">查看档案 / 返回首页 →</button>`
+    const resultAction=ended?`<button class="btn wide" data-act="career-report">查看生涯报告 →</button>`
       :final?`<div class="result-actions"><button class="btn dark" data-act="finish">本局结算</button><button class="btn" data-act="next">进入无尽 →</button></div>`
       :`<button class="btn wide" data-act="${won?'next':'retry'}">${won?'下一关整备':'整备重试'} →</button>`;
-    els.result.innerHTML=`
-      <div class="result-card panel"><div class="result-top"><b>11 分制 · 一局定胜负<br>最终比分</b><span>比赛结果${won?'<br><strong>挑战成功</strong>':''}</span></div>
-        <div class="result-scoreboard"><div class="result-side"><div class="result-avatar you-avatar"><img src="assets/fusion-ace.png" alt="融合球员概念插画"></div><strong>终极融合体</strong><small>阵容：融合王牌</small></div>
+    els.result.markup=`
+      <div class="result-card panel">
+        <div class="result-scoreboard"><div class="result-side"><div class="result-avatar you-avatar"><img src="assets/fusion-ace.png" alt="融合球员概念插画"></div><strong>${escapeText(playerName)}</strong><small>OVR ${report.rating}</small></div>
           <div class="result-middle"><div class="score">${report.us}<span>:</span>${report.them}</div><b>${won?'胜利':'失利'}</b></div>
           <div class="result-side"><div class="result-avatar opp-avatar"><img src="assets/rival-forward.png" alt="对手概念插画"></div><strong>${report.foeName}</strong><small>OVR ${report.foeRating}${report.foeStars>1?` · ${report.foeStars}★`:''}</small></div></div>
-        <div class="result-strategy"><span>▣ ${beatText}：${C.STRATEGIES[report.strategy].name}</span><b>${report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌'}</b></div></div>
+        <div class="result-strategy"><span>▣ ${beatText}：${C.STRATEGIES[report.strategy].name}</span><b>${report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌'}</b></div></div>${playerNameNotice?`<p class="result-user-notice" role="status">${escapeText(playerNameNotice)}</p>`:''}
       <div class="sectionhead result-timeline-title"><h2>关键回合</h2></div><div class="timeline">${report.signatures?.length?`<div class="timeline-signatures">${report.signatures.map(move=>`<span>${move.kind==='offense'?'进攻':'防守'} · <b>${move.name}</b>　触发 ${move.uses} 次</span>`).join('')}</div>`:''}${report.log.map(line=>`<p>${escapeText(line)}</p>`).join('')}</div>
       ${ended?`<div class="panel result-summary">本局 ${r.wins} 胜 ${r.losses} 负，获得 ${report.legendEarned||0} 传奇点。</div>`
         :final?`<div class="panel result-summary">主线十关完成！可以带当前阵容进入无尽，或结算本局。</div>`:''}
-      <div class="result-dock"><div class="panel battle-reward"><div class="battle-reward-main"><span class="shopicon">＄</span><div><strong>本场奖金 +${report.reward}</strong><small>${report.detail.join(' · ')}</small></div></div></div>${resultAction}</div>`;
+      <div class="result-dock">${ended?'':`<div class="panel battle-reward"><div class="battle-reward-main"><span class="shopicon">＄</span><div><strong>本场奖金 +${report.reward}</strong><small>${report.detail.join(' · ')}</small></div></div></div>`}${resultAction}</div>`;
   }
+  function careerReportSummary(){
+    const r=game.run;if(!r)return null;
+    const breakdown=C.legendPointBreakdown(r),stats=r.stats||{};
+    const lineup=C.SLOTS.map(slot=>{const id=r.slots[slot.id],star=C.BY_ID[id],own=r.owned[id];return star?{slot:slot.id,slotLabel:slot.label,name:star.name,tier:star.tier,tierClass:tierClass[star.tier],stars:own?.stars||1,train:own?.train||0}:null}).filter(Boolean);
+    const bonds=C.activeSynergies(r).map(bond=>({name:bond.name,description:bond.description}));
+    const gear=r.gear.map(id=>C.GEAR.find(item=>item.id===id)).filter(Boolean).map(item=>({id:item.id,slot:item.slot,name:item.displayName,description:item.description,rarityClass:`gear-tier-${item.rarity.toLowerCase()}`}));
+    return {goat:Math.round(r.maxGoat||r.lastBattle?.goat||C.goatScore(r)),stage:r.lastBattle?.stage||r.stage,wins:r.wins,losses:r.losses,lineup,bonds,gear,recruits:stats.recruits||0,prizeIncome:stats.prizeIncome||0,gearPurchases:stats.gearPurchases||0,legendEarned:r.settlement?.points??r.lastBattle?.legendEarned??breakdown.total,formula:breakdown.formula,currentLegend:game.profile.legend,reviveUsed:r.reviveUsed===true,canRevive:r.morale<=0&&r.lastBattle?.won===false&&r.reviveUsed!==true,posterRewarded:r.posterRewarded===true};
+  }
+  function renderCareerReport(){
+    const summary=careerReportSummary();if(!summary||!game.run?.ended){go('home');return}
+    if(window.SupFusionReactScreens?.renderCareerReport){window.SupFusionReactScreens.renderCareerReport(els.report,{summary,posterBusy:reportPosterBusy,posterMessage:reportPosterMessage,reviveBusy:reportReviveBusy,reviveMessage:reportReviveMessage});return}
+    els.report.markup=`<div class="career-report-content"><div class="career-report-overview"><div class="panel career-report-hero"><span>第 ${summary.stage} 关</span><h1>${summary.goat}</h1><small>GOAT 分数</small></div><section class="panel career-advanced"><div><span>胜负记录<b>${summary.wins} 胜 ${summary.losses} 负</b></span><span>招募球员<b>${summary.recruits} 次</b></span><span>累计奖金收入<b>${summary.prizeIncome} 奖金</b></span><span>购买装备<b>${summary.gearPurchases} 次</b></span></div></section></div></div><div class="career-report-actions"><div class="career-action-row"><button class="btn wide" data-act="report-revive" ${summary.canRevive?'':'disabled'}>${summary.reviveUsed?'本局已使用体力恢复':summary.canRevive?'看视频恢复体力':'当前无需恢复体力'}</button><button class="btn wide dark" data-act="report-new">返回首页</button></div><button class="btn wide" data-act="report-poster" ${summary.posterRewarded?'disabled':''}>${summary.posterRewarded?'海报已发帖':'查看海报 · 发帖'}</button></div>`;
+  }
+  function wrapPosterText(ctx,text,x,y,maxWidth,lineHeight,maxLines=3){
+    let line='',count=0;
+    for(const char of String(text)){const next=line+char;if(ctx.measureText(next).width>maxWidth&&line){ctx.fillText(line,x,y+count*lineHeight);line=char;if(++count>=maxLines)return y+count*lineHeight}else line=next}
+    if(line&&count<maxLines){ctx.fillText(line,x,y+count*lineHeight);count++}
+    return y+count*lineHeight;
+  }
+  function createCareerPoster(summary){
+    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1440;const ctx=canvas.getContext('2d');
+    const gradient=ctx.createLinearGradient(0,0,1080,1440);gradient.addColorStop(0,'#34220b');gradient.addColorStop(.42,'#171819');gradient.addColorStop(1,'#090a0c');ctx.fillStyle=gradient;ctx.fillRect(0,0,1080,1440);
+    ctx.fillStyle='#ffbd32';ctx.font='900 42px sans-serif';ctx.fillText('我的球星融合系统 · 生涯报告',64,88);ctx.fillStyle='#fff4dc';ctx.font='900 150px sans-serif';ctx.fillText(String(summary.goat),64,260);ctx.fillStyle='#c9b890';ctx.font='700 30px sans-serif';ctx.fillText(`GOAT 分数　｜　达到第 ${summary.stage} 关　｜　${summary.wins} 胜 ${summary.losses} 负`,68,315);
+    ctx.strokeStyle='#72511e';ctx.strokeRect(60,350,960,2);ctx.fillStyle='#ffcc59';ctx.font='900 34px sans-serif';ctx.fillText('融合面板阵容',64,420);ctx.font='700 28px sans-serif';ctx.fillStyle='#f3eadc';summary.lineup.forEach((player,index)=>{const x=64+(index%2)*480,y=480+Math.floor(index/2)*74;ctx.fillText(`${player.slotLabel}位　${player.name}　${player.stars}★`,x,y)});
+    let y=720;ctx.fillStyle='#ffcc59';ctx.font='900 34px sans-serif';ctx.fillText('激活羁绊',64,y);ctx.fillStyle='#eee4d3';ctx.font='700 25px sans-serif';y+=50;wrapPosterText(ctx,summary.bonds.map(item=>item.name).join(' · ')||'本局未激活羁绊',64,y,940,38,3);y+=125;ctx.fillStyle='#ffcc59';ctx.font='900 34px sans-serif';ctx.fillText('装备和球衣',64,y);ctx.fillStyle='#eee4d3';ctx.font='700 25px sans-serif';y+=50;wrapPosterText(ctx,summary.gear.map(item=>`${item.slot}·${item.name}`).join('　')||'本局没有装备',64,y,940,38,3);
+    y=1100;ctx.fillStyle='#cfc4b2';ctx.font='700 27px sans-serif';ctx.fillText(`招募 ${summary.recruits} 次　｜　累计奖金 ${summary.prizeIncome}　｜　购买装备 ${summary.gearPurchases} 次`,64,y);ctx.fillStyle='#ffbd32';ctx.font='900 42px sans-serif';ctx.fillText(`局外结算 +${summary.legendEarned} 传奇点`,64,y+90);ctx.fillStyle='#c8bba5';ctx.font='700 24px sans-serif';wrapPosterText(ctx,summary.formula,64,y+140,940,36,2);ctx.fillStyle='#867b69';ctx.font='700 22px sans-serif';ctx.fillText('分享我的本局阵容与融合思路',64,1370);
+    return canvas.toDataURL('image/png');
+  }
+  async function publishCareerPoster(payload){
+    const ai=window.ColorboxAI;
+    if(typeof ai?.skills?.postResultPoster==='function')return ai.skills.postResultPoster(payload);
+    if(typeof ai?.skills?.invoke==='function')return ai.skills.invoke({name:'带结果海报发帖',data:payload});
+    throw new Error('当前环境未提供带结果海报发帖能力');
+  }
+  function posterPublishSucceeded(response){return response?.code===200&&(response?.data?.published===true||response?.data?.success===true||Boolean(response?.data?.postId))||response?.success===true||response?.published===true}
   function renderProfile(){
     const p=game.profile,discovered=new Set(p.discovered.map(C.identityOf)),tierOrder={SSR:0,S:1,A:2,B:3,C:4};
     const orderedStars=[...C.STARS].filter(star=>p.discovered.includes(star.id)).sort((a,b)=>tierOrder[a.tier]-tierOrder[b.tier]);
@@ -516,7 +568,7 @@
     const bondCatalog=`<div class="sectionhead"><h2>羁绊图鉴</h2><span>${C.SYNERGIES.length} 组</span></div><div class="profile-bond-catalog">${C.SYNERGIES.map(bond=>{const count=bond.ids.filter(id=>discovered.has(id)).length;return `<div class="profile-bond ${count===bond.ids.length?'unlocked':''}"><strong>${bond.name}<small>${count===bond.ids.length?'已收集':`${count}/${bond.ids.length}`}</small></strong><span>${bond.ids.map(id=>C.BY_ID[id].name).join(' · ')}</span></div>`}).join('')}</div>`;
     const jerseyCatalog=`<div class="sectionhead"><h2>球衣图鉴</h2><span>已收集 ${jerseys.length} / ${C.GEAR.filter(item=>item.slot==='球衣').length}</span></div>${jerseys.length?`<div class="profile-jersey-catalog">${jerseys.map(item=>{const visual=equipmentJerseyVisual(item);return `<div class="equipment-reserve-card gear-tier-${item.rarity.toLowerCase()}${visual.className}"${visual.style}>${visual.logo}<div class="jersey-collection-preview">${jerseyArtwork(item)}<b>${item.displayName}</b></div></div>`}).join('')}</div>`:'<div class="emptyline catalog-empty">完成一局后，本局获得过的球衣会收录在这里。</div>'}`;
     const profileTabs=['stars','bonds','jerseys'],profileTabIndex=profileTabs.indexOf(profileTab),profileFromIndex=profileTabs.indexOf(profileSlideFrom);
-    els.profile.innerHTML=`
+    els.profile.markup=`
       <div class="profile-title-row"><div><div class="eyebrow">LEGACY</div><h1 class="title">我的传奇档案</h1></div><button class="profile-home" data-act="home">返回主页</button></div>
       <div class="statusbar profile-status"><div class="statbox"><strong>${p.runs}</strong><small>局数</small></div><div class="statbox"><strong>${p.clears||0}</strong><small>通关次数</small></div><div class="statbox"><strong>${p.highestStage||0}</strong><small>最高关卡</small></div><div class="statbox"><strong class="goldtext">${p.bestGoat||0}</strong><small>最高GOAT分</small></div></div>
       <div class="profile-tabs" role="tablist" style="--tab-index:${profileTabIndex};--from-tab:${profileFromIndex<0?profileTabIndex:profileFromIndex}"><button class="${profileTab==='stars'?'active':''}" data-act="profile-tab" data-id="stars">球星图鉴</button><button class="${profileTab==='bonds'?'active':''}" data-act="profile-tab" data-id="bonds">羁绊图鉴</button><button class="${profileTab==='jerseys'?'active':''}" data-act="profile-tab" data-id="jerseys">球衣图鉴</button><i key="profile-${profileFromIndex}-${profileTabIndex}" class="${profileTab}"></i></div>
@@ -532,7 +584,7 @@
     const upgradePage=`<div class="meta-shop-list">${upgrades}</div>`;
     const jerseyPage=`<div class="panel jersey-unlock-panel"><div><strong>随机解锁一件传奇球衣</strong><span>解锁后才会加入装备商店球衣池；每次不会重复。</span>${unlockedItem?`<em>本次解锁：${unlockedItem.legendName} · ${unlockedItem.name}</em>`:''}</div><button class="btn small" data-act="jersey-unlock" ${complete||profile.legend<C.JERSEY_UNLOCK_PRICE?'disabled':''}>${complete?'已全部解锁':`${C.JERSEY_UNLOCK_PRICE} 点`}</button></div><div class="meta-jersey-grid">${jerseyCards}</div>`;
     const pointShopTabs=['upgrades','jerseys'],pointShopTabIndex=pointShopTabs.indexOf(pointShopTab),pointShopFromIndex=pointShopTabs.indexOf(pointShopSlideFrom);
-    els.pointshop.innerHTML=`<div class="profile-title-row"><div><div class="eyebrow">LEGACY SHOP</div><h1 class="title">点数商店</h1></div><button class="profile-home" data-act="home">返回主页</button></div><div class="legend-balance">传奇点 <b>${profile.legend}</b></div><div class="profile-tabs pointshop-tabs" role="tablist" style="--tab-index:${pointShopTabIndex};--from-tab:${pointShopFromIndex<0?pointShopTabIndex:pointShopFromIndex}"><button class="${pointShopTab==='upgrades'?'active':''}" data-act="pointshop-tab" data-id="upgrades">天赋加成</button><button class="${pointShopTab==='jerseys'?'active':''}" data-act="pointshop-tab" data-id="jerseys">传奇球衣</button><i key="pointshop-${pointShopFromIndex}-${pointShopTabIndex}" class="${pointShopTab}"></i></div><div class="pointshop-page">${pointShopTab==='upgrades'?upgradePage:jerseyPage}</div>`;
+    els.pointshop.markup=`<div class="profile-title-row"><div><div class="eyebrow">LEGACY SHOP</div><h1 class="title">点数商店</h1></div><button class="profile-home" data-act="home">返回主页</button></div><div class="legend-balance">传奇点 <b>${profile.legend}</b></div><div class="profile-tabs pointshop-tabs" role="tablist" style="--tab-index:${pointShopTabIndex};--from-tab:${pointShopFromIndex<0?pointShopTabIndex:pointShopFromIndex}"><button class="${pointShopTab==='upgrades'?'active':''}" data-act="pointshop-tab" data-id="upgrades">天赋加成</button><button class="${pointShopTab==='jerseys'?'active':''}" data-act="pointshop-tab" data-id="jerseys">传奇球衣</button><i key="pointshop-${pointShopFromIndex}-${pointShopTabIndex}" class="${pointShopTab}"></i></div><div class="pointshop-page">${pointShopTab==='upgrades'?upgradePage:jerseyPage}</div>`;
     pointShopSlideFrom=pointShopTab;
   }  let modal=document.createElement('div');modal.id='game-modal';document.body.appendChild(modal);adoptReactRenderer(modal);
   function rewardTaskCompleted(){return rewardTaskState?.tasks?.some(task=>task?.taskCode==='reward'&&task.status==='completed')===true}
@@ -545,30 +597,14 @@
     }catch(_){rewardTaskError='激励广告任务状态读取失败，请稍后重试。';return null}
   }
   function renderRecruitSheet(r){
-    const normalCost=C.recruitCost(r),packCost=C.recruitPackCost(r),card=document.createElement('section');
-    const head=document.createElement('div'),heading=document.createElement('div'),eyebrow=document.createElement('span'),title=document.createElement('h2'),close=document.createElement('button');
+    const normalCost=C.recruitCost(r),packCost=C.recruitPackCost(r);
     modal.className='game-modal open recruit-sheet-modal';
-    card.className='modal-card recruit-sheet';card.setAttribute('role','dialog');card.setAttribute('aria-modal','true');card.setAttribute('aria-labelledby','recruit-sheet-title');
-    head.className='recruit-sheet-head';heading.className='recruit-sheet-heading';eyebrow.textContent='球星招募';title.id='recruit-sheet-title';title.textContent='选择招募方式';
-    close.type='button';close.dataset.act='recruit-sheet-close';close.setAttribute('aria-label','关闭招募方式');close.textContent='×';
-    heading.append(eyebrow,title);head.append(heading,close);card.appendChild(head);
-    const balance=document.createElement('p');balance.className='recruit-sheet-balance';balance.textContent=`当前奖金 ${r.cash}`;card.appendChild(balance);
-    const actions=document.createElement('div');actions.className='recruit-sheet-actions';
     const actionButton=(action,label,meta,description,disabled=false)=>{
-      const button=document.createElement('button'),copy=document.createElement('span'),name=document.createElement('b'),price=document.createElement('strong'),desc=document.createElement('small');
-      button.type='button';button.dataset.act=action;button.disabled=disabled;name.textContent=label;desc.textContent=description;
-      if(action==='recruit-ad'){price.className='recruit-ad-icon';price.setAttribute('aria-label','观看广告');price.textContent='▶'}else price.textContent=meta;
-      copy.append(name,desc);button.append(copy,price);return button;
+      const price=action==='recruit-ad'?'<strong class="recruit-ad-icon" aria-label="观看广告">▶</strong>':`<strong>${escapeText(meta)}</strong>`;
+      return `<button type="button" data-act="${action}" ${disabled?'disabled':''}><span><b>${escapeText(label)}</b><small>${escapeText(description)}</small></span>${price}</button>`;
     };
     const adUnavailable=r.rewardedRecruitUsed;
-    actions.append(
-      actionButton('recruit-normal','普通招募',r.free>0?'免费':`${normalCost} 奖金`,r.free>0?`本轮还可免费招募 ${r.free} 次`:'从本轮候选球星中选择 1 名',r.free<=0&&r.cash<normalCost),
-      actionButton('recruit-ten','十连招募',`${packCost} 奖金`,'连续招募10位球员',r.cash<packCost),
-      actionButton('recruit-ad','看广告招募','','S级球员4选1（每回合一次）',rewardVideoBusy||adUnavailable)
-    );
-    card.appendChild(actions);
-    if(recruitSheetMessage){const message=document.createElement('p');message.className='recruit-sheet-message';message.setAttribute('role','status');message.textContent=recruitSheetMessage;card.appendChild(message)}
-    modal.replaceChildren(card);
+    modal.markup=`<section class="modal-card recruit-sheet" role="dialog" aria-modal="true" aria-labelledby="recruit-sheet-title"><div class="recruit-sheet-head"><div class="recruit-sheet-heading"><span>球星招募</span><h2 id="recruit-sheet-title">选择招募方式</h2></div><button type="button" data-act="recruit-sheet-close" aria-label="关闭招募方式">×</button></div><p class="recruit-sheet-balance">当前奖金 <b>${r.cash}</b></p><div class="recruit-sheet-actions">${actionButton('recruit-normal','普通招募',r.free>0?'免费':`${normalCost} 奖金`,r.free>0?`本轮还可免费招募 ${r.free} 次`:'从本轮候选球星中选择 1 名',r.cash<normalCost)}${actionButton('recruit-ten','十连招募',`${packCost} 奖金`,'连续招募10位球员',r.cash<packCost)}${actionButton('recruit-ad','看广告招募','','S级球员4选1（每回合一次）',rewardVideoBusy||adUnavailable)}</div>${recruitSheetMessage?`<p class="recruit-sheet-message" role="status">${escapeText(recruitSheetMessage)}</p>`:''}</section>`;
   }
   function startNewJourney(){
     const pool=[...C.availableTalents(game.profile)];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
@@ -580,7 +616,13 @@
   }
   function pendingPlayerPreview(id,r){
     const star=C.BY_ID[id],value=star.attrs[star.best];
-    return `<div class="pending-player-preview ${tierClass[star.tier]}"><div><span>${tierName[star.tier]}</span><small>当前待处理球员</small></div><strong>${value}</strong><h3>${star.name}</h3><p>推荐 · ${C.LABELS[star.best]}位</p><em>出售可得 ${C.saleValue(id,1,r)} 奖金</em></div>`;
+    const own=r.owned[id];
+    const ownedIdentities=new Set(Object.keys(r.owned).map(C.identityOf));
+    const bond=C.starSynergies(id).map(item=>({item,count:item.ids.filter(player=>ownedIdentities.has(player)||player===C.identityOf(id)).length})).sort((a,b)=>b.count-a.count||a.item.ids.length-b.item.ids.length)[0];
+    const status=own
+      ?`升星 · ${own.stars}★→${Math.min(C.starLimit(r,id),own.stars+1)}★`
+      :bond?`羁绊 · ${bond.item.name} ${bond.count}/${bond.item.ids.length}`:'暂无关联羁绊';
+    return `<div class="pending-player-preview ${tierClass[star.tier]}"><div><span>${tierName[star.tier]}</span><small>${status}</small></div><strong>${value}</strong><h3>${star.name}</h3><p>推荐 · ${C.LABELS[star.best]}位</p><em>出售可得 ${C.saleValue(id,1,r)} 奖金</em></div>`;
   }
   function renderPending(){
     const r=game.run,id=r?.pending;
@@ -588,17 +630,17 @@
     if(showCurrentTalent&&r){
       const talent=C.KNOWN_TALENTS.find(item=>item.id===r.talent);
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card current-talent-modal" role="dialog" aria-modal="true" aria-labelledby="current-talent-title"><div class="modal-head"><div><span>当前天赋 · ${talent?.category||'开局天赋'}</span><h2 id="current-talent-title">${talent?.name||'开局天赋'}</h2></div><button data-act="current-talent-close" aria-label="关闭">×</button></div><p>${talent?.gain||'当前旅程的开局天赋'}</p><p>代价：${talent?.cost||'无'}</p></div>`;
+      modal.markup=`<div class="modal-card current-talent-modal" role="dialog" aria-modal="true" aria-labelledby="current-talent-title"><div class="modal-head"><div><span>当前天赋 · ${talent?.category||'开局天赋'}</span><h2 id="current-talent-title">${talent?.name||'开局天赋'}</h2></div><button data-act="current-talent-close" aria-label="关闭">×</button></div><p>${talent?.gain||'当前旅程的开局天赋'}</p><p>代价：${talent?.cost||'无'}</p></div>`;
       return;
     }
     if(showNewJourneyConfirm&&screen==='home'){
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card new-journey-modal" role="dialog" aria-modal="true" aria-labelledby="new-journey-title"><div class="modal-head"><div><span>旅程确认</span><h2 id="new-journey-title">开启另一段旅程？</h2></div><button data-act="new-cancel" aria-label="关闭">×</button></div><p>当前第 ${r.stage} 关的旅程将按自动认输结算：GOAT 峰值、传奇点和本局图鉴会先写入档案。</p><div class="expand-actions"><button class="btn dark" data-act="new-cancel">取消</button><button class="btn" data-act="new-confirm">确认开启</button></div></div>`;
+      modal.markup=`<div class="modal-card new-journey-modal" role="dialog" aria-modal="true" aria-labelledby="new-journey-title"><div class="modal-head"><div><span>旅程确认</span><h2 id="new-journey-title">开启另一段旅程？</h2></div><button data-act="new-cancel" aria-label="关闭">×</button></div><p>当前第 ${r.stage} 关的旅程将按自动认输结算：GOAT 峰值、传奇点和本局图鉴会先写入档案。</p><div class="expand-actions"><button class="btn dark" data-act="new-cancel">取消</button><button class="btn" data-act="new-confirm">确认开启</button></div></div>`;
       return;
     }
     if(showTalentCatalog&&screen==='talent'){
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card talent-catalog-modal" role="dialog" aria-modal="true" aria-labelledby="talent-catalog-title"><div class="modal-head"><div><span>开局天赋图鉴</span><h2 id="talent-catalog-title">17 条融合路线</h2></div><button data-act="talent-catalog-close" aria-label="关闭">×</button></div><p>每局从已解锁天赋中随机展示三条，选择一条贯穿整局。</p><div class="talent-catalog-list">${C.TALENTS.map(talent=>{const unlocked=C.talentUnlocked(talent,game.profile);return `<div class="talent-catalog-item ${unlocked?'':'locked'}"><div><strong>${talent.name}</strong><span>${talent.category} · ${unlocked?'已解锁':unlockHint(talent)}</span></div><p>${talent.gain}</p><small>${talent.cost==='无'?'无代价':`代价：${talent.cost}`}</small></div>`}).join('')}</div></div>`;
+      modal.markup=`<div class="modal-card talent-catalog-modal" role="dialog" aria-modal="true" aria-labelledby="talent-catalog-title"><div class="modal-head"><div><span>开局天赋图鉴</span><h2 id="talent-catalog-title">17 条融合路线</h2></div><button data-act="talent-catalog-close" aria-label="关闭">×</button></div><p>每局从已解锁天赋中随机展示三条，选择一条贯穿整局。</p><div class="talent-catalog-list">${C.TALENTS.map(talent=>{const unlocked=C.talentUnlocked(talent,game.profile);return `<div class="talent-catalog-item ${unlocked?'':'locked'}"><div><strong>${talent.name}</strong><span>${talent.category} · ${unlocked?'已解锁':unlockHint(talent)}</span></div><p>${talent.gain}</p><small>${talent.cost==='无'?'无代价':`代价：${talent.cost}`}</small></div>`}).join('')}</div></div>`;
       return;
     }
     if(showStrategyPicker&&screen==='duel'&&r){
@@ -606,12 +648,12 @@
       const foe=C.opponent(r);
       const opening=C.openingEffect(r);
       const penalty=opening.ignoreStrategyPenalty?'无惩罚':`-${4+(opening.strategyPenalty||0)}%`;
-      modal.innerHTML=`<div class="modal-card strategy-modal" role="dialog" aria-modal="true" aria-labelledby="strategy-modal-title"><div class="modal-head"><div><span>本关对手 · ${foe.name}</span><h2 id="strategy-modal-title">选择本场策略</h2></div><button data-act="close-strategy" aria-label="关闭">×</button></div><p>结合对球员打法的了解，选择一项策略后立即开始单挑。</p><div class="strategy-options">${Object.entries(C.STRATEGIES).map(([strategyId,item])=>`<button data-act="strategy" data-id="${strategyId}"><b>${item.name}</b><small>${item.description.replace('-4%',penalty)}</small></button>`).join('')}</div></div>`;
+      modal.markup=`<div class="modal-card strategy-modal" role="dialog" aria-modal="true" aria-labelledby="strategy-modal-title"><div class="modal-head"><div><span>本关对手 · ${foe.name}</span><h2 id="strategy-modal-title">选择本场策略</h2></div><button data-act="close-strategy" aria-label="关闭">×</button></div><p>结合对球员打法的了解，选择一项策略后立即开始单挑。</p><div class="strategy-options">${Object.entries(C.STRATEGIES).map(([strategyId,item])=>`<button data-act="strategy" data-id="${strategyId}"><b>${item.name}</b><small>${item.description.replace('-4%',penalty)}</small></button>`).join('')}</div></div>`;
       return;
     }
     if(showExpandConfirm&&screen==='roster'&&r){
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card expand-modal" role="dialog" aria-modal="true" aria-labelledby="expand-modal-title"><div class="modal-head"><div><span>阵容管理</span><h2 id="expand-modal-title">扩容备战席</h2></div><button data-act="expand-close" aria-label="关闭">×</button></div><p>备战席上限 ${r.benchLimit} → ${r.benchLimit+1}（最多 10）</p><div class="expand-actions"><button class="btn dark" data-act="expand-close">取消</button><button class="btn" data-act="expand-confirm">确认扩容 · ${cashPrice(10)}</button></div></div>`;
+      modal.markup=`<div class="modal-card expand-modal" role="dialog" aria-modal="true" aria-labelledby="expand-modal-title"><div class="modal-head"><div><span>阵容管理</span><h2 id="expand-modal-title">扩容备战席</h2></div><button data-act="expand-close" aria-label="关闭">×</button></div><p>备战席上限 ${r.benchLimit} → ${r.benchLimit+1}（最多 10）</p><div class="expand-actions"><button class="btn dark" data-act="expand-close">取消</button><button class="btn" data-act="expand-confirm">确认扩容 · ${cashPrice(10)}</button></div></div>`;
       return;
     }
     if(gearReplaceId&&r&&screen==='shop'){
@@ -623,14 +665,14 @@
         return `<div class="gear-compare-card ${className} gear-tier-${item.rarity.toLowerCase()}${visual.className}"${visual.style}>${visual.logo}<span>${label} · ${item.slot}</span><strong>${item.displayName}</strong><p>${item.description}</p><small>${className==='incoming'?`购买价 ${price} 奖金`:`回收价 ${item.sellPrice} 奖金`}</small></div>`;
       };
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card gear-replace-modal" role="dialog" aria-modal="true" aria-labelledby="gear-replace-title"><div class="modal-head"><div><span>装备替换确认</span><h2 id="gear-replace-title">确认替换${next.slot}？</h2></div><button data-act="gear-replace-cancel" aria-label="关闭">×</button></div><div class="gear-compare-list">${compareCard(next,'即将购买','incoming')}<div class="gear-compare-arrow">↓ 替换</div>${compareCard(current,'当前已有','current')}</div><p class="gear-replace-cost">支付 ${price} 奖金，回收旧装备获得 ${current.sellPrice} 奖金，实际支出 <b>${net}</b> 奖金</p><div class="expand-actions"><button class="btn dark" data-act="gear-replace-cancel">取消</button><button class="btn" data-act="gear-replace-confirm" data-id="${next.id}">确认替换</button></div></div>`;
+      modal.markup=`<div class="modal-card gear-replace-modal" role="dialog" aria-modal="true" aria-labelledby="gear-replace-title"><div class="modal-head"><div><span>装备替换确认</span><h2 id="gear-replace-title">确认替换${next.slot}？</h2></div><button data-act="gear-replace-cancel" aria-label="关闭">×</button></div><div class="gear-compare-list">${compareCard(next,'即将购买','incoming')}<div class="gear-compare-arrow">↓ 替换</div>${compareCard(current,'当前已有','current')}</div><p class="gear-replace-cost">支付 ${price} 奖金，回收旧装备获得 ${current.sellPrice} 奖金，实际支出 <b>${net}</b> 奖金</p><div class="expand-actions"><button class="btn dark" data-act="gear-replace-cancel">取消</button><button class="btn" data-act="gear-replace-confirm" data-id="${next.id}">确认替换</button></div></div>`;
       return;
     }
     if(gearDetailId&&r&&screen==='shop'){
       const item=C.GEAR.find(gear=>gear.id===gearDetailId);
       if(!item||![...r.gear,...(r.gearReserve||[])].includes(item.id)){gearDetailId='';renderPending();return}
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card gear-detail-modal" role="dialog" aria-modal="true" aria-labelledby="gear-detail-title"><div class="modal-head"><div><span>${item.slot}</span><h2 id="gear-detail-title">${item.displayName}</h2></div><button data-act="gear-detail-close" aria-label="关闭">×</button></div><p>${item.description}</p></div>`;
+      modal.markup=`<div class="modal-card gear-detail-modal" role="dialog" aria-modal="true" aria-labelledby="gear-detail-title"><div class="modal-head"><div><span>${item.slot}</span><h2 id="gear-detail-title">${item.displayName}</h2></div><button data-act="gear-detail-close" aria-label="关闭">×</button></div><p>${item.description}</p></div>`;
       return;
     }
     if(!id&&detailStar&&r){
@@ -646,7 +688,7 @@
       const canSell=detailContext?.kind==='bench'&&r.bench[detailContext.key]===s.id&&!r.lastBattle;
       const assigned=effective?.slot?C.LABELS[effective.slot]+'位':'未上阵';
       modal.className='game-modal open';
-      modal.innerHTML=`<div class="modal-card player-detail ${tierClass[s.tier]}">
+      modal.markup=`<div class="modal-card player-detail ${tierClass[s.tier]}">
         <div class="modal-head detail-head"><div><span>${tierName[s.tier]} · 球员详情</span><h2>${s.name}</h2><small>${s.role} · ${s.talent}</small></div><button data-act="close-star-detail" aria-label="关闭">×</button></div>
         <div class="detail-scroll">
           <div class="detail-growth"><b>${own?`${effective.stars}★/${C.starLimit(r,s.id)} · 训练 ${effective.train}/${C.trainingLimit(r,s.id)} · ${assigned}`:'未拥有 · 基础属性'}</b><span>${effective?.effect?'位置适配已激活':'当前位置无专属适配'}</span></div>
@@ -655,7 +697,7 @@
           <section class="detail-section"><span>位置适配</span><div class="fit-list">${fits.map(attr=>`<b>${C.LABELS[attr]} ${shown[attr]}</b>`).join('')}</div></section>
           <section class="detail-section"><span>关联羁绊</span><div class="detail-bonds">${bonds.length?bonds.map(bond=>{const count=bond.ids.filter(player=>bondOwned.has(player)).length,active=count===bond.ids.length;return `<div class="${active?'active':''}"><strong>${bond.name}<small>${active?'已激活':`${count}/${bond.ids.length}`}</small></strong><p>${bond.ids.map(player=>`<em class="${bondOwned.has(player)?'owned':''}">${C.BY_ID[player].name}</em>`).join('')}</p><b>${bond.description}</b></div>`}).join(''):'<p>暂无关联羁绊</p>'}</div></section>
         </div>
-        ${canSell?`<div class="detail-actions"><button class="detail-sell" data-act="sell-detail" data-index="${detailContext.key}">出售·获得${C.saleValue(s.id,effective.stars,r)}奖金</button></div>`:''}
+        ${canSell?`<div class="detail-actions"><button class="detail-sell" data-act="sell-detail" data-id="${s.id}" data-index="${detailContext.key}">出售·获得${C.saleValue(s.id,effective.stars,r)}奖金</button></div>`:''}
       </div>`;
       return;
     }
@@ -665,12 +707,12 @@
         Number(b.count===b.ids.length)-Number(a.count===a.ids.length)||b.count-a.count||a.index-b.index);
       modal.className='game-modal open';
       const activeCount=bonds.filter(b=>b.count===b.ids.length).length;
-      modal.innerHTML=`<div class="modal-card bonds-modal"><div class="modal-head"><h2>战术羁绊</h2><button data-act="close-bonds" aria-label="关闭">×</button></div><p class="bond-summary">已激活 ${activeCount}/${bonds.length}</p><div class="bond-list">${bonds.map(b=>`<div class="bond-entry ${b.count===b.ids.length?'active':''}"><strong>${b.name}<small>${b.count}/${b.ids.length} · ${b.count===b.ids.length?'已激活':'未激活'}</small></strong><span>${b.ids.map(player=>`<em class="${owned.has(player)?'owned':''}">${C.BY_ID[player].name}</em>`).join('')}</span><b>${b.description}</b></div>`).join('')}</div></div>`;
+      modal.markup=`<div class="modal-card bonds-modal"><div class="modal-head"><h2>战术羁绊</h2><button data-act="close-bonds" aria-label="关闭">×</button></div><p class="bond-summary">已激活 ${activeCount}/${bonds.length}</p><div class="bond-list">${bonds.map(b=>`<div class="bond-entry ${b.count===b.ids.length?'active':''}"><strong>${b.name}<small>${b.count}/${b.ids.length} · ${b.count===b.ids.length?'已激活':'未激活'}</small></strong><span>${b.ids.map(player=>`<em class="${owned.has(player)?'owned':''}">${C.BY_ID[player].name}</em>`).join('')}</span><b>${b.description}</b></div>`).join('')}</div></div>`;
       return;
     }
-    if(!id){modal.className='game-modal';modal.innerHTML='';return}
+    if(!id){modal.className='game-modal';modal.markup='';return}
     const s=C.BY_ID[id],batchRemaining=(r.batchQueue?.length||0)+1;modal.className='game-modal open';
-    modal.innerHTML=`<div class="modal-card pending-recruit-modal"><h2>备战席已满，决定${s.name}的去留</h2>${r.batchQueue?.length?`<div class="pending-batch-remaining">十连还需处理 ${batchRemaining} 张</div>`:''}${pendingPlayerPreview(id,r)}<p>选择融合面板或备战席中的一名球员替换并出售，也可以直接出售这名新球员。</p><div class="pending-replacements-scroll">
+    modal.markup=`<div class="modal-card pending-recruit-modal"><h2>备战席已满，决定${s.name}的去留</h2>${r.batchQueue?.length?`<div class="pending-batch-remaining">十连还需处理 ${batchRemaining} 张</div>`:''}${pendingPlayerPreview(id,r)}<p>选择融合面板或备战席中的一名球员替换并出售，也可以直接出售这名新球员。</p><div class="pending-replacements-scroll">
       <section class="pending-replace-section"><h3>替换备战席球员</h3><div class="modal-list">${r.bench.map((old,i)=>{const star=C.BY_ID[old];return `<button class="${tierClass[star.tier]}" data-act="resolve" data-mode="replace" data-index="${i}"><span class="pending-player-tier">${tierName[star.tier]}</span><span class="pending-player-copy"><b>${star.name}</b><small>备战席 · ${r.owned[old]?.stars||1}★</small></span><em>出售 ${C.saleValue(old,r.owned[old]?.stars,r)} 奖金</em></button>`}).join('')}</div></section>
       <section class="pending-replace-section"><h3>替换融合面板球员</h3><div class="modal-list pending-slot-list">${C.SLOTS.map(slot=>{const old=r.slots[slot.id],star=C.BY_ID[old];return old?`<button class="${tierClass[star.tier]}" data-act="resolve" data-mode="replace-slot" data-slot="${slot.id}"><span class="pending-player-tier">${tierName[star.tier]}</span><span class="pending-player-copy"><b>${star.name}</b><small>${slot.label}位 · ${r.owned[old]?.stars||1}★</small></span><em>出售 ${C.saleValue(old,r.owned[old]?.stars,r)} 奖金</em></button>`:''}).join('')}</div></section></div>
       <button class="btn wide pending-sell-new" data-act="resolve" data-mode="sell">出售${s.name}，保留当前阵容</button></div>`;
@@ -730,6 +772,15 @@
     event.preventDefault();
   });
   document.addEventListener('pointerup',event=>{
+    const topBack=event.target.closest('.top-back[data-act]');
+    if(!restoring&&topBack&&!topBack.disabled){
+      const now=performance.now();
+      navigationClickLockedUntil=now+1200;
+      event.preventDefault();
+      event.stopPropagation();
+      handle(topBack.dataset.act,topBack);
+      return;
+    }
     if(!dragStart){
       const batchButton=event.target.closest('[data-act="select-offer"]');
       if(screen==='recruit'&&game.run?.offerMode==='ten-batch'&&batchButton&&!batchButton.disabled){
@@ -753,6 +804,36 @@
   async function handle(action,button){
     const r=game.run,id=button.dataset.id;
     if(action==='home'){go('home');return}
+    if(action==='career-report'){if(r?.ended){reportReviveMessage='';reportPosterMessage='';go('report')}return}
+    if(action==='report-new'){go('home');return}
+    if(action==='report-revive'){
+      if(!r||!r.ended||r.reviveUsed||r.morale>0||r.lastBattle?.won!==false||reportReviveBusy)return;
+      if(typeof window.ColorboxAI?.vatask?.completeRewardVideo!=='function'){reportReviveMessage='请在支持激励广告的虎扑 App 中打开活动后再试。';renderCareerReport();return}
+      reportReviveBusy=true;reportReviveMessage='正在拉起激励视频…';renderCareerReport();
+      try{
+        const response=await window.ColorboxAI.vatask.completeRewardVideo();
+        if(response?.code!==200||response?.data?.rewarded!==true){reportReviveMessage=response?.message||'广告未完整观看，本次没有恢复体力。';return}
+        const bonus=C.reviveRun(game);
+        if(bonus===false){reportReviveMessage='当前无法恢复体力，请刷新页面后重试。';return}
+        reportReviveMessage='';save();go('roster');return;
+      }catch(_){reportReviveMessage='激励广告拉起失败，请稍后重试。'}
+      finally{reportReviveBusy=false;if(screen==='report')renderCareerReport()}
+    }
+    if(action==='report-poster'){
+      if(!r||!r.ended||r.posterRewarded||reportPosterBusy)return;
+      reportPosterBusy=true;reportPosterMessage='正在生成本局海报并发帖…';renderCareerReport();
+      try{
+        const summary=careerReportSummary(),imageDataUrl=createCareerPoster(summary);
+        const lineup=summary.lineup.map(player=>`${player.slotLabel}位 ${player.name}`).join('、'),bonds=summary.bonds.map(item=>item.name).join('、')||'无';
+        const content=`本局达到第${summary.stage}关，GOAT ${summary.goat}，战绩${summary.wins}胜${summary.losses}负。融合阵容：${lineup}。激活羁绊：${bonds}。${summary.formula}。欢迎分析这套阵容的优缺点。`;
+        const response=await publishCareerPoster({title:`GOAT ${summary.goat}｜第${summary.stage}关生涯报告`,content,imageDataUrl,result:summary});
+        if(!posterPublishSucceeded(response)){reportPosterMessage=response?.message||'发帖未成功，本次没有发放传奇点。';return}
+        if(!r.posterRewarded){r.posterRewarded=true;game.profile.legend+=100;save()}
+        reportPosterMessage='发帖成功，已获得 100 传奇点。';
+      }catch(error){reportPosterMessage=error?.message||'海报生成或发帖失败，请稍后重试。'}
+      finally{reportPosterBusy=false;if(screen==='report')renderCareerReport()}
+      return;
+    }
     if(action==='profile'){go('profile');return}
     if(action==='pointshop'){go('pointshop');return}
     if(action==='profile-tab'){profileSlideFrom=profileTab;profileTab=['stars','bonds','jerseys'].includes(id)?id:'stars';renderProfile();return}
@@ -848,13 +929,13 @@
       go('roster');return;
     }
     if(action==='sell-detail'){
-      const index=Number(button.dataset.index),name=C.BY_ID[r.bench[index]]?.name,value=C.sellBench(r,index);
+      const index=r.bench.indexOf(id),name=C.BY_ID[id]?.name,value=C.sellBench(r,index);
       if(!value)return;
       detailStar='';detailContext=null;selectedPlace=null;save();renderPending();renderRoster();top();notify(`${name} 已出售，获得 ${value} 奖金`);return;
     }
     if(action==='sell-bench'){
-      const index=Number(button.dataset.index),name=C.BY_ID[r?.bench[index]]?.name;
-      if(!name||r.lastBattle)return;
+      const index=r?.bench.indexOf(id)??-1,name=C.BY_ID[id]?.name;
+      if(index<0||!name||r.lastBattle)return;
       const value=C.sellBench(r,index);
       if(!value)return;
       selectedPlace=null;save();renderRoster();top();notify(`${name} 已出售，获得 ${value} 奖金`);return;
@@ -870,14 +951,14 @@
       return;
     }
     if(action==='shop-tab'){shopSlideFrom=shopTab;shopTab=id;renderShop();return}
-    if(action==='test-cash'){if(shopTab==='my'&&r){r.cash+=999;save();renderShop()}return}
-    if(action==='equip-gear'){if(C.equipGear(r,id)){save();renderShop()}return}
+    if(action==='test-cash'){if(shopTab==='my'&&r){r.cash+=999;save();go('shop')}return}
+    if(action==='equip-gear'){if(C.equipGear(r,id)){save();go('shop')}return}
     if(action==='expand-open'){if(!r||r.cash<10||r.benchLimit>=10||r.lastBattle)return;showExpandConfirm=true;renderPending();return}
     if(action==='expand-close'){showExpandConfirm=false;renderPending();return}
     if(action==='expand-confirm'){if(showExpandConfirm&&r&&!r.lastBattle&&C.expandBench(r)){showExpandConfirm=false;save();renderRoster();renderPending();top()}return}
     if(action==='train'){if(!r||r.lastBattle){go('result');return}if(C.train(r,id)){save();renderRoster({preserveScroll:true});top();notify('训练完成')}else notify('本关已训练、已满级或奖金不足');return}
-    if(action==='buy-boost'){if(C.buyBoost(r,id)){save();renderShop();top();notify('赛前强化已生效')}else notify('奖金不足或商品已刷新');return}
-    if(action==='buy-gear'){if(C.buyGear(r,id)){save();renderShop();top();notify('装备已购买')}else notify('奖金不足或已有该部位装备');return}
+    if(action==='buy-boost'){if(C.buyBoost(r,id)){save();go('shop');notify('赛前强化已生效')}else notify('奖金不足或商品已刷新');return}
+    if(action==='buy-gear'){if(C.buyGear(r,id)){save();go('shop');notify('装备已购买')}else notify('奖金不足或已有该部位装备');return}
     if(action==='replace-gear'){
       gearReplaceId=id;renderPending();return;
     }
@@ -886,13 +967,13 @@
       if(id!==gearReplaceId)return;
       const oldId=C.replaceGear(r,id),old=C.GEAR.find(item=>item.id===oldId),next=C.GEAR.find(item=>item.id===id);
       gearReplaceId='';
-      if(oldId){save();renderShop();renderPending();top();notify(`${old?.displayName||'旧装备'}已出售，替换为${next?.displayName||'新装备'}`)}else {renderPending();notify('奖金不足或当前装备无法替换')}
+      if(oldId){save();go('shop');notify(`${old?.displayName||'旧装备'}已出售，替换为${next?.displayName||'新装备'}`)}else {renderPending();notify('奖金不足或当前装备无法替换')}
       return;
     }
     if(action==='gear-detail-open'){gearDetailId=id;renderPending();return}
     if(action==='gear-detail-close'){gearDetailId='';renderPending();return}
-    if(action==='sell-gear'){const value=C.sellGear(r,id);if(value){gearDetailId='';save();renderShop();renderPending();top();notify('装备已出售')}return}
-    if(action==='shop-refresh'){if(C.refreshShop(r,shopTab)){save();renderShop();top();notify('商店商品已刷新')}else notify('刷新所需奖金不足');return}
+    if(action==='sell-gear'){const value=C.sellGear(r,id);if(value){gearDetailId='';save();go('shop');notify('装备已出售')}return}
+    if(action==='shop-refresh'){if(C.refreshShop(r,shopTab)){save();go('shop');notify('商店商品已刷新')}else notify('刷新所需奖金不足');return}
     if(action==='close-strategy'){showStrategyPicker=false;renderPending();return}
     if(action==='strategy'){
       if(!showStrategyPicker||screen!=='duel'||!Object.hasOwn(C.STRATEGIES,id))return;
@@ -904,7 +985,7 @@
     if(action==='battle'){
       if(r?.lastBattle){go('result');return}
       if(!r||C.starterCount(r)<6){notify('请先确认六个能力槽都有球员');return}
-      showStrategyPicker=true;renderPending();return;
+      showRecruitSheet=false;recruitSheetMessage='';showBonds=false;showCurrentTalent=false;showTalentCatalog=false;showExpandConfirm=false;gearDetailId='';gearReplaceId='';detailStar='';detailContext=null;showStrategyPicker=true;renderPending();return;
     }
     if(action==='retry'){if(C.continueRun(game,'retry')){save();go('roster')}return}
     if(action==='next'){if(C.continueRun(game,'next')){selectedPlace=null;save();go('roster')}return}
@@ -914,23 +995,25 @@
     const button=event.target.closest('[data-act]');
     if(restoring||!button||button.disabled)return;
     const action=button.dataset.act;
+    if(button.classList.contains('top-back')&&event.detail>0)return;
     if(action==='place'&&suppressPlaceClick)return;
     if(action==='select-offer'&&performance.now()<batchPointerClickSuppressedUntil)return;
     if(SCREEN_NAVIGATION_ACTIONS.has(action)){
       const now=performance.now();
       if(now<navigationClickLockedUntil)return;
-      navigationClickLockedUntil=now+450;
+      navigationClickLockedUntil=now+900;
     }
     handle(action,button);
   });
   async function init(){
     // Do not expose mutable game actions until the asynchronous local/cloud restore finishes.
-    els.home.innerHTML='<div class="panel game-loading" role="status">正在读取游戏存档…</div>';
+    els.home.markup='<div class="panel game-loading" role="status">正在读取游戏存档…</div>';
     if(STORAGE.available()){
       try{const loaded=await STORAGE.load();game=restoreGame(loaded);if(loaded?.run&&JSON.stringify(loaded.run.gear)!==JSON.stringify(game.run?.gear))save()}catch(_){notify('存档读取失败，本次从新旅程开始')}
     }
     restoring=false;
     go('home');
+    loadPlayerName();
     refreshRewardTaskState();
   }
   init();

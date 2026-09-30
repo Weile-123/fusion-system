@@ -40,7 +40,7 @@
   .player-detail .detail-scroll{flex:1 1 auto;min-height:0;padding-bottom:18px}
   .player-detail .detail-actions{flex:0 0 auto;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #514745;background:#2b2d30;box-shadow:0 -6px 15px #0005}
   .player-detail .detail-sell{margin:0;min-height:42px}
-  #duel .floatingaction{position:fixed;z-index:19;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,480px);margin:0;padding:9px 15px calc(11px + env(safe-area-inset-bottom));border-radius:0;box-sizing:border-box}
+  #duel .floatingaction{position:fixed;z-index:19;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,480px);margin:0;padding:9px 15px calc(9px + env(safe-area-inset-bottom));border-radius:0;box-sizing:border-box}
   #duel.active{padding-bottom:100px}
   .strategy-modal .modal-head{display:flex;align-items:flex-start;justify-content:space-between}
   .strategy-modal .modal-head span{color:#dfb869;font-size:10px;font-weight:900}
