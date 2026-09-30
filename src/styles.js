@@ -1,0 +1,17 @@
+import '../h5/styles/tailwind.css';
+import '../h5/styles/base.css';
+import '../h5/styles/light-court.css';
+import '../h5/styles/navigation.css';
+import '../h5/styles/night-theme.css';
+import '../h5/styles/gameplay.css';
+import '../h5/styles/roster.css';
+import '../h5/styles/responsive.css';
+import '../h5/styles/utilities.css';
+import '../h5/styles/roster-actions.css';
+import '../h5/styles/duel.css';
+import '../h5/styles/layout.css';
+import '../h5/styles/catalog.css';
+import '../h5/styles/home.css';
+import '../h5/styles/profile-shop.css';
+import '../h5/styles/recruit-sheet.css';
+import '../h5/ssr-card.css';

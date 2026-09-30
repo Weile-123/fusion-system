@@ -2,14 +2,21 @@
   "name": "my-sup-fusion",
   "private": true,
   "scripts": {
-    "pages:build": "node ./scripts/build-page-templates.cjs",
+    "dev": "vite --host 0.0.0.0",
     "css:build": "tailwindcss -i ./h5/styles/tailwind.input.css -o ./h5/styles/tailwind.css --minify",
     "css:watch": "tailwindcss -i ./h5/styles/tailwind.input.css -o ./h5/styles/tailwind.css --watch",
-    "build": "npm run pages:build && npm run css:build",
+    "build": "npm run css:build && vite build",
+    "preview": "vite preview --host 0.0.0.0",
     "pretest": "npm run build",
     "test": "node --test tests/game-core.test.cjs tests/storage-adapter.test.cjs tests/flow-audit.cjs"
   },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "@vitejs/plugin-react": "^4.4.1",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.1.0"
   }
 }

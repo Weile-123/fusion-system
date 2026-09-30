@@ -28,17 +28,28 @@
 
 ## 本地运行
 
-直接用支持 IndexedDB 的浏览器打开 [`h5/index.html`](h5/index.html) 即可试玩，无需安装依赖或启动服务器。存档保存在当前浏览器；更换浏览器、清除站点数据或更改本地文件位置，可能无法继续原进度。
+项目使用 React 与 Vite。首次运行先安装依赖，然后启动开发服务器：
+
+```bash
+npm install
+npm run dev
+```
+
+浏览器打开终端显示的本地地址即可试玩。存档保存在当前浏览器；更换浏览器或清除站点数据后，可能无法继续原进度。生产构建使用 `npm run build`，输出目录为 `dist/`。
 
 游戏没有云后端，也不需要登录。活动容器内的存档接入按项目提供的 Colorbox 存储技能实现；广告和排行榜接入前也需遵循相应技能约束。
 
 ## 项目结构
 
 ```text
+index.html            Vite 页面入口
+src/
+  App.jsx             React 应用外壳与启动状态
+  react-screens.jsx   React 页面与公共组件
+  runtime-loader.js   游戏数据、规则和存档模块加载器
 h5/
-  index.html          页面结构、样式与存储适配
   game-core.js        球星数据、融合、经济、对战和关卡规则
-  game-ui.js          页面渲染与交互流程
+  game-ui.js          游戏状态与交互控制器
   assets/             原创虚构篮球人物概念插画
 tests/
   game-core.test.cjs  核心流程与规则测试
@@ -48,7 +59,7 @@ tests/
 运行测试：
 
 ```bash
-node --test tests/game-core.test.cjs tests/storage-adapter.test.cjs
+npm test
 ```
 
 当前自动测试覆盖球员等级与属性区间、羁绊网络与经济效果、开局招募、备战席、训练和升星上限、奖励防重复领取、策略克制、十关流程及存档恢复。实际手机上的视觉和点击体验仍需试玩。

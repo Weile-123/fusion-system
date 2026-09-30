@@ -6,8 +6,6 @@
   #home .home-profile{border-color:#49443d;background:#242321;color:#e5e0d8}
   #pointshop .pointshop-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:10px 0}
   #pointshop .pointshop-tabs i{width:calc(50% - 3px)}
-  #pointshop .pointshop-tabs i.upgrades{transform:translateX(0)}
-  #pointshop .pointshop-tabs i.jerseys{transform:translateX(100%)}
   #pointshop .pointshop-page{min-height:0}
   .roster-talent-action,.roster-bonds-action{border:1px solid #765627;border-radius:6px;background:#30291f;color:#ffd277;padding:6px 8px;font-size:9px;font-weight:900}
   .app.pointshop-mode .top{display:none}
@@ -20,8 +18,6 @@
   #profile .profile-status .statbox small{font-size:8px;white-space:nowrap}
   #profile .profile-tabs{grid-template-columns:repeat(3,minmax(0,1fr));margin:0 0 10px}
   #profile .profile-tabs i{width:calc((100% - 6px)/3)}
-  #profile .profile-tabs i.bonds{transform:translateX(100%)}
-  #profile .profile-tabs i.jerseys{transform:translateX(200%)}
   #profile .profile-catalog-panel{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px;border:1px solid #444039;border-radius:10px;background:#1d1e1e;scrollbar-width:thin;scrollbar-color:#8e6936 #292824}
   #profile .profile-catalog-panel>.sectionhead{margin-top:0}
   #profile .catalog,#profile .profile-bond-catalog{max-height:none;overflow:visible;padding:0}
@@ -114,6 +110,10 @@
   #shop .equipment-slot-row.is-equipped.gear-tier-a,#shop .equipment-reserve-card.gear-tier-a{background:linear-gradient(115deg,#ffffff53 0%,#ffffff00 28%,#ffe4a141 48%,#ffffff00 70%),linear-gradient(135deg,#65400b,#ba8529 48%,#47300c)}
   #shop .equipment-slot-row.is-equipped.gear-tier-s,#shop .equipment-reserve-card.gear-tier-s{background:linear-gradient(115deg,#ffffff40 0%,#ffffff00 28%,#ffb5ae30 48%,#ffffff00 70%),linear-gradient(135deg,#59121c,#a5263a 48%,#3d0c19)}
   #shop .equipment-slot-row.is-equipped:not(.jersey-equipment) .equipment-card-open b{color:#fff9ed;text-shadow:0 1px 3px #0009}
+  #shop .equipment-slot-row.is-equipped.gear-tier-c .equipment-card-open span{color:#172630;text-shadow:0 1px 1px #ffffffb8}
+  #shop .equipment-slot-row.is-equipped.gear-tier-b .equipment-card-open span{color:#e0f2ff;text-shadow:0 1px 3px #00152f}
+  #shop .equipment-slot-row.is-equipped.gear-tier-a .equipment-card-open span{color:#fff0c4;text-shadow:0 1px 3px #3c2300}
+  #shop .equipment-slot-row.is-equipped.gear-tier-s .equipment-card-open span{color:#ffe2d6;text-shadow:0 1px 3px #280008}
   #shop .equipment-slot-row.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment{border:2px solid #d9ad54;background:linear-gradient(135deg,#4c4c4c88,#292929aa),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b))}
   #shop .equipment-reserve-list>.equipment-reserve-card:last-child:nth-child(odd){grid-column:auto;justify-self:stretch;width:auto}
   #shop .jersey-art-frame{display:flex;align-items:center;justify-content:center;height:88px}
@@ -135,15 +135,17 @@
   #recruit.draft-style-material .card :is(.card-meta,.card-effect){color:#fff8ee;text-shadow:0 1px 3px #000b}
   #recruit.draft-style-material .card .card-visual strong{color:#fffaf2}
   /* Shared player materials across draft, lineup, bench and drag preview. */
-  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-c{--player-material:linear-gradient(115deg,#ffffff2d,#ffffff00 29%,#ffffff28 46%,#ffffff00 66%),linear-gradient(135deg,#36424c,#778890 48%,#293640)}
-  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-b{--player-material:linear-gradient(115deg,#ffffff24,#ffffff00 29%,#92cfff2c 46%,#ffffff00 66%),linear-gradient(135deg,#102d55,#286a9c 48%,#0c2548)}
-  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-a{--player-material:linear-gradient(115deg,#ffffff23,#ffffff00 29%,#d3a8f642 46%,#ffffff00 66%),linear-gradient(135deg,#392051,#77499b 48%,#301b49)}
-  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-s{--player-material:linear-gradient(115deg,#ffffff38,#ffffff00 29%,#ffe3a038 46%,#ffffff00 66%),linear-gradient(135deg,#604113,#aa7a25 48%,#4e330d)}
-  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-legend{--player-material:linear-gradient(145deg,#ffffff32 0%,#ffffff08 46%,#e8d8b530 100%),linear-gradient(135deg,#b7d9df 0%,#cadfe4 34%,#d4d0df 68%,#dfd2ba 100%)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-c{--player-material:linear-gradient(115deg,#ffffff2d,#ffffff00 29%,#ffffff28 46%,#ffffff00 66%),linear-gradient(135deg,#36424c,#778890 48%,#293640)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-b{--player-material:linear-gradient(115deg,#ffffff24,#ffffff00 29%,#92cfff2c 46%,#ffffff00 66%),linear-gradient(135deg,#102d55,#286a9c 48%,#0c2548)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-a{--player-material:linear-gradient(115deg,#ffffff23,#ffffff00 29%,#d3a8f642 46%,#ffffff00 66%),linear-gradient(135deg,#392051,#77499b 48%,#301b49)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-s{--player-material:linear-gradient(115deg,#ffffff38,#ffffff00 29%,#ffe3a038 46%,#ffffff00 66%),linear-gradient(135deg,#604113,#aa7a25 48%,#4e330d)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-legend{--player-material:linear-gradient(145deg,#ffffff32 0%,#ffffff08 46%,#e8d8b530 100%),linear-gradient(135deg,#b7d9df 0%,#cadfe4 34%,#d4d0df 68%,#dfd2ba 100%)}
   #recruit.draft-style-material .card.tier-c,#recruit.draft-style-material .card.tier-b,#recruit.draft-style-material .card.tier-a,#recruit.draft-style-material .card.tier-s,#recruit.draft-style-material .card.tier-legend,
   #roster .fusion-lineup .slot.tier-c,#roster .fusion-lineup .slot.tier-b,#roster .fusion-lineup .slot.tier-a,#roster .fusion-lineup .slot.tier-s,#roster .fusion-lineup .slot.tier-legend,
   #roster .bench-card.tier-c,#roster .bench-card.tier-b,#roster .bench-card.tier-a,#roster .bench-card.tier-s,#roster .bench-card.tier-legend,
   .bench-card.drag-ghost.tier-c,.bench-card.drag-ghost.tier-b,.bench-card.drag-ghost.tier-a,.bench-card.drag-ghost.tier-s,.bench-card.drag-ghost.tier-legend{background:var(--player-material);box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0009}
+  #profile .catalog .profile-star-card{border-color:color-mix(in srgb,var(--tier) 78%,white);background:var(--player-material);color:#fffaf0;box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0007;text-shadow:0 1px 3px #000b}
+  #profile .catalog .profile-star-card.tier-legend{border-color:#e4bd55;color:#173e42;text-shadow:0 1px 1px #ffffffd9}
   #recruit.draft-style-material .card .card-top{background:#10151a92;color:#fff9ed;text-shadow:0 1px 3px #000e}
   #recruit.draft-style-material .card .card-visual{background:linear-gradient(180deg,#10151a77 0%,#11192313 36%,#10151ac9 100%);box-shadow:none}
   #recruit.draft-style-material .card .visual-role{color:#fff8e8;text-shadow:0 1px 3px #000,0 0 4px #000}
@@ -155,7 +157,10 @@
   #roster .fusion-lineup .slot:not(.empty) :is(.slot-top,.slot-body strong,.slot-body small),#roster .bench-card .bench-player{color:#fffaf0;text-shadow:0 1px 3px #000b}
   #roster .fusion-lineup .slot:not(.empty) .slot-value{color:#ffe192}
   /* Team-colored jersey fabric: soft satin streaks over the actual team colors. */
-  #shop .equipment-slot-row.is-equipped.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment:is(.gear-tier-c,.gear-tier-b,.gear-tier-a,.gear-tier-s,.gear-tier-sr){border-color:#d9ad54;background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}
+  #shop .equipment-slot-row.is-equipped.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment:is(.gear-tier-c,.gear-tier-b,.gear-tier-a,.gear-tier-s,.gear-tier-sr),.profile-jersey-catalog .equipment-reserve-card.jersey-equipment,.meta-jersey.unlocked.jersey-equipment{border-color:#d9ad54;background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}
+  .meta-jersey.unlocked.jersey-equipment{position:relative;isolation:isolate;overflow:hidden}
+  .meta-jersey.unlocked.jersey-equipment .equipment-team-logo{position:absolute;z-index:0;top:-10%;right:4%;width:auto;height:120%;max-width:none;object-fit:contain;opacity:.2;pointer-events:none}
+  .meta-jersey.unlocked.jersey-equipment>:not(.equipment-team-logo){position:relative;z-index:1}
   #shop .jersey-equipment .equipment-card-open :is(span,b){color:#fffaf0;text-shadow:0 1px 3px #000,0 0 5px #000}
   #shop .shop-boost .boost-icon{display:block;flex:0 0 43px;width:43px;height:43px;border-radius:7px;object-fit:cover;box-shadow:0 2px 7px #0008}
   /* One uninterrupted material surface for the entire recruitment card. */
@@ -210,6 +215,8 @@
   #recruit.draft-style-material .card .draft-bond-hints{top:65px}
   #recruit.draft-style-material .card .card-visual strong{bottom:8px;left:9px;right:8px}
   #recruit.draft-style-material .card .card-meta{min-height:32px;padding:2px 8px 5px;border:0}
+  .gear-replace-modal{padding:15px}.gear-replace-modal .modal-head{margin-bottom:12px}.gear-compare-list{display:grid;gap:7px}.gear-compare-card{position:relative;display:grid;gap:4px;overflow:hidden;padding:12px;border:0;border-radius:9px;box-shadow:inset 0 1px 0 #ffffff54,inset 0 -1px 0 #0007,0 4px 12px #0008}.gear-compare-card.gear-tier-c{background:linear-gradient(115deg,#ffffff4a 0%,#ffffff08 28%,#ffffff31 48%,#ffffff00 70%),linear-gradient(135deg,#5b6670,#9da8ae 48%,#38434c)}.gear-compare-card.gear-tier-b{background:linear-gradient(115deg,#ffffff3a 0%,#ffffff00 28%,#9dd6ff2b 48%,#ffffff00 70%),linear-gradient(135deg,#09254c,#246da8 48%,#081d3d)}.gear-compare-card.gear-tier-a{background:linear-gradient(115deg,#ffffff53 0%,#ffffff00 28%,#ffe4a141 48%,#ffffff00 70%),linear-gradient(135deg,#65400b,#ba8529 48%,#47300c)}.gear-compare-card.gear-tier-s{background:linear-gradient(115deg,#ffffff40 0%,#ffffff00 28%,#ffb5ae30 48%,#ffffff00 70%),linear-gradient(135deg,#59121c,#a5263a 48%,#3d0c19)}.gear-compare-card.jersey-equipment{border:2px solid #d9ad54;background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}.gear-compare-card .equipment-team-logo{position:absolute;z-index:0;top:-10%;right:4%;width:auto;height:120%;max-width:none;object-fit:contain;opacity:.24;pointer-events:none}.gear-compare-card>:not(.equipment-team-logo){position:relative;z-index:1}.gear-compare-card>span{color:#fff5dc;font-size:9px;font-weight:900;text-shadow:0 1px 3px #0009}.gear-compare-card.current>span{color:#ffd16a}.gear-compare-card>strong{color:#fff9ed;font-size:15px;text-shadow:0 1px 3px #0009}.gear-compare-card>p{margin:0!important;color:#fff4e3!important;font-size:10px!important;line-height:1.45!important;text-shadow:0 1px 3px #0009}.gear-compare-card>small{color:#ffd16a;font-size:9px;font-weight:900;text-shadow:0 1px 3px #0009}.gear-compare-card.gear-tier-c>span{color:#172630;text-shadow:0 1px 1px #ffffffb8}.gear-compare-arrow{color:#f1b843;text-align:center;font-size:10px;font-weight:950}.gear-replace-cost{margin:10px 0!important;padding:9px 10px;border-radius:7px;background:#1b1b1b;color:#cfc5b5!important;font-size:10px!important}.gear-replace-cost b{color:#ffcf62;font-size:13px}
+  .gear-compare-card.incoming{outline:1px solid #d29a35;outline-offset:-1px}
   #recruit.draft-style-material .card .card-effect{margin-top:auto;padding:6px 8px;border-top:1px solid #ffffff4d}
   #recruit.draft-style-material .card.selected{border-color:color-mix(in srgb,var(--selected-border) 68%,white);outline:0;box-shadow:0 0 16px color-mix(in srgb,var(--selected-border) 94%,transparent),inset 0 0 10px color-mix(in srgb,var(--selected-border) 52%,transparent)}
   #recruit.draft-style-material .card .card-top .rarity{display:inline-block;transform:skewX(-12deg);transform-origin:left center}

@@ -337,6 +337,12 @@
     run.batchSelected=chosen.map(()=>true);
     return chosen;
   }
+  function toggleRecruitBatchSelection(run,index){
+    if(!run||run.offerMode!=='ten-batch'||!Number.isInteger(index)||index<0||index>=run.offer.length)return false;
+    const current=Array.isArray(run.batchSelected)?run.batchSelected:[];
+    run.batchSelected=run.offer.map((_,offerIndex)=>offerIndex===index?current[offerIndex]===false:current[offerIndex]!==false);
+    return true;
+  }
   function grantRewardedSOffer(run){
     if(run.ended||run.pending||run.rewardedRecruitUsed)return false;
     const chosen=[],ownedIds=new Set(Object.keys(run.owned));
@@ -859,10 +865,10 @@
     run.stage++;run.free=1+bondFree+(opening.freePerStage||0);
     run.cash=Math.max(0,run.cash+bondCash+(opening.stageCash||0));
     run.gearRefreshFree=opening.freeGearRefresh||0;
-    run.refreshFree=1;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;makeShopOffers(run);run.lastBattle=null;
+    run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,goatPhases,goatScore,clearedMainStage,legendPoints,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
+  const api={ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,goatPhases,goatScore,clearedMainStage,legendPoints,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;
 })(typeof window!=='undefined'?window:globalThis);

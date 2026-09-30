@@ -3,9 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const html = fs.readFileSync('h5/index.html', 'utf8');
+const runtime = fs.readFileSync('src/runtime-loader.js', 'utf8');
 const adapter = fs.readFileSync('h5/storage-adapter.js', 'utf8');
-assert.match(html, /<script src="storage-adapter\.js"><\/script>/, 'storage adapter is loaded by the page');
+assert.match(runtime, /await import\('\.\.\/h5\/storage-adapter\.js'\)/, 'storage adapter is loaded by the React runtime');
+assert.ok(runtime.indexOf('storage-adapter.js') < runtime.indexOf('game-ui.js'), 'storage loads before the UI controller');
 assert.match(adapter, /window\.FusionStorage/, 'storage adapter exists in its own module');
 
 function fakeIndexedDB() {

@@ -186,10 +186,12 @@
     if(C_TIER_IDS.has(row[0]))return 'C';
     return 'B';
   }
+  const ATTRIBUTE_OVERRIDES={durant:{drive:90,inside:84}};
   const STAR_ROWS=RAW_STAR_ROWS.map(row=>{
     const raw=row[6],tier=reassignedTier(row),best=BEST_MAP[row[5]]||row[5];
     const six=tier==='SSR'?raw.slice(0,6):allocateAttributes(
       [raw[0],raw[1],raw[2],raw[3],Math.round(raw[4]*.45+raw[5]*.55),Math.round(raw[6]*.72+raw[7]*.28)],tier,best);
+    for(const [attr,value] of Object.entries(ATTRIBUTE_OVERRIDES[row[0]]||{}))six[ATTRS.indexOf(attr)]=value;
     return [row[0],row[1],tier,row[3],row[4],best,six,row[7],row[8]||null];
   });
   const S_TALENT_DETAILS={
@@ -273,8 +275,8 @@
   const B=makeBond;
   const SYNERGIES = [
     // 44 组双人羁绊：优先真实搭档、宿敌、传承与同队关系。
-    B('splash','水花兄弟',['curry','klay'],{three:3,handle:1},{stageCash:1,chainId:'warriors_death',chainLevel:1}),
-    B('warrior_brain','勇士轴心',['curry','green'],{handle:4,def:3},{chainId:'warriors_death',chainLevel:1}),
+    B('splash','水花兄弟',['curry','klay'],{three:3,handle:1},{stageCash:1}),
+    B('warrior_brain','勇士轴心',['curry','green'],{handle:4,def:3}),
     B('ok_combo','紫金OK',['kobe','shaq'],{inside:3,mid:1},{winCash:1,chainId:'ok_lakers',chainLevel:1}),
     B('mamba_pau','冠军内外线',['kobe','pau'],{inside:4,mid:3}),
     B('laker_twin','湖人双核',['lebron','davis'],{inside:2,def:1},{stageCash:1}),
@@ -337,7 +339,7 @@
     B('floor_generals','球场指挥官',['paul','kidd','nash'],{handle:5,mid:2,def:2},{winCash:1}),
     B('violent_dunkers','暴力扣将',['wilkins','carter','griffin'],{drive:5,inside:4},{winCash:1}),
 
-    // 14 组四人羁绊。“香蕉船兄弟”替代错误的“03黄金一代”命名，保留用户指定成员。
+    // 15 组四人羁绊。“香蕉船兄弟”替代错误的“03黄金一代”命名，保留用户指定成员。
     B('four_shooting_guards','四大分位',['kobe','tmac','carter','iverson'],{mid:4,drive:4,handle:2,three:2},{winCash:2}),
     B('banana_boat','香蕉船兄弟',['lebron','wade','paul','melo'],{drive:3,handle:2,mid:3,inside:2},{stageCash:3}),
     B('draft_96','96黄金一代',['kobe','iverson','nash','rayallen'],{three:4,handle:3,drive:3,mid:3},{freeRecruit:1}),
@@ -345,6 +347,7 @@
     B('bad_boys','坏孩子军团',['isiah','dumars','laimbeer','rodman'],{def:5,handle:2,inside:2,mid:2},{winCash:2,chainId:'bad_boys',chainLevel:2}),
     B('four_centers','四大中锋',['hakeem','shaq','robinson','ewing'],{inside:8,def:8,mid:3}),
     B('four_great_shooters','四大神射',['curry','reggie','klay','peja'],{three:6,mid:3,handle:2},{stageCash:2}),
+    B('bucks_system','密城攻防体系',['giannis','lillard','holiday','lopez'],{inside:4,drive:3,def:3,three:2},{winCash:2}),
     B('spurs_pillars','圣城四柱',['duncan','kawhi','robinson','parker'],{def:5,inside:3,mid:2,handle:1},{winCash:2}),
     B('versatile_forwards','全能大前锋',['giannis','garnett','barkley','lebron'],{inside:3,drive:3,def:3,handle:2},{winCash:2}),
     B('lakers_generations','湖人四代核心',['magic','kareem','west','baylor'],{handle:3,inside:3,mid:3,drive:3},{stageCash:2}),
@@ -354,7 +357,7 @@
     B('paint_dominators','禁区统治者',['wilt','russell','moses','kareem'],{inside:9,def:8,mid:3}),
 
     // 5 组五人终局羁绊。
-    B('death_lineup','死亡五小',['curry','klay','iguodala','durant','green'],{three:5,handle:3,def:4,mid:2,drive:1},{freeRecruit:2,chainId:'warriors_death',chainLevel:3}),
+    B('death_lineup','死亡五小',['curry','klay','iguodala','durant','green'],{three:5,handle:3,def:4,mid:2,drive:1},{freeRecruit:2}),
     B('bulls_dynasty','公牛王朝',['harper','jordan','pippen','rodman','longley'],{def:6,mid:4,drive:3,handle:2},{stageCash:4,chainId:'bulls_dynasty',chainLevel:3}),
     B('ok_dynasty','OK王朝',['fisher','kobe','fox','horry','shaq'],{inside:6,mid:5,three:4,def:3},{winCash:3,chainId:'ok_lakers',chainLevel:3}),
     B('showtime_five','Showtime',['magic','byron_scott','worthy','ac_green','kareem'],{handle:6,inside:5,mid:3,drive:2},{stageCash:4,chainId:'showtime_lakers',chainLevel:3}),
