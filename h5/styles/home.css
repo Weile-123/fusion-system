@@ -1,0 +1,5 @@
+.app.home-mode #home{padding-left:0;padding-right:0}
+  #home .home-label,#home .home-hero{padding-left:21px;padding-right:21px}
+  #home .home-primary,#home .home-entry-row,#home>.footer-note{width:calc(100% - 42px);margin-left:21px;margin-right:21px}
+  #home .home-hero{box-sizing:border-box}
+  #home .home-eyebrow{min-height:22px;display:flex;align-items:center}

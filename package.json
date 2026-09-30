@@ -1,0 +1,15 @@
+{
+  "name": "my-sup-fusion",
+  "private": true,
+  "scripts": {
+    "pages:build": "node ./scripts/build-page-templates.cjs",
+    "css:build": "tailwindcss -i ./h5/styles/tailwind.input.css -o ./h5/styles/tailwind.css --minify",
+    "css:watch": "tailwindcss -i ./h5/styles/tailwind.input.css -o ./h5/styles/tailwind.css --watch",
+    "build": "npm run pages:build && npm run css:build",
+    "pretest": "npm run build",
+    "test": "node --test tests/game-core.test.cjs tests/storage-adapter.test.cjs tests/flow-audit.cjs"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,29 @@
+  #profile .catalog,#profile .profile-bond-catalog{max-height:min(46vh,390px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#806137 #292929;padding:2px 3px 3px 0;align-content:start}
+  #profile .catalog{grid-auto-rows:min-content}
+  #shop .shop-tabs{display:flex;align-items:center;gap:7px;overflow:visible;margin-bottom:9px}
+  #shop .shop-tabs .tab{padding:7px 10px}
+  #shop .shop-refresh-action{display:inline-flex;align-items:center;justify-content:center;gap:3px;min-height:32px;margin-left:auto;padding:5px 8px;border:1px solid #755427;border-radius:7px;background:#2e281f;color:#ffd06e;font-size:9px;font-weight:900;white-space:nowrap}
+  #shop .shop-refresh-action:disabled{opacity:.45;cursor:not-allowed}
+  #shop .shop-refresh-action .cash-price img{width:18px;height:14px}
+  #shop .shopitem{min-height:66px;padding:5px 8px;gap:6px}
+  #shop .shopitem .btn{min-height:30px}
+  #shop .shopitem small{margin-top:2px}
+  #roster .bench-count{color:#fff}
+  #roster .roster-dock-main{display:grid;grid-template-columns:90px minmax(0,1fr);align-items:center;gap:7px}
+  #roster .roster-dock .action-cash{min-width:0;display:flex;align-items:center;justify-content:flex-start;gap:4px;margin:0;color:#cdbb9b;font-size:9px;line-height:1.2}
+  #roster .roster-dock .action-cash img{width:22px;height:18px;object-fit:contain}
+  #roster .roster-dock .action-cash span{display:flex;flex-direction:column;white-space:nowrap}
+  #roster .roster-dock .action-cash b{font-size:17px;line-height:1.1}
+  #roster .roster-dock .quick-actions{min-width:0;margin:0;gap:6px}
+  #roster .roster-dock .quick-actions .btn{min-height:39px;padding:4px 5px;font-size:11px}
+  #roster .roster-dock .roster-fight{min-height:42px;margin-top:6px}
+  #roster.active{padding-bottom:145px}
+  #result.active{padding-bottom:calc(160px + env(safe-area-inset-bottom))}
+  #result .result-dock{position:fixed;z-index:18;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,480px);padding:7px 15px calc(10px + env(safe-area-inset-bottom));background:#111214f2;border-top:1px solid #39342c;box-shadow:0 -8px 22px #000a;backdrop-filter:blur(12px)}
+  #result .result-dock .battle-reward{min-height:0;margin:0 0 7px;padding:8px 10px}
+  #result .result-dock .battle-reward small{line-height:1.3}
+  #result .result-dock>.btn,#result .result-dock .result-actions .btn{min-height:44px}
+  #result .result-dock .result-actions{margin:0}
+  #result.result-loss .result-dock{border-top-color:#704147;background:#20191bfa}
+  #result.result-loss .result-dock>.btn{background:#bf4048;color:#fff;box-shadow:0 4px 0 #6e20252b}
+  @media(max-width:360px){#roster .roster-dock-main{grid-template-columns:82px minmax(0,1fr);gap:5px}#roster .roster-dock .quick-actions .btn{font-size:10px}#shop .shop-tabs{gap:5px}#shop .shop-refresh-action{padding:5px 6px;font-size:8px}}

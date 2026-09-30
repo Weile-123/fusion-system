@@ -1,0 +1,39 @@
+#recruit .floatingaction{position:fixed;z-index:19;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,480px);margin:0;padding:9px 15px calc(11px + env(safe-area-inset-bottom));border-radius:0;isolation:isolate;background:#1d1e20;box-shadow:0 -8px 20px #111214}
+  #recruit.active{padding-bottom:120px}
+  .top{height:32px;padding:0 14px}
+  .top-back{padding:6px 0;font-size:9px}
+  .top-status{min-width:0;gap:11px}.top-status>span{gap:2px;white-space:nowrap;font-size:8px}.top-status small{font-size:6.5px}.top-status b{font-size:10px}.top-status img{width:16px;height:12px}.top-back{white-space:nowrap}.top-talent{flex:0 1 auto;max-width:90px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid #735525;border-radius:5px;background:#342a1b;color:#ffd16b;padding:3px 5px;font-size:7px;font-weight:900;cursor:pointer}
+  .top-life .life-heart{display:block;flex:0 0 13px;width:13px;height:13px;overflow:visible}
+  .screen{padding-top:55px}#roster{padding-top:53px}
+  #roster .roster-combat{margin:0 0 7px;padding:7px 8px;border-radius:9px;background:#242322;border-color:#57452c}
+  .roster-combat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:10px;color:#ffe0a0}
+  .roster-combat-head span{font-size:9px;color:#c7b18e}
+  .roster-combat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+  .roster-combat-grid span{min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 1px;border-radius:5px;background:#302b24;color:#d6c9b3;text-align:center;font-size:9px;white-space:nowrap}
+  .roster-combat-grid b{font-size:13px;color:#ffd16e}
+  #roster .slots-heading{margin:6px 0 6px}#roster .bench-title{margin:11px 0 6px}
+  #roster .fusion-lineup{gap:5px}#roster .lineup-column{gap:5px}
+  #roster .bench-grid{grid-auto-rows:52px;max-height:140px;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#806137 #292929;padding:1px 2px 3px;align-content:start}
+  #roster .bench-grid .bench-card{min-height:0;height:52px}
+  #roster .bench-grid .bench-player{position:relative;padding-right:27px;touch-action:pan-y}
+  #roster .bench-grid .bench-drag-handle{position:absolute;right:2px;top:50%;display:grid;place-items:center;width:23px;height:36px;border-left:1px solid #ffffff20;border-radius:4px;background:#ffffff0b;color:#ffd277;transform:translateY(-50%);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+  #roster .bench-grid .bench-drag-handle svg{width:15px;height:15px;fill:currentColor;pointer-events:none}
+  #roster .bench-grid .bench-drag-handle:active{cursor:grabbing}
+  #roster .bench-gesture-hint{flex:0 0 auto;margin:0 1px 5px;color:#a99473;font-size:9px;line-height:1.3}
+  #duel .compact-ace{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;min-height:0;margin-top:8px;padding:10px;border-radius:13px}
+  .compact-ace:after{width:65px;height:65px;right:-32px;top:-18px;opacity:.35}
+  .compact-ace .ace-overview{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .compact-ace .ace-mark{width:78px;min-width:78px;height:78px;align-self:flex-start}
+  .compact-ace .ace-summary{min-width:0}.compact-ace .ace-score{gap:5px}.compact-ace .ace-score>strong{font-size:30px}
+  .compact-ace .ace-score span{font-size:8px}.compact-ace .ace-score span em{font-size:8px;white-space:normal}
+  .compact-ace .ace-summary>small{display:block;margin-top:3px;color:#c8b898;font-size:8px}
+  .compact-ace .ace-detail{min-width:0;position:relative;z-index:1}
+  .compact-ace .ace-section-label{display:flex;justify-content:space-between;gap:4px;margin:0 0 4px;font-size:9px}
+  .compact-ace .ace-section-label:not(:first-child){margin-top:8px}
+  .compact-ace .ace-section-label small{font-size:7px;color:#9f9688;font-weight:700}
+  .ace-stat-grid,.ace-combat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .ace-stat-grid span,.ace-combat-grid span{display:flex;justify-content:space-between;align-items:center;gap:3px;min-width:0;padding:4px;border:1px solid #534637;border-radius:4px;background:#302b26;color:#d9ccb8;font-size:9px;white-space:nowrap}
+  .ace-stat-grid b,.ace-combat-grid b{color:#ffe0a2;font-size:11px}
+  .ace-combat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #duel .duel-foe-heading{margin-top:12px}
+  @media(max-width:380px){#duel .compact-ace{grid-template-columns:82px minmax(0,1fr);gap:7px}.compact-ace .ace-mark{width:68px;min-width:68px;height:68px}.ace-stat-grid span,.ace-combat-grid span{font-size:7px;padding:3px}.roster-combat-grid span{font-size:7px}}

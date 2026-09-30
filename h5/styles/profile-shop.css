@@ -1,0 +1,215 @@
+#home .home-scores{left:21px;right:21px}
+  #home .home-primary,#home .home-entry-row{margin-top:10px}
+  #home .home-entry-row{gap:10px}
+  #home .home-secondary{min-height:45px;padding:10px 5px}
+  #home .home-pointshop{border-color:#b7791f;background:linear-gradient(95deg,#70400b,#a96810);color:#fff0c8}
+  #home .home-profile{border-color:#49443d;background:#242321;color:#e5e0d8}
+  #pointshop .pointshop-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:10px 0}
+  #pointshop .pointshop-tabs i{width:calc(50% - 3px)}
+  #pointshop .pointshop-tabs i.upgrades{transform:translateX(0)}
+  #pointshop .pointshop-tabs i.jerseys{transform:translateX(100%)}
+  #pointshop .pointshop-page{min-height:0}
+  .roster-talent-action,.roster-bonds-action{border:1px solid #765627;border-radius:6px;background:#30291f;color:#ffd277;padding:6px 8px;font-size:9px;font-weight:900}
+  .app.pointshop-mode .top{display:none}
+  .app.pointshop-mode #pointshop.active{height:100dvh;min-height:0;margin-top:0;padding-top:15px;overflow-y:auto}
+  .app.profile-mode #profile.active{height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;margin-top:0;padding-top:15px;padding-bottom:14px}
+  #profile .profile-title-row,#profile>.statusbar,#profile>.profile-tabs{flex:0 0 auto}
+  #profile .profile-status{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0}
+  #profile .profile-status .statbox{min-width:0;padding:10px 3px}
+  #profile .profile-status .statbox strong{font-size:18px}
+  #profile .profile-status .statbox small{font-size:8px;white-space:nowrap}
+  #profile .profile-tabs{grid-template-columns:repeat(3,minmax(0,1fr));margin:0 0 10px}
+  #profile .profile-tabs i{width:calc((100% - 6px)/3)}
+  #profile .profile-tabs i.bonds{transform:translateX(100%)}
+  #profile .profile-tabs i.jerseys{transform:translateX(200%)}
+  #profile .profile-catalog-panel{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px;border:1px solid #444039;border-radius:10px;background:#1d1e1e;scrollbar-width:thin;scrollbar-color:#8e6936 #292824}
+  #profile .profile-catalog-panel>.sectionhead{margin-top:0}
+  #profile .catalog,#profile .profile-bond-catalog{max-height:none;overflow:visible;padding:0}
+  .profile-jersey-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .profile-jersey-catalog .equipment-reserve-card{position:relative;display:block;min-width:0;padding:7px;border:2px solid transparent;border-radius:8px;background:linear-gradient(#252525,#252525) padding-box,linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b)) border-box;overflow:hidden;isolation:isolate}
+  .profile-jersey-catalog .equipment-team-logo{position:absolute;z-index:0;top:-10%;right:4%;width:auto;height:120%;opacity:.2}
+  .profile-jersey-catalog .jersey-collection-preview{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#f5ead7;text-align:center;font-size:9px}
+  .profile-jersey-catalog .jersey-art-frame{height:88px}.profile-jersey-catalog .jersey-vector{height:80px}
+  .legend-balance{display:flex;align-items:center;justify-content:space-between;margin:8px 0 16px;padding:13px 15px;border:1px solid #775527;border-radius:9px;background:#302719;color:#d9c49e;font-size:11px;font-weight:900}.legend-balance b{color:#ffc43c;font-size:24px}
+  .meta-shop-list{display:grid;gap:8px}.meta-shop-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px}.meta-shop-item>div{min-width:0}.meta-shop-item strong{display:block;color:#f8ead2;font-size:12px}.meta-shop-item strong small{color:#c3a670;font-size:9px}.meta-shop-item span{display:block;margin-top:4px;color:#aaa39a;font-size:9px;line-height:1.4}.meta-shop-item .btn{flex:0 0 auto;min-width:76px;padding:0 8px}
+  .jersey-unlock-head{margin-top:20px}.jersey-unlock-panel{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px}.jersey-unlock-panel>div{min-width:0}.jersey-unlock-panel strong{display:block;color:#f8ead2;font-size:12px}.jersey-unlock-panel span,.jersey-unlock-panel em{display:block;margin-top:4px;color:#aaa39a;font-size:9px;line-height:1.4}.jersey-unlock-panel em{color:#ffc95b;font-style:normal;font-weight:900}.jersey-unlock-panel .btn{flex:0 0 auto;min-width:76px;padding:0 8px}.meta-jersey-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}.meta-jersey{min-width:0;padding:7px 4px;border:1px solid #46423b;border-radius:8px;background:#222;text-align:center;overflow:hidden}.meta-jersey .jersey-art-frame{height:58px}.meta-jersey .jersey-vector{height:55px}.meta-jersey b,.meta-jersey span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.meta-jersey b{margin-top:2px;color:#f1e8d9;font-size:9px}.meta-jersey span{margin-top:2px;color:#8f8980;font-size:8px}.meta-jersey.locked .jersey-art-frame{filter:grayscale(1) brightness(.35)}.meta-jersey.unlocked{border-color:#9b6d27;background:#302719}.meta-jersey.unlocked span{color:#d3b981}
+  @media(max-width:360px){#home .home-entry-row{gap:7px}#profile .profile-status .statbox small{font-size:7px}.profile-jersey-catalog{grid-template-columns:1fr}}
+  .signature-panel{padding:10px 12px;margin:8px 0}
+  #roster .signature-panel{flex:0 0 auto}
+  .signature-title{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#ffd277;font-size:11px}
+  .signature-title small{color:#aaa39a;font-size:9px;font-weight:400;text-align:right}
+  .signature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+  .signature-item{min-width:0;padding:7px 8px;border:1px solid #5f4827;border-radius:7px;background:#30291f}
+  .signature-item span{display:block;color:#bcae95;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .signature-item b{display:block;margin:2px 0;color:#ffe2a1;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .signature-item small{display:block;color:#c4b9a7;font-size:9px;line-height:1.35}
+  .signature-item em{display:block;margin-top:4px;color:#ffd277;font-size:8px;font-style:normal;line-height:1.25}
+  #result .timeline-signatures{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px;color:#cfc3af;font-size:10px}
+  #result .timeline-signatures b{color:#ffd277}
+  /* Main screen modules share the gap between the top bar and first combat panel. */
+  :root{--module-gap:10px;--game-top-height:46px}
+  :is(#talent,#recruit,#roster,#shop,#duel,#result).screen{padding-top:calc(var(--game-top-height) + var(--module-gap))}
+  #roster.active{row-gap:var(--module-gap)}
+  #roster.active>:is(.roster-combat,.signature-panel,.slots-heading,.bench-title,.bench-gesture-hint,.bench-panel){margin-top:0;margin-bottom:0}
+  #roster .fusion-lineup .slot-player{display:flex;flex-direction:column;justify-content:center;padding:6px 5px}
+  #roster .fusion-lineup .slot-player .slot-top{min-height:0;padding:0}
+  #roster .fusion-lineup .slot-player .slot-body{padding:4px 0 0}
+  #roster .bench-grid{grid-auto-rows:min-content;gap:var(--module-gap)}
+  #roster .bench-grid .bench-card{height:auto;min-height:0}
+  #roster .bench-grid .bench-player{padding:7px 27px 7px 7px}
+  #shop.active{display:flex;flex-direction:column;gap:var(--module-gap)}
+  #shop.active>:is(.shop-tabs,.shop-grid,.roster-combat,.equipped-shelf,.equipment-reserve,.shop-test-cash,.footer-note,.btn.wide){margin-top:0;margin-bottom:0}
+  #shop .shop-grid{gap:var(--module-gap)}
+  #talent .lead{margin-bottom:0}
+  #talent .talent-catalog-row{margin:var(--module-gap) 0}
+  #recruit .draft-heading,#recruit .draft-odds{margin-bottom:var(--module-gap)}
+  #recruit .choicegrid{gap:var(--module-gap)}
+  #duel .ace-panel,#duel .signature-panel{margin-top:var(--module-gap);margin-bottom:0}
+  #duel .duel-foe-heading{margin:var(--module-gap) 0}
+  #result.active{row-gap:var(--module-gap)}
+  #result .result-timeline-title,#result .result-summary{margin:0}
+  #profile.active{row-gap:var(--module-gap)}
+  #profile.active>:is(.profile-status,.profile-tabs){margin-top:0;margin-bottom:0}
+  .app.profile-mode #profile.active,.app.pointshop-mode #pointshop.active{padding-top:var(--module-gap)}
+  #pointshop .legend-balance,#pointshop .pointshop-tabs{margin-top:var(--module-gap);margin-bottom:0}
+  #pointshop .pointshop-page{margin-top:var(--module-gap)}
+  #home .home-primary,#home .home-entry-row,#home>.footer-note{margin-top:var(--module-gap)}
+  #shop .shopitem.jersey-shopitem{border:3px solid #f4f0e8;background:linear-gradient(135deg,#4c4c4c88,#292929aa),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));padding:6px 8px}
+  #shop .jersey-shopitem .shop-card-copy{text-shadow:0 1px 3px #000a}
+  #shop .jersey-shopitem .shop-card-copy strong{color:#fffaf0}
+  #shop .jersey-shopitem .shop-card-copy small,#shop .jersey-shopitem .shop-card-top{color:#eee6da}
+  #roster .bench-grid .bench-player{padding:7px 7px 7px 31px}
+  #roster .bench-grid .bench-drag-handle{left:2px;right:auto;border-left:0;border-right:1px solid #ffd27755;background:#ffd27716;color:#ffd15d}
+  #roster .bench-grid .bench-drag-handle svg{fill:none}
+  #roster .lineup-column{grid-template-rows:repeat(3,auto)}
+  #roster .fusion-lineup .slot,#roster .fusion-lineup .slot-player{min-height:0}
+  #roster .fusion-lineup .slot-player{height:auto;padding:7px}
+  #roster .fusion-lineup .slot.empty{padding:7px}
+  #roster .fusion-lineup .slot.empty .slot-top,#roster .fusion-lineup .slot.empty .slot-body{min-height:0;padding:0}
+  #roster .fusion-lineup .slot.empty .slot-body{padding-top:4px}
+  .roster-combat .signature-panel.embedded,.compact-ace .signature-panel.embedded{margin:var(--module-gap) 0 0;padding:var(--module-gap) 0 0;border-top:1px solid #665337;background:transparent;box-shadow:none}
+  #duel .compact-ace .signature-panel.embedded{grid-column:1/-1}
+  .signature-item b{margin:0 0 4px}
+  .signature-item b span{display:inline;color:#bea982;font-size:8px;font-weight:700;white-space:normal}
+  #shop .shopitem.jersey-shopitem{border-color:#d9ad54}
+  #shop .shopitem:not(.jersey-shopitem):not(.shop-boost){border:0;box-shadow:inset 0 1px 0 #ffffff54,inset 0 -1px 0 #0007,0 4px 12px #0008}
+  #shop .shopitem:not(.jersey-shopitem).shop-tier-c{background:linear-gradient(115deg,#ffffff4a 0%,#ffffff08 28%,#ffffff31 48%,#ffffff00 70%),linear-gradient(135deg,#5b6670,#9da8ae 48%,#38434c)}
+  #shop .shopitem:not(.jersey-shopitem).shop-tier-b{background:linear-gradient(115deg,#ffffff3a 0%,#ffffff00 28%,#9dd6ff2b 48%,#ffffff00 70%),linear-gradient(135deg,#09254c,#246da8 48%,#081d3d)}
+  #shop .shopitem:not(.jersey-shopitem).shop-tier-a{background:linear-gradient(115deg,#ffffff53 0%,#ffffff00 28%,#ffe4a141 48%,#ffffff00 70%),linear-gradient(135deg,#65400b,#ba8529 48%,#47300c)}
+  #shop .shopitem:not(.jersey-shopitem).shop-tier-s{background:linear-gradient(115deg,#ffffff40 0%,#ffffff00 28%,#ffb5ae30 48%,#ffffff00 70%),linear-gradient(135deg,#59121c,#a5263a 48%,#3d0c19)}
+  #shop .shopitem:not(.jersey-shopitem):not(.shop-boost) :is(.shop-card-top,.shop-card-copy strong,.shop-card-copy small){color:#fff9ed;text-shadow:0 1px 3px #0009}
+  /* Keep the detached bench preview identical to the in-list card. */
+  .bench-card.drag-ghost{display:flex;align-items:center;height:auto;min-height:0;padding:0;border:1px solid var(--tier);border-radius:8px;background:var(--tier-card);overflow:hidden;color:#fff}
+  .bench-card.drag-ghost .bench-player{position:relative;align-self:stretch;flex:1;min-width:0;padding:7px 7px 7px 31px;border:0;background:transparent;color:#fff;text-align:left}
+  .bench-card.drag-ghost .bench-player>strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;line-height:1.1}
+  .bench-card.drag-ghost .bench-player>small{display:block;margin-top:3px;color:#fff4df;font-size:8px;font-weight:850}
+  .bench-card.drag-ghost .bench-drag-handle{position:absolute;left:2px;top:50%;display:grid;place-items:center;width:23px;height:36px;border:0;background:transparent;color:#ffd15d;transform:translateY(-50%)}
+  .bench-card.drag-ghost .bench-drag-handle svg{width:15px;height:15px;fill:none}
+  .bench-card.drag-ghost .bench-sell{width:max-content;flex:0 0 auto;margin:6px;padding:4px;border:1px solid #dc7771;border-radius:6px;background:#742c30;color:#ffe4de;font-size:8px;font-weight:950}
+  #roster .bench-grid .bench-drag-handle{border:0;background:transparent}
+  /* The locker uses the same material finish as the purchase cards. */
+  #shop .equipment-slot-row.is-equipped:not(.jersey-equipment),#shop .equipment-reserve-card:not(.jersey-equipment){border:0;box-shadow:inset 0 1px 0 #ffffff54,inset 0 -1px 0 #0007,0 4px 12px #0008}
+  #shop .equipment-slot-row.is-equipped.gear-tier-c,#shop .equipment-reserve-card.gear-tier-c{background:linear-gradient(115deg,#ffffff4a 0%,#ffffff08 28%,#ffffff31 48%,#ffffff00 70%),linear-gradient(135deg,#5b6670,#9da8ae 48%,#38434c)}
+  #shop .equipment-slot-row.is-equipped.gear-tier-b,#shop .equipment-reserve-card.gear-tier-b{background:linear-gradient(115deg,#ffffff3a 0%,#ffffff00 28%,#9dd6ff2b 48%,#ffffff00 70%),linear-gradient(135deg,#09254c,#246da8 48%,#081d3d)}
+  #shop .equipment-slot-row.is-equipped.gear-tier-a,#shop .equipment-reserve-card.gear-tier-a{background:linear-gradient(115deg,#ffffff53 0%,#ffffff00 28%,#ffe4a141 48%,#ffffff00 70%),linear-gradient(135deg,#65400b,#ba8529 48%,#47300c)}
+  #shop .equipment-slot-row.is-equipped.gear-tier-s,#shop .equipment-reserve-card.gear-tier-s{background:linear-gradient(115deg,#ffffff40 0%,#ffffff00 28%,#ffb5ae30 48%,#ffffff00 70%),linear-gradient(135deg,#59121c,#a5263a 48%,#3d0c19)}
+  #shop .equipment-slot-row.is-equipped:not(.jersey-equipment) .equipment-card-open b{color:#fff9ed;text-shadow:0 1px 3px #0009}
+  #shop .equipment-slot-row.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment{border:2px solid #d9ad54;background:linear-gradient(135deg,#4c4c4c88,#292929aa),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b))}
+  #shop .equipment-reserve-list>.equipment-reserve-card:last-child:nth-child(odd){grid-column:auto;justify-self:stretch;width:auto}
+  #shop .jersey-art-frame{display:flex;align-items:center;justify-content:center;height:88px}
+  #shop .jersey-vector{width:92px;height:72px;max-width:90%;margin:auto}
+  #roster .roster-combat .signature-title{font-size:9px}
+  #roster .roster-combat .signature-title small{font-size:7px}
+  #roster .roster-combat .signature-item{padding:5px 6px}
+  #roster .roster-combat .signature-item b{font-size:9px}
+  #roster .roster-combat .signature-item b span,#roster .roster-combat .signature-item small,#roster .roster-combat .signature-item em{font-size:7px}
+  #recruit.active{padding-bottom:160px}
+  #recruit.draft-style-material .card{border:1px solid #ffffff6e;box-shadow:inset 0 1px 0 #ffffff55,0 4px 12px #0009;color:#fff9ef}
+  #recruit.draft-style-material .card.tier-c{background:linear-gradient(115deg,#ffffff58,#ffffff00 35%,#ffffff30 55%,#ffffff00 72%),linear-gradient(135deg,#626d75,#a9b4ba 49%,#414c53)}
+  #recruit.draft-style-material .card.tier-b{background:linear-gradient(115deg,#ffffff3b,#ffffff00 35%,#9dd6ff2b 55%,#ffffff00 72%),linear-gradient(135deg,#0c2954,#2876b1 49%,#092043)}
+  #recruit.draft-style-material .card.tier-a{background:linear-gradient(115deg,#ffffff40,#ffffff00 35%,#d9b1ff3f 55%,#ffffff00 72%),linear-gradient(135deg,#3b205c,#8653ae 49%,#30174f)}
+  #recruit.draft-style-material .card.tier-s{background:linear-gradient(115deg,#ffffff5b,#ffffff00 35%,#ffe4a141 55%,#ffffff00 72%),linear-gradient(135deg,#67430e,#bd902b 49%,#52350c)}
+  #recruit.draft-style-material .card.tier-legend{background:linear-gradient(115deg,#ffffffa0,#ffffff00 36%,#b5eaff66 58%,#ffffff00 75%),linear-gradient(135deg,#4d6b78,#b9eaf3 35%,#7979ae 66%,#364c67)}
+  #recruit.draft-style-material .card.selected{outline:2px solid #ffe09c;outline-offset:1px;box-shadow:0 0 0 3px #ffcc6866,0 0 18px #ffda7788}
+  #recruit.draft-style-material .card :is(.card-top,.card-visual,.card-effect){background:transparent;box-shadow:none}
+  #recruit.draft-style-material .card :is(.card-meta,.card-effect){color:#fff8ee;text-shadow:0 1px 3px #000b}
+  #recruit.draft-style-material .card .card-visual strong{color:#fffaf2}
+  /* Shared player materials across draft, lineup, bench and drag preview. */
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-c{--player-material:linear-gradient(115deg,#ffffff2d,#ffffff00 29%,#ffffff28 46%,#ffffff00 66%),linear-gradient(135deg,#36424c,#778890 48%,#293640)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-b{--player-material:linear-gradient(115deg,#ffffff24,#ffffff00 29%,#92cfff2c 46%,#ffffff00 66%),linear-gradient(135deg,#102d55,#286a9c 48%,#0c2548)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-a{--player-material:linear-gradient(115deg,#ffffff23,#ffffff00 29%,#d3a8f642 46%,#ffffff00 66%),linear-gradient(135deg,#392051,#77499b 48%,#301b49)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-s{--player-material:linear-gradient(115deg,#ffffff38,#ffffff00 29%,#ffe3a038 46%,#ffffff00 66%),linear-gradient(135deg,#604113,#aa7a25 48%,#4e330d)}
+  :is(.card,.fusion-lineup .slot,.bench-card,.player-detail).tier-legend{--player-material:linear-gradient(145deg,#ffffff32 0%,#ffffff08 46%,#e8d8b530 100%),linear-gradient(135deg,#b7d9df 0%,#cadfe4 34%,#d4d0df 68%,#dfd2ba 100%)}
+  #recruit.draft-style-material .card.tier-c,#recruit.draft-style-material .card.tier-b,#recruit.draft-style-material .card.tier-a,#recruit.draft-style-material .card.tier-s,#recruit.draft-style-material .card.tier-legend,
+  #roster .fusion-lineup .slot.tier-c,#roster .fusion-lineup .slot.tier-b,#roster .fusion-lineup .slot.tier-a,#roster .fusion-lineup .slot.tier-s,#roster .fusion-lineup .slot.tier-legend,
+  #roster .bench-card.tier-c,#roster .bench-card.tier-b,#roster .bench-card.tier-a,#roster .bench-card.tier-s,#roster .bench-card.tier-legend,
+  .bench-card.drag-ghost.tier-c,.bench-card.drag-ghost.tier-b,.bench-card.drag-ghost.tier-a,.bench-card.drag-ghost.tier-s,.bench-card.drag-ghost.tier-legend{background:var(--player-material);box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0009}
+  #recruit.draft-style-material .card .card-top{background:#10151a92;color:#fff9ed;text-shadow:0 1px 3px #000e}
+  #recruit.draft-style-material .card .card-visual{background:linear-gradient(180deg,#10151a77 0%,#11192313 36%,#10151ac9 100%);box-shadow:none}
+  #recruit.draft-style-material .card .visual-role{color:#fff8e8;text-shadow:0 1px 3px #000,0 0 4px #000}
+  #recruit.draft-style-material .card .visual-number{color:#fff;opacity:.35;text-shadow:0 2px 8px #0008}
+  #recruit.draft-style-material .card .card-visual :is(strong,small){color:#fffaf1;text-shadow:0 1px 3px #000,0 0 5px #000}
+  #recruit.draft-style-material .card .card-meta{background:#10151ac9;color:#fff7e8;border-color:#ffffff36;text-shadow:0 1px 3px #000}
+  #recruit.draft-style-material .card .card-effect{background:#10151ae0;color:#fff7e8;text-shadow:0 1px 3px #000}
+  #recruit.draft-style-material .card .card-top .rarity{background:#161c22de;color:#fff6de;border:1px solid #ffffff6b}
+  #roster .fusion-lineup .slot:not(.empty) :is(.slot-top,.slot-body strong,.slot-body small),#roster .bench-card .bench-player{color:#fffaf0;text-shadow:0 1px 3px #000b}
+  #roster .fusion-lineup .slot:not(.empty) .slot-value{color:#ffe192}
+  /* Team-colored jersey fabric: soft satin streaks over the actual team colors. */
+  #shop .equipment-slot-row.is-equipped.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment:is(.gear-tier-c,.gear-tier-b,.gear-tier-a,.gear-tier-s,.gear-tier-sr){border-color:#d9ad54;background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}
+  #shop .jersey-equipment .equipment-card-open :is(span,b){color:#fffaf0;text-shadow:0 1px 3px #000,0 0 5px #000}
+  #shop .shop-boost .boost-icon{display:block;flex:0 0 43px;width:43px;height:43px;border-radius:7px;object-fit:cover;box-shadow:0 2px 7px #0008}
+  /* One uninterrupted material surface for the entire recruitment card. */
+  #recruit.draft-style-material .card.tier-c,#recruit.draft-style-material .card.tier-b,#recruit.draft-style-material .card.tier-a,#recruit.draft-style-material .card.tier-s,#recruit.draft-style-material .card.tier-legend{background:var(--player-material)}
+  #recruit.draft-style-material .card :is(.card-top,.card-visual,.card-meta,.card-effect){background:transparent;box-shadow:none}
+  #recruit.draft-style-material .card :is(.card-top,.card-meta,.card-effect){border-color:#ffffff4d}
+  #recruit.draft-style-material .card :is(.card-top,.card-meta,.card-effect,.card-visual strong,.card-visual small,.visual-role){color:#fffdf6;text-shadow:0 2px 3px #000,0 0 6px #000b}
+  #recruit.draft-style-material .card .card-top .rarity{color:#fffdf6;background:#10151a99;border-color:#ffffff8c;text-shadow:none}
+  #recruit.draft-style-material .card.tier-legend{border-color:#c5fff0;box-shadow:inset 0 1px 0 #fff,0 0 18px #7effdcb8,0 5px 16px #0008}
+  #recruit.draft-style-material .card.tier-legend :is(.card-top,.card-meta,.card-effect,.card-visual strong,.card-visual small,.visual-role){color:#073d36;text-shadow:0 1px 1px #ffffffb5,0 0 4px #ffffffa0}
+  #recruit.draft-style-material .card.tier-legend .card-top .rarity{background:#063d36d9;color:#e9fff7;border-color:#d8fff5;text-shadow:none}
+  #recruit.draft-style-material .card.tier-legend .visual-number{color:#ecfff9;opacity:.7;text-shadow:0 0 14px #ffffffd9,0 2px 7px #0069538c}
+  #recruit.draft-style-material .card.tier-legend .card-effect{border-top-color:#087d6980}
+  /* Player details use the same full-card material as their recruitment tier. */
+  .modal-card.player-detail.tier-c,.modal-card.player-detail.tier-b,.modal-card.player-detail.tier-a,.modal-card.player-detail.tier-s,.modal-card.player-detail.tier-legend{background:var(--player-material);box-shadow:0 18px 45px #000c,inset 0 1px 0 #ffffff8c}
+  .player-detail .detail-head,.player-detail.tier-legend .detail-head{background:transparent;box-shadow:none;border-bottom-color:#ffffff7a}
+  .player-detail .detail-scroll{background:transparent}
+  .player-detail .detail-growth,.player-detail .detail-stats div,.player-detail .detail-section,.player-detail .detail-bonds>div{background:#10191bbb;backdrop-filter:blur(3px);border-color:#ffffff5c}
+  .player-detail.tier-legend .detail-growth,.player-detail.tier-legend .detail-stats div,.player-detail.tier-legend .detail-section,.player-detail.tier-legend .detail-bonds>div{background:#075443b3;backdrop-filter:blur(3px);border-color:#d3fff3a8}
+  .player-detail .detail-head :is(h2,small,span){color:#fffdf6;text-shadow:0 1px 3px #000b}
+  .player-detail.tier-legend .detail-head :is(h2,small,span){color:#063f36;text-shadow:0 1px 2px #ffffffc9}
+  .player-detail.tier-legend .detail-head button{color:#064c40;text-shadow:0 1px 2px #fff}
+  /* Shop jerseys use the same satin finish as wardrobe jerseys. */
+  #shop .shopitem.jersey-shopitem{background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}
+  /* The number ring crosses the card header; only small controls have glass surfaces. */
+  #recruit.draft-style-material .card .card-top{position:relative;z-index:2;border:0;background:transparent}
+  #recruit.draft-style-material .card .card-visual{overflow:visible}
+  #recruit.draft-style-material .card .card-top .rarity,#recruit.draft-style-material .card .draft-upgrade,#recruit.draft-style-material .card .card-detail{border:1px solid #ffffff9c;border-radius:6px;background:#ffffff2e;box-shadow:inset 0 1px 0 #ffffff74,0 2px 5px #0002;backdrop-filter:blur(8px) saturate(1.25);color:#fffdf4;text-shadow:0 1px 2px #000b}
+  #recruit.draft-style-material .card .card-top .rarity{padding:3px 6px}
+  #recruit.draft-style-material .card .draft-upgrade{background:#42be8270;border-color:#b1ffcb;color:#effff2}
+  #recruit.draft-style-material .card .card-detail{padding:5px 7px;font-size:9px}
+  #recruit.draft-style-material .card.tier-legend{border-color:#a1ebd7;box-shadow:inset 0 1px 0 #ffffffb0,0 0 10px #7cf0cf7a,0 5px 16px #0008}
+  #recruit.draft-style-material .card.tier-legend :is(.card-top,.card-meta,.card-effect,.card-visual strong,.card-visual small,.visual-role){color:#073b33;text-shadow:0 1px 2px #ffffffa8}
+  #recruit.draft-style-material .card.tier-legend .card-top .rarity,#recruit.draft-style-material .card.tier-legend .card-detail{background:#d4fff47a;border-color:#f0fffa;color:#063c34;text-shadow:none}
+  #recruit.draft-style-material .card.tier-legend .draft-upgrade{background:#d5ffea9c;border-color:#eafff3;color:#064535;text-shadow:none}
+  #recruit.draft-style-material .card.tier-legend .visual-number{color:#edfff9;opacity:.4;text-shadow:0 0 9px #ffffff78}
+  /* Translucent tier-colored panes keep the detail view connected to its material. */
+  .player-detail .detail-growth,.player-detail .detail-stats,.player-detail .detail-section,.player-detail .detail-bonds>div,.player-detail.tier-legend .detail-growth,.player-detail.tier-legend .detail-stats,.player-detail.tier-legend .detail-section,.player-detail.tier-legend .detail-bonds>div{border:1px solid #ffffff75;background:linear-gradient(130deg,#ffffff38,color-mix(in srgb,var(--tier) 28%,#ffffff18) 58%,#ffffff20);box-shadow:inset 0 1px 0 #ffffff65,0 5px 15px #0002;backdrop-filter:blur(10px) saturate(1.25)}
+  .player-detail .detail-stats div,.player-detail.tier-legend .detail-stats div{background:#ffffff12;border-color:#ffffff54;backdrop-filter:none}
+  .player-detail .detail-bonds>div.active,.player-detail.tier-legend .detail-bonds>div.active{background:linear-gradient(135deg,#aaffce46,#ffffff20);border-color:#b8ffd2b3;box-shadow:inset 0 1px 0 #ffffff66}
+  .player-detail .detail-stats :is(span,b,small),.player-detail .detail-growth b,.player-detail .detail-section :is(span,h3,p),.player-detail .detail-bonds :is(strong,b),.player-detail.tier-legend .detail-stats :is(span,b,small),.player-detail.tier-legend .detail-section :is(span,h3,p){color:#fffdf6;text-shadow:0 1px 3px #0009}
+  .player-detail .fit-list b,.player-detail.tier-legend .fit-list b{border:1px solid #ffffff79;background:#ffffff26;color:#fffdf6;box-shadow:inset 0 1px 0 #ffffff50;text-shadow:0 1px 2px #0008}
+  .player-detail .detail-actions{border-top:1px solid #ffffff78;background:linear-gradient(0deg,#ffffff36,#ffffff16);backdrop-filter:blur(12px) saturate(1.25);box-shadow:inset 0 1px 0 #ffffff4d}
+  #recruit.draft-style-material .card .card-top .rarity{padding:0;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;color:var(--tier-dark);font-size:40px;font-style:italic;font-weight:1000;line-height:1;letter-spacing:-.09em;text-shadow:0 2px 3px #0008}
+  #recruit.draft-style-material .card{min-height:0;border:3px solid #ffffff2a}
+  #recruit.draft-style-material .card .card-select{position:relative;height:150px;flex:none}
+  #recruit.draft-style-material .card .card-top{position:absolute;top:20px;left:9px;right:9px;z-index:3;padding:0}
+  #recruit.draft-style-material .card .card-visual{height:100%;padding:0}
+  #recruit.draft-style-material .card .visual-role{top:6px;left:9px;display:flex;align-items:center;gap:4px;letter-spacing:0}
+  #recruit.draft-style-material .card .visual-role .draft-upgrade{padding:2px 4px;border:1px solid #39755b;border-radius:3px;background:#164a35cf;box-shadow:none;color:#c2ead2!important;font-size:8px;line-height:1;text-shadow:none}
+  .shop-item-actions{display:flex;align-items:stretch;gap:5px;flex:0 0 auto}.shop-item-actions>.btn{min-width:0}.shop-item-actions>.gear-replace{border-color:#d99b2b;background:#6f4714;color:#ffd77b;padding-inline:10px}
+  #recruit.draft-style-material .card .draft-bond-hints{top:65px}
+  #recruit.draft-style-material .card .card-visual strong{bottom:8px;left:9px;right:8px}
+  #recruit.draft-style-material .card .card-meta{min-height:32px;padding:2px 8px 5px;border:0}
+  #recruit.draft-style-material .card .card-effect{margin-top:auto;padding:6px 8px;border-top:1px solid #ffffff4d}
+  #recruit.draft-style-material .card.selected{border-color:color-mix(in srgb,var(--selected-border) 68%,white);outline:0;box-shadow:0 0 16px color-mix(in srgb,var(--selected-border) 94%,transparent),inset 0 0 10px color-mix(in srgb,var(--selected-border) 52%,transparent)}
+  #recruit.draft-style-material .card .card-top .rarity{display:inline-block;transform:skewX(-12deg);transform-origin:left center}

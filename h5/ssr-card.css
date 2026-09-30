@@ -1,0 +1,199 @@
+/* SSR shares the standard recruitment-card layout. Only its material and art layer differ. */
+#recruit.draft-style-material .card.tier-legend.ssr-card{
+  color:#27313d;
+  background:linear-gradient(135deg,#b3bac1 0%,#faffff 8%,#dbf6ff 21%,#ffffff 40%,#f1e7ff 62%,#fffbeb 91%,#c5cfd7 100%);
+  box-shadow:inset 0 0 22px #6d8bad35,0 4px 12px #0009;
+}
+#recruit.draft-style-material .card.tier-legend.ssr-card{border-color:#f2c85e;box-shadow:inset 0 2px 0 #fff3b8,inset 0 -1px 0 #9b6b14,0 4px 12px #0009}
+#recruit.draft-style-material .ssr-card{
+  position:relative;
+  isolation:isolate;
+  width:auto;
+  min-width:0;
+  min-height:0;
+  aspect-ratio:auto;
+  padding:0;
+  border-color:#f2c85e;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:inset 0 2px 0 #fff3b8,inset 0 -1px 0 #9b6b14,0 4px 12px #0009;
+}
+#recruit.draft-style-material .ssr-card:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:none;
+}
+#recruit.draft-style-material .ssr-card>*{position:relative;z-index:1}
+#recruit.draft-style-material .ssr-card .card-visual{overflow:hidden}
+#recruit.draft-style-material .ssr-card .ssr-player-art{
+  position:absolute;
+  z-index:1;
+  top:4px;
+  right:-7px;
+  bottom:0;
+  width:57%;
+  pointer-events:none;
+  background-image:var(--ssr-player-art,none);
+  background-repeat:no-repeat;
+  background-position:right bottom;
+  background-size:contain;
+  filter:drop-shadow(0 2px 4px #60768f70);
+  opacity:.9;
+}
+#recruit.draft-style-material .card.tier-legend.ssr-card .visual-number{z-index:2;right:6px;color:#9eb4c5;font-size:clamp(42px,13.5vw,59px);opacity:.9;text-shadow:0 1px 0 #fff,0 2px 7px #40566d99}
+#recruit.draft-style-material .ssr-card :is(.visual-role,.card-visual strong,.card-meta,.card-effect){color:#273541;text-shadow:0 1px 2px #fff,0 0 4px #ffffffc9}
+#recruit.draft-style-material .card.tier-legend.ssr-card .card-top .rarity{
+  color:transparent;
+  background:linear-gradient(135deg,#b3bac1 0%,#faffff 8%,#dbf6ff 21%,#ffffff 40%,#f1e7ff 62%,#fffbeb 91%,#c5cfd7 100%);
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  -webkit-text-stroke:.7px #8193a5;
+  filter:drop-shadow(0 1px 0 #fff) drop-shadow(0 2px 2px #5264778c);
+  text-shadow:none;
+}
+#recruit.draft-style-material .ssr-card .draft-bond-hints{z-index:3}
+#recruit.draft-style-material .ssr-card .draft-bond-hints i{background:#ffffffb8;color:#465361;border-color:#a9b8c8}
+#recruit.draft-style-material .ssr-card .draft-bond-hints i.active{background:#d8f7e9c7;color:#246146;border-color:#70ae8e}
+#recruit.draft-style-material .ssr-card .card-visual strong{z-index:3;max-width:75%}
+#recruit.draft-style-material .ssr-card .card-meta,#recruit.draft-style-material .ssr-card .card-effect{position:relative;z-index:3;background:transparent}
+#recruit.draft-style-material .ssr-card .card-detail{background:#ffffff73;border-color:#fff;color:#334756;text-shadow:0 1px 0 #fff}
+#recruit.draft-style-material .card.tier-legend.ssr-card.selected{border-color:#fff0a7;outline:0;box-shadow:0 0 18px #ffe886,0 0 9px #fff4bd,inset 0 2px 0 #fffbe7,inset 0 0 12px #ffffffc4}
+
+/* Player details use one neutral dark material at every rarity. */
+.modal-card.player-detail:is(.tier-c,.tier-b,.tier-a,.tier-s,.tier-legend){
+  color:#eee8dc;
+  border-color:#5b4a32;
+  border-radius:14px;
+  background:linear-gradient(155deg,#282724 0%,#20211f 52%,#25231f 100%);
+  box-shadow:0 18px 45px #000d,inset 0 1px 0 #ffffff12;
+}
+.player-detail .detail-head,
+.player-detail.tier-legend .detail-head{
+  background:linear-gradient(180deg,#292824,#232320);
+  border-bottom-color:#514535;
+  box-shadow:none;
+}
+.player-detail .detail-head:after,
+.player-detail.tier-legend .detail-head:after{display:none}
+.player-detail .detail-head :is(h2,small,span),
+.player-detail.tier-legend .detail-head :is(h2,small,span){color:#f5eee2;text-shadow:0 1px 3px #000b}
+.player-detail .detail-head button,
+.player-detail.tier-legend .detail-head button{color:#ddc08a;text-shadow:0 1px 2px #000}
+.player-detail .detail-scroll{background:transparent}
+.player-detail .detail-growth,
+.player-detail .detail-stats,
+.player-detail .detail-section,
+.player-detail .detail-bonds>div,
+.player-detail.tier-legend .detail-growth,
+.player-detail.tier-legend .detail-stats,
+.player-detail.tier-legend .detail-section,
+.player-detail.tier-legend .detail-bonds>div{
+  border-color:#584a37;
+  background:#292824;
+  box-shadow:inset 0 1px 0 #ffffff0b;
+  backdrop-filter:none;
+}
+.player-detail .detail-stats div,
+.player-detail.tier-legend .detail-stats div{
+  background:#252421;
+  border-color:#494239;
+  backdrop-filter:none;
+}
+.player-detail .detail-stats span,
+.player-detail.tier-legend .detail-stats span{color:#b7b0a5;text-shadow:none}
+.player-detail .detail-stats b,
+.player-detail.tier-legend .detail-stats b{color:#f1c969;text-shadow:0 1px 5px #0008}
+.player-detail .detail-stats small,
+.player-detail.tier-legend .detail-stats small{color:#7f7a72;text-shadow:none}
+.player-detail .detail-growth b,
+.player-detail .detail-section :is(span,h3),
+.player-detail .detail-bonds strong,
+.player-detail.tier-legend .detail-growth b,
+.player-detail.tier-legend .detail-section :is(span,h3),
+.player-detail.tier-legend .detail-bonds strong{color:#f4e7ce;text-shadow:none}
+.player-detail .detail-section p,
+.player-detail.tier-legend .detail-section p{color:#b8b1a7;text-shadow:none}
+.player-detail .detail-bonds>div>b,
+.player-detail.tier-legend .detail-bonds>div>b{color:#efc45f;text-shadow:none}
+.player-detail .fit-list b,
+.player-detail.tier-legend .fit-list b{
+  border-color:#62533d;
+  background:#342f26;
+  color:#e5c77f;
+  box-shadow:inset 0 1px 0 #ffffff0a;
+  text-shadow:none;
+}
+.player-detail .detail-bonds>div.active,
+.player-detail.tier-legend .detail-bonds>div.active{border-color:#4f9367;background:#233329;box-shadow:inset 0 1px 0 #ffffff0b}
+.player-detail .detail-actions,
+.player-detail.tier-legend .detail-actions{
+  border-top-color:#514535;
+  background:#22221f;
+  box-shadow:0 -6px 15px #0005;
+  backdrop-filter:none;
+}
+
+/* SSR lineup values stay distinct from the yellow values used by every other tier. */
+#roster .fusion-lineup .slot.tier-legend .slot-value{
+  color:#1264b0;
+  text-shadow:0 1px 0 #fff,0 0 5px #ffffffb8;
+}
+
+/* One low-contrast pastel diamond surface for lineup, bench and drag preview SSR cards. */
+#roster .fusion-lineup .slot.tier-legend,
+#roster .bench-card.tier-legend,
+.bench-card.drag-ghost.tier-legend{
+  border-color:#e4bd55;
+  background:
+    linear-gradient(145deg,#ffffff32 0%,#ffffff08 46%,#e8d8b530 100%),
+    linear-gradient(135deg,#b7d9df 0%,#cadfe4 34%,#d4d0df 68%,#dfd2ba 100%);
+  box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 #9e792a66,0 3px 9px #0008;
+}
+#roster .fusion-lineup .slot.tier-legend :is(.slot-top,.slot-body strong,.slot-body small),
+#roster .bench-card.tier-legend .bench-player,
+.bench-card.drag-ghost.tier-legend .bench-player,
+.bench-card.drag-ghost.tier-legend .bench-player>small{
+  color:#173e42;
+  text-shadow:0 1px 1px #ffffffd9;
+}
+#roster .fusion-lineup .slot.tier-legend .slot-tier-watermark{
+  color:#6aaeb8;
+  opacity:.24;
+  text-shadow:0 1px 0 #fff;
+}
+#roster .fusion-lineup .slot.tier-legend .slot-value{
+  color:#1264b0;
+  text-shadow:0 1px 0 #fff,0 0 5px #ffffffb8;
+}
+#roster .fusion-lineup .slot.tier-legend :is(.slot-rank,.star-icon),
+#roster .bench-card.tier-legend .star-icon,
+.bench-card.drag-ghost.tier-legend .star-icon{color:#9a6815;text-shadow:0 1px 0 #fff}
+#roster .bench-card.tier-legend .bench-player>strong,
+.bench-card.drag-ghost.tier-legend .bench-player>strong{color:#173e42;text-shadow:none}
+#roster .bench-card.tier-legend .bench-player>small,
+.bench-card.drag-ghost.tier-legend .bench-player>small{color:#765b2f;text-shadow:none}
+#roster .bench-card.tier-legend .bench-value,
+.bench-card.drag-ghost.tier-legend .bench-value{color:#1264b0;font-size:9px;text-shadow:0 1px 0 #fff}
+#roster .bench-card.tier-legend :is(.bench-rank,.bench-attr),
+.bench-card.drag-ghost.tier-legend :is(.bench-rank,.bench-attr){color:#8a651f;text-shadow:none}
+#roster .bench-card.tier-legend .bench-drag-handle,
+.bench-card.drag-ghost.tier-legend .bench-drag-handle{color:#161616}
+
+/* Compact roster headings leave more vertical room for cards on small screens. */
+#roster .fusion-lineup .slot-tier-watermark{font-size:42px}
+#roster :is(.slots-heading,.bench-title){gap:5px}
+#roster :is(.slots-heading,.bench-title) h2{font-size:12px;line-height:1}
+#roster .slots-title-actions{gap:4px}
+#roster :is(.roster-bonds-action,.roster-talent-action,.roster-expand,.roster-training-toggle){padding:4px 6px;font-size:7px;line-height:1}
+#roster .bench-title-actions{gap:3px}
+#roster .bench-count{padding:2px 4px;font-size:8px}
+#roster .slots-heading>span{font-size:7px}
+#roster .bench-heading-block{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0}
+#roster .bench-heading-copy{display:grid;min-width:0;gap:5px}
+#roster .bench-title{margin:0}
+#roster .bench-gesture-hint{min-width:0;margin:0 1px;font-size:7px;line-height:1}
+#roster .bench-heading-block :is(.roster-expand,.roster-training-toggle){padding:6px 9px;font-size:9px;line-height:1.2}
