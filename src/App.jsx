@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { startGameRuntime } from './runtime-loader.js';
 import { installReactScreens } from './react-screens.jsx';
 
-const screens = ['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'];
+const screens = ['home', 'leaderboard', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'];
 
 export default function App() {
   const pageRoot = useRef(null);

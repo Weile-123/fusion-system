@@ -1,0 +1,121 @@
+{
+  "name": "request-football-teamPlayerSeasonStats",
+  "description": "按球队与赛季联赛 ID，获取足球球队阵容球员列表及该赛季各项技术统计。seasonId 需从球队年度关联联赛（teamSeasonYear）结果中选择。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID（接口 newId），例如 \"655\""
+      },
+      "seasonId": {
+        "type": "string",
+        "description": "赛季联赛 ID，来自 request.football.teamSeasonYear 返回的 competitions[].seasonId，例如 \"54032\""
+      }
+    },
+    "required": [
+      "teamId",
+      "seasonId"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "array",
+        "description": "球队该赛季阵容球员及统计列表",
+        "items": {
+          "type": "object",
+          "description": "阵容中的单个球员及其赛季统计",
+          "properties": {
+            "playerId": {
+              "type": "number",
+              "description": "球员 ID"
+            },
+            "gdcId": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "GDC ID，可能为 null"
+            },
+            "name": {
+              "type": "string",
+              "description": "球员中文名"
+            },
+            "avatar": {
+              "type": "string",
+              "description": "球员头像 URL"
+            },
+            "position": {
+              "type": "string",
+              "description": "场上位置，例如 前锋、中场、后卫、守门员"
+            },
+            "isGoalkeeper": {
+              "type": "boolean",
+              "description": "是否守门员"
+            },
+            "age": {
+              "type": "number",
+              "description": "年龄"
+            },
+            "number": {
+              "type": [
+                "string",
+                "number",
+                "null"
+              ],
+              "description": "球衣号码，可能为 null"
+            },
+            "country": {
+              "type": "string",
+              "description": "国籍"
+            },
+            "stats": {
+              "type": "array",
+              "description": "该球员在指定赛季的统计项列表",
+              "items": {
+                "type": "object",
+                "description": "球员单项赛季统计",
+                "properties": {
+                  "statsId": {
+                    "type": "number",
+                    "description": "统计项 ID，例如 1 表示进球"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "统计项名称，例如 进球、助攻、出场时间"
+                  },
+                  "group": {
+                    "type": "number",
+                    "description": "统计分组 ID，例如 40 进攻、41 防守、42 组织、43 纪律、44 守门员"
+                  },
+                  "groupName": {
+                    "type": "string",
+                    "description": "统计分组名称，例如 进攻、防守、组织、纪律、守门员"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "统计值文案，例如 10、40.35%、1938'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

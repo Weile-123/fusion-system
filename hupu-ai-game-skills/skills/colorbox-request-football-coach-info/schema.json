@@ -1,0 +1,125 @@
+{
+  "name": "request-football-coachInfo",
+  "description": "获取足球球队主教练基础资料，包括姓名、头像、年龄、国籍、所属球队、常用阵型及主题色等。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID（接口 newId），例如 \"655\""
+      }
+    },
+    "required": [
+      "teamId"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "object",
+        "description": "成功时返回的数据载荷",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "教练 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "教练中文名，例如 安多尼·伊劳拉"
+          },
+          "newsTag": {
+            "type": "string",
+            "description": "资讯标签名，例如 安多尼-伊劳拉"
+          },
+          "oldId": {
+            "type": "string",
+            "description": "教练旧 ID"
+          },
+          "enName": {
+            "type": "string",
+            "description": "教练英文名，例如 Andoni Iraola"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "教练头像 URL"
+          },
+          "teamId": {
+            "type": "number",
+            "description": "所属球队 ID"
+          },
+          "teamLogo": {
+            "type": "string",
+            "description": "所属球队队徽 URL"
+          },
+          "teamName": {
+            "type": "string",
+            "description": "所属球队名称，例如 利物浦"
+          },
+          "age": {
+            "type": "number",
+            "description": "年龄"
+          },
+          "nation": {
+            "type": "string",
+            "description": "国籍，例如 西班牙"
+          },
+          "nationLogo": {
+            "type": "string",
+            "description": "国旗图片 URL"
+          },
+          "headerDayBg": {
+            "type": "string",
+            "description": "日间头部背景色，例如 #CC2929"
+          },
+          "headerNightBg": {
+            "type": "string",
+            "description": "夜间头部背景色"
+          },
+          "headerColor": {
+            "type": "string",
+            "description": "头部文字颜色，例如 white"
+          },
+          "formation": {
+            "type": "string",
+            "description": "常用阵型，例如 4-2-3-1"
+          },
+          "describe": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "教练简介，可能为 null"
+          },
+          "session": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "执教场次相关信息，可能为 null"
+          },
+          "rate": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ],
+            "description": "评分/胜率相关信息，可能为 null"
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

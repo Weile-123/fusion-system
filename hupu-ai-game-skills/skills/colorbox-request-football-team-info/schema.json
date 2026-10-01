@@ -1,0 +1,149 @@
+{
+  "name": "request-football-teamInfo",
+  "description": "获取足球球队基础资料，包括队名、队徽、身价、专区信息、主场、建队年份及主题色等 Header 信息。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID（接口 newId），例如 \"910\""
+      }
+    },
+    "required": [
+      "teamId"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "object",
+        "description": "成功时返回的数据载荷",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "资料类型，固定为 team"
+          },
+          "newId": {
+            "type": "string",
+            "description": "球队新 ID"
+          },
+          "oldId": {
+            "type": "string",
+            "description": "球队旧 ID"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "球队 ID，通常与 newId 相同"
+          },
+          "name": {
+            "type": "string",
+            "description": "球队中文名，例如 阿森纳"
+          },
+          "enName": {
+            "type": "string",
+            "description": "球队英文名，例如 Arsenal"
+          },
+          "logo": {
+            "type": "string",
+            "description": "队徽图片 URL"
+          },
+          "worth": {
+            "type": "number",
+            "description": "球队身价数值"
+          },
+          "currency": {
+            "type": "string",
+            "description": "身价货币单位，例如 欧元"
+          },
+          "prefectureId": {
+            "type": "number",
+            "description": "专区 ID"
+          },
+          "prefectureName": {
+            "type": "string",
+            "description": "专区名称，例如 阿森纳专区"
+          },
+          "prefectureJrNumber": {
+            "type": "number",
+            "description": "专区关注/JRS 人数"
+          },
+          "prefectureLogo": {
+            "type": "string",
+            "description": "专区 Logo URL"
+          },
+          "headerDayBg": {
+            "type": "string",
+            "description": "日间头部背景色，例如 #CC2929"
+          },
+          "headerNightBg": {
+            "type": "string",
+            "description": "夜间头部背景色"
+          },
+          "headerColor": {
+            "type": "string",
+            "description": "头部文字颜色，例如 white"
+          },
+          "headerImg": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "头部背景图，可能为 null"
+          },
+          "address": {
+            "type": "string",
+            "description": "球队所在地，例如 英格兰 伦敦"
+          },
+          "officialWeb": {
+            "type": "string",
+            "description": "官网地址"
+          },
+          "arena": {
+            "type": "string",
+            "description": "主场球馆名称"
+          },
+          "capacity": {
+            "type": "number",
+            "description": "主场容量"
+          },
+          "year": {
+            "type": "number",
+            "description": "建队年份"
+          },
+          "isNational": {
+            "type": "boolean",
+            "description": "是否国家队"
+          },
+          "fifaRank": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "FIFA 排名，可能为 null"
+          },
+          "isFollowTeam": {
+            "type": "boolean",
+            "description": "当前用户是否已关注该球队"
+          },
+          "encyclItemId": {
+            "type": "number",
+            "description": "关联评分百科对象 ID"
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

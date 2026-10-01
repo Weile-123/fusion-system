@@ -12,6 +12,8 @@
   .expand-modal>p b{color:#ffd078}
   .expand-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:18px}
   .expand-actions .btn{min-width:0;padding:9px 6px;font-size:11px}
+  .expand-confirm-button{display:flex;align-items:center;justify-content:center;gap:5px}
+  .expand-confirm-price,.expand-confirm-price .cash-price{display:inline-flex;align-items:center;justify-content:center;gap:3px;line-height:1}
   @media(max-width:360px){.slots-title-actions{gap:5px}.roster-bonds-action{padding:6px;font-size:8px}.slots-heading>span{font-size:8px}}
   .fusion-lineup .slot{position:relative}
   .fusion-lineup .slot-player{display:block;width:100%;height:100%;min-height:68px;border:0;background:transparent;color:inherit;padding:0;text-align:left;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}

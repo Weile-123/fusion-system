@@ -1,0 +1,27 @@
+# 云端排行榜
+
+活动 `app_656cf66d07` 的 CloudBase 环境已启用。云端地址与 EnvId 配置在 `.env.production`；Vite 构建后，游戏通过 `ColorboxAI.cloud.request` 访问网关。排行榜没有演示数据，最多展示真实的前 50 名。
+
+## 统计口径
+
+- **总传奇点**：每局结束时，按服务端确认的主线关卡和无尽胜场累计发放。它是历史获得量，不扣除点数商店花费；本地海报编辑器奖励不计入云榜。
+- **单局战力**：服务端按当前战斗数据重新计算的最高 OVR，不使用 GOAT 分数。
+- 同分时按首次达到该分数的时间、记录 ID 排序；“我的排名”使用相同顺序。
+- 老存档不会补录。只有从云端成功创建的新局才能上榜；未连接云端时仍可本地游玩，结果页显示同步状态。
+
+## 云端资源
+
+- `activity_api` HTTP 云函数；PostgreSQL 表 `leaderboard_entries`、`leaderboard_runs`。
+- `GET /api/leaderboard?board=legend|ovr&limit=50`：公开读取。
+- `GET /api/leaderboard/me?board=legend|ovr`：登录后读取个人分数和名次。
+- `POST /api/runs/start`：登录后创建局记录和服务端随机种子。
+- `POST /api/runs/battle`：登录后提交战前状态与策略，服务端重新运行战斗并记录 OVR。
+- `POST /api/runs/finish`：登录后按已记录的战斗结算传奇点；重复结算不会再次计分。
+
+写入身份来自网关注入的 `x-cloudbase-context`，请求正文不接受自报 PUID。写入路由强制登录，数据库写权限只授予服务端角色。SQL 迁移记录在 `activity/migrations/` 和 `cloudbase/migrations/`。
+
+## 验证与限制
+
+已通过网关验证公开读取、未登录写入返回 401、带活动凭据的登录请求创建局记录；已用临时身份验证创建局、战斗写入、个人名次读回、重复结算，并清理全部测试记录。`npm run build` 与游戏测试也通过。
+
+战斗由服务端重新计算，但战前阵容和装备来自客户端存档，尚未在云端完整重放招募、商店和训练行为。因此当前机制能防止直接自报最终分数及重复结算，不能抵御伪造整段战前状态的客户端。真实虎扑 App 的 SDK 登录及端到端交互仍需在 App 内验收。

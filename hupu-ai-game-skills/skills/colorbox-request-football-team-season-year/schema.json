@@ -1,0 +1,99 @@
+{
+  "name": "request-football-teamSeasonYear",
+  "description": "获取足球球队各赛季年度列表，以及每个赛季关联的联赛/杯赛（含 competitionId、seasonId、赛事类型）。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID（接口 newId），例如 \"655\""
+      }
+    },
+    "required": [
+      "teamId"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "array",
+        "description": "球队各赛季年度及关联联赛列表",
+        "items": {
+          "type": "object",
+          "description": "单个赛季年度及其关联联赛列表",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "赛季短名，例如 25/26"
+            },
+            "fullName": {
+              "type": "string",
+              "description": "赛季全名，例如 2025-2026"
+            },
+            "year": {
+              "type": "object",
+              "description": "赛季年份信息",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "开始年份，例如 2025"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "结束年份，例如 2026"
+                },
+                "fullYearName": {
+                  "type": "string",
+                  "description": "短年份名，例如 25/26"
+                },
+                "realFullYearName": {
+                  "type": "string",
+                  "description": "完整年份名，例如 2025-2026"
+                }
+              }
+            },
+            "competitions": {
+              "type": "array",
+              "description": "该赛季关联的赛事列表",
+              "items": {
+                "type": "object",
+                "description": "某一赛季关联的赛事/联赛",
+                "properties": {
+                  "competitionId": {
+                    "type": "number",
+                    "description": "赛事 ID，例如 81"
+                  },
+                  "competitionName": {
+                    "type": "string",
+                    "description": "赛事名称，例如 英超、欧冠、足总杯"
+                  },
+                  "seasonId": {
+                    "type": "number",
+                    "description": "该赛事在对应赛季的 seasonId"
+                  },
+                  "competitionType": {
+                    "type": "string",
+                    "description": "赛事类型，例如 LEAGUE、INTERCONTINENTAL_CUP、DOMESTIC_CUP、UNKNOWN"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

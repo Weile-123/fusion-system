@@ -56,7 +56,7 @@ test('Vite entry mounts all React screens and preserves the validated game runti
   assert.match(html, /src="\/src\/main\.jsx"/);
   assert.match(main, /createRoot\(document\.getElementById\('root'\)\)/);
   assert.match(app, /id="page-root"/);
-  assert.match(app, /const screens = \['home', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'\]/);
+  assert.match(app, /const screens = \['home', 'leaderboard', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'\]/);
   assert.match(app, /installReactScreens/);
   assert.match(screens, /function HomeScreen/);
   assert.match(screens, /function TalentScreen/);
@@ -511,7 +511,7 @@ test('profile and top bar expose GOAT, three catalogs, and point shop without th
   assert.match(css, /meta-jersey\.unlocked\.jersey-equipment/);
   assert.doesNotMatch(ui, /jersey-collection-preview">\$\{jerseyArtwork\(item\)\}<span>球衣<\/span>/);
   assert.match(ui, /function renderPointShop\(\)/);
-  assert.match(ui, /C\.finishRun\(game\);save\(\);startNewJourney\(\)/);
+  assert.match(ui, /C\.finishRun\(game\);save\(\);await finishCloudRun\(r\);startNewJourney\(\)/);
   assert.doesNotMatch(ui, /<h2>生涯纪录<\/h2>|<h2>后续开放<\/h2>/);
   assert.match(app, /['"]pointshop['"]/);
   assert.match(ui, /classList\.toggle\('pointshop-mode',id==='pointshop'\)/);
@@ -769,12 +769,14 @@ test('selling a bench player pays reference tier base value times current stars'
   assert.equal(run.owned[spare.id], undefined);
 });
 
-test('bench sale controls bind the displayed player id instead of trusting a sorted-list index', () => {
+test('bench sale asks for confirmation and verifies the displayed player and position', () => {
   const ui = readH5('game-ui.js');
   assert.match(ui, /data-act="sell-bench" data-id="\$\{id\}" data-index="\$\{index\}"/);
-  assert.match(ui, /if\(action==='sell-bench'\)\{\s*const index=r\?\.bench\.indexOf\(id\)\?\?-1/);
   assert.match(ui, /data-act="sell-detail" data-id="\$\{s\.id\}" data-index="\$\{detailContext\.key\}"/);
-  assert.match(ui, /if\(action==='sell-detail'\)\{\s*const index=r\.bench\.indexOf\(id\)/);
+  assert.match(ui, /if\(action==='sell-detail'\|\|action==='sell-bench'\)/);
+  assert.match(ui, /r\.bench\[index\]!==id/);
+  assert.match(ui, /if\(action==='sell-confirm'\)/);
+  assert.match(ui, /r\.bench\[index\]!==playerId/);
 });
 
 test('star and training growth use reference percentages and distinguish SSR', () => {
@@ -1681,12 +1683,12 @@ test('duel fusion panel uses the rating in place of the portrait and spans five 
   assert.match(css, /#duel \.opponent-name-row>strong\{[^}]*margin:0/);
   assert.match(css, /#duel \.opponent-combat\{margin-bottom:0\}/);
   assert.match(css, /#duel \.compact-ace \.signature-panel\.embedded\{margin-top:6px;padding-top:6px\}/);
-  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
+  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\):not\(#leaderboard\)\.active/);
 });
 
 test('roster action dock remains fixed at the viewport bottom while the roster scrolls', () => {
   const css = readH5('styles/catalog.css');
-  assert.match(css, /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
+  assert.match(css, /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\):not\(#leaderboard\)\.active/);
   assert.match(css, /#roster \.roster-dock \{[\s\S]*?position: fixed;[\s\S]*?bottom: 0;/);
   assert.match(css, /#roster\.active \{[\s\S]*?padding-bottom: 145px/);
 });
@@ -1717,18 +1719,29 @@ test('career settlement can be revived once without duplicating run rewards', ()
   assert.equal(C.reviveRun(game), false);
 });
 
-test('career report exposes settlement details and callback-gated rewards', () => {
+test('career report builds a preview and shares its PNG through OSS and the post editor', () => {
   const ui = readH5('game-ui.js');
   const screens = readRoot('src', 'react-screens.jsx');
   const css = readH5('styles/career-report.css');
   assert.match(ui, /function careerReportSummary\(\)/);
   assert.match(ui, /function createCareerPoster\(summary\)/);
-  assert.match(ui, /posterPublishSucceeded\(response\)/);
-  assert.match(ui, /if\(!r\.posterRewarded\)\{r\.posterRewarded=true;game\.profile\.legend\+=100/);
+  assert.match(ui, /canvas\.toBlob\(blob=>blob\?resolve\(blob\)/);
+  assert.match(ui, /ai\.oss\.uploadFile\(\{file:blob,filename:/);
+  assert.match(ui, /new URL\(upload\.downloadUrl\)/);
+  assert.match(ui, /imageUrl\.protocol!=='https:'/);
+  assert.match(ui, /const bbs=await ai\.bbsConfig\.get\(\)/);
+  assert.match(ui, /typeof bbs\?\.bbsTagId==='string'&&bbs\.bbsTagId\.trim\(\)/);
+  assert.match(ui, /ai\.request\.bbs\.openPostEditor\(params\)/);
+  assert.match(ui, /if\(response\?\.code!==200\)throw new Error/);
+  assert.match(ui, /await publishCareerPoster\(posterBlob,careerReportSummary\(\)\);\s*if\(!r\.posterRewarded\)\{r\.posterRewarded=true;game\.profile\.legend\+=100;save\(\)\}/);
   assert.match(ui, /showRecruitSheet=false;recruitSheetMessage='';showBonds=false/);
   assert.match(screens, /查看生涯报告/);
   assert.match(screens, /\{!ended && <div className="panel battle-reward"/);
-  assert.match(screens, /发帖成功奖励100传奇点/);
+  assert.match(screens, /data-act="report-poster" disabled=\{posterBusy\}>生成海报/);
+  assert.doesNotMatch(ui, /data-act="poster-regenerate"/);
+  assert.match(ui, /data-act="poster-share"/);
+  assert.match(screens, /value\.startsWith\('blob:'\)/);
+  assert.match(screens, /new URL\(value\.slice\(5\)\)\.origin !== window\.location\.origin/);
   assert.match(screens, /<h2>最终阵容<\/h2>/);
   assert.match(screens, /未激活羁绊/);
   assert.match(screens, /未购买装备和球衣/);
@@ -1752,5 +1765,33 @@ test('career report exposes settlement details and callback-gated rewards', () =
   assert.match(css, /\.career-gear-tag\.gear-tier-a\{background:linear-gradient/);
   assert.match(screens, /className="career-settlement-head"/);
   assert.doesNotMatch(screens, /重打当前关，并获得一次十连招募所需奖金/);
-  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\)\.active/);
+  assert.match(readH5('styles/catalog.css'), /\.screen:not\(#home\):not\(#result\):not\(#report\):not\(#roster\):not\(#profile\):not\(#pointshop\):not\(#leaderboard\)\.active/);
+});
+
+test('talent video choice and leaderboard use rewarded callbacks and bounded cloud reads', () => {
+  const ui = readH5('game-ui.js');
+  const screens = readRoot('src', 'react-screens.jsx');
+  assert.match(ui, /if\(action==='talent-ad'\)/);
+  assert.match(ui, /response\?\.code!==200\|\|response\?\.data\?\.rewarded!==true/);
+  assert.match(ui, /talentOffer=C\.availableTalents\(game\.profile\)/);
+  assert.match(ui, /await refreshRewardTaskState\(\)/);
+  assert.doesNotMatch(ui, /mockBoard|MOCK_NAMES|SUPFUSION_DEMO_LEADERBOARD/);
+  assert.match(ui, /rows\.slice\(0,50\)/);
+  assert.match(ui, /window\.ColorboxAI\.cloud\.request\(\{url:`\$\{base\}\/api\/leaderboard`,method:'GET',data:\{board,limit:50\}\}\)/);
+  assert.match(screens, /leaderboard-podium/);
+  assert.match(screens, /entries\.slice\(3, 50\)/);
+  assert.match(screens, /data-act="talent-ad"/);
+  assert.match(screens, /单局最高 OVR/);
+  assert.doesNotMatch(screens, /unit="GOAT"/);
+});
+
+test('a run records its highest battle OVR separately from GOAT', () => {
+  const game = C.createGame();
+  game.run = draftedRun(20261001);
+  const report = C.battle(game, 'outside');
+  assert.ok(report);
+  assert.equal(game.run.maxOvr, report.rating);
+  assert.notEqual(game.run.maxOvr, report.goat);
+  C.finishRun(game);
+  assert.equal(game.profile.bestOvr, report.rating);
 });

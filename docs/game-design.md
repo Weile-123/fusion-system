@@ -113,18 +113,20 @@
 
 个人页记录总局数、最佳通关层数、最高无尽层数、胜率、累计奖金、已发现球星/羁绊/装备、最高单局融合评分。图鉴分「已解锁」「已见过」「未发现」，明确解锁途径。结算报告展示本局的上阵构筑、关键羁绊、装备、最强回合和传奇点来源。
 
-排行榜在当前版本**暂不制作**。后续可按最高无尽层数、单局融合评分或限时赛季分进行排名，但需防刷分和可复算的成绩来源。
+排行榜页面展示云端累计获得的传奇点和单局最高 OVR。演示数据已移除；CloudBase 服务端、数据库与网关已部署，生产构建已配置 `VITE_ACTIVITY_API_BASE` / `VITE_ACTIVITY_ENV_ID`。只有联网并成功创建的本局计入云榜；服务端复算战斗，但战前阵容仍来自客户端，详见 [云端排行榜](cloud-leaderboard.md)。
 
 ## 9. 存档、广告和项目技能约束
 
-本项目已有 Colorbox 专项技能。后续开发相关功能时，先阅读对应 `SKILL.md`，按其规定的能力、字段与调用时机实现；本草案只确定功能意图，不假定未读技能的接口细节。
+项目内的 Colorbox 专项技能位于 `hupu-ai-game-skills/skills/`。后续开发相关功能时，先阅读对应 `SKILL.md`，按其规定的能力、字段与调用时机实现。
 
 | 功能 | 项目内技能入口 | 当前设计安排 |
 | --- | --- | --- |
-| 局内进度与个人数据保存 | `skills/colorbox-storage-set-value/SKILL.md`、`skills/colorbox-storage-get-value/SKILL.md` | 首版必须实现断点续玩；保存随机种子、当前关、球星和槽位、奖金、士气、道具、传奇点及版本号，读档须能迁移或安全回退 |
-| 激励广告 | `skills/colorbox-vatask-complete-reward-video/SKILL.md`、`skills/colorbox-vatask-get-activity-task-state/SKILL.md`；按场景再查 `skills/colorbox-vatask/SKILL.md` | 后续可放置自愿观看换额外招募/赛后奖金/单局一次续命；只在任务确认完成后发奖，失败或取消不发奖，限制每局和每日次数 |
-| 排行榜与成绩 | `skills/colorbox-leaderboard-template/SKILL.md`、`skills/colorbox-score-add-score/SKILL.md`、`skills/colorbox-score-get-score/SKILL.md`、`skills/colorbox-score-get-item-detail/SKILL.md` | 当前版本不接入；未来在服务端校验成绩后提交，明确榜单口径和同分规则 |
-| 需要云端时 | `skills/act-cloudbase/SKILL.md` | 若本地技能不能覆盖跨设备存档或成绩校验，进入实现/部署阶段再评估云端能力与环境 |
+| 虎扑用户名 | `hupu-ai-game-skills/skills/colorbox-auth-get-user-info/SKILL.md` | 使用 `auth.getUserInfo()` 读取昵称；非虎扑环境或未登录显示“玩家” |
+| 局内进度与个人数据保存 | `hupu-ai-game-skills/skills/colorbox-storage-set-value/SKILL.md`、`hupu-ai-game-skills/skills/colorbox-storage-get-value/SKILL.md` | 虎扑容器使用 `ColorboxAI.storage` 保存并同步存档，本地预览使用 IndexedDB；单次虎扑写入不得超过 200KB |
+| 激励广告 | `hupu-ai-game-skills/skills/colorbox-vatask-complete-reward-video/SKILL.md`、`hupu-ai-game-skills/skills/colorbox-vatask-get-activity-task-state/SKILL.md` | 只在任务确认完成后发奖 |
+| 排行榜与成绩 | `hupu-ai-game-skills/skills/colorbox-leaderboard-template/SKILL.md`、`hupu-ai-game-skills/skills/colorbox-cloud-request/SKILL.md` | 云端读写和服务端战斗复算已部署；真实虎扑 App 联调与完整操作重放仍待验收。`colorbox-score-*` 是球员等对象的 1–10 分评价接口，不适用于游戏排行榜 |
+| 海报发帖 | `hupu-ai-game-skills/skills/colorbox-result-poster-posting/SKILL.md` | Canvas 生成海报后经 OSS 上传，再调用虎扑发帖编辑器；回调只证明编辑器已打开，不证明帖子已发布 |
+| 云端服务 | `hupu-ai-game-skills/skills/act-cloudbase/SKILL.md` | 跨用户排行榜使用已部署的 CloudBase 云函数、数据库和网关；`ColorboxAI.storage` 继续用于玩家个人存档 |
 
 存档要在招募、购买、战斗结算等原子操作后写入，避免刷新页面重复领取奖励。广告不进入必经流程，也不决定通关资格。统计、图鉴与局外解锁应以同一份可信持久数据为准。
 
@@ -138,7 +140,7 @@
 6. **赛前页**：展示对手属性和战力，隐藏其固定倾向；点击开战后在弹窗中三选一策略并开始单挑。
 7. **单挑页/战报**：可加速的回合演出、清晰比分、触发日志和结果分析。
 8. **结算页**：奖金明细、连关进度、通关报告和无尽入口。
-9. **个人页**：累计统计、图鉴、传奇点与永久升级；排行榜入口待未来版本开放。
+9. **个人页**：累计统计、图鉴、传奇点与永久升级；首页可进入云端排行榜。
 
 移动端竖屏优先。每个重要选择都显示「当前值 → 选择后值」；战斗有减少动画和跳过选项；文字说明在小屏上可展开查看。
 
@@ -149,7 +151,7 @@
 | 核心原型 | 六槽融合、静态球星池、四选一、10 关自动单挑、士气和赛后奖金 | 能完整通关或失败结算；换位/策略改变结果且战报可解释 |
 | 构筑完整 | 羁绊、专属天赋、训练、强化、装备、商店、事件、无尽 | 各系统资源和效果在界面、战斗、存档中一致；不存在无限奖金或死档 |
 | 长线体验 | 传奇点、局外解锁、图鉴统计、断点存档、平衡调优 | 重开有不同构筑路线；存档刷新恢复准确；永久成长有上限 |
-| 平台能力 | 激励广告；排行榜后续版本 | 严格按对应项目技能实现，取消/失败不发奖，成绩可校验 |
+| 平台能力 | 激励广告、云端排行榜 | 严格按对应项目技能实现；云榜写入经登录网关与服务端战斗复算 |
 
 已按确认的方向开始制作页面雏形；正式玩法逻辑、存档与发布要以雏形确认后的实现为准。
 
@@ -162,12 +164,12 @@
 
 ## 部署决策
 
-开发者已在确认静态预览后选择**初版本地保存**。初版进度保存在当前设备/浏览器；换设备或清除浏览器数据可能丢失进度，暂不做跨设备同步。项目内存在云服务技能，但只读环境查询显示本活动目前没有已开通的云环境；本轮不启用云服务。排行榜暂缓，未来若需跨用户排名，再单独设计云端成绩校验与保存。
+游戏进度仍保存在当前设备/浏览器；换设备或清除浏览器数据可能丢失进度，暂不做跨设备存档同步。云环境现已启用，仅用于跨用户排行榜。本局必须在云端创建并完成同步才计入榜单，旧本地存档不补录。
 
 ## 静默假设
 
 - 默认手机竖屏 H5、无需登录即可试玩。
 - 默认球星池覆盖不同年代，资料先用策划维护的静态数据，原型暂用文字卡和自有视觉。
 - 默认战斗是赛前选策略后的自动单挑，可加速与跳过动画。
-- 默认主线 10 关、通关后开放无尽、排行榜留到后续版本。
+- 默认主线 10 关、通关后开放无尽；排行榜读取真实云端数据。
 - 奖金、训练价格、概率与数值均为首轮平衡假设，需通过原型实测调整。

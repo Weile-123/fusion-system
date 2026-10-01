@@ -1,0 +1,269 @@
+{
+  "name": "request-basketball-teamPlayerList",
+  "description": "获取篮球球队（NBA / CBA）当前阵容球员列表、赛季场均数据，以及管理层/教练组信息。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID，例如 \"1901000000501288\""
+      },
+      "leagueType": {
+        "type": "string",
+        "description": "联赛类型：nba 或 cba（大小写均可）"
+      },
+      "competitionType": {
+        "type": "string",
+        "description": "赛事类型，默认与 leagueType 相同，例如 nba"
+      },
+      "competitionLeagueType": {
+        "type": "string",
+        "description": "赛事联赛类型，默认与 leagueType 相同，例如 nba"
+      }
+    },
+    "required": [
+      "teamId",
+      "leagueType"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "object",
+        "description": "成功时返回的数据载荷",
+        "properties": {
+          "info": {
+            "type": "object",
+            "description": "球队基础摘要信息",
+            "properties": {
+              "teamId": {
+                "type": "string",
+                "description": "球队唯一 ID"
+              },
+              "tid": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "球队内部 tid，可能为 null"
+              },
+              "name": {
+                "type": "string",
+                "description": "球队简称"
+              },
+              "full_name": {
+                "type": "string",
+                "description": "球队全称"
+              },
+              "en_name": {
+                "type": "string",
+                "description": "球队英文缩写/名称"
+              },
+              "salary_title": {
+                "type": "string",
+                "description": "薪资列标题，例如 薪水(美元)"
+              },
+              "arena_title": {
+                "type": "string",
+                "description": "主场标题文案"
+              },
+              "logo_link": {
+                "type": "string",
+                "description": "队徽图片 URL"
+              },
+              "arena": {
+                "type": "string",
+                "description": "主场球馆名称"
+              },
+              "rank_title": {
+                "type": "string",
+                "description": "战绩标题文案"
+              }
+            }
+          },
+          "list": {
+            "type": "array",
+            "description": "球队阵容球员列表",
+            "items": {
+              "type": "object",
+              "description": "阵容中的单个球员及赛季数据",
+              "properties": {
+                "playerId": {
+                  "type": "string",
+                  "description": "球员唯一 ID"
+                },
+                "homeUrl": {
+                  "type": "string",
+                  "description": "球员详情页 H5 链接"
+                },
+                "player_id": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "球员内部数字 ID，可能为 null"
+                },
+                "player_name": {
+                  "type": "string",
+                  "description": "球员中文名"
+                },
+                "player_header": {
+                  "type": "string",
+                  "description": "球员头像小图 URL"
+                },
+                "player_header_big": {
+                  "type": "string",
+                  "description": "球员头像大图 URL"
+                },
+                "number": {
+                  "type": "string",
+                  "description": "球衣号码"
+                },
+                "position": {
+                  "type": "string",
+                  "description": "场上位置，例如 后卫、中锋"
+                },
+                "salary": {
+                  "type": "string",
+                  "description": "薪资数值字符串，可能为空"
+                },
+                "salary_str": {
+                  "type": "string",
+                  "description": "薪资展示文案，例如 46394100万"
+                },
+                "is_injured": {
+                  "type": "number",
+                  "description": "是否受伤，0 表示未受伤"
+                },
+                "game_played_start": {
+                  "type": "string",
+                  "description": "出场/首发，例如 18/18"
+                },
+                "min": {
+                  "type": "string",
+                  "description": "场均时间"
+                },
+                "pts": {
+                  "type": "string",
+                  "description": "场均得分"
+                },
+                "reb": {
+                  "type": "string",
+                  "description": "场均篮板"
+                },
+                "asts": {
+                  "type": "string",
+                  "description": "场均助攻"
+                },
+                "fgp": {
+                  "type": "string",
+                  "description": "投篮命中率，例如 45%"
+                },
+                "tpp": {
+                  "type": "string",
+                  "description": "三分命中率"
+                },
+                "ftp": {
+                  "type": "string",
+                  "description": "罚球命中率"
+                },
+                "oreb": {
+                  "type": "string",
+                  "description": "场均前板"
+                },
+                "dreb": {
+                  "type": "string",
+                  "description": "场均后板"
+                },
+                "stl": {
+                  "type": "string",
+                  "description": "场均抢断"
+                },
+                "to": {
+                  "type": "string",
+                  "description": "场均失误"
+                },
+                "blk": {
+                  "type": "string",
+                  "description": "场均盖帽"
+                },
+                "pf": {
+                  "type": "string",
+                  "description": "场均犯规"
+                }
+              }
+            }
+          },
+          "offical": {
+            "type": "array",
+            "description": "管理层/教练组列表（接口字段名为 offical）",
+            "items": {
+              "type": "object",
+              "description": "球队管理层/教练组成员",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "人员 ID"
+                },
+                "eng_name": {
+                  "type": "string",
+                  "description": "英文名"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "中文名"
+                },
+                "birth_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "出生日期，可能为 null"
+                },
+                "page_link": {
+                  "type": "string",
+                  "description": "详情跳转链接/schema"
+                },
+                "photo": {
+                  "type": "string",
+                  "description": "头像 URL"
+                },
+                "category_name": {
+                  "type": "string",
+                  "description": "职位中文名，例如 主教练、总经理"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "职位类型，例如 MAIN_COACH、GENERAL_MANAGER、OPERATION_MANAGER"
+                }
+              }
+            }
+          },
+          "players_stats_glossary": {
+            "type": "array",
+            "description": "球员数据字段中英文对照，通常为 [英文 key 数组, 中文文案数组]",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

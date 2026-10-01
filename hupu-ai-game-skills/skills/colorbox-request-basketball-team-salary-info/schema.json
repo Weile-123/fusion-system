@@ -1,0 +1,189 @@
+{
+  "name": "request-basketball-teamSalaryInfo",
+  "description": "获取篮球球队（NBA / CBA）薪资帽概览与球员多年薪资表，包括总薪资、薪资空间、奢侈税及各赛季合同信息。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID，例如 \"1901000000501288\""
+      },
+      "leagueType": {
+        "type": "string",
+        "description": "联赛类型：nba 或 cba（大小写均可）"
+      }
+    },
+    "required": [
+      "teamId",
+      "leagueType"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "object",
+        "description": "成功时返回的数据载荷",
+        "properties": {
+          "projectId": {
+            "type": "number",
+            "description": "项目 ID"
+          },
+          "version": {
+            "type": "string",
+            "description": "接口版本号，例如 7.5.60"
+          },
+          "salaryGeneralViewPlate": {
+            "type": "array",
+            "description": "薪资概览板块列表",
+            "items": {
+              "type": "object",
+              "description": "球队薪资概览卡片（总薪资/薪资空间/奢侈税等）",
+              "properties": {
+                "leftTitle": {
+                  "type": "string",
+                  "description": "左侧标题，例如 总薪资、需缴纳奢侈税"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "卡片标题，例如 总薪资、薪资空间、奢侈税"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "卡片主数值，例如 2.421亿、-8747万"
+                },
+                "allianceRankingNum": {
+                  "type": "number",
+                  "description": "联盟排名"
+                },
+                "allianceRankingUrl": {
+                  "type": "string",
+                  "description": "联盟排名跳转链接"
+                },
+                "items": {
+                  "type": "array",
+                  "description": "卡片明细项列表",
+                  "items": {
+                    "type": "object",
+                    "description": "薪资概览板块中的明细项",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "明细名称，例如 阵容占据薪资、工资帽"
+                      },
+                      "value": {
+                        "type": "string",
+                        "description": "明细数值文案，例如 2.259亿"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "salaryPlayerTable": {
+            "type": "object",
+            "description": "球员多年薪资表",
+            "properties": {
+              "seasonSalaryHeads": {
+                "type": "array",
+                "description": "赛季表头列表，例如 2025-26赛季",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "items": {
+                "type": "array",
+                "description": "球员薪资行列表",
+                "items": {
+                  "type": "object",
+                  "description": "球员多年薪资表中的一行",
+                  "properties": {
+                    "playerName": {
+                      "type": "string",
+                      "description": "球员中文名"
+                    },
+                    "playerId": {
+                      "type": "string",
+                      "description": "球员唯一 ID"
+                    },
+                    "playerAvatarUrl": {
+                      "type": "string",
+                      "description": "球员头像 URL"
+                    },
+                    "age": {
+                      "type": "string",
+                      "description": "年龄文案，例如 29岁"
+                    },
+                    "signedUsing": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "签约条款，可能为 null"
+                    },
+                    "isOutgoing": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ],
+                      "description": "是否即将离队，可能为 null"
+                    },
+                    "seasonSalaryInfos": {
+                      "type": "array",
+                      "description": "按 seasonSalaryHeads 顺序排列的各赛季薪资",
+                      "items": {
+                        "type": "object",
+                        "description": "球员某一赛季的薪资信息",
+                        "properties": {
+                          "restrictedType": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "自由球员限制类型，例如 UFA、RFA；无限制时为 null"
+                          },
+                          "salaryOption": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "合同选项说明，例如 球员选项、球队选项、非完全保障；无为 null"
+                          },
+                          "seasonSalary": {
+                            "type": "string",
+                            "description": "该赛季薪资文案，例如 4639万；无合同为 \"-\""
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "lastModifyDate": {
+            "type": "string",
+            "description": "最近修改时间文案，例如 2025年11月03日 18:08"
+          },
+          "lastUpdateDate": {
+            "type": "string",
+            "description": "最近更新时间（ISO 字符串）"
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

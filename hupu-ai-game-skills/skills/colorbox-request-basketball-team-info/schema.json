@@ -1,0 +1,237 @@
+{
+  "name": "request-basketball-teamInfo",
+  "description": "获取篮球球队（NBA / CBA）页面 Header 基础资料，包括队名、队徽、主题色、主场、专区关注及页内 Tab 配置。",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "teamId": {
+        "type": "string",
+        "description": "球队唯一 ID，例如 \"1901000000501288\""
+      },
+      "leagueType": {
+        "type": "string",
+        "description": "联赛类型：nba 或 cba（大小写均可）"
+      }
+    },
+    "required": [
+      "teamId",
+      "leagueType"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "number",
+        "description": "状态码。200 表示成功，401 表示未登录，404 表示内容不存在，500 表示服务器错误"
+      },
+      "message": {
+        "type": "string",
+        "description": "错误提示信息。当 code 不等于 200 时必须用于向用户友好提示"
+      },
+      "data": {
+        "type": "object",
+        "description": "成功时返回的数据载荷",
+        "properties": {
+          "info": {
+            "type": "object",
+            "description": "球队基础 Header 信息",
+            "properties": {
+              "tid": {
+                "type": "string",
+                "description": "球队内部 tid，例如 \"10\""
+              },
+              "teamId": {
+                "type": "string",
+                "description": "球队唯一 ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "球队简称，例如 骑士"
+              },
+              "full_name": {
+                "type": "string",
+                "description": "球队全称，例如 克里夫兰骑士"
+              },
+              "en_name": {
+                "type": "string",
+                "description": "球队英文名，例如 Cavaliers"
+              },
+              "arena": {
+                "type": "string",
+                "description": "主场球馆名称"
+              },
+              "background": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "背景图，可能为 null"
+              },
+              "dayColor": {
+                "type": "string",
+                "description": "日间主题色（十六进制，无 # 前缀）"
+              },
+              "nightColor": {
+                "type": "string",
+                "description": "夜间主题色（十六进制，无 # 前缀）"
+              },
+              "rank": {
+                "type": [
+                  "string",
+                  "number",
+                  "null"
+                ],
+                "description": "排名，可能为 null"
+              },
+              "wins": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "胜场，可能为 null"
+              },
+              "losses": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "负场，可能为 null"
+              },
+              "homeWins": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "主场胜场，可能为 null"
+              },
+              "homeLosses": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "主场负场，可能为 null"
+              },
+              "awayWins": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "客场胜场，可能为 null"
+              },
+              "awayLosses": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "客场负场，可能为 null"
+              },
+              "area": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "赛区，可能为 null"
+              },
+              "logoLink": {
+                "type": "string",
+                "description": "队徽图片 URL"
+              },
+              "teamLinkUrl": {
+                "type": "string",
+                "description": "球队详情跳转 schema"
+              }
+            }
+          },
+          "thread": {
+            "type": "object",
+            "description": "球队专区信息",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "专区名称，例如 骑士专区"
+              },
+              "bbs_tid": {
+                "type": "number",
+                "description": "论坛专区 tid"
+              },
+              "bbs_tpid": {
+                "type": "number",
+                "description": "论坛话题/版块 tpid"
+              },
+              "followedUserNum": {
+                "type": "number",
+                "description": "专区关注人数"
+              }
+            }
+          },
+          "is_follow": {
+            "type": "number",
+            "description": "当前用户是否已关注，1 表示已关注，0 表示未关注"
+          },
+          "team_tab": {
+            "type": "string",
+            "description": "数据 Tab 文案"
+          },
+          "team_tab_url": {
+            "type": "string",
+            "description": "数据 Tab 跳转链接"
+          },
+          "salary_tab": {
+            "type": "string",
+            "description": "薪资 Tab 文案"
+          },
+          "salary_tab_show": {
+            "type": "boolean",
+            "description": "是否展示薪资 Tab"
+          },
+          "salary_tab_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "薪资 Tab 跳转链接，可能为 null"
+          },
+          "history_tab": {
+            "type": "string",
+            "description": "资料 Tab 文案"
+          },
+          "history_tab_show": {
+            "type": "boolean",
+            "description": "是否展示资料 Tab"
+          },
+          "history_tab_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "资料 Tab 跳转链接，可能为 null"
+          },
+          "season_tab": {
+            "type": "string",
+            "description": "赛季 Tab 文案"
+          },
+          "season_tab_show": {
+            "type": "boolean",
+            "description": "是否展示赛季 Tab"
+          },
+          "season_tab_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "赛季 Tab 跳转链接，可能为 null"
+          },
+          "encyclItemId": {
+            "type": "number",
+            "description": "关联评分百科对象 ID"
+          }
+        }
+      }
+    },
+    "required": [
+      "code",
+      "message"
+    ]
+  }
+}

@@ -54,7 +54,7 @@
   #roster .bench-grid .bench-card{height:auto;min-height:0}
   #roster .bench-grid .bench-player{padding:7px 27px 7px 7px}
   #shop.active{display:flex;flex-direction:column;gap:var(--module-gap)}
-  #shop.active>:is(.shop-tabs,.shop-grid,.roster-combat,.equipped-shelf,.equipment-reserve,.shop-test-cash,.footer-note,.btn.wide){margin-top:0;margin-bottom:0}
+  #shop.active>:is(.shop-tabs,.shop-grid,.roster-combat,.equipped-shelf,.equipment-reserve,.footer-note,.btn.wide){margin-top:0;margin-bottom:0}
   #shop .shop-grid{gap:var(--module-gap)}
   #shop .shop-overview-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;gap:7px}
   #shop>.row{display:none!important}

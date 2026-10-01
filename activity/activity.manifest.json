@@ -1,0 +1,30 @@
+{
+  "metaActivityId": "app_656cf66d07",
+  "alias": "我的球星融合系统",
+  "envId": "app-656cf66d07-d4grmvx6yaf70dad0",
+  "resources": {
+    "functions": ["activity_api"],
+    "gatewayRoutes": [
+      "/api/health",
+      "/api/leaderboard",
+      "/api/leaderboard/me",
+      "/api/runs/start",
+      "/api/runs/battle",
+      "/api/runs/finish"
+    ],
+    "postgresqlTables": ["public.leaderboard_entries", "public.leaderboard_runs"]
+  },
+  "publicBaseUrl": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com",
+  "verification": {
+    "ok": true,
+    "healthChecked": true,
+    "publicReadChecked": true,
+    "unauthorizedWriteRejected": true,
+    "authenticatedStartChecked": true,
+    "battleWriteReadChecked": true,
+    "finishIdempotencyChecked": true,
+    "testDataRemoved": true,
+    "hupuAppEndToEndChecked": false
+  },
+  "activity": { "status": "verified" }
+}

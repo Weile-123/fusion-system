@@ -360,6 +360,17 @@
   flex-direction: column;
   overflow: hidden
 }
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card{padding:10px}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.player-detail{padding:0}
+.game-modal .player-detail .detail-head,.game-modal .player-detail .detail-scroll,.game-modal .player-detail .detail-actions{padding-left:10px;padding-right:10px}
+.game-modal.sell-confirm-modal{align-items:flex-end;padding:0;background:#000b}
+.sell-confirm-sheet{width:min(100%,480px);max-height:80dvh;margin:0 auto;padding:10px 16px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:linear-gradient(180deg,#302820,#18191a);animation:recruit-sheet-rise .22s ease-out}
+.sell-confirm-sheet>p{margin:14px 0 9px}.sell-confirm-value{padding:11px;border:1px solid #70502a;border-radius:9px;background:#28231c;color:#d8c9af;font-size:12px}.sell-confirm-value b{color:#ffd065;font-size:20px}
+#talent .list .talent{padding:10px}
+#talent .floatingaction.talent-actions{position:static;bottom:auto;display:grid;gap:7px;margin-top:10px;padding:7px;border:1px solid #5c4428;border-radius:12px;background:#242322;box-shadow:none;backdrop-filter:none}
+#talent .talent-actions .btn.talent-confirm{display:flex;align-items:center;justify-content:center;height:50px;min-height:0;padding:8px 10px;border:1px solid #d59a2b;border-radius:8px;background:#302b24;color:#fff3dd;font-size:12px;line-height:1.2;box-shadow:none}
+#talent .talent-actions .talent-ad{display:flex;align-items:center;justify-content:space-between;width:100%;height:50px;min-height:0;padding:7px 10px;border:1px solid #ffe083;border-radius:8px;background:linear-gradient(135deg,#ff9f0a,#ffd85b);color:#201508;text-align:left;box-shadow:inset 0 1px 0 #fff4bd}
+#talent .talent-ad span{display:grid;gap:2px}#talent .talent-ad b{font-size:12px}#talent .talent-ad small{font-size:9px}#talent .talent-ad img{display:block;flex:0 0 auto;width:30px;height:24px;object-fit:contain}#talent .talent-ad:disabled{opacity:.55}.talent-ad-message{margin:0;color:#ffd18a;font-size:10px;line-height:1.4}
 
 .talent-catalog-modal .modal-head {
   flex: none
@@ -428,7 +439,7 @@
   line-height: 1.4
 }
 
-.screen:not(#home):not(#result):not(#report):not(#roster):not(#profile):not(#pointshop).active {
+.screen:not(#home):not(#result):not(#report):not(#roster):not(#profile):not(#pointshop):not(#leaderboard).active {
   height: calc(100dvh - var(--screen-top-offset, var(--game-top-height, 32px)) - var(--fixed-dock-height, 0px));
   min-height: 0;
   margin-top: var(--screen-top-offset, var(--game-top-height, 32px));
@@ -778,19 +789,6 @@
   color: #b6ab98;
   text-align: center;
   font-size: 10px
-}
-
-#shop .shop-test-cash {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-  padding: 9px;
-  border: 1px dashed #8c6832;
-  border-radius: 7px;
-  background: #28231d;
-  color: #eec279;
-  font-size: 10px;
-  font-weight: 900
 }
 
 #shop>.btn.wide[data-act="roster"] {
