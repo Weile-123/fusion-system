@@ -11,3 +11,8 @@
 .button-9{border:1px solid #6c5332;background:#292520;color:#c8b89e;box-shadow:none}.button-9[aria-selected="true"]{border-color:#ffac1c;background:#ffac1c;color:#201303}
 .leaderboard-switch .button-9,.leaderboard-switch .button-9[aria-selected="true"]{border-color:transparent;background:transparent}
 :where(.button-1,.button-2,.button-3,.button-4,.button-5,.button-6,.button-7,.button-8,.button-9):disabled{opacity:.48;cursor:not-allowed;box-shadow:none}
+.ad-loading-icon{display:inline-block;flex:0 0 auto;width:22px;height:22px;border:3px solid #24170645;border-top-color:#241706;border-radius:50%;box-sizing:border-box;animation:ad-button-spin .75s linear infinite}
+.career-revive .ad-loading-icon{width:14px;height:14px;border-width:2px}
+#talent .talent-ad.ad-busy:disabled,.recruit-sheet-actions>button.ad-busy:disabled,.career-report-actions .btn.ad-busy:disabled{opacity:1;filter:none;cursor:progress}
+@keyframes ad-button-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ad-loading-icon{animation-duration:1.5s}}

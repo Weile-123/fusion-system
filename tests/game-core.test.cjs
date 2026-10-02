@@ -1200,11 +1200,10 @@ test('game restore finishes before actions become available and locker slot labe
   for (const rarity of ['c','b','a','s']) assert.match(css, new RegExp(`equipment-slot-row\\.is-equipped\\.gear-tier-${rarity} \\.equipment-card-open span\\{color:`));
 });
 
-test('screen navigation ignores mobile WebView click-through after changing pages', () => {
+test('screen navigation uses the shared click handler without a time lock', () => {
   const ui = readH5('game-ui.js');
-  assert.match(ui, /const SCREEN_NAVIGATION_ACTIONS=new Set/);
-  assert.match(ui, /if\(now<navigationClickLockedUntil\)return/);
-  assert.match(ui, /navigationClickLockedUntil=now\+900/);
+  assert.match(ui, /document\.addEventListener\('click',event=>\{/);
+  assert.doesNotMatch(ui, /navigationClickLockedUntil/);
   assert.match(ui, /if\(action==='roster'\)\{go\('roster'\);return\}/);
 });
 
@@ -1585,8 +1584,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(ui, /\$\{batch\?bondHintMarkup:''\}<\/span>/);
   assert.doesNotMatch(ui, /style="--card-order:\$\{index\}" data-act="select-offer"/);
   assert.match(ui, /C\.toggleRecruitBatchSelection\(r,index\)/);
-  assert.match(ui, /batchPointerClickSuppressedUntil=performance\.now\(\)\+800/);
-  assert.match(ui, /action==='select-offer'&&performance\.now\(\)<batchPointerClickSuppressedUntil/);
+  assert.doesNotMatch(ui, /batchPointerClickSuppressedUntil/);
   assert.match(ui, /forcedOpening\|\|screen==='recruit'\|\|screen==='result'/);
   assert.match(ui, /batchCount===0\?'全部出售':'确认拿走'/);
   assert.match(css, /pending-recruit-modal>h2\{[^}]*font-size:14px/);
@@ -1649,10 +1647,10 @@ test('shop and locker share a compact five-stat header without a title', () => {
   assert.match(ui, /action==='buy-gear'.+save\(\);go\('shop'\);notify\('装备已购买'\)/);
 });
 
-test('top-bar back navigation consumes the pointer gesture before the next screen is drawn', () => {
+test('top-bar back navigation uses the shared click handler', () => {
   const ui = readH5('game-ui.js');
-  assert.match(ui, /handle\(topBack\.dataset\.act,topBack\);/);
-  assert.match(ui, /button\.classList\.contains\('top-back'\)&&event\.detail>0/);
+  assert.match(ui, /document\.addEventListener\('click',event=>\{/);
+  assert.doesNotMatch(ui, /handle\(topBack\.dataset\.act,topBack\);/);
   assert.doesNotMatch(ui, /topBackClickSuppressedUntil/);
   assert.match(ui, /if\(action==='roster'\)\{go\('roster'\);return\}/);
 });

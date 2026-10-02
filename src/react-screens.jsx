@@ -205,7 +205,7 @@ function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talent
       </div>
       <div className="floatingaction talent-actions">
         <button className="btn wide talent-confirm button-3" data-act="begin" disabled={talentAdBusy}>确认天赋</button>
-        <button className="talent-ad button-4" data-act="talent-ad" disabled={talentAdBusy || talentAdUnlocked}><span><b>{talentAdUnlocked ? '已解锁自选天赋' : talentAdBusy ? '正在播放广告…' : '看广告自选天赋'}</b><small>{talentAdUnlocked ? '请在上方选择天赋' : '从所有已解锁天赋中自选一个'}</small></span><img src="assets/reward-video-icon.svg" alt="" /></button>
+        <button className={`talent-ad button-4${talentAdBusy ? ' ad-busy' : ''}`} data-act="talent-ad" disabled={talentAdBusy || talentAdUnlocked}><span><b>{talentAdUnlocked ? '已解锁自选天赋' : '看广告自选天赋'}</b><small>{talentAdUnlocked ? '请在上方选择天赋' : '从所有已解锁天赋中自选一个'}</small></span>{talentAdBusy ? <i className="ad-loading-icon" aria-hidden="true" /> : <img src="assets/reward-video-icon.svg" alt="" />}</button>
         {talentAdMessage && <p className="talent-ad-message" role="status">{talentAdMessage}</p>}
       </div>
     </>
@@ -361,7 +361,7 @@ function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, re
         </section>
       </div>
       <div className="career-report-actions">
-        <div className="career-action-row"><button className="btn wide career-revive" data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : reviveBusy ? '正在拉起视频…' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
+        <div className="career-action-row"><button className={`btn wide career-revive${reviveBusy ? ' ad-busy' : ''}`} data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{reviveBusy && <i className="ad-loading-icon" aria-hidden="true" />}{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
         {reviveMessage && <p role="status">{reviveMessage}</p>}
         <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>生成海报</button>
         <small>{summary.posterRewarded ? '本局已领取海报分享奖励' : '首次打开虎扑发帖编辑器，奖励 100 传奇点'}</small>
