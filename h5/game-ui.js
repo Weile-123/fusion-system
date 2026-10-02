@@ -983,8 +983,9 @@
       if(!showPosterPreview||screen!=='report'||!posterBlob||posterPhase==='rendering'||posterPhase==='uploading'||posterPhase==='opening')return;
       try{
         await publishCareerPoster(posterBlob,careerReportSummary());
-        if(!r.posterRewarded){r.posterRewarded=true;game.profile.legend+=100;save()}
-        posterPhase='done';posterMessage='已打开虎扑发帖编辑器，获得 100 传奇点。请在虎扑确认并发布帖子。';renderCareerReport();
+        const rewardedNow=!r.posterRewarded;
+        if(rewardedNow){r.posterRewarded=true;game.profile.legend+=100;save()}
+        posterPhase='done';posterMessage=rewardedNow?'已获得奖励·100传奇点':'';renderCareerReport();
       }catch(error){posterPhase='error';posterMessage=error?.message||'分享未完成，请稍后重试。'}
       if(showPosterPreview&&screen==='report')renderPending();
       return;

@@ -1731,7 +1731,8 @@ test('career report builds a preview and shares its PNG through OSS and the post
   assert.match(ui, /typeof bbs\?\.bbsTagId==='string'&&bbs\.bbsTagId\.trim\(\)/);
   assert.match(ui, /ai\.request\.bbs\.openPostEditor\(params\)/);
   assert.match(ui, /if\(response\?\.code!==200\)throw new Error/);
-  assert.match(ui, /await publishCareerPoster\(posterBlob,careerReportSummary\(\)\);\s*if\(!r\.posterRewarded\)\{r\.posterRewarded=true;game\.profile\.legend\+=100;save\(\)\}/);
+  assert.match(ui, /const rewardedNow=!r\.posterRewarded;\s*if\(rewardedNow\)\{r\.posterRewarded=true;game\.profile\.legend\+=100;save\(\)\}/);
+  assert.match(ui, /posterMessage=rewardedNow\?'已获得奖励·100传奇点':''/);
   assert.match(ui, /showRecruitSheet=false;recruitSheetMessage='';showBonds=false/);
   assert.match(screens, /查看生涯报告/);
   assert.match(screens, /\{!ended && <div className="panel battle-reward"/);
