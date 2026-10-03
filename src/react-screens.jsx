@@ -305,7 +305,7 @@ function ResultAction({ ended, final, won }) {
   return <button className="btn wide" data-act={won ? 'next' : 'retry'}>{won ? '下一关整备' : '整备重试'} →</button>;
 }
 
-function ResultScreen({ report, won, ended, final, wins, losses, beatText, strategyName, strategyEffect, playerName, playerNameNotice }) {
+function ResultScreen({ report, won, ended, final, wins, losses, battleKey, beatText, strategyName, strategyEffect, playerName, playerNameNotice }) {
   return (
     <>
       <div className="result-card panel">
@@ -318,9 +318,9 @@ function ResultScreen({ report, won, ended, final, wins, losses, beatText, strat
       </div>
       {playerNameNotice && <p className="result-user-notice" role="status">{playerNameNotice}</p>}
       <div className="sectionhead result-timeline-title"><h2>关键回合</h2></div>
-      <div className="timeline">
+      <div className="timeline" key={battleKey}>
         {!!report.signatures?.length && <div className="timeline-signatures">{report.signatures.map((move) => <span key={move.id}>{move.kind === 'offense' ? '进攻' : '防守'} · <b>{move.name}</b>　触发 {move.uses} 次</span>)}</div>}
-        {report.log.map((line, index) => <p key={`${index}-${line}`}>{line}</p>)}
+        {report.log.map((line, index) => <p className="timeline-entry" style={{ '--round-order': index }} key={`${index}-${line}`}>{line.replace(/^(\d+)回合/, '第$1次攻防')}</p>)}
       </div>
       {ended && <div className="panel result-summary">本局 {wins} 胜 {losses} 负，获得 {report.legendEarned || 0} 传奇点。</div>}
       {final && <div className="panel result-summary">主线十关完成！可以带当前阵容进入无尽，或结算本局。</div>}
@@ -364,7 +364,7 @@ function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, re
         <div className="career-action-row"><button className={`btn wide career-revive${reviveBusy ? ' ad-busy' : ''}`} data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{reviveBusy && <i className="ad-loading-icon" aria-hidden="true" />}{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
         {reviveMessage && <p role="status">{reviveMessage}</p>}
         <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>生成海报</button>
-        <small>{summary.posterRewarded ? '本局已领取海报分享奖励' : '首次打开虎扑发帖编辑器，奖励 100 传奇点'}</small>
+        {!summary.posterRewarded && <small>首次分享海报，获得 100 传奇点</small>}
       </div>
     </>
   );

@@ -1657,7 +1657,7 @@ test('top-bar back navigation uses the shared click handler', () => {
 
 test('roster top action opens the current talent instead of returning home', () => {
   const ui = readH5('game-ui.js');
-  assert.match(ui, /screen==='roster'\?\['current-talent-open','查看天赋'\]/);
+  assert.match(ui, /screen==='roster'\?\['current-talent-open',`当前天赋：\$\{currentTalent\?\.name\|\|'未选择'\}`\]/);
   assert.doesNotMatch(ui, /<button class="roster-talent-action" data-act="current-talent-open">查看天赋<\/button>/);
   assert.match(ui, /if\(action==='current-talent-open'\)\{if\(r\)\{showCurrentTalent=true;renderPending\(\)\}return\}/);
 });

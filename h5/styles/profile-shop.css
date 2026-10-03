@@ -1,7 +1,7 @@
 #home .home-scores{left:21px;right:21px}
   #home .home-primary,#home .home-entry-row{margin-top:10px}
   #home .home-entry-row{gap:10px}
-  #home .home-secondary{min-height:45px;padding:10px 5px}
+  #home .home-secondary{min-height:var(--home-button-height);padding:10px 5px}
   #home .home-pointshop{border-color:#b7791f;background:linear-gradient(95deg,#70400b,#a96810);color:#fff0c8}
   #home .home-profile{border-color:#49443d;background:#242321;color:#e5e0d8}
   #pointshop .pointshop-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin:10px 0}
@@ -42,6 +42,9 @@
   .signature-item em{display:block;margin-top:4px;color:#ffd277;font-size:8px;font-style:normal;line-height:1.25}
   #result .timeline-signatures{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:12px;color:#cfc3af;font-size:10px}
   #result .timeline-signatures b{color:#ffd277}
+  #result .timeline-entry{animation:critical-round-enter .28s ease-out both;animation-delay:calc(var(--round-order,0)*220ms)}
+  @keyframes critical-round-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){#result .timeline-entry{animation:none}}
   /* Main screen modules share the gap between the top bar and first combat panel. */
   :root{--module-gap:10px;--game-top-height:32px;--screen-edge-gap:15px}
   :is(#talent,#recruit,#roster,#shop,#duel,#result).screen{padding-top:calc(var(--game-top-height) + var(--screen-edge-gap))}

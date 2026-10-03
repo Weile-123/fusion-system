@@ -85,7 +85,7 @@
     const seed=safeNumber(source.seed,0,4294967295,1);
     const run=C.createRun(source.talent,seed,{...restored.profile.upgrades,jerseyUnlocks:restored.profile.jerseyUnlocks});
     run.cloudRunId=typeof source.cloudRunId==='string'&&/^[0-9a-f-]{36}$/i.test(source.cloudRunId)?source.cloudRunId:'';
-    run.cloudRankError=typeof source.cloudRankError==='string'?source.cloudRankError.slice(0,120):'';
+    run.cloudRankError=typeof source.cloudRankError==='string'&&source.cloudRankError!=='本局未连接云端，不计入排行榜。'?source.cloudRankError.slice(0,120):'';
     run.cloudFinished=source.cloudFinished===true;
     run.rng=safeNumber(source.rng,0,4294967295,run.rng);
     run.stage=safeNumber(source.stage,1,100000,1);
@@ -221,7 +221,8 @@
   function top(){
     const r=game.run;
     const header=document.querySelector('.top');
-    const back=screen==='roster'?['current-talent-open','查看天赋']:
+    const currentTalent=C.KNOWN_TALENTS.find(item=>item.id===r?.talent);
+    const back=screen==='roster'?['current-talent-open',`当前天赋：${currentTalent?.name||'未选择'}`]:
       screen==='talent'?['home','返回首页']:
       ['recruit','shop','duel'].includes(screen)?['roster','返回阵容']:
       screen==='result'?['roster','返回阵容']:['home','返回首页'];
@@ -569,7 +570,7 @@
     els.result.classList.toggle('result-loss',!won);
     const beatText=report.beats>0?'战术克制成功':report.beats<0?'本场战术被克制':'双方策略未形成克制';
     if(window.SupFusionReactScreens?.renderResult){
-      window.SupFusionReactScreens.renderResult(els.result,{report,won,ended,final,wins:r.wins,losses:r.losses,beatText,strategyName:C.STRATEGIES[report.strategy].name,strategyEffect:report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌',playerName,playerNameNotice:[playerNameNotice,r.cloudRankError].filter(Boolean).join(' ')});
+      window.SupFusionReactScreens.renderResult(els.result,{report,won,ended,final,wins:r.wins,losses:r.losses,battleKey:`${r.seed}-${r.wins}-${r.losses}`,beatText,strategyName:C.STRATEGIES[report.strategy].name,strategyEffect:report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌',playerName,playerNameNotice:[playerNameNotice,r.cloudRankError].filter(Boolean).join(' ')});
       return;
     }
     const resultAction=ended?`<button class="btn wide" data-act="career-report">查看生涯报告 →</button>`
@@ -581,7 +582,7 @@
           <div class="result-middle"><div class="score">${report.us}<span>:</span>${report.them}</div><b>${won?'胜利':'失利'}</b></div>
           <div class="result-side"><div class="result-avatar opp-avatar"><img src="assets/rival-forward.png" alt="对手概念插画"></div><strong>${report.foeName}</strong><small>OVR ${report.foeRating}${report.foeStars>1?` · ${report.foeStars}★`:''}</small></div></div>
         <div class="result-strategy"><span>▣ ${beatText}：${C.STRATEGIES[report.strategy].name}</span><b>${report.beats>0?'主战力额外 +6%':report.beats<0?'对手主战力额外 +6%':'势均力敌'}</b></div></div>${playerNameNotice?`<p class="result-user-notice" role="status">${escapeText(playerNameNotice)}</p>`:''}
-      <div class="sectionhead result-timeline-title"><h2>关键回合</h2></div><div class="timeline">${report.signatures?.length?`<div class="timeline-signatures">${report.signatures.map(move=>`<span>${move.kind==='offense'?'进攻':'防守'} · <b>${move.name}</b>　触发 ${move.uses} 次</span>`).join('')}</div>`:''}${report.log.map(line=>`<p>${escapeText(line)}</p>`).join('')}</div>
+      <div class="sectionhead result-timeline-title"><h2>关键回合</h2></div><div class="timeline" key="battle-${r.seed}-${r.wins}-${r.losses}">${report.signatures?.length?`<div class="timeline-signatures">${report.signatures.map(move=>`<span>${move.kind==='offense'?'进攻':'防守'} · <b>${move.name}</b>　触发 ${move.uses} 次</span>`).join('')}</div>`:''}${report.log.map((line,index)=>`<p class="timeline-entry" style="--round-order:${index}">${escapeText(line.replace(/^(\d+)回合/,'第$1次攻防'))}</p>`).join('')}</div>
       ${ended?`<div class="panel result-summary">本局 ${r.wins} 胜 ${r.losses} 负，获得 ${report.legendEarned||0} 传奇点。</div>`
         :final?`<div class="panel result-summary">主线十关完成！可以带当前阵容进入无尽，或结算本局。</div>`:''}
       <div class="result-dock">${ended?'':`<div class="panel battle-reward"><div class="battle-reward-main"><span class="shopicon">＄</span><div><strong>本场奖金 +${report.reward}</strong><small>${report.detail.join(' · ')}</small></div></div></div>`}${resultAction}</div>`;
@@ -1033,7 +1034,7 @@
       try{cloudRun=await cloudApi('/runs/start','POST',{talent,displayName:playerName})}catch(_){/* Local play remains available. */}
       game.run=C.createRun(talent,cloudRun?.seed??Date.now(),{...(game.profile.upgrades||{}),jerseyUnlocks:game.profile.jerseyUnlocks||[]});
       game.run.cloudRunId=typeof cloudRun?.runId==='string'?cloudRun.runId:'';
-      game.run.cloudRankError=game.run.cloudRunId?'':'本局未连接云端，不计入排行榜。';
+      game.run.cloudRankError='';
       cloudStartBusy=false;selectedPlace=null;selectedOffer='';rosterTraining=false;strategy='collapse';save();go('recruit');return;
     }
     if(action==='roster'){go('roster');return}

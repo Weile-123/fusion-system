@@ -1,7 +1,9 @@
 .app.home-mode #home{padding-left:0;padding-right:0}
+  #home{--home-button-height:54px}
+  #home :is(.home-primary,.home-secondary,.home-leaderboard-entry){box-sizing:border-box;height:var(--home-button-height);min-height:var(--home-button-height)}
   #home .home-label,#home .home-hero{padding-left:21px;padding-right:21px}
   #home .home-primary,#home .home-entry-row,#home>.footer-note{width:calc(100% - 42px);margin-left:21px;margin-right:21px}
   #home .home-hero{box-sizing:border-box}
-  #home .home-leaderboard-entry{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 42px);min-height:46px;margin:9px 21px 0;padding:0 17px;border:1px solid #b58330;border-radius:9px;background:linear-gradient(115deg,#352814,#211d1b);color:#ffcb62;font-size:14px;font-weight:950}
+  #home .home-leaderboard-entry{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 42px);min-height:var(--home-button-height);margin:9px 21px 0;padding:0 17px;border:1px solid #b58330;border-radius:9px;background:linear-gradient(115deg,#352814,#211d1b);color:#ffcb62;font-size:14px;font-weight:950}
   #home .home-leaderboard-entry span{font-size:20px}
   #home .home-eyebrow{min-height:22px;display:flex;align-items:center}
