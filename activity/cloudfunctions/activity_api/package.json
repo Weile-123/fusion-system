@@ -10,7 +10,6 @@
     "node": ">=18.15"
   },
   "dependencies": {
-    "@cloudbase/node-sdk": "^3.16.0",
-    "my-sup-fusion": "file:../../.."
+    "@cloudbase/node-sdk": "^3.16.0"
   }
 }

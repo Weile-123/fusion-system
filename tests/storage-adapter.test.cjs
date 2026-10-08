@@ -75,60 +75,43 @@ test('local preview saves and restores a run after a page reload', async () => {
   assert.deepEqual(await reloaded.load(), snapshot);
 });
 
-test('entering the Hupu container reads and syncs the newest save every time', async () => {
-  const indexedDB = fakeIndexedDB();
-  const oldSave = { version: 1, savedAt: 100, run: { stage: 3 }, profile: { legend: 9 } };
-  const calls = [];
-  let cloud = oldSave;
-  const window = { indexedDB, ColorboxAI: { storage: {
-    async getValue(key) { calls.push(['get', key]); return { [key]: cloud }; },
-    async setValue(data) { calls.push(['set', data.mySupFusionGameV1.run.stage]); cloud = data.mySupFusionGameV1; return { ok: true }; }
-  } } };
-  const store = storageFor(window);
-  assert.deepEqual(await store.load(), oldSave);
-  assert.deepEqual(calls, [['get', 'mySupFusionGameV1'], ['set', 3]]);
-  const nextSave = { ...oldSave, savedAt: 200, run: { stage: 4 }, profile: { legend: 5, upgrades: { startGold: 1 } } };
-  await store.save(nextSave);
-  assert.deepEqual(await storageFor(window).load(), nextSave);
-  assert.deepEqual(calls, [['get', 'mySupFusionGameV1'], ['set', 3], ['set', 4], ['get', 'mySupFusionGameV1'], ['set', 4]]);
+
+test('ordinary saves and loads use only the device even when SDK cloud storage is available', async () => {
+  const calls=[], indexedDB=fakeIndexedDB();
+  const window={indexedDB,ColorboxAI:{storage:{getValue:async()=>{calls.push('get');return {version:1,savedAt:999,run:{stage:9}}},setValue:async()=>{calls.push('set');return {ok:true}}}}};
+  const store=storageFor(window),snapshot={version:1,savedAt:1,run:{stage:2}};
+  await store.save(snapshot);assert.deepEqual(await store.load(),snapshot);assert.deepEqual(calls,[]);
+  await store.syncToCloud(snapshot);assert.deepEqual(calls,['set']);
 });
 
-test('an older device save never replaces newer Hupu data', async () => {
-  const indexedDB = fakeIndexedDB();
-  const local = storageFor({ indexedDB });
-  await local.save({ version: 1, savedAt: 100, run: { stage: 2 } });
-  let uploaded;
-  const store = storageFor({ indexedDB, ColorboxAI: { storage: {
-    async getValue() { return { version: 1, savedAt: 200, run: { stage: 5 } }; },
-    async setValue(value) { uploaded = value.mySupFusionGameV1; return { ok: true }; }
-  } } });
-  assert.equal((await store.load()).run.stage, 5);
-  assert.equal(uploaded.run.stage, 5);
-  assert.equal((await storageFor({ indexedDB }).load()).run.stage, 5);
+test('legacy platform saves import once and never replace an existing device save',async()=>{
+  const calls=[],indexedDB=fakeIndexedDB(),snapshot={version:1,savedAt:1,run:{stage:3}};
+  const window={indexedDB,ColorboxAI:{storage:{getValue:async()=>{calls.push('get');return snapshot},setValue:async()=>{calls.push('set');return {ok:true}}}}};
+  const store=storageFor(window);assert.deepEqual(await store.load(),snapshot);assert.deepEqual(calls,['get']);
+  await store.save({...snapshot,run:{stage:4}});assert.equal((await storageFor(window).load()).run.stage,4);assert.deepEqual(calls,['get']);
 });
 
-test('a newer device save uploads to Hupu when the game opens', async () => {
-  const indexedDB = fakeIndexedDB();
-  await storageFor({ indexedDB }).save({ version: 1, savedAt: 300, run: { stage: 7 } });
-  let uploaded;
-  const store = storageFor({ indexedDB, ColorboxAI: { storage: {
-    async getValue() { return { version: 1, savedAt: 200, run: { stage: 5 } }; },
-    async setValue(value) { uploaded = value.mySupFusionGameV1; return { ok: true }; }
-  } } });
-  assert.equal((await store.load()).run.stage, 7);
-  assert.equal(uploaded.run.stage, 7);
+test('localStorage is a device-only fallback when IndexedDB fails',async()=>{
+  const values=new Map(),calls=[];
+  const store=storageFor({indexedDB:{open(){throw Error('blocked')}},localStorage:{getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)},ColorboxAI:{storage:{getValue:async()=>null,setValue:async()=>{calls.push('set')}}}});
+  await store.save({version:1,run:{stage:5}});assert.equal((await store.load()).run.stage,5);assert.deepEqual(calls,[]);
 });
 
-test('activity container falls back to Colorbox storage when local storage fails', async () => {
-  const calls = [];
-  const store = storageFor({
-    indexedDB: { open() { throw new Error('fallback should not open'); } },
-    ColorboxAI: { storage: {
-      async getValue(key) { calls.push(['get', key]); return { mySupFusionGameV1: { version: 1 } }; },
-      async setValue(value) { calls.push(['set', value.mySupFusionGameV1.version]); return { ok: true }; }
-    } }
-  });
-  assert.deepEqual(await store.load(), { version: 1 });
-  await store.save({ version: 1 });
-  assert.deepEqual(calls, [['get', 'mySupFusionGameV1'], ['set', 1], ['set', 1]]);
+test('a stalled cloud backup cannot hold up subsequent device writes',async()=>{
+  const indexedDB=fakeIndexedDB();let release;
+  const store=storageFor({indexedDB,ColorboxAI:{storage:{getValue:async()=>null,setValue:()=>new Promise(resolve=>release=resolve)}}});
+  const backup=store.syncToCloud({version:1,run:{stage:1}});
+  await store.save({version:1,run:{stage:2}});await store.save({version:1,run:{stage:3}});
+  assert.equal((await store.load()).run.stage,3);release({ok:true});await backup;
+});
+
+test('failed cloud backups preserve the local save and report failure for retry',async()=>{
+  const indexedDB=fakeIndexedDB(),store=storageFor({indexedDB,ColorboxAI:{storage:{getValue:async()=>null,setValue:async()=>({code:403})}}});
+  const snapshot={version:1,run:{stage:4}};await store.save(snapshot);
+  await assert.rejects(store.syncToCloud(snapshot),/backup failed/);assert.deepEqual(await store.load(),snapshot);
+});
+
+test('device failure cannot silently turn ordinary saves into cloud writes',async()=>{
+  const calls=[],store=storageFor({indexedDB:{open(){throw Error('blocked')}},ColorboxAI:{storage:{getValue:async()=>null,setValue:async()=>{calls.push('set')}}}});
+  await assert.rejects(store.save({version:1}),/Device storage/);assert.deepEqual(calls,[]);
 });

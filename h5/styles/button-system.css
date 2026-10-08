@@ -16,3 +16,6 @@
 #talent .talent-ad.ad-busy:disabled,.recruit-sheet-actions>button.ad-busy:disabled,.career-report-actions .btn.ad-busy:disabled{opacity:1;filter:none;cursor:progress}
 @keyframes ad-button-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.ad-loading-icon{animation-duration:1.5s}}
+button[data-network-pending] { cursor: wait; opacity: .75; }
+button[data-network-pending]::after { content: ''; display: inline-block; width: 12px; height: 12px; margin-left: 6px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: middle; animation: network-button-spin .7s linear infinite; }
+@keyframes network-button-spin { to { transform: rotate(360deg); } }

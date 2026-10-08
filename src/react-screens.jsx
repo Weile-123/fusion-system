@@ -1,6 +1,4 @@
-import { createElement, Fragment } from 'react';
-import { createRoot } from 'react-dom/client';
-import { flushSync } from 'react-dom';
+import { createElement, Fragment, createRoot, flushSync } from './dom-runtime.mjs';
 
 const roots = new WeakMap();
 
@@ -131,7 +129,7 @@ function MarkupScreen({ html }) {
   return createElement(Fragment, null, ...parseGeneratedMarkup(html).map(markupNodeToReact));
 }
 
-function HomeScreen({ active, stage, storageMessage }) {
+function HomeScreen({ active, stage }) {
   return (
     <>
       <section className="home-hero">
@@ -152,9 +150,22 @@ function HomeScreen({ active, stage, storageMessage }) {
         <button className="home-secondary home-pointshop" data-act="pointshop">点数商店</button>
         <button className="home-secondary home-profile" data-act="profile">传奇档案</button>
       </div>
-      <p className="footer-note">{storageMessage}</p>
+      <button type="button" className="home-feedback button-7" data-act="feedback-open">反馈入口</button>
     </>
   );
+}
+
+function FeedbackScreen({ draft, remaining, busy, message }) {
+  return <section className="modal-card feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title">
+    <div className="modal-head"><h2 id="feedback-title">反馈入口</h2><button type="button" className="button-8" data-act="feedback-close" aria-label="关闭反馈" disabled={busy}>×</button></div>
+    <label className="feedback-input-label" htmlFor="feedback-content">反馈内容</label>
+    <textarea id="feedback-content" value={draft} rows={5} placeholder="遇到了什么问题，或有什么建议？" readOnly={busy} aria-describedby="feedback-count feedback-status" />
+    <small id="feedback-count" aria-live="polite">{remaining >= 0 ? `还可输入 ${remaining} 字` : `已超出 ${-remaining} 字`}</small>
+    <p id="feedback-status" role="status" aria-live="polite">{message}</p>
+    <button id="feedback-submit" type="button" className="btn button-1 wide" data-act="feedback-submit" disabled={busy || !draft.trim() || remaining < 0} aria-busy={busy}>
+      {busy && <i className="ad-loading-icon" aria-hidden="true" />}{busy ? '提交中…' : '提交反馈'}
+    </button>
+  </section>;
 }
 
 function LeaderboardPage({ entries, title, unit, status, playerName }) {
@@ -163,23 +174,24 @@ function LeaderboardPage({ entries, title, unit, status, playerName }) {
     {status && <p className="leaderboard-status" role="status">{status}</p>}
     {entries.length > 0 && <>
       <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small></div>)}</div>
+      {entries.length > 3 && <div className="leaderboard-list-heading"><span>排名</span><span>玩家</span><span>{title}</span></div>}
       <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit}</small></b></div>)}</div>
     </>}
     {entries.length === 0 && (status === '' || status === '暂无成绩') && <p className="leaderboard-empty">暂时还没有成绩</p>}
   </section>;
 }
 
-function LeaderboardScreen({ boards, tab, status, mine, playerName }) {
+function LeaderboardScreen({ boards, tab, status, mine, playerName, busy }) {
   const current = mine[tab];
   return <>
-    <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><button className="leaderboard-home button-7" data-act="home">返回主页</button></div>
+    <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><div className="leaderboard-heading-actions"><button className="leaderboard-refresh button-7" data-act="leaderboard-refresh" disabled={busy} aria-busy={busy}>{busy&&<i className="leaderboard-loading-icon" aria-hidden="true"/>}刷新</button><button className="leaderboard-home button-7" data-act="home">返回主页</button></div></div>
     <div className="leaderboard-my-rank"><span>我的排名<small>{tab === 'legend' ? '总传奇点' : '单局最高 OVR'}</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'} <small>{tab === 'legend' ? '点' : 'OVR'}</small></b></div>
     <div className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">单局最高 OVR</button><i aria-hidden="true" /></div>
     <div className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="点" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title="单局最高 OVR" unit="OVR" status={status.ovr} playerName={playerName} /></div></div>
   </>;
 }
 
-function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talentAdBusy, talentAdUnlocked, talentAdMessage }) {
+function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talentAdBusy, talentAdUnlocked, talentAdMessage, beginBusy = false }) {
   return (
     <>
       <button className="inline-back" data-act="home">← 返回首页</button>
@@ -196,6 +208,7 @@ function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talent
             data-act="talent"
             data-id={talent.id}
             key={talent.id}
+            disabled={beginBusy || talentAdBusy}
           >
             <b>✦ {talent.name} <small>{talent.category}</small></b>
             <span>{talent.gain}</span>
@@ -204,8 +217,8 @@ function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talent
         ))}
       </div>
       <div className="floatingaction talent-actions">
-        <button className="btn wide talent-confirm button-3" data-act="begin" disabled={talentAdBusy}>确认天赋</button>
-        <button className={`talent-ad button-4${talentAdBusy ? ' ad-busy' : ''}`} data-act="talent-ad" disabled={talentAdBusy || talentAdUnlocked}><span><b>{talentAdUnlocked ? '已解锁自选天赋' : '看广告自选天赋'}</b><small>{talentAdUnlocked ? '请在上方选择天赋' : '从所有已解锁天赋中自选一个'}</small></span>{talentAdBusy ? <i className="ad-loading-icon" aria-hidden="true" /> : <img src="assets/reward-video-icon.svg" alt="" />}</button>
+        <button className="btn wide talent-confirm button-3" data-act="begin" disabled={talentAdBusy || beginBusy}>{beginBusy && <i className="ad-loading-icon" aria-hidden="true" />}确认天赋</button>
+        <button className={`talent-ad button-4${talentAdBusy ? ' ad-busy' : ''}`} data-act="talent-ad" disabled={talentAdBusy || talentAdUnlocked || beginBusy}><span><b>{talentAdUnlocked ? '已解锁自选天赋' : '看广告自选天赋'}</b><small>{talentAdUnlocked ? '请在上方选择天赋' : '从所有已解锁天赋中自选一个'}</small></span>{talentAdBusy ? <i className="ad-loading-icon" aria-hidden="true" /> : <img src="assets/reward-video-icon.svg" alt="" />}</button>
         {talentAdMessage && <p className="talent-ad-message" role="status">{talentAdMessage}</p>}
       </div>
     </>
@@ -243,7 +256,7 @@ function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel,
             <rect x="2" y={21 - heartFillHeight} width="20" height={heartFillHeight} fill="#ff655c" clipPath="url(#life-heart-fill)" />
             <path d={heartPath} fill="none" stroke="#ff655c" strokeWidth="2" strokeLinejoin="round" />
           </svg>
-          <b>{morale}/{moraleMax}</b>
+          <b>{Math.min(moraleMax,morale)}/{moraleMax}{morale>moraleMax?` +${morale-moraleMax}`:''}</b>
         </span>
       </div>
     </>
@@ -364,7 +377,7 @@ function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, re
         <div className="career-action-row"><button className={`btn wide career-revive${reviveBusy ? ' ad-busy' : ''}`} data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{reviveBusy && <i className="ad-loading-icon" aria-hidden="true" />}{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
         {reviveMessage && <p role="status">{reviveMessage}</p>}
         <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>生成海报</button>
-        {!summary.posterRewarded && <small>首次分享海报，获得 100 传奇点</small>}
+        {!summary.posterRewarded && summary.wins+summary.losses>0 && <small>首次分享海报，获得 100 传奇点</small>}
       </div>
     </>
   );
@@ -374,6 +387,9 @@ export function installReactScreens() {
   if (window.SupFusionReactScreens) return window.SupFusionReactScreens;
 
   window.SupFusionReactScreens = Object.freeze({
+    renderFeedback(element, props) {
+      renderInto(element, <FeedbackScreen {...props} />);
+    },
     renderHome(element, props) {
       renderInto(element, <HomeScreen {...props} />);
     },

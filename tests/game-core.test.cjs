@@ -511,7 +511,7 @@ test('profile and top bar expose GOAT, three catalogs, and point shop without th
   assert.match(css, /meta-jersey\.unlocked\.jersey-equipment/);
   assert.doesNotMatch(ui, /jersey-collection-preview">\$\{jerseyArtwork\(item\)\}<span>球衣<\/span>/);
   assert.match(ui, /function renderPointShop\(\)/);
-  assert.match(ui, /C\.finishRun\(game\);save\(\);await finishCloudRun\(r\);startNewJourney\(\)/);
+  assert.match(ui, /C\.finishRun\(game\);queueFinalization\(r\);archiveCloudRun\(r\);void finishCloudRun\(r\)/);
   assert.doesNotMatch(ui, /<h2>生涯纪录<\/h2>|<h2>后续开放<\/h2>/);
   assert.match(app, /['"]pointshop['"]/);
   assert.match(ui, /classList\.toggle\('pointshop-mode',id==='pointshop'\)/);
@@ -1728,11 +1728,11 @@ test('career report builds a preview and shares its PNG through OSS and the post
   assert.match(ui, /ai\.oss\.uploadFile\(\{file:blob,filename:/);
   assert.match(ui, /new URL\(upload\.downloadUrl\)/);
   assert.match(ui, /imageUrl\.protocol!=='https:'/);
-  assert.match(ui, /const bbs=await ai\.bbsConfig\.get\(\)/);
-  assert.match(ui, /typeof bbs\?\.bbsTagId==='string'&&bbs\.bbsTagId\.trim\(\)/);
+  assert.doesNotMatch(ui, /ai\.bbsConfig\.get/);
+  assert.match(ui, /topicId:'871',tagId:'158640',topicName:'AI工坊',tagName:'我的球星融合系统'/);
   assert.match(ui, /ai\.request\.bbs\.openPostEditor\(params\)/);
   assert.match(ui, /if\(response\?\.code!==200\)throw new Error/);
-  assert.match(ui, /const rewardedNow=!r\.posterRewarded;\s*if\(rewardedNow\)\{r\.posterRewarded=true;game\.profile\.legend\+=100;save\(\)\}/);
+  assert.match(ui, /const rewardedNow=!r\.posterRewarded&&r\.wins\+r\.losses>0;\s*if\(rewardedNow\)\{r\.posterRewarded=true;game\.profile\.legend\+=100;save\(\)\}/);
   assert.match(ui, /posterMessage=rewardedNow\?'已获得奖励·100传奇点':''/);
   assert.match(ui, /showRecruitSheet=false;recruitSheetMessage='';showBonds=false/);
   assert.match(screens, /查看生涯报告/);
@@ -1774,10 +1774,10 @@ test('talent video choice and leaderboard use rewarded callbacks and bounded clo
   assert.match(ui, /if\(action==='talent-ad'\)/);
   assert.match(ui, /response\?\.code!==200\|\|response\?\.data\?\.rewarded!==true/);
   assert.match(ui, /talentOffer=C\.availableTalents\(game\.profile\)/);
-  assert.match(ui, /await refreshRewardTaskState\(\)/);
+  assert.match(ui, /void refreshRewardTaskState\(\)/);
   assert.doesNotMatch(ui, /mockBoard|MOCK_NAMES|SUPFUSION_DEMO_LEADERBOARD/);
   assert.match(ui, /rows\.slice\(0,50\)/);
-  assert.match(ui, /window\.ColorboxAI\.cloud\.request\(\{url:`\$\{base\}\/api\/leaderboard`,method:'GET',data:\{board,limit:50\}\}\)/);
+  assert.match(ui, /window\.ColorboxAI\.cloud\.request\(\{url:`\$\{base\}\/api\/leaderboard`,method:'GET',data:\{board,limit:50,refreshId\}\}\)/);
   assert.match(screens, /leaderboard-podium/);
   assert.match(screens, /entries\.slice\(3, 50\)/);
   assert.match(screens, /data-act="talent-ad"/);

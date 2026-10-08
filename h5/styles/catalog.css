@@ -879,3 +879,12 @@
   backdrop-filter: none;
   -webkit-backdrop-filter: none
 }
+.codex-bond-entry:not(.complete) { border-color: #454545; background: #222; }
+.codex-bond-entry:not(.complete) h3,
+.codex-bond-entry:not(.complete) p,
+.codex-bond-entry:not(.complete) small { color: #888; }
+.codex-bond-entry:not(.complete) .codex-bond-members span { color: #888; border-color: #4a4a4a; background: #292929; }
+.jersey-unlock-result { text-align: center; }
+.jersey-unlock-art { width: 130px; margin: 16px auto; }
+.jersey-unlock-result h3 { color: #ffc34d; font-size: 18px; }
+.jersey-unlock-result p { color: #aaa; font-size: 12px; margin: 8px 0 16px; }

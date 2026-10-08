@@ -867,7 +867,7 @@
       const bond=own.bonds.length?1:0,bondCash=Math.min(5,own.bonds.reduce((sum,item)=>sum+(item.effect?.winCash||0),0));
       const talentCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.winCash||0),0);
       const openingCash=(opening.battleCash||0)+(own.bonds.length?(opening.bondWinCash||0):0);
-      reward=base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash;run.cash+=reward;run.wins++;
+      reward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash);run.cash+=reward;run.wins++;
       if(opening.winHeal&&run.wins%(opening.healEveryWins||1)===0){
         const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit||10)-granted));
         run.morale+=heal;run.talentWinHealGranted=granted+heal;
@@ -877,7 +877,7 @@
       if(talentCash)detail.push(`球星技能 ${talentCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
     }else{
-      run.morale--;run.losses++;reward=incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0);run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)}`];
+      run.morale--;run.losses++;run.free++;reward=Math.max(0,incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0));run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)}`,'免费招募 +1'];
       if(opening.battleCash)detail.push(`开局天赋 ${opening.battleCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
     }

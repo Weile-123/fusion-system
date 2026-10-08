@@ -1,5 +1,6 @@
 import '../h5/styles/tailwind.css';
 import '../h5/styles/base.css';
+import '../h5/styles/feedback.css';
 import '../h5/styles/light-court.css';
 import '../h5/styles/navigation.css';
 import '../h5/styles/night-theme.css';
@@ -20,3 +21,4 @@ import '../h5/styles/button-system.css';
 import '../h5/styles/legacy-shop.css';
 import '../h5/ssr-card.css';
 import '../h5/styles/codex.css';
+import '../h5/styles/release-polish.css';
