@@ -8,7 +8,7 @@
     "build": "npm run css:build && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "pretest": "npm run build",
-    "test": "node --test tests/game-core.test.cjs tests/storage-adapter.test.cjs tests/flow-audit.cjs tests/team5v5.test.mjs"
+    "test": "node --test tests/game-core.test.cjs tests/storage-adapter.test.cjs tests/flow-audit.cjs tests/talent-v2.test.cjs tests/profile-render.test.cjs"
   },
   "dependencies": {
     "react": "^19.1.1",

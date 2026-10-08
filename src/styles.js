@@ -17,4 +17,6 @@ import '../h5/styles/profile-shop.css';
 import '../h5/styles/recruit-sheet.css';
 import '../h5/styles/career-report.css';
 import '../h5/styles/button-system.css';
+import '../h5/styles/legacy-shop.css';
 import '../h5/ssr-card.css';
+import '../h5/styles/codex.css';

@@ -34,7 +34,7 @@ const reactAttributeNames = {
   'font-weight': 'fontWeight'
 };
 const booleanAttributes = new Set(['disabled', 'hidden', 'checked', 'selected', 'multiple', 'readonly']);
-const allowedTags = new Set(['b', 'br', 'button', 'div', 'em', 'h1', 'h2', 'h3', 'i', 'img', 'p', 'path', 'section', 'small', 'span', 'strong', 'svg', 'text']);
+const allowedTags = new Set(['article', 'b', 'br', 'button', 'div', 'em', 'h1', 'h2', 'h3', 'header', 'i', 'img', 'p', 'path', 'section', 'small', 'span', 'strong', 'svg', 'text']);
 const allowedAttributes = new Set([
   'alt', 'class', 'colspan', 'd', 'disabled', 'fill', 'fill-opacity', 'font-family', 'font-size',
   'font-weight', 'height', 'hidden', 'id', 'key', 'opacity', 'paint-order', 'preserveaspectratio',
@@ -212,9 +212,9 @@ function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talent
   );
 }
 
-function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel, morale }) {
+function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel, morale, moraleMax = 3 }) {
   const heartPath = 'M12 21s-9-5.5-9-11.7C3 5.6 5.4 3 8.5 3c1.8 0 3 1 3.5 2.1C12.5 4 13.7 3 15.5 3 18.6 3 21 5.6 21 9.3 21 15.5 12 21 12 21Z';
-  const heartFillHeight = 18 * (morale / 3);
+  const heartFillHeight = 18 * Math.min(1, morale / moraleMax);
   const isTalentAction = hasRun && backAction === 'current-talent-open';
   const backButton = !hideBack && (
     <button className={`top-back${isTalentAction ? ' top-talent' : ''}`} data-act={hasRun ? backAction : 'home'}>
@@ -243,7 +243,7 @@ function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel,
             <rect x="2" y={21 - heartFillHeight} width="20" height={heartFillHeight} fill="#ff655c" clipPath="url(#life-heart-fill)" />
             <path d={heartPath} fill="none" stroke="#ff655c" strokeWidth="2" strokeLinejoin="round" />
           </svg>
-          <b>{morale}/3</b>
+          <b>{morale}/{moraleMax}</b>
         </span>
       </div>
     </>

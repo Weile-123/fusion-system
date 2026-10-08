@@ -1,0 +1,56 @@
+/* Legacy shop: gold wallet and gift showcase, with athletic upgrade rows. */
+#pointshop .profile-title-row,#profile .profile-title-row,#leaderboard .leaderboard-heading{align-items:center;padding-bottom:2px}
+#pointshop .profile-title-row .eyebrow,#profile .profile-title-row .eyebrow,#leaderboard .leaderboard-heading>div>span{letter-spacing:.17em;color:#e1b65d;font-size:10px}
+#pointshop .profile-title-row .title,#profile .profile-title-row .title,#leaderboard .leaderboard-heading h1{color:#fff2d3;font-size:24px;letter-spacing:-.055em;margin:4px 0 0}
+#pointshop .profile-home,#profile .profile-home,#leaderboard .leaderboard-home{border:1px solid #ac8035;background:linear-gradient(135deg,#443521,#221e18);border-radius:10px;color:#f4cd7a;padding:8px 10px;font-size:10px}
+#pointshop .legend-balance{display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:12px;border:1px solid #ad803b;border-radius:12px;background:radial-gradient(ellipse at 0 0,#93621d44,transparent 65%),linear-gradient(115deg,#2e281c,#171818);box-shadow:inset 0 1px 0 #fff0ba1c;color:#eedcb7;font-size:11px}
+#pointshop .legend-balance b{margin-left:auto;font-size:28px;color:#ffcf68;line-height:1}
+.legacy-icon{display:block;width:24px;height:24px;flex-shrink:0}
+.legacy-coin{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:2px solid #edc36c;border-radius:50%;background:linear-gradient(130deg,#ffe6a5,#b48126 55%,#5d3c0e);box-shadow:inset 0 0 0 3px #a97628,inset 0 0 0 4px #ffe5a58c,0 3px 10px #0005;color:#fff1c4}
+.legacy-coin .legacy-icon{width:21px;height:21px;filter:drop-shadow(0 1px 1px #5c3c15)}
+#pointshop .pointshop-tabs,#profile .profile-tabs,#leaderboard .leaderboard-switch{border:1px solid #665339;border-radius:10px;background:linear-gradient(130deg,#282725,#181a1c);padding:3px;isolation:isolate;overflow:hidden}
+#pointshop .pointshop-tabs button,#profile .profile-tabs button,#leaderboard .leaderboard-switch button{border-radius:7px;color:#a9a59a;font-size:12px;padding:12px 4px;position:relative;z-index:2;background:none}
+#pointshop .pointshop-tabs button.active,#profile .profile-tabs button.active,#leaderboard .leaderboard-switch button[aria-selected="true"]{color:#ffe5ad;background:none;text-shadow:0 1px 2px #0006}
+#pointshop .pointshop-tabs i,#profile .profile-tabs i,#leaderboard .leaderboard-switch i{border:1px solid #af8441;border-radius:7px;background:linear-gradient(125deg,#78603a,#3d3325);box-shadow:inset 0 -3px 0 #f8c753,0 3px 9px #f9c34a25;z-index:1}
+#leaderboard .leaderboard-switch button{min-height:0}
+#leaderboard .leaderboard-switch i{top:3px;bottom:3px;left:3px;width:calc(50% - 3px)}
+#pointshop .legacy-upgrade{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border:1px solid #4a4435;border-left:4px solid #e5a329;border-radius:11px;background:linear-gradient(120deg,#2c2b26,#181b1c);box-shadow:inset 0 1px 0 #ffffff06}
+#pointshop .legacy-upgrade-icon{display:grid;place-items:center;border:1px solid #9d793a;border-radius:7px;width:34px;height:34px;background:#171817;color:#e9c16b}
+#pointshop .legacy-upgrade-icon .legacy-icon{width:26px;height:26px}
+#pointshop .legacy-upgrade-copy{min-width:0}
+#pointshop .legacy-upgrade-copy strong{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px;color:#f9f1df;font-size:12px;line-height:1.4}
+#pointshop .legacy-upgrade-copy strong small{color:#d7b46f;font-size:9px;white-space:nowrap}
+#pointshop .legacy-upgrade-copy>span{display:block;color:#b8b4a9;font-size:9px;line-height:1.5;margin-top:3px}
+.legacy-levels{display:flex;gap:4px;margin-top:4px}
+.legacy-levels i{width:6px;height:6px;border:1px solid #777569;border-radius:50%;background:#151819}
+.legacy-levels i.filled{border-color:#edc25e;background:#e6ad35;box-shadow:0 0 5px #e6ad3540}
+#pointshop .legacy-upgrade>.btn{min-width:0;height:auto;min-height:0;padding:8px;font-size:11px;border-radius:8px;margin:0}
+#pointshop .legacy-upgrade.is-max{border-left-color:#9b895c}
+#pointshop .legacy-gift-panel{display:flex;flex-direction:column;align-items:center;gap:0;padding:18px 14px;border:1px solid #aa8646;border-radius:12px;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 50% 55%,#d4a03f24,transparent 60%),repeating-conic-gradient(from -10deg at 50% 62%,#c6994810 0deg 5deg,transparent 5deg 24deg),linear-gradient(135deg,#27241e,#121515);box-shadow:inset 0 1px 0 #ffdd931a}
+#pointshop .legacy-gift-panel h2{font-size:15px;color:#f6dfaa;line-height:1.4;margin:0}
+.legacy-gift-stage{width:100%;position:relative;display:grid;place-items:center}
+.legacy-gift-stage:before{content:'';position:absolute;bottom:17px;width:84%;height:30px;border-radius:50%;background:#9e742015;border:1px solid #a5834230;box-shadow:0 -7px 25px #e9b84713}
+.legacy-gift-stage img{position:relative;width:min(100%,230px);height:135px;object-fit:contain;filter:drop-shadow(0 0 12px #d6a74515)}
+#pointshop .legacy-gift-panel.has-collection .legacy-gift-stage img{height:120px}
+#pointshop .legacy-gift-panel p{font-size:9px;line-height:1.6;color:#c5b99e;margin:0 0 9px}
+#pointshop .legacy-unlock-button{width:min(100%,320px);padding:9px;height:auto;min-height:0;flex:none;border-radius:9px;border:1px solid #f4d889;background:linear-gradient(120deg,#dfa632,#ffda76 52%,#dba540);color:#241a0a;font-size:12px;box-shadow:inset 0 1px 0 #fff2bc,0 4px 16px #c58e2330}
+#pointshop .legacy-unlock-button:disabled{opacity:.55;cursor:default;box-shadow:none}
+#pointshop .legacy-unlock-result{display:block;color:#ffdc8b;font-size:10px;font-style:normal;line-height:1.5;margin-top:8px}
+#pointshop .legacy-collection{padding:12px;border:1px solid #645538;border-radius:12px;background:radial-gradient(ellipse at 50% 0,#54462b20,transparent 65%),#191b1b}
+.legacy-collection-title{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.legacy-collection-title h2{font-size:11px;color:#ece1c9;margin:0;white-space:nowrap}
+.legacy-collection-title h2 b{font-size:13px;margin-left:5px;color:#e6c57e}
+.legacy-collection-title>span{display:flex;align-items:center;gap:12px;flex:1;color:#ad8c4b}
+.legacy-collection-title>span:before,.legacy-collection-title>span:after{content:'';height:1px;background:linear-gradient(90deg,#9c773c,transparent);flex:1}
+.legacy-collection-title>span:before{background:linear-gradient(90deg,transparent,#9c773c)}
+.legacy-collection-title .legacy-icon{width:15px;height:15px}
+#pointshop .legacy-collection .meta-jersey-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:0}
+#pointshop .legacy-collection .meta-jersey{padding:12px 7px 10px;border:1px solid #d6b663;border-radius:10px}
+#pointshop .legacy-collection .jersey-art-frame{height:100px;display:flex;align-items:center;justify-content:center}
+#pointshop .legacy-collection .jersey-vector{width:115px;max-width:100%;height:90px;filter:drop-shadow(0 4px 4px #0007)}
+#pointshop .legacy-collection .meta-jersey b{white-space:normal;color:#fff6dc;font-size:11px;line-height:1.4;text-shadow:0 1px 3px #000;margin:4px 0 6px}
+#pointshop .legacy-collection .legacy-jersey-stats{white-space:normal;color:#fae9c5;font-size:9px;line-height:1.5;border-top:1px solid #ffffff30;padding-top:6px;text-shadow:0 1px 3px #000}
+.legacy-collection-empty{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;padding:20px 10px;background:radial-gradient(ellipse,#b4933d0a,transparent 65%)}
+.legacy-collection-empty .legacy-icon{width:52px;height:52px;color:#ad905c;stroke-width:1}
+.legacy-collection-empty p{font-size:10px;line-height:1.6;color:#cebb90;margin:0;text-align:center}
+@media(max-width:360px){#pointshop .legacy-upgrade{grid-template-columns:30px minmax(0,1fr) auto;gap:7px;padding:10px}#pointshop .legacy-upgrade-icon{width:30px;height:30px}#pointshop .legacy-upgrade-copy strong{font-size:12px}#pointshop .legacy-upgrade>.btn{min-width:57px;padding:6px;font-size:11px}#pointshop .legacy-collection .jersey-art-frame{height:85px}#pointshop .legacy-collection .jersey-vector{height:75px}}

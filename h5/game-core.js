@@ -67,7 +67,7 @@
     {id:'steal',name:'预判抢断',kind:'defense',slots:['def','handle'],turnover:.06,description:'对手失误率 +6 个百分点'},
     {id:'block',name:'追身封盖',kind:'defense',slots:['def','inside'],shot:'inside',accuracy:.10,description:'对手篮下命中 -10 个百分点'}
   ];
-  // 17 条开局路线：10 条默认、7 条由生涯纪录解锁。旧版天赋只用于继续已有存档。
+  // 20 条开局路线：13 条默认、7 条由生涯纪录解锁。
   const TALENTS = [
     {id:'reserve_fund',name:'奖金储备',category:'经营',gain:'开局奖金 +8；每过一关奖金 +1；利息上限 +1',cost:'投射威胁、禁区终结各 -3%',effects:{startCash:8,stageCash:1,interestCap:1,dimensions:{shooting:-3,finishing:-3}}},
     {id:'scouting_network',name:'球探网络',category:'招募',gain:'S 出现权重 +30%；SSR 每组概率 +50%；每关免费招募 +1',cost:'付费招募 +2 奖金',effects:{draftSWeight:1.3,draftSSRWeight:1.5,freePerStage:1,paidRecruitDelta:2}},
@@ -79,13 +79,16 @@
     {id:'lockdown',name:'铁桶防线',category:'防守',gain:'外线限制、护框强度各 +8%；每关免费刷新装备商店 1 次',cost:'投射威胁 -3%',effects:{dimensions:{perimeterStop:8,rimStop:8,shooting:-3},freeGearRefresh:1}},
     {id:'counter_coach',name:'临场教练',category:'战术',gain:'战术克制额外加成从 6% 提高到 12%；每关免费招募 +1',cost:'本方策略弱势维度惩罚从 -4% 增至 -6%',effects:{counterBonus:6,freePerStage:1,strategyPenalty:2}},
     {id:'all_in',name:'孤注一掷',category:'决战',gain:'五项单挑能力 +7%；开局获得一件随机 A 级装备',cost:'开局士气 -1',effects:{allDimensions:7,startGearRarity:'A',startMorale:-1}},
-    {id:'steady_interest',name:'长期合同',category:'经营',gain:'利息上限 +1；每过一关奖金 +1',cost:'无',unlock:{runs:1},effects:{interestCap:1,stageCash:1}},
-    {id:'championship_budget',name:'冠军预算',category:'经营',gain:'五项单挑能力 +6%；装备购买价格 -2 奖金',cost:'开局奖金 -8',unlock:{bestStage:5},effects:{allDimensions:6,gearDiscount:2,startCash:-8}},
-    {id:'dynasty',name:'王朝计划',category:'决战',gain:'开局获得一件随机 S 级装备',cost:'开局奖金 -8；每过一关奖金 -2',unlock:{bestStage:10},effects:{startGearRarity:'S',startCash:-8,stageCash:-2}},
-    {id:'film_room',name:'录像分析室',category:'战术',gain:'战术克制额外加成从 6% 提高到 16%；免除本方策略弱势惩罚',cost:'装备商店刷新费用 +1',unlock:{wins:8},effects:{counterBonus:10,ignoreStrategyPenalty:true,gearRefreshCostDelta:1}},
-    {id:'deep_bench',name:'豪华轮换',category:'阵容',gain:'备战席初始上限 +2',cost:'付费招募 +1 奖金',unlock:{discovered:20},effects:{benchDelta:2,paidRecruitDelta:1}},
-    {id:'streak_bonus',name:'连胜分红',category:'进取',gain:'每场胜利额外获得 6 奖金',cost:'失败补偿 -2 奖金',unlock:{bestEndless:13},effects:{winCash:6,lossCash:-2}},
-    {id:'captain',name:'领袖回归',category:'续战',gain:'每场胜利恢复 1 点士气，最多恢复到 3 点',cost:'持球创造 -3%',unlock:{runs:3},effects:{winHeal:1,dimensions:{creation:-3}}}
+    {id:'steady_interest',name:'长期合同',category:'经营',gain:'利息上限 +1；每过一关奖金 +1',cost:'无',unlock:{wins:5},effects:{interestCap:1,stageCash:1}},
+    {id:'championship_budget',name:'冠军预算',category:'经营',gain:'五项单挑能力 +10%；装备购买享 8 折',cost:'开局奖金 -8',unlock:{bestStage:7,wins:15},effects:{allDimensions:10,gearPriceMultiplier:.8,startCash:-8}},
+    {id:'dynasty',name:'王朝计划',category:'决战',gain:'五项单挑能力 +12%；开局获得一件随机 S 级装备',cost:'每场结算奖金 -2',unlock:{clears:1,wins:30},effects:{allDimensions:12,startGearRarity:'S',battleCash:-2}},
+    {id:'film_room',name:'录像分析室',category:'战术',gain:'战术克制额外加成从 6% 提高到 16%；免除本方策略弱势惩罚',cost:'装备商店刷新费用 +1',unlock:{bestStage:6,wins:20},effects:{counterBonus:10,ignoreStrategyPenalty:true,gearRefreshCostDelta:1}},
+    {id:'deep_bench',name:'豪华轮换',category:'阵容',gain:'备战席初始上限 +3；扩容上限 +3',cost:'付费招募 +1 奖金',unlock:{discovered:35},effects:{benchDelta:3,paidRecruitDelta:1}},
+    {id:'streak_bonus',name:'连胜分红',category:'进取',gain:'每场胜利额外获得 10 奖金',cost:'失败补偿 -2 奖金',unlock:{bestEndless:13,wins:40},effects:{winCash:10,lossCash:-2}},
+    {id:'captain',name:'领袖回归',category:'续战',gain:'每累计两胜恢复 1 点士气；本局累计最多恢复 10 点，可超过初始士气',cost:'持球创造 -3%',unlock:{clears:1,wins:25},effects:{winHeal:1,healEveryWins:2,healLimit:10,dimensions:{creation:-3}}},
+    {id:'phase_pressure',name:'攻防压制',category:'阶段专精',gain:'对抗、续航专精：禁区终结、外线限制、护框强度 +8%',cost:'布局弱势：投射威胁、持球创造 -4%',effects:{dimensions:{finishing:8,perimeterStop:8,rimStop:8,shooting:-4,creation:-4}}},
+    {id:'phase_patient',name:'稳守反击',category:'阶段专精',gain:'布局、续航专精：投射威胁、持球创造、护框强度 +8%',cost:'对抗弱势：禁区终结、外线限制 -4%',effects:{dimensions:{shooting:8,creation:8,rimStop:8,finishing:-4,perimeterStop:-4}}},
+    {id:'phase_tempo',name:'速战速决',category:'阶段专精',gain:'布局、对抗专精：投射威胁、持球创造、禁区终结、外线限制 +6%',cost:'续航弱势：护框强度 -8%',effects:{dimensions:{shooting:6,creation:6,finishing:6,perimeterStop:6,rimStop:-8}}}
   ];
   const LEGACY_TALENTS = [
     {id:'outside',name:'外线速成'},{id:'inside',name:'禁区霸主'},{id:'defense',name:'铁血防线'},
@@ -95,10 +98,19 @@
   const TALENT_BY_ID=Object.fromEntries(TALENTS.map(talent=>[talent.id,talent]));
   function openingEffect(run){return TALENT_BY_ID[run?.talent]?.effects||{}}
   function talentUnlocked(talent,profile){
+    if(profile?.metaUnlocks?.talents?.includes(talent.id))return true;
     if(!talent.unlock)return true;
     return Object.entries(talent.unlock).every(([key,value])=>key==='discovered'?(profile?.discovered?.length||0)>=value:(profile?.[key]||0)>=value);
   }
   function availableTalents(profile){return TALENTS.filter(talent=>talentUnlocked(talent,profile)||profile?.metaUnlocks?.talents?.includes(talent.id))}
+  function migrateTalentUnlocks(profile){
+    if(profile.talentRulesVersion===2)return profile;
+    const old={steady_interest:{runs:1},championship_budget:{bestStage:5},dynasty:{bestStage:10},film_room:{wins:8},deep_bench:{discovered:20},streak_bonus:{bestEndless:13},captain:{runs:3}};
+    profile.metaUnlocks ||= {talents:[],gear:[],players:[]};
+    profile.metaUnlocks.talents=[...new Set([...(profile.metaUnlocks.talents||[]),...Object.entries(old).filter(([,unlock])=>talentUnlocked({unlock},profile)).map(([id])=>id)])];
+    profile.talentRulesVersion=2;return profile;
+  }
+  function benchExpansionLimit(run){return 10+Math.max(0,openingEffect(run).benchDelta||0)}
   const STAR_ROWS = DATA.STAR_ROWS;
   const STARS = STAR_ROWS.map(r => ({
     id:r[0],name:r[1],tier:r[2],role:r[3],team:r[4],best:r[5],
@@ -214,10 +226,10 @@
 
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
-  function createGame(){return { version:1, run:null, profile:{runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
+  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
   function createRun(talent,seed,progress={}){
     const effect=openingEffect({talent});
-    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,16+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
+    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,16+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
     if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature');if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
@@ -652,7 +664,7 @@
   function trainingCost(run,id){const level=run.owned[id]?.train??0,base=TRAINING_COSTS[Math.min(level,TRAINING_COSTS.length-1)];return base===undefined?Infinity:Math.max(1,base+(run.talent==='agent'?2:0)+(openingEffect(run).trainingCostDelta||0))}
   function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const cost=trainingCost(run,id);if(run.cash<cost)return false;run.cash-=cost;own.train++;own.trainedAt=run.stage;return true}
   function boostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
-  function gearPrice(run,item){return Math.max(1,item.price-(openingEffect(run).gearDiscount||0))}
+  function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0))*(effect.gearPriceMultiplier||1)))}
   function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.cash<boostPrice(run,item))return false;run.cash-=boostPrice(run,item);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
   function buyGear(run,id){
     ensureShop(run);
@@ -698,7 +710,7 @@
     if(activeIndex>=0)run.gear.splice(activeIndex,1);else reserve.splice(reserveIndex,1);
     run.cash+=item.sellPrice;return item.sellPrice;
   }
-  function expandBench(run){if(run.cash<10||run.benchLimit>=10)return false;run.cash-=10;run.benchLimit++;return true}
+  function expandBench(run){if(run.cash<10||run.benchLimit>=benchExpansionLimit(run))return false;run.cash-=10;run.benchLimit++;return true}
   function refreshOffer(run){if(run.refreshFree>0)run.refreshFree--;else if(run.cash>=5)run.cash-=5;else return false;run.offer=[];run.offerOdds=null;makeOffer(run);return true}
   function shotType(run,strategy,attacker,move=null){
     const n=nextRandom(run),bias=attacker==='us'?(move?.threeBias||0):0;
@@ -753,6 +765,8 @@
     profile.bestEndless=Math.max(profile.bestEndless||0,run.endless?run.stage:0);profile.bestGoat=Math.max(profile.bestGoat||0,goat);profile.bestOvr=Math.max(profile.bestOvr||0,run.maxOvr||run.lastBattle?.rating||0);profile.legend+=points;
     profile.discovered=[...new Set([...(profile.discovered||[]),...(run.collectedPlayers||Object.keys(run.owned))])];
     profile.jerseys=[...new Set([...(profile.jerseys||[]),...(run.collectedJerseys||[])])];
+    profile.metaUnlocks ||= {talents:[],gear:[],players:[]};
+    profile.metaUnlocks.talents=[...new Set([...(profile.metaUnlocks.talents||[]),...availableTalents(profile).filter(talent=>talent.unlock).map(talent=>talent.id)])];
     run.settlement={points,wins:run.wins,clearAward:cleared>=10?1:0};run.awarded=true;run.ended=true;return points;
   }
   function reviveRun(game){
@@ -854,7 +868,10 @@
       const talentCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.winCash||0),0);
       const openingCash=(opening.battleCash||0)+(own.bonds.length?(opening.bondWinCash||0):0);
       reward=base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash;run.cash+=reward;run.wins++;
-      if(opening.winHeal)run.morale=Math.min(3,run.morale+opening.winHeal);
+      if(opening.winHeal&&run.wins%(opening.healEveryWins||1)===0){
+        const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit||10)-granted));
+        run.morale+=heal;run.talentWinHealGranted=granted+heal;
+      }
       detail=[`胜利 ${base}`,`阵容收入 ${lineupIncome}`,`利息 ${interest}`,`羁绊 ${bond+bondCash}`];
       if(openingCash)detail.push(`开局天赋 ${openingCash}`);
       if(talentCash)detail.push(`球星技能 ${talentCash}`);
@@ -889,7 +906,7 @@
     run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
+  const api={ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -1,19 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { startGameRuntime } from './runtime-loader.js';
 import { installReactScreens } from './react-screens.jsx';
-import Team5v5App, { ModeHub } from './team5v5/Team5v5App.jsx';
-import { modeLink } from './mode-links.js';
 
 const screens = ['home', 'leaderboard', 'talent', 'recruit', 'roster', 'shop', 'duel', 'result', 'report', 'profile', 'pointshop'];
 
 export default function App() {
-  const mode = new URLSearchParams(window.location.search).get('mode');
-  if (mode === '5v5') return <Team5v5App />;
-  if (mode === 'fusion') return <ClassicApp />;
-  return <ModeHub />;
-}
-
-function ClassicApp() {
   const pageRoot = useRef(null);
   const [error, setError] = useState('');
 
@@ -47,7 +38,6 @@ function ClassicApp() {
   return (
     <>
       <div className="app home-mode">
-        <a href={modeLink(null)} className="classic-mode-switch">切换模式</a>
         <header className="top" />
         <div id="page-root" className="contents" ref={pageRoot}>
           {screens.map((screen) => <main id={screen} className={`screen${screen === 'home' ? ' active' : ''}`} key={screen} />)}

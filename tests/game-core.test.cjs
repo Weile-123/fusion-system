@@ -61,7 +61,7 @@ test('Vite entry mounts all React screens and preserves the validated game runti
   assert.match(screens, /function HomeScreen/);
   assert.match(screens, /function TalentScreen/);
   assert.match(screens, /function TopBar/);
-  assert.match(screens, /heartFillHeight = 18 \* \(morale \/ 3\)/);
+  assert.match(screens, /heartFillHeight = 18 \* Math.min\(1, morale \/ moraleMax\)/);
   assert.match(screens, /clipPath="url\(#life-heart-fill\)"/);
   assert.doesNotMatch(screens, /fillOpacity=\{morale \/ 3\}/);
   assert.match(screens, /function DuelScreen/);
@@ -1311,14 +1311,14 @@ test('automatic battle records bounded signature activations without extra playe
   assert.ok(report.log.length <= 7);
 });
 
-test('seventeen opening talents keep ten initial choices and seven career unlocks', () => {
-  assert.equal(C.TALENTS.length, 17);
-  assert.equal(new Set(C.TALENTS.map(talent => talent.id)).size, 17);
+test('twenty opening talents include thirteen initial choices and seven career unlocks', () => {
+  assert.equal(C.TALENTS.length, 20);
+  assert.equal(new Set(C.TALENTS.map(talent => talent.id)).size, 20);
   const profile = C.createGame().profile;
-  assert.equal(C.availableTalents(profile).length, 10);
-  Object.assign(profile, { runs: 3, wins: 8, bestStage: 10, bestEndless: 13 });
-  profile.discovered = C.STARS.slice(0, 20).map(star => star.id);
-  assert.equal(C.availableTalents(profile).length, 17);
+  assert.equal(C.availableTalents(profile).length, 13);
+  Object.assign(profile, { clears:1, runs: 3, wins: 40, bestStage: 10, bestEndless: 13 });
+  profile.discovered = C.STARS.slice(0, 35).map(star => star.id);
+  assert.equal(C.availableTalents(profile).length, 20);
   assert.ok(C.TALENTS.every(talent => talent.gain && talent.cost && talent.category));
 });
 
@@ -1338,7 +1338,7 @@ test('opening talent effects reach recruitment, growth, shop pricing, and free r
   assert.equal(C.trainingCost(development, player.id), C.trainingCost(base, player.id) - 1);
   assert.ok(C.saleValue(player.id, 2, development) > C.saleValue(player.id, 2, base));
   assert.equal(workshop.benchLimit, 5);
-  assert.equal(C.createRun('deep_bench', 33).benchLimit, 8);
+  assert.equal(C.createRun('deep_bench', 33).benchLimit, 9);
   const manager = C.createRun('front_office', 33);
   assert.equal(C.gearPrice(manager, C.GEAR[0]), C.GEAR[0].price - 2);
   assert.equal(C.boostPrice(manager, C.BOOSTS[0]), C.BOOSTS[0].price + 2);
@@ -1380,6 +1380,7 @@ test('coaching routes change counter strength and captain restores morale after 
   assert.ok(C.fused(coach, 'outside', 'collapse').dimensions.shooting > C.fused(standard, 'outside', 'collapse').dimensions.shooting);
   assert.ok(C.fused(film, 'outside', 'drive').dimensions.rimStop > C.fused(standard, 'outside', 'drive').dimensions.rimStop);
   const game = C.createGame(); game.run = makeRun('captain'); game.run.morale = 1;
+  game.run.wins = 1;
   const report = C.battle(game, 'outside');
   assert.equal(report.won, true);
   assert.equal(game.run.morale, 2);
