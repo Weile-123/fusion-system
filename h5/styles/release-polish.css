@@ -14,7 +14,7 @@
 #leaderboard .leaderboard-medal.medal-1{min-height:148px}
 #leaderboard .leaderboard-medal b{font-size:12px;line-height:1.6}
 #leaderboard .leaderboard-medal small{font-size:18px;font-weight:950;line-height:1.4;font-variant-numeric:tabular-nums}
-#leaderboard .leaderboard-medal .leaderboard-stage{font-size:10px;font-weight:600;line-height:1.4}
+#leaderboard .leaderboard-medal .leaderboard-stage,#leaderboard .leaderboard-medal .leaderboard-peak-stage{font-size:10px;font-weight:600;line-height:1.4}
 #profile .codex-bond-journal{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 #profile .codex-bond-entry{min-width:0}
 #profile .codex-bond-entry header{flex-wrap:wrap;gap:2px 5px}

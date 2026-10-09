@@ -190,9 +190,9 @@ function LeaderboardPage({ entries, title, unit, status, playerName }) {
   return <section className="leaderboard-page" aria-label={title}>
     {status && <p className="leaderboard-status" role="status">{status}</p>}
     {entries.length > 0 && <>
-      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small>{unit==='OVR'&&entry.stage>0&&<small className="leaderboard-stage">第{entry.stage}关</small>}</div>)}</div>
+      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small>{unit === 'OVR' && entry.stage > 0 && <small className="leaderboard-peak-stage">第{entry.stage}关</small>}</div>)}</div>
       {entries.length > 3 && <div className="leaderboard-list-heading"><span>排名</span><span>玩家</span><span>{title}</span></div>}
-      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit}</small></b></div>)}</div>
+      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit}{unit === 'OVR' && entry.stage > 0 ? `·第${entry.stage}关` : ''}</small></b></div>)}</div>
     </>}
     {entries.length === 0 && (status === '' || status === '暂无成绩') && <p className="leaderboard-empty">暂时还没有成绩</p>}
   </section>;
@@ -393,8 +393,7 @@ function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, re
       <div className="career-report-actions">
         <div className="career-action-row"><button className={`btn wide career-revive${reviveBusy ? ' ad-busy' : ''}`} data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{reviveBusy && <i className="ad-loading-icon" aria-hidden="true" />}{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
         {reviveMessage && <p role="status">{reviveMessage}</p>}
-        <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>生成海报</button>
-        {!summary.posterRewarded && summary.wins+summary.losses>0 && <small>首次分享海报，获得 100 传奇点</small>}
+        <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>{!summary.posterRewarded && summary.wins + summary.losses > 0 ? '生成海报·首次分享获得100传奇点' : '生成海报'}</button>
       </div>
     </>
   );

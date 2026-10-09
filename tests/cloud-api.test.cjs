@@ -19,6 +19,14 @@ function lineup(stage=1){
   for(let i=0;i<6;i++){const id=C.STARS[i].id;run.slots[C.SLOTS[i].id]=id;run.owned[id]={stars:stage>10?C.starLimit(run,id):1,train:stage>10?stage:1,trainedAt:stage}}
   return run;
 }
+test('OVR leaderboard returns the peak battle stage and caps requested page size',async()=>{
+  const entries=[{rank:1,displayName:'Player',score:334,stage:58},{rank:2,displayName:'No battle record',score:300,stage:null}];
+  const server=api([],()=>({entries}));
+  const response=await server.handle(request('/leaderboard?board=ovr&limit=100',undefined,false));
+  assert.equal(JSON.stringify(response.data),JSON.stringify(entries));
+  assert.ok(server.calls[0].url.endsWith('/get_ovr_leaderboard_page'));
+  assert.equal(server.calls[0].args.p_limit,50);
+});
 test('cloud accepts legitimate endless star and training limits and rejects overflow',()=>{
   const server=api(),run=lineup(30);assert.doesNotThrow(()=>server.validateRun(run,'outside'));
   const id=run.slots.three;run.owned[id].stars=C.starLimit(run,id)+1;assert.throws(()=>server.validateRun(run,'outside'),/阵容数据无效/);

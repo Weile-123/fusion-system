@@ -1719,7 +1719,8 @@ test('career report builds a preview and shares its PNG through OSS and the post
   assert.match(ui, /showRecruitSheet=false;recruitSheetMessage='';showBonds=false/);
   assert.match(screens, /查看生涯报告/);
   assert.match(screens, /\{!ended && <div className="panel battle-reward"/);
-  assert.match(screens, /data-act="report-poster" disabled=\{posterBusy\}>生成海报/);
+  assert.match(screens, /data-act="report-poster" disabled=\{posterBusy\}>/);
+  assert.match(screens, /!summary\.posterRewarded && summary\.wins \+ summary\.losses > 0 \? '生成海报·首次分享获得100传奇点' : '生成海报'/);
   assert.doesNotMatch(ui, /data-act="poster-regenerate"/);
   assert.match(ui, /data-act="poster-share"/);
   assert.match(screens, /value\.startsWith\('blob:'\)/);
