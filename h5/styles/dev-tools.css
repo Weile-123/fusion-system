@@ -1,0 +1,7 @@
+#dev-test-button{position:fixed;right:18px;bottom:24px;z-index:20000;width:56px;height:56px;border:1px solid #ffd277;border-radius:50%;background:#ad7522;color:white;font:700 14px system-ui;box-shadow:0 4px 18px #0009;touch-action:none;user-select:none;cursor:grab}
+#dev-test-overlay{position:fixed;inset:0;z-index:20001;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px;color:#eee;font:13px/1.5 system-ui}
+#dev-test-overlay[hidden]{display:none}
+.dev-test-panel{box-sizing:border-box;width:min(620px,100%);max-height:90dvh;overflow:auto;overscroll-behavior:contain;background:#1c2023;border:1px solid #9e793b;border-radius:12px;padding:18px}
+.dev-test-panel>header,.dev-event header{display:flex;justify-content:space-between;align-items:center;gap:12px}.dev-test-panel h2{margin:0;color:#ffd277}
+.dev-test-panel button{background:#403221;color:#ffe3a1;border:1px solid #8e713e;border-radius:6px;padding:8px 12px;cursor:pointer}
+.dev-test-actions{display:flex;gap:10px;flex-wrap:wrap}.dev-event{border:1px solid #51504b;border-radius:8px;padding:12px;margin:10px 0}.dev-event p{margin:6px 0}.dev-event ul{padding-left:18px;font-size:12px}.dev-event .met{color:#95dbaa}.dev-event .unmet{color:#efb19e}
