@@ -3,16 +3,29 @@
   "alias": "我的球星融合系统",
   "envId": "app-656cf66d07-d4grmvx6yaf70dad0",
   "resources": {
-    "functions": ["activity_api"],
+    "functions": [
+      "activity_api"
+    ],
     "gatewayRoutes": [
       "/api/health",
       "/api/leaderboard",
       "/api/leaderboard/me",
       "/api/runs/start",
       "/api/runs/battle",
-      "/api/runs/finish"
+      "/api/runs/finish",
+      "/api/runs/resume",
+      "/api/runs/share",
+      "/api/profile/jersey"
     ],
-    "postgresqlTables": ["public.leaderboard_entries", "public.leaderboard_runs"]
+    "postgresqlTables": [
+      "public.leaderboard_entries",
+      "public.leaderboard_runs",
+      "public.leaderboard_battles",
+      "public.verified_game_progress",
+      "public.verified_jersey_purchases",
+      "public.leaderboard_entries_before_verification",
+      "public.leaderboard_legacy_credit"
+    ]
   },
   "publicBaseUrl": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com",
   "verification": {
@@ -24,7 +37,30 @@
     "battleWriteReadChecked": true,
     "finishIdempotencyChecked": true,
     "testDataRemoved": true,
-    "hupuAppEndToEndChecked": false
+    "hupuAppEndToEndChecked": false,
+    "proofVersion": 3,
+    "rulesVersion": 2,
+    "recoveryVersion": 1,
+    "backgroundSyncVersion": 1,
+    "migrationsApplied": [
+      "20261008180000",
+      "20261009100000",
+      "20261009110000",
+      "20261009120000"
+    ],
+    "authenticatedBattleFinishChecked": true,
+    "authenticatedPersonalRankChecked": true,
+    "shareIdempotencyChecked": true,
+    "historicalLegendCreditChecked": true,
+    "ovrPeakStageChecked": true
   },
-  "activity": { "status": "verified" }
+  "activity": {
+    "status": "verified"
+  },
+  "deployment": {
+    "date": "2026-10-08",
+    "reason": "Repair frontend/backend leaderboard protocol mismatch",
+    "oldFunctionBackup": ".local-tools/function-before.zip",
+    "functionTimeoutSeconds": 30
+  }
 }

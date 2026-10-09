@@ -116,6 +116,11 @@ async function handle(req, res) {
     const query = new URL(req.url, 'http://localhost').searchParams;
     const board = boardOf(query.get('board'));
     const limit = Math.min(50, Math.max(1, Number.parseInt(query.get('limit') || '50', 10) || 50));
+    if (board === 'ovr') {
+      const result = await rpc('get_ovr_leaderboard_page', { p_limit: limit });
+      if (!Array.isArray(result?.entries)) fail('排行榜数据暂不可用', 503);
+      return { code: 0, message: 'success', data: result.entries };
+    }
     const result = await rdb.from('leaderboard_entries').select('id, display_name, score, updated_at')
       .eq('board', board).eq('verified',true).order('score', { ascending: false })
       .order('updated_at', { ascending: true }).order('id', { ascending: true }).limit(limit);

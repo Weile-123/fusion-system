@@ -6,6 +6,7 @@ const path=require('node:path');
 const React=require('react');
 const {renderToStaticMarkup}=require('react-dom/server');
 const C=require('../h5/game-core.js');
+const {transformSync}=require('esbuild');
 const read=file=>fs.readFileSync(path.join(__dirname,'..',file),'utf8');
 function renderer(){
   const source=read('src/react-screens.jsx');
@@ -14,6 +15,19 @@ function renderer(){
   vm.runInContext(source.slice(source.indexOf('const reactAttributeNames'),source.indexOf('function HomeScreen')),context);
   return context;
 }
+test('OVR medals show peak stage below score and list rows show it inline',()=>{
+  const source=read('src/react-screens.jsx');
+  const component=source.slice(source.indexOf('function LeaderboardPage('),source.indexOf('function LeaderboardScreen('));
+  const context={React,module:{exports:{}}};
+  vm.runInNewContext(transformSync(component+'\nmodule.exports=LeaderboardPage;', {loader:'jsx'}).code,context);
+  const entries=[1,2,3,4].map(rank=>({rank,name:'Player '+rank,score:334,stage:rank===2?null:58}));
+  const render=unit=>renderToStaticMarkup(React.createElement(context.module.exports,{entries,title:'Board',unit,status:'',playerName:'Me'}));
+  const ovr=render('OVR');
+  assert.ok(ovr.includes('<small>334 OVR</small><small class="leaderboard-peak-stage">第58关</small>'));
+  assert.ok(ovr.includes('<b>334 <small>OVR·第58关</small></b>'));
+  assert.equal((ovr.match(/leaderboard-peak-stage/g)||[]).length,2);
+  assert.ok(!render('点').includes('第58关'));
+});
 function profileMarkup({collected=true,tab='stars',tier='all'}={}){
   const source=read('h5/game-ui.js'),game=C.createGame();
   if(collected)game.profile.discovered=C.STARS.map(star=>star.id);
