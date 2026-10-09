@@ -195,7 +195,7 @@
   const SALE_BASE = { C:2, B:3, A:5, S:8, SSR:16 };
   const TRAINING_COSTS = [1,2,3,16,22,29,37,46,56,67];
   const LEGACY_TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
-  const BALANCE_RULES_VERSION=3,MORALE_HARD_CAP=13;
+  const BALANCE_RULES_VERSION=4,MORALE_HARD_CAP=13;
   function currentBalance(run){return run?.balanceRulesVersion>=2}
   function saleValue(id,stars=1,run=null){const star=BY_ID[id];return star?Math.floor(SALE_BASE[star.tier]*clamp(Math.floor(stars)||1,1,10)*(openingEffect(run).saleMultiplier||1)):0}
   function resolveTalentEffect(run,slotId){
@@ -229,11 +229,12 @@
 
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
-  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
+  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
   function createRun(talent,seed,progress={},rulesVersion=BALANCE_RULES_VERSION){
     const effect=openingEffect({talent});
     const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
     if(rulesVersion>=2){run.balanceRulesVersion=rulesVersion;run.bondWinHealCounters={}}
+    if(rulesVersion>=4){run.eventState={seen:[],misses:0,lastBattle:-2,bonuses:{},jerseys:0,recovered:false};run.randomEvent=null}
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
     if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature');if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
@@ -529,6 +530,7 @@
     const dimensions=dimensionsFromSlots(slotScores),flat=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
     const percents=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
     const openingPercents=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
+    if(run.balanceRulesVersion>=4)addDimensions(percents,run.eventState?.bonuses);
     for(const slot of SLOTS){
       const id=run.slots[slot.id],star=BY_ID[id],effect=resolveTalentEffect(run,slot.id);
       if(!star||!effect)continue;
@@ -766,6 +768,7 @@
   }
   function finishRun(game){
     const run=game.run;if(!run||run.awarded)return 0;
+    if(run.morale>0)run.randomEvent=null;
     const profile=game.profile,points=legendPoints(run),cleared=clearedMainStage(run),goat=Math.round(run.maxGoat||0);
     profile.runs++;profile.wins+=run.wins;profile.clears=(profile.clears||0)+(cleared>=10?1:0);
     profile.bestStage=Math.max(profile.bestStage||0,cleared);profile.highestStage=Math.max(profile.highestStage||0,run.stage);
@@ -842,7 +845,7 @@
     return messages;
   }
   function battle(game,strategy){
-    const run=game.run;if(!run||run.ended||run.lastBattle||starterCount(run)<6||!STRATEGIES[strategy])return null;
+    const run=game.run;if(!run||run.ended||run.lastBattle||run.randomEvent||starterCount(run)<6||!STRATEGIES[strategy])return null;
     const opening=openingEffect(run);
     const foe=opponent(run),own=fused(run,strategy,foe.strategy),equipment=itemEffects(run);
     const foeDimensions=strategyDimensions(foe.dimensions,foe.strategy,strategy);
@@ -913,10 +916,18 @@
     const report={stage:run.stage,won,us,them,reward,detail,log:log.slice(-7),signatures:signatures.map(({id,name,kind,uses})=>({id,name,kind,uses})),strategy,foe:foe.id,foeName:foe.name,foeStars:foe.stars,foeStrategy:foe.strategy,beats,rating:own.rating,foeRating:foe.rating,goat,goatPhases};
     run.maxGoat=Math.max(run.maxGoat||0,goat);run.maxOvr=Math.max(run.maxOvr||0,own.rating);if(won&&run.stage>10)run.endlessWins=(run.endlessWins||0)+1;
     run.lastBattle=report;
+    if(run.balanceRulesVersion>=4)report.eventSnapshot=api.eventBattleSnapshot(run);
     if(!won&&run.morale<=0)report.legendEarned=finishRun(game);
     return report;
   }
   function continueRun(game,choice){
+    const run=game.run;if(!run||run.randomEvent||!run.lastBattle||run.ended)return false;
+    if(!['next','retry','finish'].includes(choice)||(!run.lastBattle.won&&choice!=='retry')||(run.lastBattle.won&&choice==='retry'))return false;
+    if(choice==='finish'&&run.stage!==10)return false;
+    if(api.maybeTriggerEvent(game,choice))return true;
+    return advanceAfterBattle(game,choice);
+  }
+  function advanceAfterBattle(game,choice){
     const run=game.run;if(!run||!run.lastBattle)return false;
     if(run.ended)return false;
     if(!run.lastBattle.won){run.lastBattle=null;return true}
@@ -932,6 +943,12 @@
     return true;
   }
   const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
+  const EVENT_SYSTEM=root.SupFusionEventSystem||(typeof require==='function'?require('./event-system.js'):null);
+  if(!EVENT_SYSTEM)throw new Error('SupFusionEventSystem is required before game-core.js');
+  Object.assign(api,EVENT_SYSTEM.createSystem({...api,nextRandom,advanceAfterBattle}));
+  for(const name of ['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','swapBench','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer']){
+    const original=api[name];api[name]=function(run,...args){return run?.randomEvent?false:original(run,...args)};
+  }
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;
 })(typeof window!=='undefined'?window:globalThis);

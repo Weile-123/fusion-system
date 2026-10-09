@@ -1255,6 +1255,7 @@ test('a powered seeded run can finish ten stages and enter endless play', () => 
     const report = C.battle(game, counter);
     assert.ok(report);
     if (!run.ended) C.continueRun(game, report.won ? 'next' : 'retry');
+    if(run.randomEvent){const id=run.randomEvent.id;C.resolveRandomEvent(game,id,'safe');C.acknowledgeRandomEvent(game,id)}
   }
   assert.equal(run.wins, 10);
   assert.equal(run.stage, 11);

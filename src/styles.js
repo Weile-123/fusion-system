@@ -22,3 +22,4 @@ import '../h5/styles/legacy-shop.css';
 import '../h5/ssr-card.css';
 import '../h5/styles/codex.css';
 import '../h5/styles/release-polish.css';
+import '../h5/styles/events.css';

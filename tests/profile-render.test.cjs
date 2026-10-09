@@ -36,6 +36,7 @@ function profileMarkup({collected=true,tab='stars',tier='all',bondSize='all'}={}
     els:{profile:{}},escapeText:value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))};
   vm.createContext(context);
   vm.runInContext(source.slice(source.indexOf('  function renderProfile(){'),source.indexOf('  function legacyIcon(')),context);
+  vm.runInContext(source.slice(source.indexOf('  function renderEventCatalog('),source.indexOf('  function eventArchiveDetail(')),context);
   context.renderProfile();return context.els.profile.markup;
 }
 test('collected player catalog and all tier filters pass the production React renderer',()=>{
@@ -64,4 +65,12 @@ test('additional catalog tags retain unsafe-tag and attribute restrictions',()=>
   assert.throws(()=>render.parseGeneratedMarkup('<article><header></article>'),/Invalid generated markup closing tag/);
   const output=renderToStaticMarkup(render.MarkupScreen({html:'<article onclick="alert(1)"><header>图鉴</header></article>'}));
   assert.equal(output,'<article><header>图鉴</header></article>');
+});
+
+test('unseen event catalog contains only question marks and no event content',()=>{
+  const output=renderToStaticMarkup(renderer().MarkupScreen({html:profileMarkup({tab:'events'})}));
+  assert.equal((output.match(/event-catalog-card unknown/g)||[]).length,28);
+  assert.equal((output.match(/aria-hidden="true">\?/g)||[]).length,28);
+  assert.match(output,/事件图鉴 <small>0 \/ 28<\/small>/);
+  for(const e of C.EVENTS){assert.ok(!output.includes(e.name));assert.ok(!output.includes(e.story));assert.ok(!output.includes(e.id));}
 });

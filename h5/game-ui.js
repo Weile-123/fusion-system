@@ -11,14 +11,14 @@
   const cloudBattleRequests=new WeakMap();
   let leaderboardLoadRequest=null,leaderboardRefreshRequest=null,leaderboardBusy=false,leaderboardTimer=null;
   let pointShopMessage='',jerseyUnlockResult='';
-  let profileBondSize='all';
+  let profileBondSize='all',profileEventType='all',detailEvent='';
   let showAnnouncement=false;
   let showFeedback=false,feedbackDraft='',feedbackBusy=false,feedbackMessage='';
-  const recordedActions=['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun'];
+  const recordedActions=['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent'];
   for(const name of recordedActions){
     const original=C[name];
     C[name]=function(first,...args){
-      const run=name==='continueRun'?first?.run:first;
+      const run=['continueRun','resolveRandomEvent','acknowledgeRandomEvent'].includes(name)?first?.run:first;
       const tracking=run===game.run&&run?.cloudProofVersion===3;
       const before=tracking?JSON.stringify(run):'';
       const result=original(first,...args);
@@ -108,6 +108,7 @@
       bestOvr:safeNumber(profile.bestOvr,0,Number.MAX_SAFE_INTEGER,0),
       legend:safeNumber(profile.legend,0,10000000,0),
       discovered:Array.isArray(profile.discovered)?[...new Set(profile.discovered.filter(knownPlayer))]:[],
+      discoveredEvents:Array.isArray(profile.discoveredEvents)?[...new Set(profile.discoveredEvents.filter(id=>Object.hasOwn(C.EVENT_BY_ID,id)))]:[],
       achievedBonds:Array.isArray(profile.achievedBonds)?[...new Set(profile.achievedBonds.filter(id=>C.SYNERGIES.some(b=>b.id===id)||C.synergiesForRun({balanceRulesVersion:2}).some(b=>b.id===id)))]:[],
       bondArchiveVersion:1,
       jerseys:Array.isArray(profile.jerseys)?[...new Set(profile.jerseys.filter(id=>C.GEAR.some(item=>item.id===id&&item.slot==='球衣')))]:[],
@@ -178,6 +179,7 @@
     run.wins=safeNumber(source.wins,0,100000,0);
     run.losses=safeNumber(source.losses,0,100000,0);
     run.stats={recruits:safeNumber(source.stats?.recruits,0,100000,0),prizeIncome:safeNumber(source.stats?.prizeIncome,0,10000000,0),gearPurchases:safeNumber(source.stats?.gearPurchases,0,100000,0)};
+    if(run.balanceRulesVersion>=4){run.stats.eventIncome=safeNumber(source.stats?.eventIncome,0,10000000,0);run.stats.eventSpending=safeNumber(source.stats?.eventSpending,0,10000000,0)}
     run.reviveUsed=source.reviveUsed===true;
     run.posterRewarded=source.posterRewarded===true;
     run.owned=Object.create(null);
@@ -276,6 +278,9 @@
         legendEarned:safeNumber(report.legendEarned,0,100000,0)
       };
     }
+    if(run.lastBattle&&source.lastBattle?.eventSnapshot)run.lastBattle.eventSnapshot=JSON.parse(JSON.stringify(source.lastBattle.eventSnapshot));
+    C.restoreEventState(run,source);
+    if(run.eventState)restored.profile.discoveredEvents=[...new Set([...restored.profile.discoveredEvents,...run.eventState.seen])];
     restored.run=run;
     if(depth===0)recordBondAchievements(restored);
     return restored;
@@ -320,6 +325,7 @@
     }else if(!hideBack)header.appendChild(backButton('home','返回首页'));
   }
   function go(id){
+    detailEvent='';
     if(id!=='leaderboard')clearLeaderboardTimer();
     if(id!=='report'&&showPosterPreview)resetCareerPoster();
     if(id!=='roster')sellConfirm=null;
@@ -355,7 +361,7 @@
   }
   window.addEventListener('resize',syncScrollViewport);
   function render(){({home:renderHome,leaderboard:renderLeaderboard,talent:renderTalent,recruit:renderRecruit,roster:renderRoster,shop:renderShop,duel:renderDuel,result:renderResult,report:renderCareerReport,profile:renderProfile,pointshop:renderPointShop}[screen]||renderHome)();renderPending()}
-  function runOrHome(){if(!game.run||game.run.ended){go('home');return null}return game.run}
+  function runOrHome(){if(!game.run||game.run.ended&&!game.run.randomEvent){go('home');return null}return game.run}
   function renderHome(){
     const r=game.run,active=r&&!r.ended;
     if(window.SupFusionReactScreens?.renderHome){
@@ -395,7 +401,7 @@
   }
   function queueFinalization(run){
     if(!run||!run.cloudRunId&&!run.cloudStartPending)return;
-    if(run.ended&&!run.cloudFinalizationQueued&&(!run.cloudFinished||run.cloudResumePending)){
+    if(run.ended&&!run.randomEvent&&!run.cloudFinalizationQueued&&(!run.cloudFinished||run.cloudResumePending)){
       queueEvent(run,'finish',run.cloudOperations||[]);run.cloudOperations=[];run.cloudFinalizationQueued=true;
     }
     if(run.cloudSharePending&&!run.cloudOutbox?.some(event=>event.type==='share'))queueEvent(run,'share');
@@ -861,14 +867,15 @@
     const starCatalog=`<div class="codex-heading"><div><h2>球星图鉴 <small>${p.discovered.length} / ${C.STARS.length}</small></h2></div><div class="codex-tier-filter" aria-label="球星等级筛选">${['all','SSR','S','A','B','C'].map(tier=>`<button data-act="profile-tier" data-id="${tier}" class="${profileTier===tier?'active':''}" aria-pressed="${profileTier===tier}">${tier==='all'?'全部':tier}</button>`).join('')}</div></div>${visibleStars.length?`<div class="catalog codex-star-list">${visibleStars.map(star=>`<span class="profile-star-card ${tierClass[star.tier]} unlocked" data-tier="${star.tier}">${escapeText(star.name)}</span>`).join('')}</div>`:`<div class="codex-empty"><b>等待传奇入册</b><p>${orderedStars.length?'该等级暂无已收集球星。':'完成一局后，招募过的球星会收录在这里。'}</p></div>`}`;
     const achievedBonds=new Set(game.profile.achievedBonds||[]);
     const visibleBonds=[...C.SYNERGIES].sort((a,b)=>a.ids.length-b.ids.length).filter(b=>profileBondSize==='all'||b.ids.length===Number(profileBondSize));
-    const bondCatalog=`<div class="codex-heading"><div><h2>羁绊图鉴 <small>${C.SYNERGIES.filter(bond=>achievedBonds.has(bond.id)).length} / ${C.SYNERGIES.length} 已达成</small></h2></div><div class="codex-tier-filter" aria-label="羁绊人数筛选">${['all','2','3','4','5'].map(size=>`<button data-act="profile-bond-size" data-id="${size}" class="${profileBondSize===size?'active':''}" aria-pressed="${profileBondSize===size}">${size==='all'?'全部':size+'人'}</button>`).join('')}</div></div><div class="codex-bond-journal">${visibleBonds.map(bond=>{return `<article class="codex-bond-entry ${achievedBonds.has(bond.id)?'complete':''}"><header><h3>${escapeText(bond.name)}</h3><small>${achievedBonds.has(bond.id)?'已达成':'未达成'}</small></header><div class="codex-bond-members">${bond.ids.map(id=>`<span class="${discovered.has(id)?'collected':''}">${escapeText(C.BY_ID[id].name)}</span>`).join('')}</div><p>${escapeText(bond.description||'')}</p></article>`}).join('')}</div>`;
-    const jerseyCatalog=`<div class="sectionhead"><h2>球衣图鉴</h2><span>已收集 ${jerseys.length} / ${C.GEAR.filter(item=>item.slot==='球衣').length}</span></div>${jerseys.length?`<div class="profile-jersey-catalog">${jerseys.map(item=>{const visual=equipmentJerseyVisual(item);return `<div class="equipment-reserve-card gear-tier-${item.rarity.toLowerCase()}${visual.className}"${visual.style}>${visual.logo}<div class="jersey-collection-preview">${jerseyArtwork(item)}<b>${item.name}</b></div></div>`}).join('')}</div>`:'<div class="emptyline catalog-empty">完成一局后，本局获得过的球衣会收录在这里。</div>'}`;
-    const profileTabs=['stars','bonds','jerseys'],profileTabIndex=profileTabs.indexOf(profileTab),profileFromIndex=profileTabs.indexOf(profileSlideFrom);
+    const bondCatalog=`<div class="codex-heading"><div><h2>羁绊图鉴 <small>${C.SYNERGIES.filter(bond=>achievedBonds.has(bond.id)).length} / ${C.SYNERGIES.length}</small></h2></div><div class="codex-tier-filter" aria-label="羁绊人数筛选">${['all','2','3','4','5'].map(size=>`<button data-act="profile-bond-size" data-id="${size}" class="${profileBondSize===size?'active':''}" aria-pressed="${profileBondSize===size}">${size==='all'?'全部':size+'人'}</button>`).join('')}</div></div><div class="codex-bond-journal">${visibleBonds.map(bond=>{return `<article class="codex-bond-entry ${achievedBonds.has(bond.id)?'complete':''}"><header><h3>${escapeText(bond.name)}</h3><small>${achievedBonds.has(bond.id)?'已达成':'未达成'}</small></header><div class="codex-bond-members">${bond.ids.map(id=>`<span class="${discovered.has(id)?'collected':''}">${escapeText(C.BY_ID[id].name)}</span>`).join('')}</div><p>${escapeText(bond.description||'')}</p></article>`}).join('')}</div>`;
+    const jerseyCatalog=`<div class="codex-heading"><div><h2>球衣图鉴 <small>${jerseys.length} / ${C.GEAR.filter(item=>item.slot==='球衣').length}</small></h2></div></div>${jerseys.length?`<div class="profile-jersey-catalog">${jerseys.map(item=>{const visual=equipmentJerseyVisual(item);return `<div class="equipment-reserve-card gear-tier-${item.rarity.toLowerCase()}${visual.className}"${visual.style}>${visual.logo}<div class="jersey-collection-preview">${jerseyArtwork(item)}<b>${item.name}</b></div></div>`}).join('')}</div>`:'<div class="emptyline catalog-empty">完成一局后，本局获得过的球衣会收录在这里。</div>'}`;
+    const eventCatalog=profileTab==='events'?renderEventCatalog(p):'';
+    const profileTabs=['stars','bonds','jerseys','events'],profileTabIndex=profileTabs.indexOf(profileTab),profileFromIndex=profileTabs.indexOf(profileSlideFrom);
     els.profile.markup=`
       <div class="profile-title-row"><div><div class="eyebrow">LEGACY</div><h1 class="title">我的传奇档案</h1></div><button class="profile-home" data-act="home">返回主页</button></div>
       <div class="statusbar profile-status"><div class="statbox"><strong>${p.runs}</strong><small>局数</small></div><div class="statbox"><strong>${p.clears||0}</strong><small>通关次数</small></div><div class="statbox"><strong>${p.highestStage||0}</strong><small>最高关卡</small></div><div class="statbox"><strong class="goldtext">${p.bestGoat||0}</strong><small>最高GOAT分</small></div></div>
-      <div class="profile-tabs" role="tablist" style="--tab-index:${profileTabIndex};--from-tab:${profileFromIndex<0?profileTabIndex:profileFromIndex}"><button class="${profileTab==='stars'?'active':''}" data-act="profile-tab" data-id="stars">球星图鉴</button><button class="${profileTab==='bonds'?'active':''}" data-act="profile-tab" data-id="bonds">羁绊图鉴</button><button class="${profileTab==='jerseys'?'active':''}" data-act="profile-tab" data-id="jerseys">球衣图鉴</button><i key="profile-${profileFromIndex}-${profileTabIndex}" class="${profileTab}"></i></div>
-      <div class="profile-catalog-panel">${profileTab==='stars'?starCatalog:profileTab==='bonds'?bondCatalog:jerseyCatalog}</div>`;
+      <div class="profile-tabs" role="tablist" style="--tab-index:${profileTabIndex};--from-tab:${profileFromIndex<0?profileTabIndex:profileFromIndex}"><button class="${profileTab==='stars'?'active':''}" data-act="profile-tab" data-id="stars">球星图鉴</button><button class="${profileTab==='bonds'?'active':''}" data-act="profile-tab" data-id="bonds">羁绊图鉴</button><button class="${profileTab==='jerseys'?'active':''}" data-act="profile-tab" data-id="jerseys">球衣图鉴</button><button class="${profileTab==='events'?'active':''}" data-act="profile-tab" data-id="events">事件图鉴</button><i key="profile-${profileFromIndex}-${profileTabIndex}" class="${profileTab}"></i></div>
+      <div class="profile-catalog-panel">${profileTab==='stars'?starCatalog:profileTab==='bonds'?bondCatalog:profileTab==='events'?eventCatalog:jerseyCatalog}</div>`;
     profileSlideFrom=profileTab;
   }
   function legacyIcon(id){
@@ -940,7 +947,28 @@
       :bond?`羁绊 · ${bond.item.name} ${bond.count}/${bond.item.ids.length}`:'暂无关联羁绊';
     return `<div class="pending-player-preview ${tierClass[star.tier]}"><div><span>${tierName[star.tier]}</span><small>${status}</small></div><strong>${value}</strong><h3>${star.name}</h3><p>推荐 · ${C.LABELS[star.best]}位</p><em>出售可得 ${C.saleValue(id,1,r)} 奖金</em></div>`;
   }
+  function renderEventCatalog(profile){
+    const found=new Set(profile.discoveredEvents||[]),filter=typeof profileEventType==='string'?profileEventType:'all';
+    const visible=C.EVENTS.filter(e=>filter==='all'||e.type===filter);
+    return '<div class="codex-heading"><h2>事件图鉴 <small>'+C.EVENTS.filter(e=>found.has(e.id)).length+' / '+C.EVENTS.length+'</small></h2></div><div class="codex-tier-filter event-filters">'+[['all','全部'],['T','技巧'],['C','单挑'],['P','剧情'],['R','救援'],['X','交易']].map(([id,label])=>'<button data-act="profile-event-type" data-id="'+id+'" class="'+(filter===id?'active':'')+'" aria-pressed="'+(filter===id)+'">'+label+'</button>').join('')+'</div><div class="event-catalog">'+visible.map(e=>found.has(e.id)?'<button class="event-catalog-card discovered" data-act="event-detail" data-id="'+e.id+'"><span>'+escapeText(e.category)+'</span><b>'+escapeText(e.name)+'</b><small>查看故事</small></button>':'<div class="event-catalog-card unknown" aria-label="未触发事件"><b aria-hidden="true">?</b></div>').join('')+'</div>';
+  }
+  function eventArchiveDetail(id){
+    const e=C.EVENT_BY_ID[id];
+    const players=e.players.length?e.players.map(id=>C.BY_ID[id].name).join('、')+'必须在融合面板上；备战席不算。':'不要求指定球员。';
+    const requirements=[players,'融合面板六位满员','第 '+e.minStage+' 关起',e.afterLoss?'本场失败且存活':'',e.cost?'奖金 ≥'+e.cost:'',e.jersey?'目标球衣已永久解锁、可进入本局商店池且更衣室未拥有；同局球衣事件奖励最多 2 件':'',e.type==='R'?'生命低于 3；本局未接受恢复':''].filter(Boolean).join(' · ');
+    return '<section class="modal-card event-modal" role="dialog" aria-modal="true"><div class="modal-head"><h2>'+escapeText(e.name)+'</h2><button data-act="event-detail-close" aria-label="关闭">×</button></div><span class="event-category">'+escapeText(e.category)+'</span><p class="event-story">'+escapeText(e.story)+'</p><h3>触发条件</h3><p>'+escapeText(requirements)+'</p><h3>选项与收益</h3><p>'+escapeText(e.rewardText)+'</p>'+(e.type==='C'?'<p>挑战失败生命 -1，跳过无损失。</p>':'')+(e.jersey?'<div class="event-jersey">'+jerseyArtwork(C.GEAR.find(g=>g.id===e.jersey))+'</div>':'')+'<button class="btn wide" data-act="event-detail-close">关闭</button></section>';
+  }
+  function randomEventMarkup(run){
+    const p=run.randomEvent,e=C.EVENT_BY_ID[p.id],choices=C.eventChoices(run,p),result=p.result;
+    return '<section class="modal-card event-modal" role="dialog" aria-modal="true" aria-labelledby="random-event-title"><span class="event-category">'+escapeText(e.category)+' · 第 '+p.stage+' 关</span><h2 id="random-event-title">'+escapeText(e.name)+'</h2><p class="event-story">'+escapeText(e.story)+'</p>'+(e.jersey?'<div class="event-jersey">'+jerseyArtwork(C.GEAR.find(g=>g.id===e.jersey))+'</div>':'')+(result?'<div class="event-result"><h3>'+(result.choice==='safe'?'已选择'+choices.safe:result.success?'事件成功':'事件失败')+'</h3><p>'+escapeText(result.message)+'</p></div><button class="btn wide button-1" data-act="event-confirm" data-id="'+e.id+'">'+(run.ended?'查看生涯报告':'确认继续')+'</button>':'<div class="event-outcomes">'+(choices.chance?'<b>成功率 '+Math.round(p.successRate*100)+'%</b>':'<b>直接获得，无需概率判定</b>')+'<p>成功：'+escapeText(choices.success)+'</p>'+(choices.failure?'<p>失败：'+escapeText(choices.failure)+'</p>':'')+'<p>'+escapeText(choices.safe)+'：'+escapeText(choices.safeReward)+'</p></div>'+(choices.fatal?'<p class="event-risk">失败将结束本局</p>':'')+'<div class="event-actions"><button class="btn button-1" data-act="event-main" data-id="'+e.id+'">'+escapeText(choices.main)+'</button><button class="btn" data-act="event-safe" data-id="'+e.id+'">'+escapeText(choices.safe)+'</button></div>')+'</section>';
+  }
   function renderPending(){
+    if(detailEvent&&(game.profile.discoveredEvents||[]).includes(detailEvent)){
+      modal.className='game-modal open';modal.markup=eventArchiveDetail(detailEvent);return;
+    }
+    if(game.run?.randomEvent&&['roster','result','recruit','duel','shop'].includes(screen)){
+      modal.className='game-modal open';modal.markup=randomEventMarkup(game.run);return;
+    }
     if(showAnnouncement){modal.className="game-modal open";window.SupFusionReactScreens.renderAnnouncement(modal);return;}
     if(showFeedback){
       modal.className='game-modal open';
@@ -1141,6 +1169,17 @@
   }
   async function performAction(action,button){
     const r=game.run,id=button.dataset.id;
+    if(r?.randomEvent&&r.ended&&action==='new'){go('roster');return}
+    if(action==='event-detail-close'){detailEvent='';renderPending();return}
+    if(action==='event-detail'){if((game.profile.discoveredEvents||[]).includes(id)){detailEvent=id;renderPending()}return}
+    if(action==='profile-event-type'){profileEventType=['all','T','C','P','R','X'].includes(id)?id:'all';renderProfile();return}
+    if(action==='event-main'||action==='event-safe'){
+      if(C.resolveRandomEvent(game,id,action==='event-main'?'main':'safe')){save();top();renderPending()}return;
+    }
+    if(action==='event-confirm'){
+      if(C.acknowledgeRandomEvent(game,id)){save();if(r.ended){queueFinalization(r);void finishCloudRun(r);go('report')}else go('roster')}return;
+    }
+    if(r?.randomEvent&&!['home','continue','profile','profile-tab','pointshop','new','new-cancel','new-confirm'].includes(action)){renderPending();return}
     if(action==='announcement-open'){showAnnouncement=true;renderPending();return;}
     if(action==='announcement-close'){showAnnouncement=false;renderPending();return;}
     if(action==='feedback-open'){
@@ -1211,7 +1250,7 @@
     if(action==='pointshop'){go('pointshop');return}
     if(action==='profile-bond-size'){profileBondSize=['2','3','4','5'].includes(id)?id:'all';renderProfile();return}
     if(action==='profile-tier'){profileTier=['SSR','S','A','B','C'].includes(id)?id:'all';renderProfile();return}
-    if(action==='profile-tab'){profileSlideFrom=profileTab;profileTab=['stars','bonds','jerseys'].includes(id)?id:'stars';renderProfile();return}
+    if(action==='profile-tab'){profileSlideFrom=profileTab;profileTab=['stars','bonds','jerseys','events'].includes(id)?id:'stars';renderProfile();return}
     if(action==='pointshop-tab'){pointShopSlideFrom=pointShopTab;pointShopTab=['upgrades','jerseys'].includes(id)?id:'upgrades';renderPointShop();els.pointshop.scrollTo({top:0,behavior:'auto'});return}
     if(action==='meta-upgrade'){if(C.buyMetaUpgrade(game.profile,id)){save();renderPointShop()}return}
     if(action==='meta-unlock'){if(C.buyMetaUnlock(game.profile,id)){save();renderPointShop()}return}
@@ -1421,7 +1460,8 @@
       try{const loaded=await STORAGE.load();game=restoreGame(loaded);if(loaded&&(loaded.profile?.talentRulesVersion!==2||loaded.profile?.bondArchiveVersion!==1||JSON.stringify(loaded.profile?.achievedBonds||[])!==JSON.stringify(game.profile.achievedBonds||[])||loaded?.run&&JSON.stringify(loaded.run.gear)!==JSON.stringify(game.run?.gear)))save()}catch(_){notify('存档读取失败，本次从新旅程开始')}
     }
     restoring=false;
-    go('home');
+    window.SupFusionDevTools?.install({C,getGame:()=>game,save,render,go});
+    if(game.run?.randomEvent)go('roster');else go('home');
     loadPlayerName();
     refreshRewardTaskState();
     syncSaveBackup();

@@ -49,6 +49,41 @@ function runtime(sdk={},timers={}){
   return {audit:window.audit,window,screens,saved,rendered,backups,document,fire:(name,event)=>listeners[name](event),input:value=>listeners.input({target:{id:'feedback-content',value}}),click:(act,id='')=>window.audit.handle(act,{dataset:{id}})};
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+function eventGame(id='P01'){
+  const game=C.createGame(),run=game.run=C.createRun('steady_interest',911),event=C.EVENT_BY_ID[id];
+  const ids=[...new Set([...event.players,'curry','lebron','magic','shaq','jordan','bird'])].slice(0,6);
+  ids.forEach((id,i)=>{run.owned[id]={stars:1,train:0,trainedAt:0};run.slots[C.SLOTS[i].id]=id});
+  run.stage=6;run.cash=100;run.wins=1;run.lastBattle={stage:6,won:true,foe:'curry',strategy:'outside',rating:100,goat:500};
+  run.lastBattle.eventSnapshot=C.eventBattleSnapshot(run);run.eventState.seen=[id];game.profile.discoveredEvents=[id];
+  run.randomEvent={id,choice:'next',stage:6,ability:100,difficulty:105,successRate:.9,snapshot:run.lastBattle.eventSnapshot,result:null};run.rng=0;
+  return game;
+}
+test('event UI saves each choice, restores the result and opens only discovered archive entries',async()=>{
+  const app=runtime(),game=eventGame();app.audit.setGame(game);app.audit.go('roster');
+  assert.match(app.screens['game-modal'].output,/成功率 90%/);assert.match(app.screens['game-modal'].output,/投入 5 奖金/);
+  await app.click('event-main','P01');const cash=game.run.cash,rng=game.run.rng;
+  assert.equal(cash,110);assert.match(app.screens['game-modal'].output,/到账 15/);
+  await app.click('event-main','P01');assert.equal(game.run.cash,cash);assert.equal(game.run.rng,rng);
+  await tick();const next=runtime(),restored=next.audit.restoreGame(JSON.parse(JSON.stringify(app.saved.at(-1))));next.audit.setGame(restored);next.audit.go('roster');
+  assert.match(next.screens['game-modal'].output,/到账 15/);assert.ok(!next.screens['game-modal'].output.includes('data-act="event-main"'));
+  await next.click('event-confirm','P01');assert.equal(restored.run.randomEvent,null);assert.equal(restored.run.stage,7);
+  next.audit.go('profile');await next.click('profile-tab','events');
+  assert.match(next.screens.profile.output,/1 \/ 28/);assert.match(next.screens.profile.output,/球场补给摊/);assert.ok(!next.screens.profile.output.includes('弧顶一千球'));
+  await next.click('event-detail','T01');assert.ok(!next.screens['game-modal'].output.includes('弧顶一千球'));
+  await next.click('event-detail','P01');assert.match(next.screens['game-modal'].output,/触发条件/);assert.ok(!next.screens['game-modal'].output.includes('data-act="event-main"'));
+  await next.click('event-detail-close');await next.click('profile-event-type','T');assert.equal((next.screens.profile.output.match(/event-catalog-card unknown/g)||[]).length,13);
+});
+test('fatal event result survives real restore and cloud finalization waits for confirmation',async()=>{
+  const app=runtime(),game=eventGame('C01'),run=game.run;run.morale=1;run.rng=1900;run.randomEvent.successRate=.35;
+  run.cloudProofVersion=3;run.cloudRunId='00000000-0000-4000-8000-000000000001';
+  app.audit.setGame(game);app.audit.go('roster');assert.match(app.screens['game-modal'].output,/失败将结束本局/);
+  await app.click('event-main','C01');assert.equal(run.ended,true);await app.audit.syncPendingRuns(true);
+  assert.ok(!(run.cloudOutbox||[]).some(e=>e.type==='finish'));assert.equal(run.cloudFinalizationQueued,undefined);
+  const next=runtime(),restored=next.audit.restoreGame(JSON.parse(JSON.stringify(game)));next.audit.setGame(restored);next.audit.go('roster');
+  assert.equal(next.audit.state().screen,'roster');assert.match(next.screens['game-modal'].output,/挑战失败，生命 -1/);
+  await next.click('event-confirm','C01');assert.equal(next.audit.state().screen,'report');assert.equal(restored.profile.runs,1);
+  assert.equal(restored.run.cloudFinalizationQueued,true);
+});
 test('new recovery counters and overflow health survive save restoration',()=>{
   const app=runtime(),game=C.createGame();game.run=C.createRun('steady_interest',911);
   game.run.morale=8;game.run.bondWinHealCounters={royal_recovery:1,purple_gold_recovery:2,champion_recovery:3};
@@ -182,6 +217,7 @@ test('production UI operation journal replays identically for all talents across
       assert.equal(await app.audit.flushCloudBattle(run),true,`${talent.id}: ${run.cloudRankError}`);
       assert.equal(run.rng,state.rng);assert.equal(run.cash,state.cash);assert.equal(run.morale,state.morale);assert.deepEqual(run.owned,state.owned);
       if(!run.ended)await app.click(run.lastBattle.won?'next':'retry');
+      if(run.randomEvent){const id=run.randomEvent.id;await app.click('event-safe',id);await app.click('event-confirm',id)}
     }
     C.finishRun(app.audit.getGame());assert.equal(await app.audit.finishCloudRun(run),true,talent.id);
   }
@@ -517,6 +553,7 @@ test('first migration, three new achievements, settlement and re-entry preserve 
   for(let attempts=0;!run.ended&&attempts<100;attempts++){
     app.audit.go('duel');await app.click('battle');await app.click('strategy','outside');
     if(!run.ended)await app.click(run.lastBattle.won?(run.stage===10?'finish':'next'):'retry');
+    if(run.randomEvent){const id=run.randomEvent.id;await app.click('event-safe',id);await app.click('event-confirm',id)}
   }
   assert.equal(run.ended,true);assert.equal(app.audit.getGame().profile.runs,1);await tick();
   const persisted=JSON.parse(JSON.stringify(app.saved.at(-1)));assert.equal(persisted.profile.bondArchiveVersion,1);
@@ -528,7 +565,7 @@ test('first migration, three new achievements, settlement and re-entry preserve 
   for(const id of targetIds)assert.ok(nextApp.screens.profile.output.includes(C.SYNERGIES.find(b=>b.id===id).name));
   await nextApp.click('new');nextApp.audit.setTalent('steady_interest');await nextApp.click('begin');
   assert.equal(JSON.stringify(nextApp.audit.getGame().profile.achievedBonds),before);
-  assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,3);
+  assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,4);
 });
 
 test('pending replacement takes priority over reopening the recruit sheet',async()=>{

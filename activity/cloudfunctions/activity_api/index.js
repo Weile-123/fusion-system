@@ -111,7 +111,7 @@ function validateRun(run, strategy) {
 }
 async function handle(req, res) {
   const path = pathOf(req);
-  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:C.BALANCE_RULES_VERSION, supportedRulesVersions:[1,2,C.BALANCE_RULES_VERSION], synergies:C.SYNERGIES.length, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, talents:C.TALENTS.length} };
+  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:C.BALANCE_RULES_VERSION, supportedRulesVersions:[1,2,3,C.BALANCE_RULES_VERSION], randomEvents:C.EVENTS.length, synergies:C.SYNERGIES.length, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, talents:C.TALENTS.length} };
   if (req.method === 'GET' && path === '/leaderboard') {
     const query = new URL(req.url, 'http://localhost').searchParams;
     const board = boardOf(query.get('board'));
@@ -142,7 +142,7 @@ async function handle(req, res) {
     const displayName = typeof body.displayName === 'string' ? body.displayName.trim().slice(0, 40) : '玩家';
     const runId=body.requestId;
     const balanceRulesVersion=body.balanceRulesVersion??1;
-    if(![1,2,C.BALANCE_RULES_VERSION].includes(balanceRulesVersion))fail('游戏规则版本无效');
+    if(![1,2,3,C.BALANCE_RULES_VERSION].includes(balanceRulesVersion))fail('游戏规则版本无效');
     if(typeof runId!=='string'||!/^[0-9a-f-]{36}$/i.test(runId)||!Number.isInteger(body.seed)||body.seed<0||body.seed>4294967295)fail('开局请求无效');
     const prior=rowsOf(await rdb.from('leaderboard_runs').select('id, seed, talent, proof_version, state').eq('id',runId).eq('puid',puid).limit(1));
     if(prior.length){if(Number(prior[0].seed)!==body.seed||prior[0].talent!==body.talent||prior[0].proof_version!==3||(prior[0].state?.balanceRulesVersion||1)!==balanceRulesVersion)fail('开局记录不一致',409);return {code:0,message:'success',data:{runId,seed:body.seed,proofVersion:3,balanceRulesVersion}}}

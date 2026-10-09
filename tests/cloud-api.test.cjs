@@ -78,7 +78,7 @@ test('an empty finished run cannot farm verified sharing points',async()=>{
 
 test('cloud start binds the balance version and keeps legacy starts compatible',async()=>{
   const body={requestId:'00000000-0000-4000-8000-000000000002',seed:911,talent:'reserve_fund',progress:{}};
-  for(const version of [1,2,3]){
+  for(const version of [1,2,3,4]){
     const server=api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress:{},earned:0,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3});
     const response=await server.handle(request('/runs/start',version>=2?{...body,balanceRulesVersion:version}:body));
     assert.equal(response.data.balanceRulesVersion,version);
@@ -87,7 +87,7 @@ test('cloud start binds the balance version and keeps legacy starts compatible',
   }
   const retry=api([{id:body.requestId,seed:911,talent:body.talent,proof_version:3,state:{balanceRulesVersion:2}}]);
   await assert.rejects(retry.handle(request('/runs/start',body)));
-  await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:4})));
+  await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:5})));
 });
 
 test('background start binds a committed seed and retries do not create another run',async()=>{

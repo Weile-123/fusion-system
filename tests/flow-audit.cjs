@@ -90,6 +90,7 @@ for (let seed = 1; seed <= count; seed++) {
       row.attempts++; outcome.attempts++;
       won = result.won;
       if (!r.ended) C.continueRun(game, won ? 'next' : 'retry');
+      if(r.randomEvent){const id=r.randomEvent.id;C.resolveRandomEvent(game,id,'safe');C.acknowledgeRandomEvent(game,id)}
     }
     if (won) row.wins++;
     assertState(r);
