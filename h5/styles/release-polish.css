@@ -13,9 +13,28 @@
 #leaderboard .leaderboard-medal{padding:12px 6px;border-radius:10px;min-height:125px;box-shadow:inset 0 1px 0 #ffffff90,0 4px 12px #0005}
 #leaderboard .leaderboard-medal.medal-1{min-height:148px}
 #leaderboard .leaderboard-medal b{font-size:12px;line-height:1.6}
-#leaderboard .leaderboard-medal small{font-size:13px;font-variant-numeric:tabular-nums}
+#leaderboard .leaderboard-medal small{font-size:18px;font-weight:950;line-height:1.4;font-variant-numeric:tabular-nums}
+#leaderboard .leaderboard-medal .leaderboard-stage{font-size:10px;font-weight:600;line-height:1.4}
+#profile .codex-bond-journal{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#profile .codex-bond-entry{min-width:0}
+#profile .codex-bond-entry header{flex-wrap:wrap;gap:2px 5px}
+#profile .codex-bond-members span{max-width:100%;overflow-wrap:anywhere}
 .leaderboard-list-heading{display:grid;grid-template-columns:31px minmax(0,1fr) auto;gap:9px;padding:0 11px 8px;color:#b6a689;font-size:10px}
 #leaderboard .leaderboard-row{padding:10px 11px;min-height:0;background:linear-gradient(115deg,#242321,#1c1c1b);border-color:#454037}
 #leaderboard .leaderboard-row>span{font-size:12px}
 #leaderboard .leaderboard-row>b{font-size:14px;font-variant-numeric:tabular-nums}
 #leaderboard .leaderboard-row.current{border-color:#ce9c43;background:linear-gradient(115deg,#403019,#282219);box-shadow:inset 3px 0 #ffc65d}
+/* 首页介绍与更新公告 */
+.home-hero:before,.home-orbit,.home-orbit:before,.home-orbit:after{pointer-events:none}
+.home-introduction{position:relative;z-index:1;display:flex;align-items:center;gap:16px}
+.home-hero .home-introduction p{flex:1;margin:0;min-width:0}
+.home-announcement{display:flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:42px;padding:9px;color:#ffca54;background:#292725;border:1px solid #ffbf35;border-radius:11px;box-shadow:0 0 12px rgba(255,185,37,.2);cursor:pointer}
+.home-announcement svg{width:24px;height:24px}
+.home-announcement:focus-visible{outline:2px solid #ffe3a0;outline-offset:3px}
+.announcement-modal{width:min(100%,480px)}
+.announcement-modal .modal-head small{font-size:11px;color:#c6ac76}
+.announcement-content{max-height:55vh;overflow-y:auto;padding-right:6px;margin:12px 0 18px}
+.announcement-content h3{font-size:15px;color:#ffcc63;margin:16px 0 6px}
+.announcement-content h3:first-child{margin-top:0}
+.announcement-content p{font-size:13px;line-height:1.7;color:#cdc8be;margin:0}
+.announcement-content .announcement-note{margin-top:18px;padding-top:12px;border-top:1px solid #514735;font-size:11px;color:#a69d8c}

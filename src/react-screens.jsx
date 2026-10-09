@@ -136,7 +136,12 @@ function HomeScreen({ active, stage }) {
         <div className="home-orbit" aria-hidden="true"><span>11</span></div>
         <div className="home-eyebrow">BUILD YOUR OWN LEGEND</div>
         <h1>我的球星<br /><em>融合系统</em></h1>
-        <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
+        <div className="home-introduction">
+          <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
+          <button type="button" className="home-announcement" data-act="announcement-open" aria-label="更新公告" title="更新公告">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
+          </button>
+        </div>
         <div className="home-scores">
           <div><b>06</b><small>能力槽位</small></div>
           <div><b>10</b><small>主线关卡</small></div>
@@ -155,12 +160,24 @@ function HomeScreen({ active, stage }) {
   );
 }
 
+function AnnouncementScreen() {
+  return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
+    <div className="modal-head"><div><small>2026.10.09 · 阵容多样性更新</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="announcement-content">
+      <h3>更多羁绊，更多搭配</h3><p>羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。</p>
+      <h3>数值调整</h3><p>重新分配羁绊的战力与奖金收益，对部分现有羁绊效果数值、战力成长进行调整。</p>
+      <h3>样式调整</h3><p>羁绊图鉴样式调整，页面内模块间距统一调整，修复现有操作问题。</p>
+      <p className="announcement-note">本次规则适用于新开局。已有对局继续使用原规则，传奇点、球衣收藏与生涯记录保留。</p>
+    </div>
+    <button type="button" className="btn button-1 wide" data-act="announcement-close">知道了</button>
+  </section>;
+}
+
 function FeedbackScreen({ draft, remaining, busy, message }) {
   return <section className="modal-card feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title">
     <div className="modal-head"><h2 id="feedback-title">反馈入口</h2><button type="button" className="button-8" data-act="feedback-close" aria-label="关闭反馈" disabled={busy}>×</button></div>
     <label className="feedback-input-label" htmlFor="feedback-content">反馈内容</label>
-    <textarea id="feedback-content" value={draft} rows={5} placeholder="遇到了什么问题，或有什么建议？" readOnly={busy} aria-describedby="feedback-count feedback-status" />
-    <small id="feedback-count" aria-live="polite">{remaining >= 0 ? `还可输入 ${remaining} 字` : `已超出 ${-remaining} 字`}</small>
+    <textarea id="feedback-content" value={draft} rows={5} placeholder="遇到了什么问题，或有什么建议？" readOnly={busy} aria-describedby="feedback-status" />
     <p id="feedback-status" role="status" aria-live="polite">{message}</p>
     <button id="feedback-submit" type="button" className="btn button-1 wide" data-act="feedback-submit" disabled={busy || !draft.trim() || remaining < 0} aria-busy={busy}>
       {busy && <i className="ad-loading-icon" aria-hidden="true" />}{busy ? '提交中…' : '提交反馈'}
@@ -173,7 +190,7 @@ function LeaderboardPage({ entries, title, unit, status, playerName }) {
   return <section className="leaderboard-page" aria-label={title}>
     {status && <p className="leaderboard-status" role="status">{status}</p>}
     {entries.length > 0 && <>
-      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small></div>)}</div>
+      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small>{unit==='OVR'&&entry.stage>0&&<small className="leaderboard-stage">第{entry.stage}关</small>}</div>)}</div>
       {entries.length > 3 && <div className="leaderboard-list-heading"><span>排名</span><span>玩家</span><span>{title}</span></div>}
       <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit}</small></b></div>)}</div>
     </>}
@@ -387,6 +404,9 @@ export function installReactScreens() {
   if (window.SupFusionReactScreens) return window.SupFusionReactScreens;
 
   window.SupFusionReactScreens = Object.freeze({
+    renderAnnouncement(element) {
+      renderInto(element, <AnnouncementScreen />);
+    },
     renderFeedback(element, props) {
       renderInto(element, <FeedbackScreen {...props} />);
     },

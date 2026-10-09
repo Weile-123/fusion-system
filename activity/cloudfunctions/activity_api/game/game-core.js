@@ -193,7 +193,10 @@
   }));
   const tierValue = { C:0, B:1, A:2, S:3, SSR:4 };
   const SALE_BASE = { C:2, B:3, A:5, S:8, SSR:16 };
-  const TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
+  const TRAINING_COSTS = [1,2,3,16,22,29,37,46,56,67];
+  const LEGACY_TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
+  const BALANCE_RULES_VERSION=3,MORALE_HARD_CAP=13;
+  function currentBalance(run){return run?.balanceRulesVersion>=2}
   function saleValue(id,stars=1,run=null){const star=BY_ID[id];return star?Math.floor(SALE_BASE[star.tier]*clamp(Math.floor(stars)||1,1,10)*(openingEffect(run).saleMultiplier||1)):0}
   function resolveTalentEffect(run,slotId){
     const star=BY_ID[run.slots[slotId]],base=star?.talentEffect;
@@ -213,7 +216,7 @@
   }
   function recruitPackCost(run,count=10){
     const size=Math.max(1,Math.min(100,Math.floor(Number(count)||10)));
-    return Math.floor(recruitCost(run)*size*.95);
+    return Math.floor(recruitCost(run)*size*(currentBalance(run)?.9:.95));
   }
   function buyRecruitPack(run,count=10){
     const size=Math.max(1,Math.min(100,Math.floor(Number(count)||10))),cost=recruitPackCost(run,size);
@@ -227,9 +230,10 @@
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
   function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
-  function createRun(talent,seed,progress={}){
+  function createRun(talent,seed,progress={},rulesVersion=BALANCE_RULES_VERSION){
     const effect=openingEffect({talent});
-    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,16+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
+    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
+    if(rulesVersion>=2){run.balanceRulesVersion=rulesVersion;run.bondWinHealCounters={}}
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
     if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature');if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
@@ -245,13 +249,15 @@
   }
   function identityOf(id){const star=BY_ID[id];return star?(star.variantOf||star.id):id}
   function ownedIdentities(run){return new Set(Object.keys(run.owned).map(identityOf))}
-  function completedSynergies(run){const ids=ownedIdentities(run);return SYNERGIES.filter(s=>s.ids.every(id=>ids.has(id)))}
+  function synergiesForRun(run){return run?.balanceRulesVersion>=3?SYNERGIES:(DATA.LEGACY_SYNERGIES||SYNERGIES)}
+  function completedSynergies(run){const ids=ownedIdentities(run);return synergiesForRun(run).filter(s=>(currentBalance(run)||!s.effect?.winHeal)&&s.ids.every(id=>ids.has(id)))}
   function activeSynergies(run){
     const completed=completedSynergies(run),highest=new Map();
+    if(run?.balanceRulesVersion>=3)return completed;
     for(const bond of completed)if(bond.chainId)highest.set(bond.chainId,Math.max(highest.get(bond.chainId)||0,bond.chainLevel||0));
     return completed.filter(bond=>!bond.chainId||(bond.chainLevel||0)===highest.get(bond.chainId));
   }
-  function starSynergies(id){const identity=identityOf(id);return SYNERGIES.filter(s=>s.ids.includes(identity))}
+  function starSynergies(id,run){const identity=identityOf(id);return (run?synergiesForRun(run):SYNERGIES).filter(s=>s.ids.includes(identity))}
   function isOpeningRecruit(run){const groups=run.recruitGroups||0;return run.offer.length?groups<=6:groups<6}
   function tierOdds(run){
     const stage=Math.max(1,run.stage||1),opening=isOpeningRecruit(run);
@@ -488,6 +494,7 @@
   function addDimensions(target,values,multiplier=1){
     for(const [key,value] of Object.entries(values||{}))if(COMBAT_KEYS.includes(key))target[key]+=value*multiplier;
   }
+  function combatBonus(run,value){return run?.balanceRulesVersion>=3?(value<=30?Math.max(-30,value):30+(value-30)*.5):clamp(value,-30,40)}
   function fused(run,strategy='',foeStrategy=''){
     const stats={},talents=[],talentEffects=[],bonds=activeSynergies(run),opening=openingEffect(run);
     for(const attr of ATTRS){
@@ -516,8 +523,8 @@
       }
     }
     for(const key of ATTRS){
-      slotScores[key]=Math.max(0,(slotScores[key]+abilityFlat[key])*(1+clamp(abilityPercent[key],-30,40)/100));
-      stats[key]=Math.round(Math.max(0,(stats[key]+abilityFlat[key])*(1+clamp(abilityPercent[key],-30,40)/100)));
+      slotScores[key]=Math.max(0,(slotScores[key]+abilityFlat[key])*(1+combatBonus(run,abilityPercent[key])/100));
+      stats[key]=Math.round(Math.max(0,(stats[key]+abilityFlat[key])*(1+combatBonus(run,abilityPercent[key])/100)));
     }
     const dimensions=dimensionsFromSlots(slotScores),flat=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
     const percents=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
@@ -561,7 +568,7 @@
       if(tactic.beats===foeStrategy)openingPercents[tactic.target]+=(opening.counterBonus||0)+(run.metaFilmStudy||0);
       if(!opening.ignoreStrategyPenalty)openingPercents[tactic.penalty]-=4+(opening.strategyPenalty||0);
     }
-    for(const key of COMBAT_KEYS)dimensions[key]=Math.max(0,(dimensions[key]+flat[key])*(1+clamp(percents[key],-30,40)/100)*(1+clamp(openingPercents[key],-30,40)/100));
+    for(const key of COMBAT_KEYS)dimensions[key]=Math.max(0,(dimensions[key]+flat[key])*(1+combatBonus(run,percents[key])/100)*(1+combatBonus(run,openingPercents[key])/100));
     const rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
     return {stats,slotScores,dimensions,rating,bonds,talents,talentEffects};
   }
@@ -661,7 +668,7 @@
     const star=BY_ID[id];if(!star)return 0;
     return run.endless||run.stage>10?run.stage:3;
   }
-  function trainingCost(run,id){const level=run.owned[id]?.train??0,base=TRAINING_COSTS[Math.min(level,TRAINING_COSTS.length-1)];return base===undefined?Infinity:Math.max(1,base+(run.talent==='agent'?2:0)+(openingEffect(run).trainingCostDelta||0))}
+  function trainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)];return base===undefined?Infinity:Math.max(1,base+(run.talent==='agent'?2:0)+(openingEffect(run).trainingCostDelta||0))}
   function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const cost=trainingCost(run,id);if(run.cash<cost)return false;run.cash-=cost;own.train++;own.trainedAt=run.stage;return true}
   function boostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
   function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0))*(effect.gearPriceMultiplier||1)))}
@@ -817,6 +824,23 @@
     };
     return profiles[type];
   }
+  function recoverBondMorale(run,bonds=activeSynergies(run)){
+    if(!currentBalance(run))return [];
+    const counters=run.bondWinHealCounters||(run.bondWinHealCounters={}),messages=[];
+    for(const bond of bonds){
+      const amount=bond.effect?.winHeal,period=bond.effect?.healEveryWins;
+      if(!amount||!period)continue;
+      const previous=Number.isInteger(counters[bond.id])&&counters[bond.id]>=0&&counters[bond.id]<period?counters[bond.id]:0;
+      counters[bond.id]=previous+1;
+      if(counters[bond.id]>=period){
+        counters[bond.id]=0;
+        const healed=Math.min(amount,Math.max(0,MORALE_HARD_CAP-run.morale));
+        run.morale+=healed;
+        if(healed)messages.push(`${bond.name} · 生命 +${healed}`);
+      }
+    }
+    return messages;
+  }
   function battle(game,strategy){
     const run=game.run;if(!run||run.ended||run.lastBattle||starterCount(run)<6||!STRATEGIES[strategy])return null;
     const opening=openingEffect(run);
@@ -870,9 +894,10 @@
       reward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash);run.cash+=reward;run.wins++;
       if(opening.winHeal&&run.wins%(opening.healEveryWins||1)===0){
         const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit||10)-granted));
-        run.morale+=heal;run.talentWinHealGranted=granted+heal;
+        run.morale+=currentBalance(run)?Math.min(heal,Math.max(0,MORALE_HARD_CAP-run.morale)):heal;run.talentWinHealGranted=granted+heal;
       }
       detail=[`胜利 ${base}`,`阵容收入 ${lineupIncome}`,`利息 ${interest}`,`羁绊 ${bond+bondCash}`];
+      detail.push(...recoverBondMorale(run,own.bonds));
       if(openingCash)detail.push(`开局天赋 ${openingCash}`);
       if(talentCash)detail.push(`球星技能 ${talentCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
@@ -906,7 +931,7 @@
     run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
+  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;
 })(typeof window!=='undefined'?window:globalThis);

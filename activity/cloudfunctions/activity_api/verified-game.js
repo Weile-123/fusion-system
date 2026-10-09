@@ -10,7 +10,7 @@ function replay(state,operations,terminal,strategy){
     if(!operation||!actions.has(operation.action)||!Array.isArray(operation.args)||operation.args.length>3)invalid();
     const run=game.run,name=operation.action,args=operation.args;
     if(run.ended||run.pending&&!['resolvePending'].includes(name)||run.lastBattle&&name!=='continueRun')invalid();
-    if(name==='makeOffer'&&(run.offer.length||C.starterCount(run)>=6&&run.free<=0&&run.cash<C.recruitCost(run)))invalid();
+    if(name==='makeOffer'&&(run.offer.length||C.starterCount(run)>=6&&!(run.recruitCredits>0)&&run.free<=0&&run.cash<C.recruitCost(run)))invalid();
     if(name==='buyRecruitPack'&&args[0]!==10)invalid();
     if(['train','recruit'].includes(name)&&(typeof args[0]!=='string'||!Object.hasOwn(C.BY_ID,args[0])))invalid();
     if(name==='refreshShop'&&!['boost','gear'].includes(args[0]||'boost'))invalid();

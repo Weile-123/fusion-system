@@ -14,10 +14,10 @@ function renderer(){
   vm.runInContext(source.slice(source.indexOf('const reactAttributeNames'),source.indexOf('function HomeScreen')),context);
   return context;
 }
-function profileMarkup({collected=true,tab='stars',tier='all'}={}){
+function profileMarkup({collected=true,tab='stars',tier='all',bondSize='all'}={}){
   const source=read('h5/game-ui.js'),game=C.createGame();
   if(collected)game.profile.discovered=C.STARS.map(star=>star.id);
-  const context={C,game,profileTier:tier,profileTab:tab,profileSlideFrom:tab,
+  const context={C,game,profileTier:tier,profileBondSize:bondSize,profileTab:tab,profileSlideFrom:tab,
     tierClass:{SSR:'tier-legend',S:'tier-s',A:'tier-a',B:'tier-b',C:'tier-c'},
     els:{profile:{}},escapeText:value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))};
   vm.createContext(context);

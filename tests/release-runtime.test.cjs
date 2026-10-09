@@ -3,7 +3,7 @@ const React=require('react'),{renderToStaticMarkup}=require('react-dom/server'),
 const C=require('../h5/game-core.js');
 // React server rendering is a reference oracle for the unchanged JSX templates;
 // the shipped DOM renderer is exercised separately in dom-runtime.test.cjs.
-const jsx=fs.readFileSync('src/react-screens.jsx','utf8').replace("import { createElement, Fragment, createRoot, flushSync } from './dom-runtime.mjs';", "import { createElement, Fragment } from 'react'; import { createRoot } from 'react-dom/client'; import { flushSync } from 'react-dom';")+'\nexport {MarkupScreen,HomeScreen,TalentScreen,TopBar,DuelScreen,ResultScreen,CareerReportScreen,LeaderboardScreen,FeedbackScreen};';
+const jsx=fs.readFileSync('src/react-screens.jsx','utf8').replace("import { createElement, Fragment, createRoot, flushSync } from './dom-runtime.mjs';", "import { createElement, Fragment } from 'react'; import { createRoot } from 'react-dom/client'; import { flushSync } from 'react-dom';")+'\nexport {MarkupScreen,HomeScreen,TalentScreen,TopBar,DuelScreen,ResultScreen,CareerReportScreen,LeaderboardScreen,FeedbackScreen,AnnouncementScreen};';
 const compiled=transformSync(jsx,{loader:'jsx',format:'cjs',jsx:'automatic'}).code,moduleShim={exports:{}};
 new Function('require','module','exports',compiled)(require,moduleShim,moduleShim.exports);
 const components=moduleShim.exports;
@@ -13,7 +13,7 @@ const shippedRuntimeCode=transformSync(fs.readFileSync('src/dom-runtime.mjs','ut
 new Function('module','exports',shippedRuntimeCode)(shippedRuntimeModule,shippedRuntimeModule.exports);
 const shippedRenderer=shippedRuntimeModule.exports;
 const shippedComponents=(()=>{
-  const source=fs.readFileSync('src/react-screens.jsx','utf8')+'\nexport {MarkupScreen,HomeScreen,TalentScreen,TopBar,DuelScreen,ResultScreen,CareerReportScreen,LeaderboardScreen,FeedbackScreen};';
+  const source=fs.readFileSync('src/react-screens.jsx','utf8')+'\nexport {MarkupScreen,HomeScreen,TalentScreen,TopBar,DuelScreen,ResultScreen,CareerReportScreen,LeaderboardScreen,FeedbackScreen,AnnouncementScreen};';
   const code=transformSync(source,{loader:'jsx',format:'cjs',jsx:'transform',jsxFactory:'createElement',jsxFragment:'Fragment'}).code;
   const module={exports:{}};
   new Function('require','module','exports',code)(()=>shippedRenderer,module,module.exports);
@@ -40,7 +40,7 @@ function runtime(sdk={},timers={}){
   const window={SupFusionGameCore:C,ColorboxAI:sdk,ACTIVITY_API_BASE:'https://example.invalid',ACTIVITY_ENV_ID:'test',
     FusionStorage:{available:()=>true,localAvailable:()=>true,platformAvailable:()=>!!sdk.storage,save:async value=>saved.push(structuredClone(value)),syncToCloud:async value=>backups.push(structuredClone(value))},
     SupFusionReactScreens:{renderMarkup:(el,html)=>render(el,components.MarkupScreen,{html})},addEventListener(){}};
-  for(const name of ['Home','Talent','TopBar','Duel','Result','CareerReport','Leaderboard','Feedback'])window.SupFusionReactScreens['render'+name]=(el,props)=>render(el,components[name+'Screen']||components.TopBar,props);
+  for(const name of ['Home','Talent','TopBar','Duel','Result','CareerReport','Leaderboard','Feedback','Announcement'])window.SupFusionReactScreens['render'+name]=(el,props)=>render(el,components[name+'Screen']||components.TopBar,props);
   const context={window,document,console,WeakMap,URL,Blob,Promise,setTimeout:timers.setTimeout||(()=>0),clearTimeout:timers.clearTimeout||(()=>{}),requestAnimationFrame(){}};
   vm.createContext(context);
   let source=fs.readFileSync('h5/game-ui.js','utf8');
@@ -49,8 +49,23 @@ function runtime(sdk={},timers={}){
   return {audit:window.audit,window,screens,saved,rendered,backups,document,fire:(name,event)=>listeners[name](event),input:value=>listeners.input({target:{id:'feedback-content',value}}),click:(act,id='')=>window.audit.handle(act,{dataset:{id}})};
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+test('new recovery counters and overflow health survive save restoration',()=>{
+  const app=runtime(),game=C.createGame();game.run=C.createRun('steady_interest',911);
+  game.run.morale=8;game.run.bondWinHealCounters={royal_recovery:1,purple_gold_recovery:2,champion_recovery:3};
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+  assert.equal(restored.run.morale,8);
+  assert.equal(JSON.stringify(restored.run.bondWinHealCounters),JSON.stringify(game.run.bondWinHealCounters));
+  app.audit.setGame(restored);app.audit.go('roster');assert.match(app.screens['.top'].output,/3\/3 \+5/);
+  game.run=C.createRun('steady_interest',911,{},1);
+  const legacy=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+  assert.equal(legacy.run.balanceRulesVersion,undefined);assert.equal(C.recruitPackCost(legacy.run,10),76);
+});
 const V=require('../activity/cloudfunctions/activity_api/verified-game.js');
-function rankedSdk(onRequest){return {cloud:{request:async args=>onRequest?onRequest(args):({statusCode:200,code:0,data:args.url.endsWith('/start')?{runId:args.data.requestId,seed:args.data.seed,proofVersion:3}:{}})}}}
+function rankedSdk(onRequest){return {cloud:{request:async args=>{
+  const response=onRequest?await onRequest(args):{statusCode:200,code:0,data:args.url.endsWith('/start')?{runId:args.data.requestId,seed:args.data.seed,proofVersion:3}:{}};
+  if(args.url.endsWith('/start')&&response?.data)response.data.balanceRulesVersion=args.data.balanceRulesVersion||1;
+  return response;
+}}}}
 test('all twenty talents traverse actual UI controller drafts, roster, shop, duel and report renderers',async()=>{
   const app=runtime(rankedSdk());
   for(const talent of C.TALENTS){
@@ -405,4 +420,120 @@ test('lineup drag clone retains scoped child styles before dimming its source',(
   assert.equal(clone.children[0].style['background-color'],'#112233');
   assert.equal(clone.style.width,'150px');assert.equal(clone.style.height,'95px');
   app.fire('pointercancel',event);
+});
+
+
+test('home announcement opens, closes and preserves current save',async()=>{
+  const app=runtime(),game=C.createGame();game.run=C.createRun('steady_interest',911,{},2);const before=JSON.stringify(game);
+  app.audit.setGame(game);app.audit.go('home');
+  assert.match(app.screens.home.output,/data-act="announcement-open"/);assert.match(app.screens.home.output,/aria-label="更新公告"/);
+  await app.click('announcement-open');assert.match(app.screens['game-modal'].output,/更多羁绊，更多搭配/);assert.match(app.screens['game-modal'].output,/数值调整/);assert.match(app.screens['game-modal'].output,/样式调整/);
+  assert.match(app.screens['game-modal'].output,/羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。/);
+  assert.match(app.screens['game-modal'].output,/class="announcement-note"/);
+  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');assert.equal(JSON.stringify(app.audit.getGame()),before);
+  const restored=app.audit.restoreGame(JSON.parse(before));assert.equal(restored.run.balanceRulesVersion,2);assert.equal(C.synergiesForRun(restored.run).length,84);
+});
+
+test('recruit sheet allows free and credited drafts even with zero cash',async()=>{
+  for(const kind of ['free','credits','rewarded']){
+    const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',911);
+    r.cash=0;r.free=kind==='free'?1:0;r.recruitCredits=kind==='credits'?1:0;
+    if(kind==='rewarded')assert.ok(C.grantRewardedSOffer(r));
+    app.audit.setGame(game);app.audit.go('roster');await app.click('recruit');
+    const sheet=app.screens['game-modal'].output;
+    assert.ok(!/data-act="recruit-normal"[^>]*disabled/.test(sheet),kind);
+    assert.ok(/data-act="recruit-ten"[^>]*disabled/.test(sheet),kind);
+    await app.click('recruit-normal');assert.equal(app.audit.state().screen,'recruit');
+    assert.ok(!/data-act="pick"[^>]*disabled/.test(app.screens.recruit.output),kind);
+    await app.click('pick');assert.equal(Object.keys(r.owned).length,1,kind);assert.equal(r.cash,0,kind);
+  }
+});
+
+test('recruit sheet locks unpaid drafts but permits affordable ten packs',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',911);r.cash=0;r.free=0;
+  app.audit.setGame(game);app.audit.go('roster');await app.click('recruit');
+  assert.match(app.screens['game-modal'].output,/data-act="recruit-normal"[^>]*disabled/);
+  await app.click('recruit-normal');assert.equal(app.audit.state().screen,'roster');
+  r.cash=C.recruitPackCost(r);await app.click('recruit');
+  assert.ok(!/data-act="recruit-ten"[^>]*disabled/.test(app.screens['game-modal'].output));
+  await app.click('recruit-ten');assert.equal(app.audit.state().screen,'recruit');assert.equal(r.offer.length,10);assert.equal(r.cash,0);
+  await app.click('confirm-recruit-batch');assert.ok(Object.keys(r.owned).length>0);
+});
+
+test('reported legacy screenshot: 9 cash and two free recruits permit a normal draft',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('scouting_network',911,{},1);
+  r.cash=9;r.free=2;assert.equal(C.recruitPackCost(r),95);
+  app.audit.setGame(game);app.audit.go('roster');await app.click('recruit');
+  const sheet=app.screens['game-modal'].output;
+  assert.match(sheet,/本轮还可免费招募 2 次/);
+  assert.ok(!/data-act="recruit-normal"[^>]*disabled/.test(sheet));
+  assert.match(sheet,/data-act="recruit-ten"[^>]*disabled/);
+  await app.click('recruit-normal');await app.click('pick');
+  assert.equal(r.free,1);assert.equal(r.cash,9);assert.equal(Object.keys(r.owned).length,1);
+});
+
+test('bond archive requires actual achievement, persists after sale and restores history',async()=>{
+  const app=runtime(),game=C.createGame();game.profile.discovered=C.STARS.map(s=>s.id);
+  const restored=app.audit.restoreGame(game);
+  const legacyIds=new Set(C.synergiesForRun({balanceRulesVersion:2}).map(b=>b.id));
+  assert.ok(restored.profile.achievedBonds.every(id=>legacyIds.has(id)));
+  const r=restored.run=C.createRun('steady_interest',911);r.free=1;
+  const ids=['curry','jordan','lebron','magic','shaq','duncan'];r.slots=Object.fromEntries(C.SLOTS.map((s,i)=>[s.id,ids[i]]));r.bench=['green'];
+  r.owned=Object.fromEntries([...ids,'green'].map(id=>[id,{stars:1,train:0}]));r.offer=['durant'];
+  const bond=C.SYNERGIES.find(b=>b.name==='格林公式');
+  app.audit.setGame(restored);app.audit.go('profile');
+  assert.ok(!restored.profile.achievedBonds.includes(bond.id));
+  app.audit.go('recruit');await app.click('pick');assert.ok(restored.profile.achievedBonds.includes(bond.id));
+  await app.audit.handle('sell-bench',{dataset:{id:'durant',index:'1'}});await app.click('sell-confirm');
+  assert.ok(!C.activeSynergies(r).some(b=>b.id===bond.id));assert.ok(restored.profile.achievedBonds.includes(bond.id));
+  const reloaded=app.audit.restoreGame(JSON.parse(JSON.stringify(restored)));assert.ok(reloaded.profile.achievedBonds.includes(bond.id));
+});
+
+test('archive migration preserves old collected entries once and never auto-unlocks added bonds',()=>{
+  const app=runtime(),game=C.createGame();game.profile.discovered=C.STARS.map(s=>s.id);game.profile.achievedBonds=[];
+  const migrated=app.audit.restoreGame(game),legacy=C.synergiesForRun({balanceRulesVersion:2});
+  assert.equal(migrated.profile.achievedBonds.length,legacy.length);
+  assert.equal(migrated.profile.bondArchiveVersion,1);
+  const previousIds=new Set(legacy.map(b=>b.id));
+  for(const b of C.SYNERGIES.filter(b=>!previousIds.has(b.id)))assert.ok(!migrated.profile.achievedBonds.includes(b.id));
+  const newGame=C.createGame();newGame.profile.bondArchiveVersion=1;newGame.profile.achievedBonds=[];newGame.profile.discovered=C.STARS.map(s=>s.id);
+  const unchanged=app.audit.restoreGame(newGame);assert.equal(unchanged.profile.achievedBonds.length,0);
+  assert.equal(app.audit.restoreGame(JSON.parse(JSON.stringify(migrated))).profile.achievedBonds.length,legacy.length);
+});
+
+test('first migration, three new achievements, settlement and re-entry preserve the archive',async()=>{
+  const app=runtime(),old=C.createGame();old.profile.discovered=C.STARS.map(s=>s.id);
+  const migrated=app.audit.restoreGame(JSON.parse(JSON.stringify(old)));
+  const legacyIds=new Set(C.synergiesForRun({balanceRulesVersion:2}).map(b=>b.id));
+  const added=C.SYNERGIES.filter(b=>!legacyIds.has(b.id));
+  assert.equal(migrated.profile.achievedBonds.length,legacyIds.size);
+  app.audit.setGame(migrated);await app.click('new');app.audit.setTalent('steady_interest');await app.click('begin');
+  const run=app.audit.getGame().run;run.benchLimit=10;run.free=9;
+  const targetIds=['spurs_lock','detroit_champs','rocket_axes'];
+  const players=targetIds.flatMap(id=>C.SYNERGIES.find(b=>b.id===id).ids);
+  for(const id of players){run.offer=[id];run.offerMode='normal';app.audit.go('recruit');await app.click('pick');}
+  const earned=added.filter(b=>app.audit.getGame().profile.achievedBonds.includes(b.id)).map(b=>b.id).sort();
+  assert.deepEqual(earned,[...targetIds].sort());
+  for(let attempts=0;!run.ended&&attempts<100;attempts++){
+    app.audit.go('duel');await app.click('battle');await app.click('strategy','outside');
+    if(!run.ended)await app.click(run.lastBattle.won?(run.stage===10?'finish':'next'):'retry');
+  }
+  assert.equal(run.ended,true);assert.equal(app.audit.getGame().profile.runs,1);await tick();
+  const persisted=JSON.parse(JSON.stringify(app.saved.at(-1)));assert.equal(persisted.profile.bondArchiveVersion,1);
+  const nextApp=runtime(),restored=nextApp.audit.restoreGame(persisted);nextApp.audit.setGame(restored);
+  for(const id of legacyIds)assert.ok(restored.profile.achievedBonds.includes(id));
+  assert.deepEqual(added.filter(b=>restored.profile.achievedBonds.includes(b.id)).map(b=>b.id).sort(),[...targetIds].sort());
+  const before=JSON.stringify(restored.profile.achievedBonds);
+  nextApp.audit.go('profile');await nextApp.click('profile-tab','bonds');
+  for(const id of targetIds)assert.ok(nextApp.screens.profile.output.includes(C.SYNERGIES.find(b=>b.id===id).name));
+  await nextApp.click('new');nextApp.audit.setTalent('steady_interest');await nextApp.click('begin');
+  assert.equal(JSON.stringify(nextApp.audit.getGame().profile.achievedBonds),before);
+  assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,3);
+});
+
+test('pending replacement takes priority over reopening the recruit sheet',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',911);r.cash=100;r.pending='curry';
+  app.audit.setGame(game);app.audit.go('roster');await app.click('recruit');
+  assert.match(app.screens['game-modal'].output,/备战席已满/);
+  assert.ok(!app.screens['game-modal'].output.includes('选择招募方式'));assert.equal(r.cash,100);
 });

@@ -22,7 +22,7 @@ test('discount is twenty percent with integer rounding and dynasty gets five-dim
   const dynasty=lineup('dynasty'),base=lineup('win_bonus');dynasty.gear=[];
   const a=C.fused(dynasty,'outside','collapse'),b=C.fused(base,'outside','collapse');
   assert.ok(C.COMBAT_LABELS&&Object.keys(C.COMBAT_LABELS).every(key=>a.dimensions[key]>b.dimensions[key]));
-  assert.equal(dynasty.cash,16);assert.equal(C.openingEffect(dynasty).battleCash,-2);
+  assert.equal(dynasty.cash,12);assert.equal(C.openingEffect(dynasty).battleCash,-2);
 });
 test('bench talent survives maximum legacy capacity upgrades',()=>{
   const run=C.createRun('deep_bench',33,{benchSeat:5});assert.equal(run.benchLimit,14);

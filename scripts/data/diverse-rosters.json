@@ -1,0 +1,254 @@
+[
+  {
+    "name": "常规路线 1",
+    "ids": [
+      "durant",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "duncan",
+      "iguodala",
+      "green",
+      "kobe",
+      "harper",
+      "pippen",
+      "curry",
+      "caruso",
+      "rodman",
+      "longley",
+      "klay"
+    ]
+  },
+  {
+    "name": "常规进阶：五小＋魔鸟",
+    "ids": [
+      "durant",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "kareem",
+      "klay",
+      "pippen",
+      "iguodala",
+      "curry",
+      "rodman",
+      "kobe",
+      "bird",
+      "duncan",
+      "worthy",
+      "green"
+    ]
+  },
+  {
+    "name": "常规路线 2",
+    "ids": [
+      "bird",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "russell",
+      "pippen",
+      "kareem",
+      "wilt",
+      "korver",
+      "moses",
+      "rodman",
+      "erving",
+      "worthy",
+      "duncan",
+      "kobe"
+    ]
+  },
+  {
+    "name": "常规路线 3",
+    "ids": [
+      "durant",
+      "bird",
+      "lebron",
+      "magic",
+      "shaq",
+      "hakeem",
+      "klay",
+      "ac_green",
+      "curry",
+      "irving",
+      "byron_scott",
+      "kareem",
+      "iguodala",
+      "worthy",
+      "love",
+      "green"
+    ]
+  },
+  {
+    "name": "常规路线 4",
+    "ids": [
+      "durant",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "hakeem",
+      "ewing",
+      "robinson",
+      "oscar",
+      "kareem",
+      "west",
+      "bird",
+      "kobe",
+      "baylor",
+      "battier",
+      "duncan"
+    ]
+  },
+  {
+    "name": "常规路线 5",
+    "ids": [
+      "durant",
+      "bird",
+      "lebron",
+      "magic",
+      "duncan",
+      "russell",
+      "rayallen",
+      "bowen",
+      "reggie",
+      "green",
+      "kawhi",
+      "klay",
+      "iguodala",
+      "curry",
+      "peja",
+      "battier"
+    ]
+  },
+  {
+    "name": "常规路线 6",
+    "ids": [
+      "durant",
+      "jordan",
+      "lebron",
+      "magic",
+      "kareem",
+      "hakeem",
+      "wilkins",
+      "harper",
+      "bird",
+      "pippen",
+      "drexler",
+      "rodman",
+      "yao",
+      "booker",
+      "longley",
+      "erving"
+    ]
+  },
+  {
+    "name": "常规路线 7：Showtime＋公牛",
+    "ids": [
+      "bird",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "kareem",
+      "kobe",
+      "rodman",
+      "duncan",
+      "ac_green",
+      "pippen",
+      "harper",
+      "worthy",
+      "longley",
+      "byron_scott",
+      "oscar"
+    ]
+  },
+  {
+    "name": "常规路线 8：Showtime备战变体",
+    "ids": [
+      "bird",
+      "jordan",
+      "lebron",
+      "magic",
+      "shaq",
+      "kareem",
+      "rodman",
+      "byron_scott",
+      "pippen",
+      "ac_green",
+      "kobe",
+      "worthy",
+      "duncan",
+      "artest",
+      "oscar",
+      "korver"
+    ]
+  },
+  {
+    "name": "含SSR路线 1",
+    "ids": [
+      "chef_curry",
+      "reaper_durant",
+      "king_lebron",
+      "showtime_magic",
+      "diesel_shaq",
+      "stone_duncan",
+      "pippen",
+      "air_jordan",
+      "melo",
+      "rodman",
+      "iguodala",
+      "green",
+      "harper",
+      "kobe",
+      "klay",
+      "longley"
+    ]
+  },
+  {
+    "name": "含SSR路线 2",
+    "ids": [
+      "reaper_durant",
+      "air_jordan",
+      "king_lebron",
+      "chef_curry",
+      "diesel_shaq",
+      "stone_duncan",
+      "bird",
+      "magic",
+      "byron_scott",
+      "ac_green",
+      "iguodala",
+      "battier",
+      "green",
+      "worthy",
+      "caruso",
+      "kareem"
+    ]
+  },
+  {
+    "name": "含SSR路线 3",
+    "ids": [
+      "chef_curry",
+      "reaper_durant",
+      "king_lebron",
+      "showtime_magic",
+      "diesel_shaq",
+      "stone_duncan",
+      "booker",
+      "russell",
+      "worthy",
+      "bird",
+      "pippen",
+      "rodman",
+      "wilt",
+      "jordan",
+      "moses",
+      "kareem"
+    ]
+  }
+]

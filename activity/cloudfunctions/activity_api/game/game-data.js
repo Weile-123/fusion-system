@@ -265,15 +265,21 @@
   function makeBond(id,name,ids,stats,extras={}){
     const dimensions=mapToCombat(stats);
     const effect={dimensions,winCash:extras.winCash||0,stageCash:extras.stageCash||0,freeRecruit:extras.freeRecruit||0};
+    if(extras.winHeal){effect.winHeal=extras.winHeal;effect.healEveryWins=extras.healEveryWins}
     const parts=[combatText(dimensions)];
     if(effect.winCash)parts.push('胜利奖金 +'+effect.winCash);
     if(effect.stageCash)parts.push('每关奖金 +'+effect.stageCash);
     if(effect.freeRecruit)parts.push('每关免费招募 +'+effect.freeRecruit);
+    if(effect.winHeal)parts.push('羁绊激活期间每累计 '+effect.healEveryWins+' 胜恢复 '+effect.winHeal+' 点生命');
     const first=Object.entries(stats)[0]||['three',0];
     return {id,name,ids,attr:first[0],gain:first[1],effect,chainId:extras.chainId||null,chainLevel:extras.chainLevel||0,description:parts.join(' · ')};
   }
   const B=makeBond;
-  const SYNERGIES = [
+  const LEGACY_SYNERGIES = [
+    // Recovery member constraints are internal design requirements, not player-facing rules.
+    B('royal_recovery','王者续航',['jordan','lebron','shaq'],{mid:1,drive:1,inside:1},{winHeal:1,healEveryWins:2}),
+    B('purple_gold_recovery','紫金薪火',['magic','worthy','byron_scott'],{handle:2,mid:1},{winHeal:1,healEveryWins:3}),
+    B('champion_recovery','冠军拼图',['horry','fisher','battier'],{def:2},{winHeal:1,healEveryWins:4}),
     // 44 组双人羁绊：优先真实搭档、宿敌、传承与同队关系。
     B('splash','水花兄弟',['curry','klay'],{three:3,handle:1},{stageCash:1}),
     B('warrior_brain','勇士轴心',['curry','green'],{handle:4,def:3}),
@@ -363,5 +369,2052 @@
     B('showtime_five','Showtime',['magic','byron_scott','worthy','ac_green','kareem'],{handle:6,inside:5,mid:3,drive:2},{stageCash:4,chainId:'showtime_lakers',chainLevel:3}),
     B('final_answer','最终答案',['magic','jordan','lebron','duncan','shaq'],{handle:3,mid:3,drive:3,inside:3,def:3},{stageCash:4,winCash:3})
   ];
-  return {ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,STAR_ROWS,TALENT_DETAILS,SYNERGIES};
+  // v3 bonds; legacy data remains available for old saves and server replay.
+  const SYNERGIES = [
+  {
+    "id": "royal_recovery",
+    "name": "王者续航",
+    "ids": [
+      "jordan",
+      "lebron",
+      "shaq"
+    ],
+    "attr": "mid",
+    "gain": 1,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "shooting": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0,
+      "winHeal": 1,
+      "healEveryWins": 2
+    },
+    "description": "禁区终结 +7%、投射威胁 +5%；每累计2胜恢复1点士气"
+  },
+  {
+    "id": "purple_gold_recovery",
+    "name": "紫金薪火",
+    "ids": [
+      "magic",
+      "worthy",
+      "byron_scott"
+    ],
+    "attr": "handle",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "shooting": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0,
+      "winHeal": 1,
+      "healEveryWins": 3
+    },
+    "description": "持球创造 +7%、投射威胁 +5%；每累计3胜恢复1点士气"
+  },
+  {
+    "id": "champion_recovery",
+    "name": "冠军拼图",
+    "ids": [
+      "horry",
+      "fisher",
+      "battier"
+    ],
+    "attr": "def",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 7,
+        "rimStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0,
+      "winHeal": 1,
+      "healEveryWins": 4
+    },
+    "description": "外线限制 +7%、护框强度 +5%；每累计4胜恢复1点士气"
+  },
+  {
+    "id": "splash",
+    "name": "水花兄弟",
+    "ids": [
+      "curry",
+      "klay"
+    ],
+    "attr": "three",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 6,
+        "creation": 4
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +6%、持球创造 +4%；每关奖金 +1"
+  },
+  {
+    "id": "warrior_brain",
+    "name": "勇士轴心",
+    "ids": [
+      "curry",
+      "green"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、外线限制 +5%"
+  },
+  {
+    "id": "ok_combo",
+    "name": "紫金OK",
+    "ids": [
+      "kobe",
+      "shaq"
+    ],
+    "attr": "inside",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "mamba_pau",
+    "name": "冠军内外线",
+    "ids": [
+      "kobe",
+      "pau"
+    ],
+    "attr": "inside",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "shooting": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、投射威胁 +5%"
+  },
+  {
+    "id": "laker_twin",
+    "name": "湖人双核",
+    "ids": [
+      "lebron",
+      "davis"
+    ],
+    "attr": "inside",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "finishing": 6,
+        "perimeterStop": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +6%、外线限制 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "buck_champs",
+    "name": "雄鹿冠军组",
+    "ids": [
+      "giannis",
+      "holiday"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 6,
+        "creation": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +6%、持球创造 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "celtic_guards",
+    "name": "绿军双闸",
+    "ids": [
+      "holiday",
+      "white"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、外线限制 +5%"
+  },
+  {
+    "id": "buck_stars",
+    "name": "雄鹿双星",
+    "ids": [
+      "lillard",
+      "giannis"
+    ],
+    "attr": "three",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "shooting": 6,
+        "finishing": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +6%、禁区终结 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "phoenix_blades",
+    "name": "太阳双刃",
+    "ids": [
+      "durant",
+      "booker"
+    ],
+    "attr": "mid",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、持球创造 +5%"
+  },
+  {
+    "id": "process_battle",
+    "name": "费城硬仗",
+    "ids": [
+      "embiid",
+      "butler"
+    ],
+    "attr": "inside",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "wolves_core",
+    "name": "狼群内外",
+    "ids": [
+      "edwards",
+      "gobert"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、持球创造 +5%"
+  },
+  {
+    "id": "knicks_core",
+    "name": "纽约双核",
+    "ids": [
+      "anunoby",
+      "brunson"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 6,
+        "perimeterStop": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +6%、外线限制 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "lake_show",
+    "name": "湖人火花",
+    "ids": [
+      "lebron",
+      "caruso"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、外线限制 +5%"
+  },
+  {
+    "id": "buck_towers",
+    "name": "密城双塔",
+    "ids": [
+      "giannis",
+      "lopez"
+    ],
+    "attr": "inside",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "pick_roll",
+    "name": "挡拆教科书",
+    "ids": [
+      "stockton",
+      "malone"
+    ],
+    "attr": "handle",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "finishing": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、禁区终结 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "spurs_heritage",
+    "name": "圣城锋线传承",
+    "ids": [
+      "bowen",
+      "kawhi"
+    ],
+    "attr": "three",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、外线限制 +5%"
+  },
+  {
+    "id": "heat_shield",
+    "name": "热火侧翼屏障",
+    "ids": [
+      "lebron",
+      "battier"
+    ],
+    "attr": "drive",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 7,
+        "rimStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +7%、护框强度 +5%"
+  },
+  {
+    "id": "mavs_wall",
+    "name": "达拉斯冠军内线",
+    "ids": [
+      "dirk",
+      "chandler"
+    ],
+    "attr": "inside",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "cavs_arc",
+    "name": "克城火力网",
+    "ids": [
+      "lebron",
+      "korver"
+    ],
+    "attr": "three",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、持球创造 +5%"
+  },
+  {
+    "id": "laker_tough",
+    "name": "洛城硬仗",
+    "ids": [
+      "kobe",
+      "artest"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、外线限制 +5%"
+  },
+  {
+    "id": "wallace_brothers",
+    "name": "华莱士双塔",
+    "ids": [
+      "benwallace",
+      "rasheed"
+    ],
+    "attr": "inside",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "sixers_final",
+    "name": "费城总决赛双核",
+    "ids": [
+      "iverson",
+      "mutombo"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "magic_heritage",
+    "name": "魔术一号传承",
+    "ids": [
+      "penny",
+      "howard"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "finishing": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、禁区终结 +5%"
+  },
+  {
+    "id": "buck_origin",
+    "name": "雄鹿冠军起点",
+    "ids": [
+      "oscar",
+      "kareem"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "finishing": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、禁区终结 +5%"
+  },
+  {
+    "id": "lake_pioneers",
+    "name": "湖人远古双翼",
+    "ids": [
+      "west",
+      "baylor"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、持球创造 +5%"
+  },
+  {
+    "id": "philly_mentors",
+    "name": "费城内线传承",
+    "ids": [
+      "barkley",
+      "moses"
+    ],
+    "attr": "inside",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "rocket_reunion",
+    "name": "休城老友",
+    "ids": [
+      "drexler",
+      "hakeem"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "warrior_old_days",
+    "name": "勇士旧梦",
+    "ids": [
+      "mullin",
+      "webber"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "sonics_duo",
+    "name": "手套与雨人",
+    "ids": [
+      "payton",
+      "kemp"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、持球创造 +5%"
+  },
+  {
+    "id": "duke_wings",
+    "name": "全能锋线传承",
+    "ids": [
+      "grant_hill",
+      "tmac"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、持球创造 +5%"
+  },
+  {
+    "id": "yao_tmac",
+    "name": "姚麦组合",
+    "ids": [
+      "yao",
+      "tmac"
+    ],
+    "attr": "mid",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "finishing": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "pistons_backcourt",
+    "name": "活塞后场双核",
+    "ids": [
+      "billups",
+      "rip"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "kings_duo",
+    "name": "国王双核",
+    "ids": [
+      "webber",
+      "peja"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "rondo_truth",
+    "name": "波士顿新旧指挥",
+    "ids": [
+      "rondo",
+      "pierce"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "shooting": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、投射威胁 +5%"
+  },
+  {
+    "id": "fo_fo_fo",
+    "name": "费城冠军双核",
+    "ids": [
+      "erving",
+      "moses"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、持球创造 +5%"
+  },
+  {
+    "id": "thunder_mentor",
+    "name": "雷霆师徒",
+    "ids": [
+      "shai",
+      "paul"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "finishing": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、禁区终结 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "showtime_pair",
+    "name": "表演时刻",
+    "ids": [
+      "magic",
+      "kareem"
+    ],
+    "attr": "handle",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "finishing": 4
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、禁区终结 +4%；每关奖金 +1"
+  },
+  {
+    "id": "mavs_origin",
+    "name": "达拉斯双星",
+    "ids": [
+      "dirk",
+      "nash"
+    ],
+    "attr": "mid",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "shooting": 4
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、投射威胁 +4%；每关奖金 +1"
+  },
+  {
+    "id": "magic_bird",
+    "name": "魔鸟争霸",
+    "ids": [
+      "magic",
+      "bird"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 7,
+        "shooting": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +7%、投射威胁 +5%"
+  },
+  {
+    "id": "jordan_kobe",
+    "name": "飞人传承",
+    "ids": [
+      "jordan",
+      "kobe"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "creation": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、持球创造 +5%"
+  },
+  {
+    "id": "bad_boys_backcourt",
+    "name": "坏孩子双枪",
+    "ids": [
+      "isiah",
+      "dumars"
+    ],
+    "attr": "handle",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "perimeterStop": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、外线限制 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "finals_94",
+    "name": "九四中锋决战",
+    "ids": [
+      "hakeem",
+      "ewing"
+    ],
+    "attr": "inside",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +7%、外线限制 +5%"
+  },
+  {
+    "id": "mavs_new_core",
+    "name": "独行侠双核",
+    "ids": [
+      "doncic",
+      "irving"
+    ],
+    "attr": "handle",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "shooting": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、投射威胁 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "nets_flight",
+    "name": "篮网飞翼",
+    "ids": [
+      "kidd",
+      "carter"
+    ],
+    "attr": "handle",
+    "gain": 2,
+    "effect": {
+      "dimensions": {
+        "creation": 6,
+        "finishing": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +6%、禁区终结 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "thunder_three",
+    "name": "雷霆三少",
+    "ids": [
+      "durant",
+      "westbrook",
+      "harden"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 11,
+        "shooting": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +11%、投射威胁 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "heat_big_three",
+    "name": "南海岸三巨头",
+    "ids": [
+      "lebron",
+      "wade",
+      "bosh"
+    ],
+    "attr": "drive",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "finishing": 11,
+        "creation": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +11%、持球创造 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "celtic_big_three",
+    "name": "绿军三巨头",
+    "ids": [
+      "pierce",
+      "garnett",
+      "rayallen"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 11,
+        "perimeterStop": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +11%、外线限制 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "bull_triangle",
+    "name": "公牛铁三角",
+    "ids": [
+      "jordan",
+      "pippen",
+      "rodman"
+    ],
+    "attr": "def",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 11,
+        "perimeterStop": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +11%、外线限制 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "gdp",
+    "name": "GDP",
+    "ids": [
+      "duncan",
+      "parker",
+      "ginobili"
+    ],
+    "attr": "inside",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 11,
+        "creation": 7
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +11%、持球创造 +7%；每关奖金 +1"
+  },
+  {
+    "id": "nets_big_three",
+    "name": "篮网三巨头",
+    "ids": [
+      "durant",
+      "harden",
+      "irving"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +13%、持球创造 +9%"
+  },
+  {
+    "id": "lob_city",
+    "name": "空接之城",
+    "ids": [
+      "paul",
+      "griffin",
+      "deandre"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +13%、持球创造 +9%"
+  },
+  {
+    "id": "celtic_dynasty",
+    "name": "凯尔特人王朝",
+    "ids": [
+      "bird",
+      "mchale",
+      "parish"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 13,
+        "shooting": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +13%、投射威胁 +9%"
+  },
+  {
+    "id": "ok3",
+    "name": "OK3",
+    "ids": [
+      "westbrook",
+      "george",
+      "melo"
+    ],
+    "attr": "drive",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "shooting": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +13%、持球创造 +9%"
+  },
+  {
+    "id": "mamba_students",
+    "name": "曼巴门徒",
+    "ids": [
+      "kobe",
+      "irving",
+      "tatum"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "creation": 13,
+        "shooting": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +13%、投射威胁 +9%"
+  },
+  {
+    "id": "cavs_big_three",
+    "name": "骑士三巨头",
+    "ids": [
+      "lebron",
+      "irving",
+      "love"
+    ],
+    "attr": "drive",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 11,
+        "shooting": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +11%、投射威胁 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "era_shooters",
+    "name": "划时代射手",
+    "ids": [
+      "reggie",
+      "rayallen",
+      "curry"
+    ],
+    "attr": "three",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "shooting": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +13%、持球创造 +9%"
+  },
+  {
+    "id": "seven_seconds",
+    "name": "7秒进攻",
+    "ids": [
+      "nash",
+      "amare",
+      "marion"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 11,
+        "finishing": 7
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +11%、禁区终结 +7%；每关奖金 +1"
+  },
+  {
+    "id": "nuggets_core",
+    "name": "掘金三核",
+    "ids": [
+      "jokic",
+      "murray",
+      "aaron_gordon"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 11,
+        "creation": 7
+      },
+      "winCash": 0,
+      "stageCash": 1,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +11%、持球创造 +7%；每关奖金 +1"
+  },
+  {
+    "id": "scoring_kaleidoscope",
+    "name": "万花筒",
+    "ids": [
+      "kobe",
+      "melo",
+      "durant"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +13%、持球创造 +9%"
+  },
+  {
+    "id": "floor_generals",
+    "name": "球场指挥官",
+    "ids": [
+      "paul",
+      "kidd",
+      "nash"
+    ],
+    "attr": "handle",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "creation": 13,
+        "shooting": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +13%、投射威胁 +9%"
+  },
+  {
+    "id": "violent_dunkers",
+    "name": "暴力扣将",
+    "ids": [
+      "wilkins",
+      "carter",
+      "griffin"
+    ],
+    "attr": "drive",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "finishing": 13,
+        "creation": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +13%、持球创造 +9%"
+  },
+  {
+    "id": "four_shooting_guards",
+    "name": "四大分位",
+    "ids": [
+      "kobe",
+      "tmac",
+      "carter",
+      "iverson"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 17,
+        "creation": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +17%、持球创造 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "banana_boat",
+    "name": "香蕉船兄弟",
+    "ids": [
+      "lebron",
+      "wade",
+      "paul",
+      "melo"
+    ],
+    "attr": "drive",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 17,
+        "finishing": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +17%、禁区终结 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "draft_96",
+    "name": "96黄金一代",
+    "ids": [
+      "kobe",
+      "iverson",
+      "nash",
+      "rayallen"
+    ],
+    "attr": "three",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 17,
+        "creation": 11
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 1
+    },
+    "description": "投射威胁 +17%、持球创造 +11%；免费招募 +1"
+  },
+  {
+    "id": "european_kings",
+    "name": "欧洲天王",
+    "ids": [
+      "dirk",
+      "pau",
+      "jokic",
+      "doncic"
+    ],
+    "attr": "mid",
+    "gain": 4,
+    "effect": {
+      "dimensions": {
+        "shooting": 17,
+        "creation": 11
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 1
+    },
+    "description": "投射威胁 +17%、持球创造 +11%；免费招募 +1"
+  },
+  {
+    "id": "bad_boys",
+    "name": "坏孩子军团",
+    "ids": [
+      "isiah",
+      "dumars",
+      "laimbeer",
+      "rodman"
+    ],
+    "attr": "def",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "creation": 17,
+        "perimeterStop": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +17%、外线限制 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "four_centers",
+    "name": "四大中锋",
+    "ids": [
+      "hakeem",
+      "shaq",
+      "robinson",
+      "ewing"
+    ],
+    "attr": "inside",
+    "gain": 8,
+    "effect": {
+      "dimensions": {
+        "finishing": 20,
+        "perimeterStop": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +20%、外线限制 +14%"
+  },
+  {
+    "id": "four_great_shooters",
+    "name": "四大神射",
+    "ids": [
+      "curry",
+      "reggie",
+      "klay",
+      "peja"
+    ],
+    "attr": "three",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "shooting": 20,
+        "creation": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +20%、持球创造 +14%"
+  },
+  {
+    "id": "spurs_pillars",
+    "name": "圣城四柱",
+    "ids": [
+      "duncan",
+      "kawhi",
+      "robinson",
+      "parker"
+    ],
+    "attr": "def",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "finishing": 17,
+        "perimeterStop": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +17%、外线限制 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "versatile_forwards",
+    "name": "全能大前锋",
+    "ids": [
+      "giannis",
+      "garnett",
+      "barkley",
+      "lebron"
+    ],
+    "attr": "inside",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 20,
+        "creation": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +20%、持球创造 +14%"
+  },
+  {
+    "id": "lakers_generations",
+    "name": "湖人四代核心",
+    "ids": [
+      "magic",
+      "kareem",
+      "west",
+      "baylor"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 17,
+        "finishing": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +17%、禁区终结 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "celtics_pillars",
+    "name": "绿军四代基石",
+    "ids": [
+      "bird",
+      "russell",
+      "mchale",
+      "garnett"
+    ],
+    "attr": "def",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "shooting": 17,
+        "finishing": 11
+      },
+      "winCash": 2,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +17%、禁区终结 +11%；胜利奖金 +2"
+  },
+  {
+    "id": "scoring_legends",
+    "name": "锋卫得分王",
+    "ids": [
+      "jordan",
+      "wilkins",
+      "erving",
+      "durant"
+    ],
+    "attr": "mid",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "finishing": 20,
+        "shooting": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +20%、投射威胁 +14%"
+  },
+  {
+    "id": "rhythm_creators",
+    "name": "节奏掌控者",
+    "ids": [
+      "shai",
+      "oscar",
+      "harden",
+      "doncic"
+    ],
+    "attr": "handle",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "creation": 20,
+        "shooting": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +20%、投射威胁 +14%"
+  },
+  {
+    "id": "paint_dominators",
+    "name": "禁区统治者",
+    "ids": [
+      "wilt",
+      "russell",
+      "moses",
+      "kareem"
+    ],
+    "attr": "inside",
+    "gain": 9,
+    "effect": {
+      "dimensions": {
+        "finishing": 20,
+        "perimeterStop": 14
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "禁区终结 +20%、外线限制 +14%"
+  },
+  {
+    "id": "death_lineup",
+    "name": "死亡五小",
+    "ids": [
+      "curry",
+      "klay",
+      "iguodala",
+      "durant",
+      "green"
+    ],
+    "attr": "three",
+    "gain": 5,
+    "effect": {
+      "dimensions": {
+        "shooting": 24,
+        "creation": 16
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 1
+    },
+    "description": "投射威胁 +24%、持球创造 +16%；免费招募 +1"
+  },
+  {
+    "id": "bulls_dynasty",
+    "name": "公牛王朝",
+    "ids": [
+      "harper",
+      "jordan",
+      "pippen",
+      "rodman",
+      "longley"
+    ],
+    "attr": "def",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "creation": 24,
+        "perimeterStop": 16
+      },
+      "winCash": 0,
+      "stageCash": 3,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +24%、外线限制 +16%；每关奖金 +3"
+  },
+  {
+    "id": "ok_dynasty",
+    "name": "OK王朝",
+    "ids": [
+      "fisher",
+      "kobe",
+      "fox",
+      "horry",
+      "shaq"
+    ],
+    "attr": "inside",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "shooting": 24,
+        "finishing": 16
+      },
+      "winCash": 3,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +24%、禁区终结 +16%；胜利奖金 +3"
+  },
+  {
+    "id": "showtime_five",
+    "name": "Showtime",
+    "ids": [
+      "magic",
+      "byron_scott",
+      "worthy",
+      "ac_green",
+      "kareem"
+    ],
+    "attr": "handle",
+    "gain": 6,
+    "effect": {
+      "dimensions": {
+        "creation": 32,
+        "finishing": 22
+      },
+      "winCash": 0,
+      "stageCash": 3,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +32%、禁区终结 +22%；每关奖金 +3"
+  },
+  {
+    "id": "final_answer",
+    "name": "最终答案",
+    "ids": [
+      "magic",
+      "jordan",
+      "lebron",
+      "duncan",
+      "shaq"
+    ],
+    "attr": "handle",
+    "gain": 3,
+    "effect": {
+      "dimensions": {
+        "creation": 24,
+        "finishing": 16
+      },
+      "winCash": 3,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +24%、禁区终结 +16%；胜利奖金 +3"
+  },
+  {
+    "id": "diversity_pair_1",
+    "name": "金州双核",
+    "ids": [
+      "curry",
+      "durant"
+    ],
+    "effect": {
+      "dimensions": {
+        "shooting": 6,
+        "creation": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +6%、持球创造 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "diversity_pair_2",
+    "name": "格林公式",
+    "ids": [
+      "durant",
+      "green"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 6,
+        "rimStop": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +6%、护框强度 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "diversity_pair_3",
+    "name": "金州防守枢纽",
+    "ids": [
+      "green",
+      "iguodala"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 6,
+        "rimStop": 4
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +6%、护框强度 +4%；胜利奖金 +1"
+  },
+  {
+    "id": "diversity_pair_4",
+    "name": "一哥掩护",
+    "ids": [
+      "curry",
+      "iguodala"
+    ],
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、外线限制 +5%"
+  },
+  {
+    "id": "diversity_pair_5",
+    "name": "侧翼接力",
+    "ids": [
+      "klay",
+      "iguodala"
+    ],
+    "effect": {
+      "dimensions": {
+        "shooting": 7,
+        "perimeterStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "投射威胁 +7%、外线限制 +5%"
+  },
+  {
+    "id": "diversity_pair_6",
+    "name": "芝城双翼",
+    "ids": [
+      "jordan",
+      "pippen"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 7,
+        "rimStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +7%、护框强度 +5%"
+  },
+  {
+    "id": "diversity_pair_7",
+    "name": "篮板与锁链",
+    "ids": [
+      "pippen",
+      "rodman"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 7,
+        "rimStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +7%、护框强度 +5%"
+  },
+  {
+    "id": "diversity_pair_8",
+    "name": "飞人与篮板王",
+    "ids": [
+      "jordan",
+      "rodman"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 7,
+        "rimStop": 5
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +7%、护框强度 +5%"
+  },
+  {
+    "id": "warriors_connect",
+    "name": "金州连接器",
+    "ids": [
+      "curry",
+      "green",
+      "iguodala"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 11,
+        "rimStop": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +11%、护框强度 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "spurs_lock",
+    "name": "圣城防守链",
+    "ids": [
+      "duncan",
+      "kawhi",
+      "bowen"
+    ],
+    "effect": {
+      "dimensions": {
+        "rimStop": 11,
+        "perimeterStop": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "护框强度 +11%、外线限制 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "detroit_champs",
+    "name": "汽车城铁三角",
+    "ids": [
+      "billups",
+      "benwallace",
+      "rasheed"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 11,
+        "rimStop": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +11%、护框强度 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "bull_wings",
+    "name": "芝城侧翼网",
+    "ids": [
+      "jordan",
+      "pippen",
+      "harper"
+    ],
+    "effect": {
+      "dimensions": {
+        "perimeterStop": 11,
+        "creation": 7
+      },
+      "winCash": 1,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "外线限制 +11%、持球创造 +7%；胜利奖金 +1"
+  },
+  {
+    "id": "laker_advance",
+    "name": "洛城快攻链",
+    "ids": [
+      "magic",
+      "worthy",
+      "kareem"
+    ],
+    "effect": {
+      "dimensions": {
+        "creation": 18,
+        "finishing": 12
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +18%、禁区终结 +12%"
+  },
+  {
+    "id": "rocket_axes",
+    "name": "休城内外策应",
+    "ids": [
+      "hakeem",
+      "drexler",
+      "yao"
+    ],
+    "effect": {
+      "dimensions": {
+        "rimStop": 13,
+        "finishing": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "护框强度 +13%、禁区终结 +9%"
+  },
+  {
+    "id": "mavs_spacing",
+    "name": "达拉斯空间链",
+    "ids": [
+      "dirk",
+      "nash",
+      "kidd"
+    ],
+    "effect": {
+      "dimensions": {
+        "creation": 13,
+        "shooting": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +13%、投射威胁 +9%"
+  },
+  {
+    "id": "bird_circle",
+    "name": "魔鸟与天勾",
+    "ids": [
+      "bird",
+      "magic",
+      "kareem"
+    ],
+    "effect": {
+      "dimensions": {
+        "creation": 18,
+        "finishing": 12
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +18%、禁区终结 +12%"
+  },
+  {
+    "id": "sun_transition",
+    "name": "纳什转换链",
+    "ids": [
+      "nash",
+      "amare",
+      "dirk"
+    ],
+    "effect": {
+      "dimensions": {
+        "creation": 13,
+        "finishing": 9
+      },
+      "winCash": 0,
+      "stageCash": 0,
+      "freeRecruit": 0
+    },
+    "description": "持球创造 +13%、禁区终结 +9%"
+  }
+];
+  return {ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,STAR_ROWS,TALENT_DETAILS,SYNERGIES,LEGACY_SYNERGIES};
 });

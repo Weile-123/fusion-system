@@ -3,7 +3,9 @@
   "alias": "我的球星融合系统",
   "envId": "app-656cf66d07-d4grmvx6yaf70dad0",
   "resources": {
-    "functions": ["activity_api"],
+    "functions": [
+      "activity_api"
+    ],
     "gatewayRoutes": [
       "/api/health",
       "/api/leaderboard",
@@ -12,7 +14,10 @@
       "/api/runs/battle",
       "/api/runs/finish"
     ],
-    "postgresqlTables": ["public.leaderboard_entries", "public.leaderboard_runs"]
+    "postgresqlTables": [
+      "public.leaderboard_entries",
+      "public.leaderboard_runs"
+    ]
   },
   "publicBaseUrl": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com",
   "verification": {
@@ -26,5 +31,25 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false
   },
-  "activity": { "status": "verified" }
+  "activity": {
+    "status": "verified"
+  },
+  "lastFunctionUpdate": {
+    "functionName": "activity_api",
+    "updatedAt": "2026-10-09T06:39:26.544Z",
+    "rulesVersion": 3,
+    "supportedRulesVersions": [
+      1,
+      2,
+      3
+    ],
+    "synergies": 100,
+    "healthChecked": true,
+    "legendReadChecked": true,
+    "ovrReadChecked": true,
+    "unauthorizedWriteRejected": true,
+    "authenticatedGameplayChecked": false,
+    "frontendPublished": false,
+    "databaseMigrationApplied": false
+  }
 }

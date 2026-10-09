@@ -111,7 +111,7 @@ function validateRun(run, strategy) {
 }
 async function handle(req, res) {
   const path = pathOf(req);
-  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:2, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, talents:C.TALENTS.length} };
+  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:C.BALANCE_RULES_VERSION, supportedRulesVersions:[1,2,C.BALANCE_RULES_VERSION], synergies:C.SYNERGIES.length, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, talents:C.TALENTS.length} };
   if (req.method === 'GET' && path === '/leaderboard') {
     const query = new URL(req.url, 'http://localhost').searchParams;
     const board = boardOf(query.get('board'));
@@ -136,20 +136,23 @@ async function handle(req, res) {
     if (!C.KNOWN_TALENTS.some(item => item.id === body.talent)) fail('天赋无效');
     const displayName = typeof body.displayName === 'string' ? body.displayName.trim().slice(0, 40) : '玩家';
     const runId=body.requestId;
+    const balanceRulesVersion=body.balanceRulesVersion??1;
+    if(![1,2,C.BALANCE_RULES_VERSION].includes(balanceRulesVersion))fail('游戏规则版本无效');
     if(typeof runId!=='string'||!/^[0-9a-f-]{36}$/i.test(runId)||!Number.isInteger(body.seed)||body.seed<0||body.seed>4294967295)fail('开局请求无效');
-    const prior=rowsOf(await rdb.from('leaderboard_runs').select('id, seed, talent, proof_version').eq('id',runId).eq('puid',puid).limit(1));
-    if(prior.length){if(Number(prior[0].seed)!==body.seed||prior[0].talent!==body.talent||prior[0].proof_version!==3)fail('开局记录不一致',409);return {code:0,message:'success',data:{runId,seed:body.seed,proofVersion:3}}}
+    const prior=rowsOf(await rdb.from('leaderboard_runs').select('id, seed, talent, proof_version, state').eq('id',runId).eq('puid',puid).limit(1));
+    if(prior.length){if(Number(prior[0].seed)!==body.seed||prior[0].talent!==body.talent||prior[0].proof_version!==3||(prior[0].state?.balanceRulesVersion||1)!==balanceRulesVersion)fail('开局记录不一致',409);return {code:0,message:'success',data:{runId,seed:body.seed,proofVersion:3,balanceRulesVersion}}}
     const context=await rpc('get_verified_game_profile',{p_puid:puid});
     const progress=body.progress||{};
     const cost=V.reconcileProgress(context.progress||{},progress,Number(context.earned)||0);
     const profile={...C.createGame().profile,...context.profile};
     if(!C.talentUnlocked(C.KNOWN_TALENTS.find(item=>item.id===body.talent),profile))fail('该天赋尚无云端解锁记录；可继续本地游戏。',409);
     const seed=body.seed;
-    const state=C.createRun(body.talent,seed,progress);
-    return {code:0,message:'success',data:await rpc('start_verified_game_run',{
+    const state=C.createRun(body.talent,seed,progress,balanceRulesVersion);
+    const result=await rpc('start_verified_game_run',{
       p_puid:puid,p_run_id:runId,p_talent:body.talent,p_display_name:displayName||'玩家',p_seed:seed,
       p_state:state,p_progress:progress,p_cost:cost,p_previous:context.progress||{}
-    })};
+    });
+    return {code:0,message:'success',data:{...result,balanceRulesVersion}};
   }
   if(req.method==='POST'&&path==='/profile/jersey'){
     const puid=puidOf(req),body=await jsonBody(req);

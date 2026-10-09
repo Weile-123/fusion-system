@@ -116,10 +116,10 @@ test('fourth edition player and synergy data forms a complete network', () => {
   assert.equal(C.BY_ID.harden.tier, 'S');
   assert.equal(C.BY_ID.jokic.tier, 'A');
   assert.equal(C.BY_ID.fisher.tier, 'C');
-  assert.equal(C.SYNERGIES.length, 81);
+  assert.equal(C.SYNERGIES.length, 100);
   assert.deepEqual(
     Object.fromEntries([2, 3, 4, 5].map(size => [size, C.SYNERGIES.filter(bond => bond.ids.length === size).length])),
-    { 2: 44, 3: 17, 4: 15, 5: 5 }
+    { 2: 52, 3: 29, 4: 14, 5: 5 }
   );
   const covered = new Set(C.SYNERGIES.flatMap(bond => bond.ids));
   assert.deepEqual(basePlayers.filter(star => !covered.has(star.id)).map(star => star.id), []);
@@ -255,7 +255,6 @@ test('requested three four and five player bonds use the approved members', () =
     european_kings: ['dirk', 'pau', 'jokic', 'doncic'],
     bad_boys: ['isiah', 'dumars', 'laimbeer', 'rodman'],
     four_centers: ['hakeem', 'shaq', 'robinson', 'ewing'],
-    bucks_system: ['giannis', 'lillard', 'holiday', 'lopez'],
     death_lineup: ['curry', 'klay', 'iguodala', 'durant', 'green'],
     bulls_dynasty: ['harper', 'jordan', 'pippen', 'rodman', 'longley'],
     ok_dynasty: ['fisher', 'kobe', 'fox', 'horry', 'shaq'],
@@ -286,13 +285,14 @@ test('requested three four and five player bonds use the approved members', () =
   assert.deepEqual(C.SYNERGIES.find(bond => bond.id === 'banana_boat').ids, ['lebron', 'wade', 'paul', 'melo']);
 });
 
-test('adjacent bond sizes do not repeat the same complete core', () => {
+test('nested bonds are permitted while exact member sets remain unique', () => {
   const overlaps = [2, 3, 4].flatMap(size => {
     const smaller = C.SYNERGIES.filter(bond => bond.ids.length === size);
     const larger = C.SYNERGIES.filter(bond => bond.ids.length === size + 1);
     return smaller.flatMap(core => larger.filter(group => core.ids.every(id => group.ids.includes(id))).map(group => [core.name, group.name]));
   });
-  assert.deepEqual(overlaps, []);
+  assert.ok(overlaps.length>0);
+  assert.equal(new Set(C.SYNERGIES.map(b=>[...b.ids].sort().join("|"))).size,C.SYNERGIES.length);
 });
 
 test('every base S player belongs to at least one four-player bond', () => {
@@ -301,53 +301,35 @@ test('every base S player belongs to at least one four-player bond', () => {
   assert.deepEqual(missing, []);
 });
 
-test('bond budgets rise by group size and recurring cash consumes power budget', () => {
-  const budget = bond => Object.values(bond.effect.dimensions).reduce((sum, value) => sum + value, 0)
-    + (bond.effect.winCash + bond.effect.stageCash) * 4
-    + bond.effect.freeRecruit * 6;
-  const ranges = { 2: [7, 9], 3: [12, 17], 4: [19, 22], 5: [27, 43] };
-  for (const bond of C.SYNERGIES) {
-    const [min, max] = ranges[bond.ids.length];
-    assert.ok(budget(bond) >= min - 1e-8 && budget(bond) <= max + 1e-8, bond.name + ': ' + budget(bond));
+test('new bond budgets distinguish economic, combat and recovery specialities',()=>{
+  const exceptions={showtime_five:54,laker_advance:30,bird_circle:30};
+  for(const bond of C.SYNERGIES){
+    const e=bond.effect,economic=Boolean(e.winCash||e.stageCash||e.freeRecruit);
+    const expected=exceptions[bond.id]??(e.winHeal?12:{2:economic?10:12,3:economic?18:22,4:economic?28:34,5:40}[bond.ids.length]);
+    assert.equal(Object.values(e.dimensions).reduce((a,b)=>a+b,0),expected,bond.name);
+    assert.equal(Object.keys(e.dimensions).length,2,bond.name);
   }
-});
-
-test('multi-player bonds provide varied combat, economy, and recruit effects without morale bonuses', () => {
-  const multi = C.SYNERGIES.filter(bond => bond.ids.length >= 3);
-  assert.ok(multi.filter(bond => bond.effect.stageCash > 0).length >= 10);
-  assert.ok(multi.filter(bond => bond.effect.winCash > 0).length >= 10);
-  assert.ok(multi.filter(bond => bond.effect.freeRecruit > 0).length >= 3);
-  assert.deepEqual(multi.filter(bond => 'morale' in bond.effect || /士气/.test(bond.description)), []);
-});
-
-test('hard four and five player bonds trade attribute points for reference-scale economy rewards', () => {
-  const byId = id => C.SYNERGIES.find(bond => bond.id === id).effect;
-  assert.equal(byId('banana_boat').stageCash, 3);
-  assert.equal(byId('four_shooting_guards').winCash, 2);
-  assert.equal(byId('bulls_dynasty').stageCash, 4);
-  assert.equal(byId('ok_dynasty').winCash, 3);
-  assert.equal(byId('death_lineup').freeRecruit, 2);
-  assert.deepEqual([byId('final_answer').stageCash, byId('final_answer').winCash], [4, 3]);
-  assert.equal(Math.round(Object.values(byId('final_answer').dimensions).reduce((sum,value)=>sum+value,0)), 15);
-  assert.deepEqual(Object.keys(byId('final_answer').dimensions).sort(), Object.keys(C.COMBAT_LABELS).sort());
-  assert.equal(C.SYNERGIES.filter(bond => bond.ids.length === 2 && (bond.effect.stageCash || bond.effect.winCash)).length, 10);
+  for(const [size,count] of [[2,20],[3,12],[4,8],[5,5]])assert.equal(C.SYNERGIES.filter(b=>b.ids.length===size&&(b.effect.winCash||b.effect.stageCash||b.effect.freeRecruit)).length,count);
+  const final=C.SYNERGIES.find(b=>b.id==='final_answer');
+  assert.ok(!(final.effect.winCash&&final.effect.stageCash));
+  assert.equal(C.SYNERGIES.some(b=>b.id==='bucks_system'),false);
 });
 
 test('Warriors bonds stack while completed upgrade chains keep only their highest package', () => {
-  const run = C.createRun('outside', 9);
+  const run = C.createRun('outside', 9, {}, 2);
   for (const id of ['curry', 'klay', 'green']) run.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
   assert.deepEqual(C.activeSynergies(run).map(bond => bond.id).sort(), ['splash', 'warrior_brain']);
   for (const id of ['iguodala', 'durant']) run.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
   assert.deepEqual(C.activeSynergies(run).filter(bond => ['splash','warrior_brain','death_lineup'].includes(bond.id)).map(bond => bond.id).sort(), ['death_lineup','splash','warrior_brain']);
 
-  const bucks = C.createRun('outside', 11);
+  const bucks = C.createRun('outside', 11, {}, 2);
   for (const id of ['giannis','lillard','holiday','lopez']) bucks.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
   const bucksSystem = C.activeSynergies(bucks).find(bond => bond.id === 'bucks_system');
   assert.deepEqual(bucksSystem.ids, ['giannis','lillard','holiday','lopez']);
   assert.equal(bucksSystem.effect.winCash, 2);
   assert.equal(Math.round(Object.values(bucksSystem.effect.dimensions).reduce((sum,value)=>sum+value,0)), 12);
 
-  const bulls = C.createRun('outside', 10);
+  const bulls = C.createRun('outside', 10, {}, 2);
   for (const id of ['jordan', 'pippen', 'rodman']) bulls.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
   assert.deepEqual(C.activeSynergies(bulls).filter(bond => bond.chainId === 'bulls_dynasty').map(bond => bond.id), ['bull_triangle']);
   for (const id of ['harper', 'longley']) bulls.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
@@ -550,9 +532,9 @@ test('one free recruit is reset each stage and cannot be banked', () => {
   assert.equal(C.recruitCost(agentRun), 6);
 });
 
-test('high-investment bonds grant expiring recruit tickets and capped stage cash', () => {
+test('legacy high-investment bonds grant expiring recruit tickets and capped stage cash', () => {
   const game = C.createGame();
-  const run = game.run = C.createRun('outside', 20260922);
+  const run = game.run = C.createRun('outside', 20260922, {}, 2);
   for (const id of ['kobe', 'iverson', 'nash', 'rayallen']) run.owned[id] = { stars: 1, train: 0, trainedAt: 0 };
   run.free = 9;
   run.cash = 10;
@@ -797,7 +779,7 @@ test('training uses the reference mainline cap, endless stage cap, and cost ladd
   run.cash = 999;
   assert.equal(C.trainingLimit(run, normal.id), 3);
   assert.equal(C.trainingLimit(run, legend.id), 3);
-  assert.equal(C.trainingCost(run, normal.id), 11);
+  assert.equal(C.trainingCost(run, normal.id), 3);
   assert.equal(C.trainingCost(run, legend.id), 16);
   run.endless = true;
   run.stage = 11;
@@ -807,7 +789,7 @@ test('training uses the reference mainline cap, endless stage cap, and cost ladd
   assert.equal(C.trainingLimit(run, normal.id), 13);
   run.stage = 25;
   assert.equal(C.trainingLimit(run, legend.id), 25);
-  const expected = [4, 7, 11, 16, 22, 29, 37, 46, 56, 67];
+  const expected = [1, 2, 3, 16, 22, 29, 37, 46, 56, 67];
   expected.forEach((cost, level) => {
     run.owned[normal.id].train = level;
     assert.equal(C.trainingCost(run, normal.id), cost);
@@ -1398,14 +1380,14 @@ test('an owned nonjersey slot can be replaced from the equipment shop', () => {
   assert.equal(run.cash,cashBefore-C.gearPrice(run,next)+old.sellPrice);
 });
 
-test('ten-recruit pack costs 95 percent and preserves prepaid selections', () => {
+test('ten-recruit pack costs 90 percent and preserves prepaid selections', () => {
   const run = C.createRun('win_bonus', 20260929);
   run.cash = 200;
   const originalFree = run.free;
   assert.equal(C.recruitCost(run), 8);
-  assert.equal(C.recruitPackCost(run), 76);
+  assert.equal(C.recruitPackCost(run), 72);
   assert.equal(C.buyRecruitPack(run), true);
-  assert.equal(run.cash, 124);
+  assert.equal(run.cash, 128);
   assert.equal(run.offerMode, 'ten-batch');
   assert.equal(run.offer.length, 10);
   assert.deepEqual(run.batchSelected, Array(10).fill(true));
@@ -1417,15 +1399,15 @@ test('ten-recruit pack costs 95 percent and preserves prepaid selections', () =>
   assert.equal(answer.sold, 8);
   assert.equal(answer.done, true);
   assert.equal(C.starterCount(run), 2);
-  assert.equal(run.cash, 124 + soldValue);
+  assert.equal(run.cash, 128 + soldValue);
   assert.equal(run.free, originalFree);
 });
 
 test('ten-recruit pack rejects insufficient cash without changing state', () => {
   const run = C.createRun('win_bonus', 929);
-  run.cash = 75;
+  run.cash = 71;
   assert.equal(C.buyRecruitPack(run), false);
-  assert.equal(run.cash, 75);
+  assert.equal(run.cash, 71);
   assert.equal(run.recruitCredits, 0);
 });
 
