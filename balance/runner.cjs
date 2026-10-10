@@ -8,7 +8,7 @@ function simulate(options={},core=C){
   const config=normalize(options),policy=createPolicy(config.policy,config.policySeed??(config.seed^0xc8013ea4));
   const started=performance.now(),{game,talentOffer,chosen}=initialize(core,config),initialGame=clone(game),journal=[],battles=[],events=[];
   let status='running',limit=null,error=null,actionsSinceBattle=0,highestAttempted=0,highestCleared=0,deathCause=null;
-  const record={schemaVersion:1,policyVersion:1,config,mode:config.scenario?'scenario':'legal',sourceHashes:manifest(),rulesVersion:game.run.balanceRulesVersion||1,talentOffer,chosen,initialGame,journal,battles,events,states:[]};
+  const record={schemaVersion:2,policyVersion:2,config,mode:config.scenario?'scenario':'legal',sourceHashes:manifest(),rulesVersion:game.run.balanceRulesVersion||1,talentOffer,chosen,initialGame,journal,battles,events,states:[]};
   const onStep=options.onStep;delete config.onStep;
   try{
     assertState(core,game.run);

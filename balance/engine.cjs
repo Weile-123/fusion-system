@@ -5,7 +5,7 @@ const files=['game-data.js','gear-catalog.js','event-data.js','event-system.js',
 const clone=value=>JSON.parse(JSON.stringify(value));
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 function manifest(){
-  const paths=[...files.map(file=>'h5/'+file),...['engine.cjs','driver.cjs','policies.cjs','runner.cjs','cli.cjs'].map(file=>'balance/'+file)];
+  const paths=[...files.map(file=>'h5/'+file),...['engine.cjs','driver.cjs','policies.cjs','runner.cjs','cli.cjs','objectives.cjs','suite.cjs'].map(file=>'balance/'+file)];
   return Object.fromEntries(paths.map(file=>[file,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex')]));
 }
 function loadBrowserCore(){
@@ -28,11 +28,12 @@ function normalize(options={}){
 }
 function initialize(core,config){
   const game=core.createGame();if(config.profile)game.profile=clone(config.profile);
+  else if(config.growthLevel)game.profile=require('./objectives.cjs').profileFor(core,config.growthLevel,config.seed);
   const setupRandom=rng(config.setupSeed??(config.seed^0xa341316c));
   const talents=[...core.availableTalents(game.profile)];
   for(let i=talents.length-1;i>0;i--){const j=Math.floor(setupRandom()*(i+1));[talents[i],talents[j]]=[talents[j],talents[i]]}
   const talentOffer=talents.slice(0,3+(game.profile.upgrades?.policyOffers||0));
-  const preferences={novice:['dynasty','championship_budget','all_in','phase_tempo'],ordinary:['scouting_network','star_workshop','development','win_bonus'],expert:['scouting_network','development','star_workshop','front_office','captain'],extreme:['scouting_network','development','chemistry','star_workshop','captain']};
+  const preferences={novice:['dynasty','championship_budget','all_in','phase_tempo'],ordinary:['scouting_network','star_workshop','development','win_bonus'],expert:['captain','scouting_network','counter_coach','development','chemistry','star_workshop','streak_bonus','front_office']};
   const preferred=(preferences[config.policy]||[]).find(id=>talentOffer.some(t=>t.id===id));
   const chosen=config.talent||preferred||talentOffer[0].id;
   if(!config.scenario&&!talentOffer.some(t=>t.id===chosen))throw Error('Talent is not in visible opening offer');

@@ -1,0 +1,22 @@
+{
+  "fetchedAt": "2026-10-10T09:47:34.678Z",
+  "page": "https://activity-static.hupu.com/shaper/published/app_656cf66d07/index.html",
+  "app": "https://activity-static.hupu.com/shaper/published/app_656cf66d07/__ai_app.html",
+  "assets": [
+    {
+      "url": "https://activity-static.hupu.com/shaper/published/app_656cf66d07/assets/game-data-DHBGtBOV.js",
+      "file": "artifacts/balance-live-game-data-DHBGtBOV.js",
+      "sha256": "982e19436e5761cdaef2eeebb4583bddd8c148a3b8e70243630a6e5d963b01fb"
+    },
+    {
+      "url": "https://activity-static.hupu.com/shaper/published/app_656cf66d07/assets/gear-catalog-JqgBiRLn.js",
+      "file": "artifacts/balance-live-gear-catalog-JqgBiRLn.js",
+      "sha256": "a8ab4c23cce2367811e37dc24aa6473ecf627dddcbabc03e4e6ff7e04ac74d9f"
+    },
+    {
+      "url": "https://activity-static.hupu.com/shaper/published/app_656cf66d07/assets/game-core-zTIm4Xol.js",
+      "file": "artifacts/balance-live-game-core-zTIm4Xol.js",
+      "sha256": "477e7700ed592d433fecaf7fbb50cf4176a3b5aed7995a8660c2155b3aabed51"
+    }
+  ]
+}
