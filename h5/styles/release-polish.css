@@ -30,11 +30,21 @@
 .home-hero .home-introduction p{flex:1;margin:0;min-width:0}
 .home-announcement{display:flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;height:42px;padding:9px;color:#ffca54;background:#292725;border:1px solid #ffbf35;border-radius:11px;box-shadow:0 0 12px rgba(255,185,37,.2);cursor:pointer}
 .home-announcement svg{width:24px;height:24px}
+.home-announcement{position:relative}
+.home-announcement.has-update::after{content:"";position:absolute;right:-3px;top:-3px;width:8px;height:8px;border:2px solid #292725;border-radius:50%;background:#f34e4e;pointer-events:none}
 .home-announcement:focus-visible{outline:2px solid #ffe3a0;outline-offset:3px}
 .announcement-modal{width:min(100%,480px)}
 .announcement-modal .modal-head small{font-size:11px;color:#c6ac76}
 .announcement-content{max-height:55vh;overflow-y:auto;padding-right:6px;margin:12px 0 18px}
 .announcement-content h3{font-size:15px;color:#ffcc63;margin:16px 0 6px}
 .announcement-content h3:first-child{margin-top:0}
+.announcement-content h3.announcement-version{font-size:16px;color:#ffe6b0;margin:24px 0 14px;padding:12px 0 8px;border-bottom:1px solid #665339}
+.announcement-content h3.announcement-version:first-child{margin-top:0;padding-top:0}
 .announcement-content p{font-size:13px;line-height:1.7;color:#cdc8be;margin:0}
 .announcement-content .announcement-note{margin-top:18px;padding-top:12px;border-top:1px solid #514735;font-size:11px;color:#a69d8c}
+#shop .equipment-reserve-card:not(.jersey-equipment) .equipment-card-open b{color:#fff9ed;text-shadow:0 1px 3px #0009;font-weight:900}
+#shop .equipment-reserve-card.gear-tier-c .equipment-card-open span{color:#172630;text-shadow:0 1px 1px #ffffffb8}
+#shop .equipment-reserve-card.gear-tier-b .equipment-card-open span{color:#e0f2ff;text-shadow:0 1px 3px #00152f}
+#shop .equipment-reserve-card.gear-tier-a .equipment-card-open span{color:#fff0c4;text-shadow:0 1px 3px #3c2300}
+#shop .equipment-reserve-card.gear-tier-s .equipment-card-open span{color:#ffe2d6;text-shadow:0 1px 3px #280008}
+#shop .equipment-reserve-card:not(.jersey-equipment) .equipment-card-open small{color:#fff9ed;font-size:9px;line-height:1.5;text-shadow:0 1px 3px #0009}

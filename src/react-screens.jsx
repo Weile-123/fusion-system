@@ -129,7 +129,7 @@ function MarkupScreen({ html }) {
   return createElement(Fragment, null, ...parseGeneratedMarkup(html).map(markupNodeToReact));
 }
 
-function HomeScreen({ active, stage }) {
+function HomeScreen({ active, stage, announcementUnread }) {
   return (
     <>
       <section className="home-hero">
@@ -138,7 +138,7 @@ function HomeScreen({ active, stage }) {
         <h1>我的球星<br /><em>融合系统</em></h1>
         <div className="home-introduction">
           <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
-          <button type="button" className="home-announcement" data-act="announcement-open" aria-label="更新公告" title="更新公告">
+          <button type="button" className={`home-announcement${announcementUnread ? ' has-update' : ''}`} data-act="announcement-open" aria-label="更新公告" title="更新公告">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
           </button>
         </div>
@@ -162,12 +162,22 @@ function HomeScreen({ active, stage }) {
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>2026.10.09 · 阵容多样性更新</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新更新 · 2026.10.10</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">2026.10.10 · 随机事件与传奇装备</h3>
+      <h3>无尽挑战调整</h3><p>第20关后对手按固定曲线逐步成长，50关后挑战压力持续提升，保留阵容养成与赛前强化的优势。同类赛前强化每场在前10关最多购买2次，无尽最多购买10次，刷新商店不重置次数。调整适用于新开局，已有对局继续使用原规则。</p>
+      <h3>单挑路上，更多故事</h3><p>新增36条随机事件：14条技巧较量、8条单挑挑战、6条剧情抉择、1条救援、1条交易及6条球衣传承。通过练习、挑战和投资，获得本局属性加成、奖金、装备或球衣。</p>
+      <h3>传奇商店上新</h3><p>球衣与装备解锁页合并为传奇商店。新增10件非球衣传奇装备；每次花费300传奇点随机解锁1件，解锁后从新开局进入装备池。新增胜利奖金、失败补偿、战术克制奖励、购买折扣等词条。</p>
+      <h3>装备商店</h3><p>装备商店前三栏只出现非球衣装备，球衣以独立概率出现并单独追加在第四栏。装备每次付费刷新后，下次费用增加1，进入下一关重置。</p>
+      <h3>装备收藏</h3><p>新增更衣室装备收藏，同部位装备可继续购买并存入收藏，随时换装；收藏列表只显示未装备物品。</p>
+      <h3>收藏扩容</h3><p>未装备的装备默认可收藏5件，新增天赋加成「装备收纳」，共5级、每级+1，最高10件；已装备物品及球衣不占容量，收藏满时需先出售再购买。</p>
+      <h3>界面与操作优化</h3><p>统一主要按钮的柔金渐变样式，优化点数商店入口及装备收藏文字；球衣展示不再附带所属球员姓名。</p>
+      <h3>Bug修复</h3><p>修复传奇商店解锁球衣后，尚未在对局中获得就点亮图鉴的问题。玩家已经解锁的球衣仍会保留，不会丢失。修复旧对局规则兼容问题。</p>
+      <p className="announcement-note">本次新规则与解锁内容适用于新开局；已有对局继续使用原规则。传奇点、已解锁装备与球衣、图鉴及生涯记录保留。</p>
+      <h3 className="announcement-version">2026.10.09 · 阵容多样性更新</h3>
       <h3>更多羁绊，更多搭配</h3><p>羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。</p>
       <h3>数值调整</h3><p>重新分配羁绊的战力与奖金收益，对部分现有羁绊效果数值、战力成长进行调整。</p>
       <h3>样式调整</h3><p>羁绊图鉴样式调整，页面内模块间距统一调整，修复现有操作问题。</p>
-      <p className="announcement-note">本次规则适用于新开局。已有对局继续使用原规则，传奇点、球衣收藏与生涯记录保留。</p>
     </div>
     <button type="button" className="btn button-1 wide" data-act="announcement-close">知道了</button>
   </section>;
@@ -190,9 +200,9 @@ function LeaderboardPage({ entries, title, unit, status, playerName }) {
   return <section className="leaderboard-page" aria-label={title}>
     {status && <p className="leaderboard-status" role="status">{status}</p>}
     {entries.length > 0 && <>
-      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()} {unit}</small>{unit === 'OVR' && entry.stage > 0 && <small className="leaderboard-peak-stage">第{entry.stage}关</small>}</div>)}</div>
+      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()}{unit !== 'OVR' && ` ${unit}`}</small>{unit === 'OVR' && entry.stage > 0 && <small className="leaderboard-peak-stage">第{entry.stage}关</small>}</div>)}</div>
       {entries.length > 3 && <div className="leaderboard-list-heading"><span>排名</span><span>玩家</span><span>{title}</span></div>}
-      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit}{unit === 'OVR' && entry.stage > 0 ? `·第${entry.stage}关` : ''}</small></b></div>)}</div>
+      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit === 'OVR' ? (entry.stage > 0 ? `第${entry.stage}关` : '') : unit}</small></b></div>)}</div>
     </>}
     {entries.length === 0 && (status === '' || status === '暂无成绩') && <p className="leaderboard-empty">暂时还没有成绩</p>}
   </section>;
@@ -201,8 +211,8 @@ function LeaderboardPage({ entries, title, unit, status, playerName }) {
 function LeaderboardScreen({ boards, tab, status, mine, playerName, busy }) {
   const current = mine[tab];
   return <>
-    <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><div className="leaderboard-heading-actions"><button className="leaderboard-refresh button-7" data-act="leaderboard-refresh" disabled={busy} aria-busy={busy}>{busy&&<i className="leaderboard-loading-icon" aria-hidden="true"/>}刷新</button><button className="leaderboard-home button-7" data-act="home">返回主页</button></div></div>
-    <div className="leaderboard-my-rank"><span>我的排名<small>{tab === 'legend' ? '总传奇点' : '单局最高 OVR'}</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'} <small>{tab === 'legend' ? '点' : 'OVR'}</small></b></div>
+    <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><div className="leaderboard-heading-actions"><button className="leaderboard-refresh button-7" data-act="leaderboard-refresh" disabled={busy} aria-busy={busy}>{busy && <i className="leaderboard-loading-icon" aria-hidden="true" />}刷新</button><button className="leaderboard-home button-7" data-act="home">返回主页</button></div></div>
+    <div className="leaderboard-my-rank"><span>我的排名<small>{tab === 'legend' ? '总传奇点' : '单局最高 OVR'}</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}{tab === 'legend' && <small> 点</small>}</b></div>
     <div className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">单局最高 OVR</button><i aria-hidden="true" /></div>
     <div className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="点" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title="单局最高 OVR" unit="OVR" status={status.ovr} playerName={playerName} /></div></div>
   </>;
@@ -273,7 +283,7 @@ function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel,
             <rect x="2" y={21 - heartFillHeight} width="20" height={heartFillHeight} fill="#ff655c" clipPath="url(#life-heart-fill)" />
             <path d={heartPath} fill="none" stroke="#ff655c" strokeWidth="2" strokeLinejoin="round" />
           </svg>
-          <b>{Math.min(moraleMax,morale)}/{moraleMax}{morale>moraleMax?` +${morale-moraleMax}`:''}</b>
+          <b>{Math.min(moraleMax, morale)}/{moraleMax}{morale > moraleMax ? ` +${morale - moraleMax}` : ''}</b>
         </span>
       </div>
     </>

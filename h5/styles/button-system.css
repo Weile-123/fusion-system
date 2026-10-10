@@ -1,9 +1,10 @@
+:root{--primary-button-background:linear-gradient(110deg,#cb963b,#f5d77d 55%,#d0a046);--primary-button-border:#fce4a5}
 /* 游戏按钮视觉编号。尺寸可由所在面板覆盖，编号只决定交互语义与配色。 */
 :where(.button-1,.button-2,.button-3,.button-4,.button-5,.button-6,.button-7,.button-8,.button-9){appearance:none;align-items:center;justify-content:center;gap:6px;border-radius:8px;font-size:12px;font-weight:900;line-height:1.2;cursor:pointer}
-.button-1{border:1px solid #ffb02c;background:linear-gradient(100deg,#ff7900,#ffb000);color:#190f04;box-shadow:0 4px 14px #ff880028}
+.button-1{border:1px solid var(--primary-button-border);background:var(--primary-button-background);color:#190f04;box-shadow:inset 0 1px 0 #fff5;border-radius:12px}
 .button-2{border:1px solid #45413b;background:#303030;color:#f0e8d6;box-shadow:none}
 .button-3{border:1px solid #d59a2b;background:#302b24;color:#fff3dd;box-shadow:none}
-.button-4{border:1px solid #ffe083;background:linear-gradient(135deg,#ff9f0a,#ffd85b);color:#201508;box-shadow:inset 0 1px 0 #fff4bd}
+.button-4{border:1px solid var(--primary-button-border);background:var(--primary-button-background);color:#201508;box-shadow:inset 0 1px 0 #fff5;border-radius:12px}
 .button-5{border:1px solid #dc7771;background:#742c30;color:#ffe4de;box-shadow:0 1px 6px #0008}
 .button-6{border:1px solid #47403a;background:#242424;color:#f1e9dc;text-align:left}.button-6[aria-pressed="true"],.button-6.selected{border-color:#ffb226;box-shadow:inset 3px 0 #ffad13}
 .button-7{border:1px solid #775527;background:#2e271e;color:#ffd072;box-shadow:none}

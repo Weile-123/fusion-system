@@ -369,7 +369,7 @@
 #talent .list .talent{padding:10px}
 #talent .floatingaction.talent-actions{position:static;bottom:auto;display:grid;gap:7px;margin-top:10px;padding:7px;border:1px solid #5c4428;border-radius:12px;background:#242322;box-shadow:none;backdrop-filter:none}
 #talent .talent-actions .btn.talent-confirm{display:flex;align-items:center;justify-content:center;height:50px;min-height:0;padding:8px 10px;border:1px solid #d59a2b;border-radius:8px;background:#302b24;color:#fff3dd;font-size:12px;line-height:1.2;box-shadow:none}
-#talent .talent-actions .talent-ad{display:flex;align-items:center;justify-content:space-between;width:100%;height:50px;min-height:0;padding:7px 10px;border:1px solid #ffe083;border-radius:8px;background:linear-gradient(135deg,#ff9f0a,#ffd85b);color:#201508;text-align:left;box-shadow:inset 0 1px 0 #fff4bd}
+#talent .talent-actions .talent-ad{display:flex;align-items:center;justify-content:space-between;width:100%;height:50px;min-height:0;padding:7px 10px;border:1px solid var(--primary-button-border);border-radius:12px;background:var(--primary-button-background);color:#201508;text-align:left;box-shadow:inset 0 1px 0 #fff5}
 #talent .talent-ad span{display:grid;gap:2px}#talent .talent-ad b{font-size:12px}#talent .talent-ad small{font-size:9px}#talent .talent-ad img{display:block;flex:0 0 auto;width:30px;height:24px;object-fit:contain}#talent .talent-ad:disabled{opacity:.55}.talent-ad-message{margin:0;color:#ffd18a;font-size:10px;line-height:1.4}
 
 .talent-catalog-modal .modal-head {

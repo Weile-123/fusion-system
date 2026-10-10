@@ -9,6 +9,16 @@ function fixture(bondIds){
   run.owned=Object.fromEntries([...starters,...run.bench].map(id=>[id,{stars:3,train:3,trainedAt:0}]));
   run.morale=3;return game;
 }
+test('version five caps total victory income at 90 and preserves legacy settlement',()=>{
+  for(const version of [4,5]){
+    const game=fixture([]),run=game.run;run.balanceRulesVersion=version;run.stage=100;run.endless=true;run.cash=1000;
+    for(const own of Object.values(run.owned)){own.stars=10;own.train=100}
+    const state=structuredClone(run),report=C.battle(game,'outside');assert.equal(report.won,true);
+    assert.equal(run.cash,1000+report.reward);assert.equal(run.stats.prizeIncome,report.reward);
+    assert.deepEqual(V.replay(state,[],'battle','outside').state,run);
+    if(version===5){assert.equal(report.reward,90);assert.ok(report.detail.includes('胜利奖金上限90'))}else assert.ok(report.reward>90);
+  }
+});
 function fight(game,won=true){
   // Keep opponent difficulty fixed to isolate victory counting, without replacing battle().
   game.run.stage=won?1:150;game.run.lastBattle=null;

@@ -1,4 +1,4 @@
-/* 随机事件配置；故事与编号对应 2026-10-09 设计稿。 */
+/* 随机事件配置：30条普通事件与6条传承事件。保留既有事件ID以兼容档案。 */
 (function(root){
 'use strict';
 const events=[
@@ -180,8 +180,8 @@ const events=[
   {
     "id": "T12",
     "name": "一秒拔起",
-    "type": "T",
-    "category": "技巧较量",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "tmac"
     ],
@@ -192,13 +192,14 @@ const events=[
     "dimension": "shooting",
     "jersey": "tmac_magic_jersey",
     "cost": 0,
-    "rewardText": "魔术·1号球衣 / 投射威胁 +1%"
+    "rewardText": "魔术·1号球衣 / 投射威胁 +1%",
+    "trialType": "T"
   },
   {
     "id": "T13",
     "name": "底角来信",
-    "type": "T",
-    "category": "技巧较量",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "rayallen"
     ],
@@ -209,13 +210,14 @@ const events=[
     "dimension": "shooting",
     "jersey": "allen_celtics_jersey",
     "cost": 0,
-    "rewardText": "凯尔特人·20号球衣 / 投射威胁 +1%"
+    "rewardText": "凯尔特人·20号球衣 / 投射威胁 +1%",
+    "trialType": "T"
   },
   {
     "id": "T14",
     "name": "金鸡独立的平衡",
-    "type": "T",
-    "category": "技巧较量",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "dirk"
     ],
@@ -226,7 +228,8 @@ const events=[
     "dimension": "shooting",
     "jersey": "dirk_mavericks_jersey",
     "cost": 0,
-    "rewardText": "独行侠·41号球衣 / 投射威胁 +1%"
+    "rewardText": "独行侠·41号球衣 / 投射威胁 +1%",
+    "trialType": "T"
   },
   {
     "id": "C01",
@@ -333,8 +336,8 @@ const events=[
   {
     "id": "C07",
     "name": "答案在脚下",
-    "type": "C",
-    "category": "单挑挑战",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "iverson"
     ],
@@ -345,13 +348,14 @@ const events=[
     "dimension": null,
     "jersey": "iverson_sixers_jersey",
     "cost": 0,
-    "rewardText": "76人·3号球衣"
+    "rewardText": "76人·3号球衣",
+    "trialType": "C"
   },
   {
     "id": "C08",
     "name": "梦境转身",
-    "type": "C",
-    "category": "单挑挑战",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "hakeem"
     ],
@@ -362,13 +366,14 @@ const events=[
     "dimension": null,
     "jersey": "olajuwon_rockets_jersey",
     "cost": 0,
-    "rewardText": "火箭·34号球衣"
+    "rewardText": "火箭·34号球衣",
+    "trialType": "C"
   },
   {
     "id": "C09",
     "name": "长臂下的出手",
-    "type": "C",
-    "category": "单挑挑战",
+    "type": "H",
+    "category": "传承事件",
     "players": [
       "durant"
     ],
@@ -379,7 +384,8 @@ const events=[
     "dimension": null,
     "jersey": "durant_thunder_jersey",
     "cost": 0,
-    "rewardText": "雷霆·35号球衣"
+    "rewardText": "雷霆·35号球衣",
+    "trialType": "C"
   },
   {
     "id": "P01",
@@ -470,8 +476,146 @@ const events=[
     "jersey": null,
     "cost": 6,
     "rewardText": "支付6：持球创造 +3% / 放弃：不扣钱"
+  },
+  {
+    "id": "T16",
+    "name": "落点先于起跳",
+    "type": "T",
+    "category": "技巧较量",
+    "players": [
+      "duncan"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "你对照邓肯的防守影像，把地面落点逐一标出。面对陪练不断变化的出手，你决定先守住位置，再寻找封盖时机。",
+    "attr": "def",
+    "dimension": "rimStop",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "护框强度 +3～5%；失败无奖励 / 稳妥 +1%"
+  },
+  {
+    "id": "T17",
+    "name": "停顿后的空隙",
+    "type": "T",
+    "category": "技巧较量",
+    "players": [
+      "harden"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "你回放哈登运球时那一瞬停顿，用两次节奏变化诱使陪练先移动重心，再独自从留下的空隙穿过。",
+    "attr": "handle",
+    "dimension": "creation",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "持球创造 +3～5%；失败无奖励 / 稳妥 +1%"
+  },
+  {
+    "id": "T18",
+    "name": "勾手越过指尖",
+    "type": "T",
+    "category": "技巧较量",
+    "players": [
+      "kareem"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "你照着贾巴尔的勾手影像练习保护收球。陪练举高手臂，你要在不多运一次球的前提下，把这一球送过他的指尖。",
+    "attr": "inside",
+    "dimension": "finishing",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "禁区终结 +3～5%；失败无奖励 / 稳妥 +1%"
+  },
+  {
+    "id": "T19",
+    "name": "压线的最后一球",
+    "type": "T",
+    "category": "技巧较量",
+    "players": [
+      "bird"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "旧球场只剩最后一轮练习时间。你重看伯德的出手影像，在弧线外换三个落脚点，把单挑中的临时停步变成稳定远投。",
+    "attr": "three",
+    "dimension": "shooting",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "投射威胁 +3～5%；失败无奖励 / 稳妥 +1%"
+  },
+  {
+    "id": "C10",
+    "name": "篮筐前的禁行线",
+    "type": "C",
+    "category": "单挑挑战",
+    "players": [
+      "wilt"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "你借鉴张伯伦占据篮下的动作。夜场挑战者划出一道禁行线，要求你独自挡住他的一次近筐终结，守住才算过关。",
+    "attr": "inside",
+    "dimension": "rimStop",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "护框强度 +5%；失败生命 -1 / 跳过无损失"
+  },
+  {
+    "id": "C11",
+    "name": "不退的半步",
+    "type": "C",
+    "category": "单挑挑战",
+    "players": [
+      "kobe"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "挑战者不断用试探步逼你后退。你回忆科比防守时的压迫站位，决定留住这半步距离，用一次完整防守回应他的挑衅。",
+    "attr": "def",
+    "dimension": "perimeterStop",
+    "jersey": null,
+    "cost": 0,
+    "rewardText": "外线限制 +5%；失败生命 -1 / 跳过无损失"
+  },
+  {
+    "id": "P06",
+    "name": "旧鞋的新试炼",
+    "type": "P",
+    "category": "剧情抉择",
+    "players": [
+      "lebron"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "球鞋修复师看过你模仿詹姆斯的突破，拿出修整好的 LeBron 2。若你能完成贴身干扰下的一次启动，他愿意把这双鞋送给你。",
+    "attr": "drive",
+    "dimension": null,
+    "jersey": null,
+    "cost": 0,
+    "gear": "king_shoes",
+    "rewardText": "成功获得A级 LeBron 2 / 放弃无奖励"
+  },
+  {
+    "id": "P07",
+    "name": "护腕交接",
+    "type": "P",
+    "category": "剧情抉择",
+    "players": [
+      "duncan"
+    ],
+    "minStage": 3,
+    "afterLoss": false,
+    "story": "老球场管理员见你练习邓肯的防守站位，拿出一副禁区护框护腕。他希望你守住陪练的一次篮下进攻，让护腕交到认真练球的人手里。",
+    "attr": "def",
+    "dimension": null,
+    "jersey": null,
+    "cost": 0,
+    "gear": "armor_jersey",
+    "rewardText": "成功获得A级禁区护框护腕 / 放弃无奖励"
   }
 ];
 if(typeof module!=='undefined'&&module.exports)module.exports=events;
-else root.SupFusionEventData=events;
+root.SupFusionEventData=events;
 })(typeof window!=='undefined'?window:globalThis);

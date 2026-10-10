@@ -8,6 +8,23 @@ const C = require('../h5/game-core.js');
 const H5_ROOT = path.join(__dirname, '../h5');
 const readH5 = (...parts) => fs.readFileSync(path.join(H5_ROOT, ...parts), 'utf8');
 const readRoot = (...parts) => fs.readFileSync(path.join(__dirname, '..', ...parts), 'utf8');
+test('equipment storage caps spare equipment without charging rejected purchases', () => {
+  const run=C.createRun('steady_interest',101,{gearStorage:0});
+  const items=C.GEAR.filter(item=>item.slot!=='球衣'&&!item.legendary);
+  const worn=items.find(item=>item.slot==='球鞋');
+  run.gear=[worn.id];run.gearReserve=items.filter(item=>item.id!==worn.id).slice(0,5).map(item=>item.id);
+  const next=items.find(item=>item.slot==='球鞋'&&!run.gearReserve.includes(item.id)&&item.id!==worn.id);
+  run.cash=1000;C.ensureShop(run);run.shopOffers.gear=[next.id];run.gearSoldOffers=[];
+  assert.equal(C.gearReserveLimit(run),5);
+  assert.equal(C.buyGear(run,next.id),false);assert.equal(run.cash,1000);
+  C.sellGear(run,run.gearReserve[0]);assert.equal(C.buyGear(run,next.id),true);
+  assert.equal(C.gearReserveCount(run),5);
+  assert.equal(C.equipGear(run,next.id),true);assert.equal(C.gearReserveCount(run),5);
+  assert.equal(C.gearReserveLimit(C.createRun('steady_interest',102,{gearStorage:5})),10);
+  const game=C.createGame();game.profile.legend=10000;
+  for(let i=0;i<5;i++)assert.equal(C.buyMetaUpgrade(game.profile,'gearStorage'),true);
+  assert.equal(C.buyMetaUpgrade(game.profile,'gearStorage'),false);
+});
 const readStyles = () => [
   ...fs.readdirSync(path.join(H5_ROOT, 'styles')).filter(file => file.endsWith('.css')).map(file => readH5('styles', file)),
   readH5('ssr-card.css')
@@ -485,7 +502,7 @@ test('profile and top bar expose GOAT, three catalogs, and point shop without th
   assert.match(ui, /metric\('GOAT',liveGoat,'top-goat'\)/);
   assert.match(ui, /最高GOAT分/);
   assert.match(ui, /data-id="jerseys">球衣图鉴/);
-  assert.match(ui, /const catalogJerseyIds=new Set\(\[\.\.\.\(p\.jerseys\|\|\[\]\),\.\.\.\(p\.jerseyUnlocks\|\|\[\]\)\]\)/);
+  assert.match(ui, /const catalogJerseyIds=new Set\(\[\.\.\.\(p\.jerseys\|\|\[\]\),\.\.\.\(game\.run\?\.collectedJerseys\|\|\[\]\)\]\)/);
   assert.match(ui, /profile-star-card \$\{tierClass\[star\.tier\]\}/);
   assert.match(css, /profile-star-card\)\.tier-c\{--player-material:/);
   assert.match(css, /#profile \.catalog \.profile-star-card\{[^}]*background:var\(--player-material\)/);
@@ -514,7 +531,7 @@ test('profile and top bar expose GOAT, three catalogs, and point shop without th
   assert.match(css, /#profile \.profile-catalog-panel\{flex:0 1 auto;[^}]*overflow-y:auto/);
   assert.match(ui, /<div class="eyebrow">LEGACY<\/div>/);
   assert.match(ui, /data-act="pointshop-tab" data-id="upgrades">天赋加成<\/button>/);
-  assert.match(ui, /data-act="pointshop-tab" data-id="jerseys">传奇球衣<\/button>/);
+  assert.match(ui, /data-act="pointshop-tab" data-id="legendary">传奇商店<\/button>/);
   assert.match(ui, /data-act="jersey-unlock"/);
   assert.match(css, /#home \.home-pointshop\{[^}]*background:/);
   assert.doesNotMatch(ui, /LEGACY · 局外成长|图鉴内容在每局结算|<h2>永久增幅<\/h2>|<h2>解锁抽取<\/h2>/);
@@ -882,6 +899,7 @@ test('boost and equipment shops keep their independent reference refresh rules',
 
 test('boosts stack across refreshes but each offer can be bought once', () => {
   const run = draftedRun(709);
+  run.balanceRulesVersion = 5;
   run.cash = 200;
   run.shopOffers.boost = ['hot', 'paint', 'stopper', 'rhythm'];
   const before = C.fused(run);
@@ -910,7 +928,7 @@ test('all eight pregame boosts are available from stage one with equal offer odd
   assert.ok(C.BOOSTS.every(item => !('rarity' in item) && !item.minStage));
   const counts = Object.fromEntries(C.BOOSTS.map(item => [item.id, 0]));
   for (let seed = 1; seed <= 600; seed++) {
-    const run = C.createRun('outside', Math.imul(seed, 2654435761));
+    const run = C.createRun('outside', Math.imul(seed, 2654435761),{},4);
     assert.equal(run.shopOffers.boost.length, 4);
     for (const id of run.shopOffers.boost) counts[id]++;
   }
@@ -927,7 +945,7 @@ test('equipment shop preserves reference treasure rarity shares despite differen
 test('equipment is drawn by per-item weight and keeps distinct slots in each refresh', () => {
   const counts = { C: 0, B: 0, A: 0, S: 0 };
   for (let seed = 1; seed <= 3000; seed++) {
-    const run = C.createRun('outside', Math.imul(seed, 2654435761));
+    const run = C.createRun('outside', Math.imul(seed, 2654435761),{},4);
     const item = C.GEAR.find(gear => gear.id === run.shopOffers.gear[0]);
     counts[item.rarity]++;
     assert.equal(new Set(run.shopOffers.gear.map(id=>C.GEAR.find(gear=>gear.id===id).slot)).size,run.shopOffers.gear.length);
@@ -939,12 +957,12 @@ test('equipment is drawn by per-item weight and keeps distinct slots in each ref
 });
 
 test('five equipment slots keep their tables alongside base and unlockable jerseys', () => {
-  assert.equal(C.GEAR.length, 52);
-  assert.equal(new Set(C.GEAR.map(item=>item.id)).size,52);
+  assert.equal(C.GEAR.length, 62);
+  assert.equal(new Set(C.GEAR.map(item=>item.id)).size,62);
   for(const slot of ['头带','护腕','球鞋','戒指','战术板']){
     const items=C.GEAR.filter(item=>item.slot===slot);
-    assert.equal(items.length,5);
-    assert.deepEqual(Object.fromEntries(['C','B','A','S'].map(rarity=>[rarity,items.filter(item=>item.rarity===rarity).length])),{C:1,B:2,A:1,S:1});
+    assert.equal(items.length,7);
+    assert.deepEqual(Object.fromEntries(['C','B','A','S'].map(rarity=>[rarity,items.filter(item=>item.rarity===rarity).length])),{C:1,B:3,A:2,S:1});
   }
   assert.ok(C.GEAR.every(item=>['C','B','A','S'].includes(item.rarity)));
   assert.ok(C.GEAR.filter(item=>item.slot==='球衣').every(item=>item.rarity==='A'));
@@ -952,6 +970,7 @@ test('five equipment slots keep their tables alongside base and unlockable jerse
   assert.equal(jerseys.length,27);
   assert.equal(baseJerseys.length,12);
   assert.equal(legendJerseys.length,15);
+  assert.ok(jerseys.every(item=>item.displayName===item.name));
   assert.deepEqual(new Set(baseJerseys.map(item=>item.name)),new Set(['公牛·23号','勇士·30号','勇士·35号','骑士·23号','热火·6号','湖人·24号','湖人·8号','湖人·34号','马刺·21号','湖人·32号','公牛·45号','森林狼·21号']));
   assert.deepEqual(new Set(legendJerseys.map(item=>item.legendName)),new Set(['麦迪','艾弗森','贾巴尔','拉里·伯德','哈登','雷·阿伦','杜兰特','威少','韦德','字母哥','奥拉朱旺','诺维茨基','东契奇','张伯伦','比尔·拉塞尔']));
   assert.ok(jerseys.every(item=>item.kind==='signature'&&/^.+·\d+号$/.test(item.name)&&item.teamCode&&!Object.hasOwn(item,'exclusiveBonus')));
@@ -975,7 +994,7 @@ test('five equipment tables match the supplied names and Kyrie 2 ability values'
     '护腕':['启动护腕','3D护腕','强硬护腕','禁区护框护腕','脚踝终结护腕'],
     '头带':['防守指挥头带','赛前录像头带','攻防转换头带','场上指挥头带','全能核心头带']
   };
-  for(const [slot,expected] of Object.entries(names))assert.deepEqual(C.GEAR.filter(item=>item.slot===slot).map(item=>item.name),expected);
+  for(const [slot,expected] of Object.entries(names))assert.deepEqual(C.GEAR.filter(item=>item.slot===slot&&!item.legendary).map(item=>item.name),expected);
   const kyrie=C.GEAR.find(item=>item.name==='Kyrie 2');
   assert.deepEqual(kyrie.stats,{mid:3,handle:7});
   assert.equal(kyrie.description,'中投 +3；控球 +7');
@@ -983,6 +1002,7 @@ test('five equipment tables match the supplied names and Kyrie 2 ability values'
 
 test('six active equipment slots keep extra jerseys in the collection', () => {
   const run = draftedRun(714);
+  run.balanceRulesVersion=4;
   run.cash = 500;
   run.shopOffers.gear = ['wrist', 'paint_shoes', 'lockdown_band', 'curry_wrist', 'dynasty_ring', 'tactics_board', 'team_jersey'];
   for (const id of run.shopOffers.gear.slice(0, 6)) assert.equal(C.buyGear(run, id), true, id);
@@ -993,13 +1013,15 @@ test('six active equipment slots keep extra jerseys in the collection', () => {
   assert.deepEqual(run.gearReserve, ['kobe_sleeve']);
   assert.equal(new Set(run.gear.map(id => C.GEAR.find(item => item.id === id).slot)).size, 6);
   const remainingCash=run.cash;
+  const refreshCost=C.shopRefreshCost(run,'gear');
   assert.equal(C.refreshShop(run,'gear'),true);
-  assert.equal(run.cash,remainingCash-C.shopRefreshCost(run,'gear'));
+  assert.equal(run.cash,remainingCash-refreshCost);
   assert.ok(run.shopOffers.gear.every(id=>![...run.gear,...run.gearReserve].includes(id)));
 });
 
 test('nonjersey slots allow one item while collected jerseys can exchange', () => {
   const run = draftedRun(708);
+  run.balanceRulesVersion=4;
   run.cash = 100;
   run.shopOffers.gear = ['wrist', 'deep_wrist', 'paint_shoes', 'curry_wrist', 'kobe_sleeve'];
   const before = C.fused(run);
@@ -1067,6 +1089,21 @@ test('percentage equipment and battle bonuses use their distinct effect paths', 
   assert.match(C.GEAR.find(item=>item.id==='paul_band').description,/失误率/);
 });
 
+test('same-slot equipment purchases enter reserve and swap without selling or stacking effects',()=>{
+  const run=draftedRun(708);run.cash=100;run.shopOffers.gear=['wrist','deep_wrist'];
+  assert.equal(C.buyGear(run,'wrist'),true);const equipped=C.fused(run);assert.equal(C.buyGear(run,'deep_wrist'),true);assert.deepEqual(run.gearReserve,['deep_wrist']);assert.deepEqual(C.fused(run),equipped);
+  const cash=run.cash;assert.equal(C.equipGear(run,'deep_wrist'),true);assert.equal(run.cash,cash);assert.deepEqual(run.gearReserve,['wrist']);assert.ok(run.gear.includes('deep_wrist'));assert.ok(!run.gear.includes('wrist'));assert.equal(C.equipGear(run,'deep_wrist'),false);
+  assert.equal(C.sellGear(run,'wrist'),4);assert.deepEqual(run.gearReserve,[]);assert.equal(run.cash,cash+4);assert.equal(C.buyGear(run,'deep_wrist'),false);
+  assert.equal(C.GEAR.find(item=>item.id==='legacy_recovery_shoes').healEveryWins,undefined);
+});
+
+test('reserve equipment terms stay inactive until equipped',()=>{
+  const run=C.createRun('steady_interest',911);run.gear=['spacing_board','rookie_ring'];run.gearReserve=['legacy_discount_board','legacy_recovery_ring'];run.morale=3;
+  const shoes=C.GEAR.find(item=>item.id==='king_shoes');assert.equal(C.gearPrice(run,shoes),25);for(let i=0;i<5;i++)C.recoverGearMorale(run);assert.equal(run.morale,3);
+  assert.equal(C.equipGear(run,'legacy_discount_board'),true);assert.equal(C.gearPrice(run,shoes),24);assert.ok(run.gearReserve.includes('spacing_board'));
+  assert.equal(C.equipGear(run,'legacy_recovery_ring'),true);for(let i=0;i<5;i++)C.recoverGearMorale(run);assert.equal(run.morale,4);
+});
+
 test('jersey gear applies directly without a player binding', () => {
   const run = C.createRun('outside', 712);
   run.offer = [];
@@ -1111,7 +1148,7 @@ test('jersey collection bonuses stay active while the equipped jersey gains fift
 test('legend points unlock nonrepeating jerseys and only unlocked jerseys enter the shop pool', () => {
   const profile=C.createGame().profile;
   profile.legend=1000;
-  const locked=C.GEAR.find(item=>item.unlockable);
+  const locked=C.GEAR.find(item=>item.unlockable&&item.slot==='球衣');
   const before=C.createRun('outside',721);
   assert.equal(C.gearAvailable(before,locked),false);
   const first=C.unlockJersey(profile,()=>0);
@@ -1119,7 +1156,7 @@ test('legend points unlock nonrepeating jerseys and only unlocked jerseys enter 
   assert.equal(profile.legend,500);
   const run=C.createRun('outside',722,{jerseyUnlocks:profile.jerseyUnlocks});
   assert.equal(C.gearAvailable(run,first),true);
-  const stillLocked=C.GEAR.find(item=>item.unlockable&&!profile.jerseyUnlocks.includes(item.id));
+  const stillLocked=C.GEAR.find(item=>item.unlockable&&item.slot==='球衣'&&!profile.jerseyUnlocks.includes(item.id));
   run.cash=100;
   run.shopOffers.gear=[first.id,stillLocked.id];
   assert.equal(C.buyGear(run,first.id),true);
@@ -1128,6 +1165,131 @@ test('legend points unlock nonrepeating jerseys and only unlocked jerseys enter 
   assert.notEqual(second.id,first.id);
   assert.equal(profile.legend,0);
   assert.equal(new Set(profile.jerseyUnlocks).size,2);
+});
+
+test('legendary equipment unlocks ten unique items for 300 each and stays out of legacy runs',()=>{
+  const items=C.GEAR.filter(item=>item.legendary),profile=C.createGame().profile;
+  assert.equal(items.length,10);assert.equal(items.filter(item=>item.rarity==='A').length,5);assert.equal(items.filter(item=>item.rarity==='B').length,5);
+  profile.legend=299;assert.equal(C.unlockLegendaryGear(profile,()=>0),null);assert.equal(profile.legend,299);
+  profile.legend=3000;
+  for(let i=0;i<10;i++){assert.ok(C.unlockLegendaryGear(profile,()=>0));assert.equal(profile.legend,3000-(i+1)*300)}
+  assert.equal(new Set(profile.gearUnlocks).size,10);assert.equal(C.unlockLegendaryGear(profile),null);assert.equal(profile.legend,0);
+  const run=C.createRun('steady_interest',911,{gearUnlocks:profile.gearUnlocks}),old=C.createRun('steady_interest',911,{gearUnlocks:profile.gearUnlocks},4);
+  for(const item of items){assert.equal(C.gearAvailable(run,item),true);assert.equal(C.gearAvailable(old,item),false)}
+  const locked=C.createRun('steady_interest',912);locked.cash=100;locked.shopOffers.gear=[items[0].id];assert.equal(C.buyGear(locked,items[0].id),false);
+});
+
+test('every legendary item adds exactly its attributes only while equipped',()=>{
+  for(const item of C.GEAR.filter(g=>g.legendary)){
+    const run=draftedRun(911);run.gear=[];run.gearReserve=[];const baseline=C.fused(run);
+    run.gearReserve=[item.id];assert.deepEqual(C.fused(run),baseline,item.id+' reserve');
+    assert.equal(C.equipGear(run,item.id),true);const active=C.fused(run);
+    for(const attr of C.ATTRS){assert.equal(active.stats[attr],baseline.stats[attr]+(item.stats?.[attr]||0),item.id+' '+attr);assert.equal(active.slotScores[attr],baseline.slotScores[attr]+(item.stats?.[attr]||0))}
+    const cash=run.cash;assert.equal(C.sellGear(run,item.id),item.sellPrice);assert.equal(run.cash,cash+item.sellPrice);assert.deepEqual(C.fused(run),baseline,item.id+' sold');assert.equal(C.sellGear(run,item.id),0);
+  }
+});
+
+test('legendary unlock snapshots prevent unlocks in an active run from granting items',()=>{
+  const profile=C.createGame().profile;profile.legend=3000;const run=C.createRun('steady_interest',911,{gearUnlocks:profile.gearUnlocks});
+  const item=C.unlockLegendaryGear(profile,()=>0);assert.ok(item);assert.equal(C.gearAvailable(run,item),false);assert.ok(!run.gear.includes(item.id));assert.ok(!run.gearReserve.includes(item.id));
+  const next=C.createRun('steady_interest',912,{gearUnlocks:profile.gearUnlocks});assert.equal(C.gearAvailable(next,item),true);
+});
+
+test('first equipment offer and fourth jersey frequencies match eligible item weights',()=>{
+  const weights=C.gearRarityWeights(),sampleCount=10000;
+  for(const mode of ['locked','unlocked','owned']){
+    const run=C.createRun('steady_interest',911,{gearUnlocks:mode==='locked'?[]:C.GEAR.filter(g=>g.legendary).map(g=>g.id)});
+    if(mode==='owned'){run.gear=['legacy_income_band'];run.gearReserve=['legacy_counter_wrist','legacy_discount_board']}
+    const owned=new Set([...run.gear,...run.gearReserve]),pool=C.GEAR.filter(g=>g.slot!=='球衣'&&C.gearAvailable(run,g)&&!owned.has(g.id)&&(!g.minStage||run.stage>=g.minStage));
+    const sums=Object.fromEntries(['C','B','A','S'].map(r=>[r,pool.filter(g=>g.rarity===r).length*weights[r]])),total=Object.values(sums).reduce((a,b)=>a+b,0),counts={C:0,B:0,A:0,S:0};let jerseys=0;
+    for(let n=1;n<=sampleCount;n++){
+      run.rng=Math.imul(n,2654435761)>>>0;const offers=C.makeShopOffers(run).gear.map(id=>C.GEAR.find(g=>g.id===id));counts[offers[0].rarity]++;
+      assert.equal(new Set(offers.slice(0,3).map(g=>g.slot)).size,3);assert.ok(offers.slice(0,3).every(g=>g.slot!=='球衣'&&!owned.has(g.id)));
+      if(offers.length===4){assert.equal(offers[3].slot,'球衣');jerseys++}
+    }
+    for(const tier of Object.keys(counts))assert.ok(Math.abs(counts[tier]/sampleCount-sums[tier]/total)<.02,mode+' '+tier);
+    assert.ok(Math.abs(jerseys/sampleCount-.15)<.02,mode+' jersey');
+  }
+});
+
+test('owning all eligible A-tier equipment retains the independent fifteen percent jersey chance',()=>{
+  const run=C.createRun('steady_interest',911,{gearUnlocks:C.GEAR.filter(g=>g.legendary).map(g=>g.id)}),items=C.GEAR.filter(g=>g.slot!=='球衣'&&g.rarity==='A');
+  run.gear=items.filter(g=>!g.legendary).map(g=>g.id);run.gearReserve=items.filter(g=>g.legendary).map(g=>g.id);run.cash=10000;
+  assert.equal(run.gear.length,5);assert.equal(run.gearReserve.length,5);
+  let jerseys=0;for(let i=1;i<=1000;i++){run.rng=Math.imul(i,2654435761)>>>0;const offers=C.makeShopOffers(run).gear;assert.ok(offers.slice(0,3).every(id=>C.GEAR.find(g=>g.id===id).slot!=='球衣'));if(offers.length===4){assert.equal(C.GEAR.find(g=>g.id===offers[3]).slot,'球衣');jerseys++}}
+  assert.ok(Math.abs(jerseys/1000-.15)<.02,{jerseys});
+});
+
+test('insufficient cash and duplicate purchases never consume equipment or advance sale counters',()=>{
+  for(const item of C.GEAR.filter(g=>g.legendary)){
+    const run=C.createRun('steady_interest',911,{gearUnlocks:[item.id]});run.shopOffers.gear=[item.id];run.gearSoldOffers=[];run.cash=C.gearPrice(run,item)-1;
+    const before=JSON.stringify(run);assert.equal(C.buyGear(run,item.id),false);assert.equal(JSON.stringify(run),before);
+    run.cash=C.gearPrice(run,item);assert.equal(C.buyGear(run,item.id),true);assert.equal(run.cash,0);const bought=JSON.stringify(run);assert.equal(C.buyGear(run,item.id),false);assert.equal(JSON.stringify(run),bought);
+  }
+});
+
+test('jerseys use an independent fourth offer with fixed fifteen percent probability',()=>{
+  let jerseys=0,without=0;const unlocked=C.GEAR.filter(g=>g.legendary).map(g=>g.id);
+  for(let seed=1;seed<=4000;seed++){
+    const run=C.createRun('steady_interest',Math.imul(seed,2654435761),{gearUnlocks:unlocked});
+    assert.ok([3,4].includes(run.shopOffers.gear.length));
+    const items=run.shopOffers.gear.map(id=>C.GEAR.find(g=>g.id===id));
+    assert.ok(items.slice(0,3).every(g=>g.slot!=='球衣'));assert.equal(new Set(items.slice(0,3).map(g=>g.slot)).size,3);
+    if(items.length===4){assert.equal(items[3].slot,'球衣');jerseys++}else without++;
+  }
+  const expected=.15;assert.ok(Math.abs(jerseys/4000-expected)<.015,{jerseys,expected});assert.ok(without>0);
+  const run=C.createRun('steady_interest',911,{gearUnlocks:unlocked});run.gearReserve=C.GEAR.filter(g=>g.slot==='球衣').map(g=>g.id);run.cash=100;
+  assert.equal(C.refreshShop(run,'gear'),true);assert.equal(run.shopOffers.gear.length,3);
+  run.cash=10000;for(let i=0;i<50;i++){assert.equal(C.refreshShop(run,'gear'),true);assert.ok(run.shopOffers.gear.every(id=>C.GEAR.find(g=>g.id===id).slot!=='球衣'))}
+});
+
+test('equipped healing items count only worn victories and preserve the 13 morale ceiling',()=>{
+  const run=C.createRun('steady_interest',911);run.gear=['legacy_recovery_shoes','legacy_recovery_ring'];run.morale=3;
+  C.recoverGearMorale(run);C.recoverGearMorale(run);assert.equal(run.morale,3);C.recoverGearMorale(run);assert.equal(run.morale,3);assert.equal(run.gearHealCounters.legacy_recovery_shoes,undefined);
+  run.gear=[];C.recoverGearMorale(run);assert.equal(run.gearHealCounters.legacy_recovery_ring,3);
+  run.gear=['legacy_recovery_shoes','legacy_recovery_ring'];C.recoverGearMorale(run);C.recoverGearMorale(run);assert.equal(run.morale,4);
+  run.morale=13;for(let i=0;i<15;i++)C.recoverGearMorale(run);assert.equal(run.morale,13);
+  const old=C.createRun('steady_interest',911,{},4);old.gear=run.gear;assert.deepEqual(C.recoverGearMorale(old),[]);assert.equal(old.morale,3);
+});
+
+test('legendary equipment discount applies only while worn, including replacement quotes',()=>{
+  const run=C.createRun('steady_interest',911),item=C.GEAR.find(g=>g.id==='king_shoes');
+  const base=C.gearPrice(run,item);run.gear=['legacy_discount_board'];assert.equal(C.gearPrice(run,item),base-1);
+  run.gear=[];assert.equal(C.gearPrice(run,item),base);run.gear=['legacy_discount_board'];assert.equal(C.gearPrice(run,{price:1}),1);
+});
+
+test('equipment paid refreshes grow by one, persist independently and reset next stage',()=>{
+  const run=C.createRun('lockdown',911);run.cash=100;assert.equal(C.shopRefreshCost(run,'gear'),0);C.refreshShop(run,'gear');
+  assert.equal(run.gearPaidRefreshes,0);const costs=[];for(let i=0;i<5;i++){costs.push(C.shopRefreshCost(run,'gear'));assert.equal(C.refreshShop(run,'gear'),true)}assert.deepEqual(costs,[3,4,5,6,7]);
+  assert.equal(run.cash,75);const game=C.createGame();game.run=run;run.lastBattle={won:true};assert.equal(C.continueRun(game,'next'),true);assert.equal(run.gearPaidRefreshes,0);assert.equal(C.shopRefreshCost(run,'gear'),0);C.refreshShop(run,'gear');assert.equal(C.shopRefreshCost(run,'gear'),3);
+  const old=C.createRun('steady_interest',911,{},4);old.cash=100;C.refreshShop(old,'gear');assert.equal(C.shopRefreshCost(old,'gear'),3);
+});
+
+test('fatal battle consumes the rescue headband before settlement, with no repeated rescue',()=>{
+  let found=false;
+  for(let seed=1;seed<=120;seed++){
+    const game=C.createGame(),run=game.run=draftedRun(seed);run.gear=['legacy_recovery_band'];run.morale=1;
+    const result=C.battle(game,'outside');if(result.won)continue;found=true;
+    assert.equal(run.morale,1);assert.equal(run.ended,false);assert.equal(run.awarded,false);assert.equal(game.profile.runs,0);assert.ok(!run.gear.includes('legacy_recovery_band'));assert.match(result.detail.join('；'),/生命恢复至1点/);
+    run.morale=0;assert.equal(C.preventGearDefeat(run),null);C.finishRun(game);assert.equal(game.profile.runs,1);break;
+  }
+  assert.equal(found,true);const active=C.createRun('steady_interest',911);active.gear=['legacy_recovery_band'];assert.equal(C.preventGearDefeat(active),null);assert.equal(active.gear.length,1);
+});
+
+test('legendary cash terms and healing settle on actual battle results',()=>{
+  const outcomes=new Set();
+  for(let seed=1;seed<=120&&outcomes.size<2;seed++){
+    const game=C.createGame(),run=game.run=draftedRun(seed);run.gear=['legacy_income_band','legacy_bounty_wrist','legacy_loss_shoes','legacy_income_ring','legacy_counter_board'];
+    const income=C.incomeBreakdown(run),own=C.fused(run,'outside'),opening=C.openingEffect(run),before=run.cash;
+    const report=C.battle(game,'outside');assert.ok(report);outcomes.add(report.won);
+    const post=own.talentEffects.reduce((sum,e)=>sum+(e.postBattleCash||0),0)+(report.beats===1?4:0)+1;
+    const expected=report.won?income.victoryBase+income.lineupIncome+income.interest+(own.bonds.length?1:0)+Math.min(5,own.bonds.reduce((sum,b)=>sum+(b.effect?.winCash||0),0))+own.talentEffects.reduce((sum,e)=>sum+(e.winCash||0),0)+post+3+(opening.battleCash||0)+(own.bonds.length?(opening.bondWinCash||0):0):income.lossBase+post+(opening.battleCash||0)+3;
+    assert.equal(report.reward,expected);assert.equal(run.cash,before+expected);
+    const counter=run.gearHealCounters;assert.deepEqual(counter,{});
+    const healing=C.createGame();healing.run=structuredClone(run);healing.run.ended=false;healing.run.lastBattle=null;healing.run.gear=['legacy_recovery_ring'];healing.run.gearHealCounters={legacy_recovery_ring:4};healing.run.morale=3;
+    const healReport=C.battle(healing,'outside');assert.equal(healing.run.gearHealCounters.legacy_recovery_ring,healReport.won?0:4);assert.equal(healing.run.morale,healReport.won?4:2);
+  }
+  assert.equal(outcomes.size,2);
 });
 
 test('basketball meta upgrades replace the equipment slot with film study', () => {
@@ -1216,7 +1378,7 @@ test('fifty distinct opponents rise in strength and end with all eight SSR playe
   assert.deepEqual([0, 1, 2, 4, 6, 7, 8, 9, 10].map(index => opponents[index].rating),
     [64, 70, 78, 90, 94, 96, 99, 103, 104]);
   assert.deepEqual([9, 19, 29, 39, 49].map(index => opponents[index].rating),
-    [103, 126, 157, 197, 247]);
+    [103, 126, 200, 317, 501]);
   assert.ok(opponents[49].rating - opponents[39].rating >
     opponents[29].rating - opponents[19].rating);
   assert.deepEqual(opponents.slice(-8).map(foe => foe.id), [
@@ -1553,7 +1715,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(ui, /bondOwned\.add\(C\.identityOf\(s\.id\)\)/);
   assert.match(ui, /r\.offerMode==='ten-batch'.+bondOwned\.add\(C\.identityOf\(offerId\)\)/);
   assert.doesNotMatch(css, /recruit-ten"\]\{min-height/);
-  assert.match(css, /recruit-ad"\]\{border-color:[^}]+background:linear-gradient/);
+  assert.match(css, /recruit-ad"\]\{border-color:[^}]+background:var\(--primary-button-background\)/);
   assert.match(css, /pending-replacements-scroll\{[^}]*overflow-y:auto/);
   assert.match(css, /pending-player-tier\{color:var\(--tier\)/);
   assert.match(css, /modal-list button em\{color:#ff7474/);
@@ -1580,7 +1742,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.doesNotMatch(ui, /batchActionRoot\.replaceChildren\(/);
   assert.match(css, /#batch-action-root\{position:fixed;z-index:19;left:0;right:0;bottom:0/);
   assert.doesNotMatch(css, /draft-ten-mode \.floatingaction\{|#batch-action-root\{[^}]*backdrop-filter|#batch-action-root\{[^}]*transform:/);
-  assert.match(css, /batch-confirm\{[^}]*background:linear-gradient[^}]*!important/);
+  assert.match(css, /batch-confirm\{[^}]*background:var\(--primary-button-background\)!important/);
 });
 
 test('all modal content stays inside the React renderer lifecycle', () => {
@@ -1628,7 +1790,7 @@ test('shop and locker share a compact five-stat header without a title', () => {
   assert.match(css, /#shop \.shop-combat-summary \.roster-combat-grid\{height:100%;gap:3px\}/);
   assert.match(css, /#shop \.shop-balance\{min-width:0;padding:5px 8px;border-radius:9px;font-size:10px\}/);
   assert.match(css, /#shop>\.row\{display:none!important\}/);
-  assert.match(ui, /action==='buy-gear'.+save\(\);go\('shop'\);notify\('装备已购买'\)/);
+  assert.match(ui, /action==='buy-gear'.+save\(\);go\('shop'\);notify\(.+'已加入装备收藏'.+'装备已购买'/);
 });
 
 test('top-bar back navigation uses the shared click handler', () => {

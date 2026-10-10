@@ -1,4 +1,4 @@
-/* 装备目录：五类非球衣各五件、十二件基础经典球衣，以及十五件传奇点解锁球衣。 */
+/* 装备目录：五类非球衣各七件（各含两件传奇点解锁装备）、十二件基础球衣与十五件解锁球衣。 */
 (function(root){
   'use strict';
   const gear=[
@@ -31,6 +31,17 @@
     {id:'matchup_board',name:'对位战术板',rarity:'B',slot:'战术板',price:16,sellPrice:7,stats:{def:7},dimensionPercent:{rimStop:3}},
     {id:'taiping_playbook',name:'临场战术板',rarity:'A',slot:'战术板',price:27,sellPrice:11,stats:{three:8,handle:6},counterCash:3},
     {id:'team_jersey',name:'核心单打战术板',rarity:'S',slot:'战术板',price:43,sellPrice:17,stats:{handle:9},dimensionPercent:{all:4},bondBoost:.15},
+
+    {id:'legacy_income_band',name:'街场赞助头带',rarity:'B',slot:'头带',price:18,sellPrice:7,stats:{handle:6},winCash:1,unlockable:true,legendary:true},
+    {id:'legacy_recovery_band',name:'逆风复苏头带',rarity:'A',slot:'头带',price:28,sellPrice:11,stats:{def:6,handle:2},preventDefeat:true,unlockable:true,legendary:true},
+    {id:'legacy_counter_wrist',name:'读招护腕',rarity:'B',slot:'护腕',price:18,sellPrice:7,stats:{def:6},counterCash:2,unlockable:true,legendary:true},
+    {id:'legacy_bounty_wrist',name:'赏金挑战护腕',rarity:'A',slot:'护腕',price:28,sellPrice:11,stats:{drive:9,mid:4},winCash:2,unlockable:true,legendary:true},
+    {id:'legacy_loss_shoes',name:'Book 1',rarity:'B',slot:'球鞋',price:18,sellPrice:7,stats:{drive:6},lossCash:2,unlockable:true,legendary:true},
+    {id:'legacy_recovery_shoes',name:'LeBron 22',rarity:'A',slot:'球鞋',price:30,sellPrice:12,stats:{drive:9,def:4},unlockable:true,legendary:true},
+    {id:'legacy_recovery_ring',name:'潮流戒指',rarity:'B',slot:'戒指',price:19,sellPrice:8,stats:{inside:6},healEveryWins:5,unlockable:true,legendary:true},
+    {id:'legacy_income_ring',name:'DPOY戒指',rarity:'A',slot:'戒指',price:29,sellPrice:12,stats:{def:13},battleCash:1,unlockable:true,legendary:true},
+    {id:'legacy_discount_board',name:'普林斯顿战术板',rarity:'B',slot:'战术板',price:19,sellPrice:8,stats:{handle:6},shopDiscount:1,unlockable:true,legendary:true},
+    {id:'legacy_counter_board',name:'三角进攻战术板',rarity:'A',slot:'战术板',price:30,sellPrice:12,stats:{three:8,handle:5},counterCash:4,lossCash:1,unlockable:true,legendary:true},
 
     {id:'curry_wrist',name:'勇士·30号',rarity:'A',slot:'球衣',teamCode:'gsw',price:20,sellPrice:8,stats:{three:12,handle:6}},
     {id:'king_double_wrist',name:'骑士·23号',rarity:'A',slot:'球衣',teamCode:'cle',price:20,sellPrice:8,stats:{drive:10,handle:8}},

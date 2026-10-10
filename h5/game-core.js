@@ -1,4 +1,4 @@
-/* 《我的球星融合系统》第四版规则与状态。数值为游戏设计值，并非真实 NBA 统计。 */
+/* 《我的球星融合系统》第五版规则与状态。数值为游戏设计值，并非真实 NBA 统计。 */
 (function (root) {
   'use strict';
 
@@ -48,6 +48,12 @@
       if(all)parts.push(`五项单挑能力 +${all}%`);
       if(Object.keys(specific).length)parts.push(DATA.combatText(specific,'%'));
     }
+    if(item.winCash)parts.push(`胜利额外 +${item.winCash} 奖金`);
+    if(item.lossCash)parts.push(`失败额外 +${item.lossCash} 奖金`);
+    if(item.battleCash)parts.push(`每场对局额外 +${item.battleCash} 奖金`);
+    if(item.shopDiscount)parts.push(`购买装备便宜 ${item.shopDiscount} 奖金（最低1）`);
+    if(item.preventDefeat)parts.push('生命归零时恢复至1点，并消耗此装备');
+    if(item.healEveryWins)parts.push(`佩戴期间每累计${item.healEveryWins}胜恢复1点士气，可溢出，总士气最高13`);
     if(item.counterCash)parts.push(`战术克制成功额外 +${item.counterCash} 奖金`);
     if(item.bondBoost)parts.push(`羁绊战力效果 +${Math.round(item.bondBoost*100)}%`);
     if(item.clutchBonus)parts.push(`关键分命中率 +${Math.round(item.clutchBonus*100)} 个百分点`);
@@ -146,6 +152,13 @@
     const depth=Math.min(stage,50)-10;
     return MAINLINE_FOE_TARGETS[9]+depth*1.8+depth*depth*.045;
   }
+  // 固定关卡目标，不读取玩家阵容；50关开始给成熟阵容压力，保留养成优势。
+  function endlessOpponentTarget(stage){
+    if(stage<=20)return null;
+    if(stage<=50)return 126*Math.exp(Math.log(500/126)*(stage-20)/30);
+    const depth=stage-50;
+    return 500*(1+depth/125)*Math.exp(.004*depth);
+  }
   const SYNERGIES = DATA.SYNERGIES;
   const BOOSTS = [
     { id:'hot', name:'手感火热', type:'投射', price:5, stats:{three:8}, description:'下一场三分 +8%' },
@@ -167,6 +180,7 @@
   const JERSEY_COLLECTION_SCALE = .35;
   const JERSEY_EQUIPPED_BONUS = .5;
   const JERSEY_UNLOCK_PRICE = 500;
+  const LEGENDARY_GEAR_UNLOCK_PRICE = 300;
   const META_UPGRADES=[
     {id:'startGold',name:'启动资金',prices:[80,150,250,400,600],effect:'每级开局奖金 +5'},
     {id:'scouting',name:'球探网络',prices:[100,180,300,450,650],effect:'每级提高 S 与 SSR 招募权重'},
@@ -174,6 +188,7 @@
     {id:'trainingBoost',name:'训练团队',prices:[150,300,500],effect:'每级训练成长 +1%'},
     {id:'policyOffers',name:'教练组会议',prices:[500],effect:'开局天赋候选 3 → 4'},
     {id:'benchSeat',name:'轮换深度',prices:[180,350,600,900,1300],effect:'每级初始备战席 +1'},
+    {id:'gearStorage',name:'装备收纳',prices:[180,350,600,900,1300],effect:'每级装备收藏上限 +1，最高10个'},
     {id:'filmStudy',name:'录像分析',prices:[200,400,700],effect:'每级使战术克制的目标能力额外 +1%'}
   ];
   const META_UNLOCKS=[
@@ -184,7 +199,7 @@
   const GEAR = GEAR_DATA.map(item => ({
     ...item,
     kind: item.slot === '球衣' ? 'signature' : 'global',
-    displayName: item.legendName?item.legendName+' · '+item.name:item.name,
+    displayName: item.name,
     combatFlat: item.dimensions || {},
     combatPercent: item.dimensionPercent
       ? Object.fromEntries(Object.entries(item.dimensionPercent).flatMap(([key,value]) => key === 'all' ? COMBAT_KEYS.map(dim => [dim,value]) : [[key,value]]))
@@ -195,7 +210,7 @@
   const SALE_BASE = { C:2, B:3, A:5, S:8, SSR:16 };
   const TRAINING_COSTS = [1,2,3,16,22,29,37,46,56,67];
   const LEGACY_TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
-  const BALANCE_RULES_VERSION=4,MORALE_HARD_CAP=13;
+  const BALANCE_RULES_VERSION=6,MORALE_HARD_CAP=13;
   function currentBalance(run){return run?.balanceRulesVersion>=2}
   function saleValue(id,stars=1,run=null){const star=BY_ID[id];return star?Math.floor(SALE_BASE[star.tier]*clamp(Math.floor(stars)||1,1,10)*(openingEffect(run).saleMultiplier||1)):0}
   function resolveTalentEffect(run,slotId){
@@ -229,15 +244,15 @@
 
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
-  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
+  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],gearUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0,gearStorage:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
   function createRun(talent,seed,progress={},rulesVersion=BALANCE_RULES_VERSION){
     const effect=openingEffect({talent});
-    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable)))],gearLimit:GEAR_LIMIT,maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
+    const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable&&item.slot==='球衣')))],unlockedGear:[...new Set((progress.gearUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.legendary)))],gearHealCounters:{},gearLimit:GEAR_LIMIT,gearReserveLimit:5+clamp(progress.gearStorage||0,0,5),maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,gearPaidRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
     if(rulesVersion>=2){run.balanceRulesVersion=rulesVersion;run.bondWinHealCounters={}}
     if(rulesVersion>=4){run.eventState={seen:[],misses:0,lastBattle:-2,bonuses:{},jerseys:0,recovered:false};run.randomEvent=null}
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
-    if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature');if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
+    if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature'&&(rulesVersion>=5?gearAvailable(run,item):!item.legendary));if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
     makeOffer(run);
     makeShopOffers(run);
     return run;
@@ -586,6 +601,7 @@
         trained:move.slots.filter(slot=>(run.owned[run.slots[slot]]?.train||0)>0).length}))
       .sort((a,b)=>b.score-a.score)[0]||null);
   }
+  const opponentRatingCache=new Map();
   function opponent(run){
     const index=run.stage<=FOE_ROSTER.length?run.stage-1:LEGEND_FOE_START+(run.stage-51)%LEGEND_FOE_COUNT;
     const [id,strategy]=FOE_ROSTER[index],star=BY_ID[id];
@@ -601,14 +617,23 @@
     const stats=Object.fromEntries(ATTRS.map(a=>[a,Math.max(20,Math.round((star.attrs[a]+diff)*starScale+extra))]));
     let slotScores=slotScoresFromStats(stats),dimensions=dimensionsFromSlots(slotScores);
     let rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
+    if(run.balanceRulesVersion>=6&&run.stage>20){
+      const targetRating=endlessOpponentTarget(run.stage),scale=targetRating/rating;
+      for(const attr of ATTRS)stats[attr]=Math.max(20,Math.round(stats[attr]*scale));
+      slotScores=slotScoresFromStats(stats);dimensions=dimensionsFromSlots(slotScores);
+      rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
+    }
     if(run.stage>1){
-      const previous=opponent({stage:run.stage-1}).rating;
+      const previousKey=`${run.balanceRulesVersion>=6?6:5}:${run.stage-1}`;
+      const previous=opponentRatingCache.has(previousKey)?opponentRatingCache.get(previousKey):opponent({stage:run.stage-1,balanceRulesVersion:run.balanceRulesVersion}).rating;
       while(rating<=previous){
         for(const attr of ATTRS)stats[attr]++;
         slotScores=slotScoresFromStats(stats);dimensions=dimensionsFromSlots(slotScores);
         rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
       }
     }
+    if(opponentRatingCache.size>=2048)opponentRatingCache.delete(opponentRatingCache.keys().next().value);
+    opponentRatingCache.set(`${run.balanceRulesVersion>=6?6:5}:${run.stage}`,rating);
     return {id,name:star.name,strategy,stars,stats,slotScores,dimensions,rating};
   }
   function gearMultiplier(run,item){
@@ -623,8 +648,9 @@
     return [...gearItems.map(item=>[item,gearMultiplier(run,item)]),...boostItems.map(item=>[item,1])].reduce((total,[item,multiplier])=>{
       total.clutchBonus+=(item.clutchBonus||0)*multiplier;total.turnoverReduction+=(item.turnoverReduction||0)*multiplier;
       total.opponentPenalty+=(item.opponentPenalty||0)*multiplier;total.winCash+=(item.winCash||0)*multiplier;
-      total.counterCash+=(item.counterCash||0)*multiplier;return total;
-    },{clutchBonus:0,turnoverReduction:0,opponentPenalty:0,winCash:0,counterCash:0});
+      total.counterCash+=(item.counterCash||0)*multiplier;
+      if(run.balanceRulesVersion>=5){total.lossCash+=(item.lossCash||0)*multiplier;total.battleCash+=(item.battleCash||0)*multiplier;total.shopDiscount+=(item.shopDiscount||0)*multiplier}return total;
+    },{clutchBonus:0,turnoverReduction:0,opponentPenalty:0,winCash:0,counterCash:0,lossCash:0,battleCash:0,shopDiscount:0});
   }
   function drawShopItems(run,items,count,owned){
     const pool=items.filter(item=>!owned.includes(item.id)&&(!item.minStage||run.stage>=item.minStage));
@@ -635,7 +661,8 @@
   function gearRarityWeights(){return {C:84,B:45.6,A:6,S:1}}
   function drawGearItems(run,count){
     const owned=new Set([...run.gear,...(run.gearReserve||[])]);
-    const pool=GEAR.filter(item=>!owned.has(item.id)&&gearAvailable(run,item)&&(!item.minStage||run.stage>=item.minStage)),chosen=[],weights=gearRarityWeights(run);
+    const pool=GEAR.filter(item=>!owned.has(item.id)&&gearAvailable(run,item)&&(!item.minStage||run.stage>=item.minStage)&&(!(run.balanceRulesVersion>=5)||item.slot!=='球衣')),chosen=[],weights=gearRarityWeights(run);
+    const jerseyChance=.15; // 第四栏球衣独立判定，不受非球衣装备池或持有情况影响。
     while(pool.length&&chosen.length<count){
       // 每件装备独立获得对应品质的权重；抽中后，同次刷新不再抽该部位。
       const total=pool.reduce((sum,item)=>sum+weights[item.rarity],0);
@@ -645,9 +672,13 @@
       nextRandom(run); // 保持每件商品消耗两次随机数，避免改变同种子后续对局的随机序列。
       for(let i=pool.length-1;i>=0;i--)if(pool[i].slot===item.slot)pool.splice(i,1);
     }
+    if(run.balanceRulesVersion>=5){
+      const jerseys=GEAR.filter(item=>item.slot==='球衣'&&!owned.has(item.id)&&gearAvailable(run,item)&&(!item.minStage||run.stage>=item.minStage));
+      if(nextRandom(run)<jerseyChance&&jerseys.length)chosen.push(jerseys[Math.floor(nextRandom(run)*jerseys.length)].id);
+    }
     return chosen;
   }
-  function gearAvailable(run,item){return !!item&&(!item.unlockable||(run.unlockedJerseys||[]).includes(item.id))}
+  function gearAvailable(run,item){return !!item&&(!item.legendary||run.balanceRulesVersion>=5)&&(!item.unlockable||(item.slot==='球衣'?(run.unlockedJerseys||[]):(run.unlockedGear||[])).includes(item.id))}
   function makeShopOffers(run){
     run.shopOffers={boost:drawShopItems(run,BOOSTS,4,[]),gear:drawGearItems(run,3)};
     run.boostBoughtOffers=[];run.gearSoldOffers=[];
@@ -659,10 +690,10 @@
     if(!run.shopOffers.gear.length){run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     return run.shopOffers;
   }
-  function shopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0?0:3+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
+  function shopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0?0:3+(run.balanceRulesVersion>=5?(run.gearPaidRefreshes||0):0)+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
   function refreshShop(run,type='boost'){
     const cost=shopRefreshCost(run,type);if(run.cash<cost)return false;run.cash-=cost;
-    if(type==='gear'){if(run.gearRefreshFree>0)run.gearRefreshFree--;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
+    if(type==='gear'){if(run.balanceRulesVersion>=5&&cost>0)run.gearPaidRefreshes=(run.gearPaidRefreshes||0)+1;if(run.gearRefreshFree>0)run.gearRefreshFree--;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     else{run.shopRefreshes=(run.shopRefreshes||0)+1;run.shopOffers.boost=drawShopItems(run,BOOSTS,4,[]);run.boostBoughtOffers=[]}
     return true;
   }
@@ -673,13 +704,18 @@
   function trainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)];return base===undefined?Infinity:Math.max(1,base+(run.talent==='agent'?2:0)+(openingEffect(run).trainingCostDelta||0))}
   function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const cost=trainingCost(run,id);if(run.cash<cost)return false;run.cash-=cost;own.train++;own.trainedAt=run.stage;return true}
   function boostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
-  function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0))*(effect.gearPriceMultiplier||1)))}
-  function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.cash<boostPrice(run,item))return false;run.cash-=boostPrice(run,item);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
+  function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0)-(run.balanceRulesVersion>=5?itemEffects(run).shopDiscount:0))*(effect.gearPriceMultiplier||1)))}
+  function boostPurchaseLimit(run){return run.balanceRulesVersion>=6?(run.stage<=10?2:10):Infinity}
+  function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.boosts.filter(boostId=>boostId===id).length>=boostPurchaseLimit(run)||run.cash<boostPrice(run,item))return false;run.cash-=boostPrice(run,item);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
+  function gearReserveCount(run){return (run.gearReserve||[]).filter(id=>GEAR.find(item=>item.id===id)?.slot!=='球衣').length}
+  function gearReserveLimit(run){return clamp(run.gearReserveLimit||5,5,10)}
+  function gearStorageFull(run,item){return run.balanceRulesVersion>=5&&item?.slot!=='球衣'&&(run.gear.some(id=>GEAR.find(g=>g.id===id)?.slot===item.slot)||run.gear.length>=(run.gearLimit||GEAR_LIMIT))&&gearReserveCount(run)>=gearReserveLimit(run)}
   function buyGear(run,id){
     ensureShop(run);
     const item=GEAR.find(g=>g.id===id),reserve=run.gearReserve||(run.gearReserve=[]);
     if(!item||!gearAvailable(run,item)||!run.shopOffers.gear.includes(id)||(run.gearSoldOffers||[]).includes(id)||run.cash<gearPrice(run,item)||run.gear.includes(id)||reserve.includes(id))return false;
-    if(item.slot!=='球衣'&&[...run.gear,...reserve].some(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot))return false;
+    if(!(run.balanceRulesVersion>=5)&&item.slot!=='球衣'&&[...run.gear,...reserve].some(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot))return false;
+    if(gearStorageFull(run,item))return false;
     run.cash-=gearPrice(run,item);
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.gearPurchases++;
     const slotUsed=run.gear.some(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot);
@@ -705,7 +741,7 @@
   }
   function equipGear(run,id){
     const reserve=run.gearReserve||[],index=reserve.indexOf(id),item=GEAR.find(g=>g.id===id);
-    if(index<0||!item||item.slot!=='球衣')return false;
+    if(index<0||!item||!(run.balanceRulesVersion>=5)&&item.slot!=='球衣')return false;
     const activeIndex=run.gear.findIndex(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot);
     if(activeIndex<0&&run.gear.length>=(run.gearLimit||GEAR_LIMIT))return false;
     reserve.splice(index,1);
@@ -765,6 +801,27 @@
     if(!pool.length||profile.legend<JERSEY_UNLOCK_PRICE)return null;
     const item=pool[Math.min(pool.length-1,Math.floor(clamp(random(),0,.999999)*pool.length))];
     profile.legend-=JERSEY_UNLOCK_PRICE;owned.push(item.id);return item;
+  }
+  function unlockLegendaryGear(profile,random=Math.random){
+    const owned=profile.gearUnlocks||(profile.gearUnlocks=[]),pool=GEAR.filter(item=>item.legendary&&!owned.includes(item.id));
+    if(!pool.length||profile.legend<LEGENDARY_GEAR_UNLOCK_PRICE)return null;
+    const item=pool[Math.min(pool.length-1,Math.floor(clamp(random(),0,.999999)*pool.length))];
+    profile.legend-=LEGENDARY_GEAR_UNLOCK_PRICE;owned.push(item.id);return item;
+  }
+  function preventGearDefeat(run){
+    if(!(run.balanceRulesVersion>=5)||run.morale>0)return null;
+    const item=run.gear.map(id=>GEAR.find(g=>g.id===id)).find(g=>g?.preventDefeat);
+    if(!item)return null;
+    run.gear=run.gear.filter(id=>id!==item.id);run.morale=1;return item;
+  }
+  function recoverGearMorale(run){
+    if(!(run.balanceRulesVersion>=5))return [];
+    const counters=run.gearHealCounters||(run.gearHealCounters={}),detail=[];
+    for(const id of run.gear){const item=GEAR.find(g=>g.id===id);if(!item?.healEveryWins)continue;
+      counters[id]=(counters[id]||0)+1;
+      if(counters[id]>=item.healEveryWins){counters[id]=0;const heal=Math.min(1,Math.max(0,MORALE_HARD_CAP-run.morale));run.morale+=heal;if(heal)detail.push(item.name+'恢复1点士气')}
+    }
+    return detail;
   }
   function finishRun(game){
     const run=game.run;if(!run||run.awarded)return 0;
@@ -887,28 +944,33 @@
     }
     const won=us>them;
     const counterCash=beats===1?equipment.counterCash:0;
-    const postBattleCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.postBattleCash||0),0)+counterCash;
+    const postBattleCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.postBattleCash||0),0)+counterCash+equipment.battleCash;
     let reward=0,detail=[];
     if(won){
       const income=incomeBreakdown(run),base=income.victoryBase,lineupIncome=income.lineupIncome,interest=income.interest;
       const bond=own.bonds.length?1:0,bondCash=Math.min(5,own.bonds.reduce((sum,item)=>sum+(item.effect?.winCash||0),0));
       const talentCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.winCash||0),0);
       const openingCash=(opening.battleCash||0)+(own.bonds.length?(opening.bondWinCash||0):0);
-      reward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash);run.cash+=reward;run.wins++;
+      const grossReward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash);
+      reward=run.balanceRulesVersion>=5?Math.min(90,grossReward):grossReward;run.cash+=reward;run.wins++;
       if(opening.winHeal&&run.wins%(opening.healEveryWins||1)===0){
         const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit||10)-granted));
         run.morale+=currentBalance(run)?Math.min(heal,Math.max(0,MORALE_HARD_CAP-run.morale)):heal;run.talentWinHealGranted=granted+heal;
       }
       detail=[`胜利 ${base}`,`阵容收入 ${lineupIncome}`,`利息 ${interest}`,`羁绊 ${bond+bondCash}`];
-      detail.push(...recoverBondMorale(run,own.bonds));
+      detail.push(...recoverBondMorale(run,own.bonds),...recoverGearMorale(run));
+      if(equipment.winCash)detail.push(`装备胜利奖励 ${equipment.winCash}`);
       if(openingCash)detail.push(`开局天赋 ${openingCash}`);
       if(talentCash)detail.push(`球星技能 ${talentCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
+      if(grossReward>reward)detail.push('胜利奖金上限90');
     }else{
-      run.morale--;run.losses++;run.free++;reward=Math.max(0,incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0));run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)}`,'免费招募 +1'];
+      run.morale--;run.losses++;run.free++;reward=Math.max(0,incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0)+equipment.lossCash);run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)-equipment.lossCash}`,'免费招募 +1'];
+      if(equipment.lossCash)detail.push(`装备失败奖励 ${equipment.lossCash}`);
       if(opening.battleCash)detail.push(`开局天赋 ${opening.battleCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
     }
+    const rescued=preventGearDefeat(run);if(rescued)detail.push(rescued.name+'已消耗，生命恢复至1点');
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.prizeIncome+=reward;
     run.boosts=[];
     const goatPhases={planning:own.dimensions.shooting+own.dimensions.creation,clash:own.dimensions.finishing+own.dimensions.perimeterStop,endurance:own.dimensions.rimStop};
@@ -939,10 +1001,10 @@
     run.stage++;run.free=1+bondFree+(opening.freePerStage||0);
     run.cash=Math.max(0,run.cash+bondCash+(opening.stageCash||0));
     run.gearRefreshFree=opening.freeGearRefresh||0;
-    run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;makeShopOffers(run);run.lastBattle=null;
+    run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;run.gearPaidRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,clamp};
+  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
   const EVENT_SYSTEM=root.SupFusionEventSystem||(typeof require==='function'?require('./event-system.js'):null);
   if(!EVENT_SYSTEM)throw new Error('SupFusionEventSystem is required before game-core.js');
   Object.assign(api,EVENT_SYSTEM.createSystem({...api,nextRandom,advanceAfterBattle}));

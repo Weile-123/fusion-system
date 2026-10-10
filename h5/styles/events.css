@@ -1,11 +1,11 @@
 #profile .profile-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
 #profile .profile-tabs i{width:calc((100% - 9px)/4)}
-.event-filters{margin-bottom:10px}
 .event-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.event-catalog-card{min-height:110px;padding:12px;text-align:left;border:1px solid #766039;border-radius:8px;background:linear-gradient(135deg,#332c20,#1b1d1e);color:#f3e4c7;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.event-catalog-card{min-height:110px;padding:8px;text-align:left;border:1px solid #766039;border-radius:8px;background:linear-gradient(135deg,#332c20,#1b1d1e);color:#f3e4c7;display:flex;flex-direction:column;justify-content:flex-start;gap:7px}
+.event-catalog-card .event-catalog-story{margin:0;color:#c8bdab;font-size:10px;line-height:1.7;overflow-wrap:anywhere}
 .event-catalog-card span,.event-catalog-card small{font-size:10px;color:#c4ad7d}
 .event-catalog-card b{font-size:14px}
-.event-catalog-card.unknown{border-color:#3c3d3e;background:#242627;color:#666;align-items:center;text-align:center}
+.event-catalog-card.unknown{border-color:#3c3d3e;background:#242627;color:#666;align-items:center;justify-content:center;text-align:center}
 .event-catalog-card.unknown b{font-size:36px}
 .event-modal{max-height:85dvh;overflow:auto;width:min(100%,420px);padding:22px;background:linear-gradient(140deg,#30291d,#191c1e);border:1px solid #8e703b}
 .event-modal h2{color:#ffe0a1;margin:12px 0;font-size:23px}
@@ -20,3 +20,30 @@
 .event-modal .event-risk{color:#ff9d8e;font-weight:bold}
 .event-jersey{display:flex;justify-content:center;margin:12px}
 .event-jersey .jersey-art-frame{height:110px}
+
+/* 纯文字黑金事件框；结果状态独立配色，安全选项保持中性。 */
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.event-dialog{--event-accent:#d8b965;--event-soft:#d8b96517;--event-ink:#ffe4a4;width:min(100%,420px);height:auto;min-height:0;max-height:85dvh;padding:18px;border:1px solid var(--event-accent);border-radius:18px;background:linear-gradient(150deg,var(--event-soft),transparent 65%),#191b1c;box-shadow:inset 0 0 0 3px #ffffff05,0 18px 45px #000b}
+.event-dialog .event-heading{text-align:center;padding-bottom:12px;border-bottom:1px solid var(--event-soft)}
+.event-dialog .event-category{color:var(--event-ink);font-size:11px;letter-spacing:.5px}
+.event-dialog h2{margin:10px 0 0;color:#ffe4a4;font-size:24px;line-height:1.3}
+.event-dialog .event-story{margin:14px 0 16px;color:#d6d0c4;font-size:12px;line-height:1.8}
+.event-dialog .event-chance{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;border:1px solid #8f7946;border-radius:10px;background:#11131580;color:#e8d6ac;font-size:12px;font-weight:800}
+.event-dialog .event-chance b{color:#ffe1a0;font-size:27px;line-height:1.2;font-variant-numeric:tabular-nums}
+.event-dialog .event-outcomes{display:grid;gap:6px;margin:9px 0 16px;padding:0;border:0;background:none}
+.event-dialog .event-outcome-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;padding:10px 12px;border:1px solid #514b3c;border-radius:8px;background:#ffffff03;font-size:11px;line-height:1.6}
+.event-outcome-row span{color:#d7c5a1;font-weight:800}
+.event-outcome-row b{text-align:right;overflow-wrap:anywhere;color:#f4e0b1;font-weight:600}
+.event-dialog .event-actions{gap:9px}
+.event-dialog .btn{min-height:44px;height:auto;margin:0;padding:11px 9px;border-radius:9px;font-size:13px;line-height:1.4;white-space:normal}
+.event-dialog .event-primary{border:1px solid #fce4a5;background:linear-gradient(110deg,#cb963b,#f5d77d 55%,#d0a046);color:#241803;box-shadow:inset 0 1px 0 #fff5,0 3px 10px #0003}
+.event-dialog .event-secondary{border:1px solid #c4a762;background:#17191a;color:#ebd8a8;box-shadow:none}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.event-dialog.event-state-success{--event-accent:#4bbda6;--event-soft:#30ac8b26;--event-ink:#96e5d1;box-shadow:inset 3px 0 0 #4bbda6, inset 0 0 0 3px #4bbda617,0 18px 45px #000b}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.event-dialog.event-state-failure{--event-accent:#cf7769;--event-soft:#aa493128;--event-ink:#ffb09d;box-shadow:inset 3px 0 0 #cf7769,inset 0 0 0 3px #cf776917,0 18px 45px #000b}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.event-dialog.event-state-safe{--event-accent:#a6936b;--event-soft:#a6936b18;--event-ink:#e3d6b8}
+.event-dialog .event-result{margin:16px 0;padding:21px 12px 15px;text-align:center;border:1px solid var(--event-accent);border-radius:12px;background:linear-gradient(140deg,var(--event-soft),#11131560)}
+.event-dialog .event-result h3{margin:0 0 13px;color:var(--event-ink);font-size:25px;font-weight:900;line-height:1.3}
+.event-dialog .event-result-reward{margin:0;color:#f4dfab;font-size:18px;line-height:1.6;font-weight:800;overflow-wrap:anywhere}
+.event-dialog .event-result-reward strong{display:inline-block;margin-left:5px;color:#ffe1a0;font-size:36px;line-height:1.3;font-variant-numeric:tabular-nums}
+.event-dialog .event-result-note{margin:13px 0 0;padding-top:12px;border-top:1px solid var(--event-soft);color:var(--event-ink);font-size:11px;font-weight:400}
+.event-dialog .event-risk{margin:0 0 12px;padding:8px 10px;border:1px solid #a95146;border-radius:8px;background:#642a222f;color:#ffb09d;font-size:11px}
+@media(max-width:360px){.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.event-dialog{padding:14px}.event-dialog h2{font-size:22px}.event-dialog .event-outcome-row{gap:8px;padding:8px 10px}.event-dialog .btn{font-size:12px}}

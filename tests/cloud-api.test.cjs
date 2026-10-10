@@ -78,7 +78,7 @@ test('an empty finished run cannot farm verified sharing points',async()=>{
 
 test('cloud start binds the balance version and keeps legacy starts compatible',async()=>{
   const body={requestId:'00000000-0000-4000-8000-000000000002',seed:911,talent:'reserve_fund',progress:{}};
-  for(const version of [1,2,3,4]){
+  for(const version of [1,2,3,4,5,6]){
     const server=api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress:{},earned:0,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3});
     const response=await server.handle(request('/runs/start',version>=2?{...body,balanceRulesVersion:version}:body));
     assert.equal(response.data.balanceRulesVersion,version);
@@ -87,13 +87,13 @@ test('cloud start binds the balance version and keeps legacy starts compatible',
   }
   const retry=api([{id:body.requestId,seed:911,talent:body.talent,proof_version:3,state:{balanceRulesVersion:2}}]);
   await assert.rejects(retry.handle(request('/runs/start',body)));
-  await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:5})));
+  await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:7})));
 });
 
 test('background start binds a committed seed and retries do not create another run',async()=>{
   const requestId='00000000-0000-4000-8000-000000000001',body={requestId,seed:911,talent:'reserve_fund',progress:{}};
   const fresh=api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress:{},earned:0,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3});
-  const response=await fresh.handle(request('/runs/start',body));assert.equal(response.data.runId,requestId);assert.equal(fresh.calls[1].args.p_state.rng,C.createRun('reserve_fund',911).rng);
+  const response=await fresh.handle(request('/runs/start',body));assert.equal(response.data.runId,requestId);assert.equal(fresh.calls[1].args.p_state.rng,C.createRun('reserve_fund',911,{},1).rng);
   const retry=api([{id:requestId,seed:911,talent:body.talent,proof_version:3}]);await retry.handle(request('/runs/start',body));assert.equal(retry.calls.length,0);
   await assert.rejects(retry.handle(request('/runs/start',{...body,seed:912})),/不一致/);
 });

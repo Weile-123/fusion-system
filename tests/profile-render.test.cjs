@@ -23,8 +23,8 @@ test('OVR medals show peak stage below score and list rows show it inline',()=>{
   const entries=[1,2,3,4].map(rank=>({rank,name:'Player '+rank,score:334,stage:rank===2?null:58}));
   const render=unit=>renderToStaticMarkup(React.createElement(context.module.exports,{entries,title:'Board',unit,status:'',playerName:'Me'}));
   const ovr=render('OVR');
-  assert.ok(ovr.includes('<small>334 OVR</small><small class="leaderboard-peak-stage">第58关</small>'));
-  assert.ok(ovr.includes('<b>334 <small>OVR·第58关</small></b>'));
+  assert.ok(ovr.includes('<small>334</small><small class="leaderboard-peak-stage">第58关</small>'));
+  assert.ok(ovr.includes('<b>334 <small>第58关</small></b>'));
   assert.equal((ovr.match(/leaderboard-peak-stage/g)||[]).length,2);
   assert.ok(!render('点').includes('第58关'));
 });
@@ -36,7 +36,7 @@ function profileMarkup({collected=true,tab='stars',tier='all',bondSize='all'}={}
     els:{profile:{}},escapeText:value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))};
   vm.createContext(context);
   vm.runInContext(source.slice(source.indexOf('  function renderProfile(){'),source.indexOf('  function legacyIcon(')),context);
-  vm.runInContext(source.slice(source.indexOf('  function renderEventCatalog('),source.indexOf('  function eventArchiveDetail(')),context);
+  vm.runInContext(source.slice(source.indexOf('  function renderEventCatalog('),source.indexOf('  function randomEventMarkup(')),context);
   context.renderProfile();return context.els.profile.markup;
 }
 test('collected player catalog and all tier filters pass the production React renderer',()=>{
@@ -69,8 +69,8 @@ test('additional catalog tags retain unsafe-tag and attribute restrictions',()=>
 
 test('unseen event catalog contains only question marks and no event content',()=>{
   const output=renderToStaticMarkup(renderer().MarkupScreen({html:profileMarkup({tab:'events'})}));
-  assert.equal((output.match(/event-catalog-card unknown/g)||[]).length,28);
-  assert.equal((output.match(/aria-hidden="true">\?/g)||[]).length,28);
-  assert.match(output,/事件图鉴 <small>0 \/ 28<\/small>/);
+  assert.equal((output.match(/event-catalog-card unknown/g)||[]).length,36);
+  assert.equal((output.match(/aria-hidden="true">\?/g)||[]).length,36);
+  assert.match(output,/事件图鉴 <small>0 \/ 36<\/small>/);
   for(const e of C.EVENTS){assert.ok(!output.includes(e.name));assert.ok(!output.includes(e.story));assert.ok(!output.includes(e.id));}
 });

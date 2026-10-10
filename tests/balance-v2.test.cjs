@@ -9,7 +9,7 @@ test('new economics preserve the old rules for existing saves',()=>{
     run.owned.curry={stars:1,train:0,trainedAt:0};
     for(let i=0;i<3;i++){run.owned.curry.train=i;assert.equal(C.trainingCost(run,'curry'),costs[i]);}
   }
-  assert.equal(fresh.rng,old.rng);
+  assert.equal(C.createRun('steady_interest',911,{},4).rng,old.rng);
 });
 
 test('recovery bonds count independent active wins and respect the health cap',()=>{

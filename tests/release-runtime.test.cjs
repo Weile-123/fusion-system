@@ -58,20 +58,19 @@ function eventGame(id='P01'){
   run.randomEvent={id,choice:'next',stage:6,ability:100,difficulty:105,successRate:.9,snapshot:run.lastBattle.eventSnapshot,result:null};run.rng=0;
   return game;
 }
-test('event UI saves each choice, restores the result and opens only discovered archive entries',async()=>{
+test('event UI saves each choice, restores the result and shows only discovered archive stories inline',async()=>{
   const app=runtime(),game=eventGame();app.audit.setGame(game);app.audit.go('roster');
-  assert.match(app.screens['game-modal'].output,/成功率 90%/);assert.match(app.screens['game-modal'].output,/投入 5 奖金/);
+  assert.match(app.screens['game-modal'].output,/<span>成功率<\/span><b>90%<\/b>/);assert.match(app.screens['game-modal'].output,/投入 5 奖金/);
   await app.click('event-main','P01');const cash=game.run.cash,rng=game.run.rng;
-  assert.equal(cash,110);assert.match(app.screens['game-modal'].output,/到账 15/);
+  assert.equal(cash,110);assert.match(app.screens['game-modal'].output,/到账 15/);assert.match(app.screens['game-modal'].output,/event-state-success/);
   await app.click('event-main','P01');assert.equal(game.run.cash,cash);assert.equal(game.run.rng,rng);
   await tick();const next=runtime(),restored=next.audit.restoreGame(JSON.parse(JSON.stringify(app.saved.at(-1))));next.audit.setGame(restored);next.audit.go('roster');
   assert.match(next.screens['game-modal'].output,/到账 15/);assert.ok(!next.screens['game-modal'].output.includes('data-act="event-main"'));
   await next.click('event-confirm','P01');assert.equal(restored.run.randomEvent,null);assert.equal(restored.run.stage,7);
   next.audit.go('profile');await next.click('profile-tab','events');
-  assert.match(next.screens.profile.output,/1 \/ 28/);assert.match(next.screens.profile.output,/球场补给摊/);assert.ok(!next.screens.profile.output.includes('弧顶一千球'));
-  await next.click('event-detail','T01');assert.ok(!next.screens['game-modal'].output.includes('弧顶一千球'));
-  await next.click('event-detail','P01');assert.match(next.screens['game-modal'].output,/触发条件/);assert.ok(!next.screens['game-modal'].output.includes('data-act="event-main"'));
-  await next.click('event-detail-close');await next.click('profile-event-type','T');assert.equal((next.screens.profile.output.match(/event-catalog-card unknown/g)||[]).length,13);
+  assert.match(next.screens.profile.output,/1 \/ 36/);assert.match(next.screens.profile.output,/球场补给摊/);assert.ok(!next.screens.profile.output.includes('弧顶一千球'));
+  assert.ok(next.screens.profile.output.includes(C.EVENT_BY_ID.P01.story));assert.equal((next.screens.profile.output.match(/event-catalog-card unknown/g)||[]).length,35);
+  assert.doesNotMatch(next.screens.profile.output,/查看故事|触发条件|选项与收益|data-act="event-detail"|profile-event-type/);
 });
 test('fatal event result survives real restore and cloud finalization waits for confirmation',async()=>{
   const app=runtime(),game=eventGame('C01'),run=game.run;run.morale=1;run.rng=1900;run.randomEvent.successRate=.35;
@@ -80,7 +79,7 @@ test('fatal event result survives real restore and cloud finalization waits for 
   await app.click('event-main','C01');assert.equal(run.ended,true);await app.audit.syncPendingRuns(true);
   assert.ok(!(run.cloudOutbox||[]).some(e=>e.type==='finish'));assert.equal(run.cloudFinalizationQueued,undefined);
   const next=runtime(),restored=next.audit.restoreGame(JSON.parse(JSON.stringify(game)));next.audit.setGame(restored);next.audit.go('roster');
-  assert.equal(next.audit.state().screen,'roster');assert.match(next.screens['game-modal'].output,/挑战失败，生命 -1/);
+  assert.equal(next.audit.state().screen,'roster');assert.match(next.screens['game-modal'].output,/挑战失败，生命 -1/);assert.match(next.screens['game-modal'].output,/event-state-failure/);
   await next.click('event-confirm','C01');assert.equal(next.audit.state().screen,'report');assert.equal(restored.profile.runs,1);
   assert.equal(restored.run.cloudFinalizationQueued,true);
 });
@@ -291,7 +290,10 @@ test('two unsent battles and a settlement survive starting another run and reloa
   for(let i=0;i<6;i++){await app.click('select-offer',old.offer[0]);await app.click('pick')}
   for(let i=0;i<2;i++){
     await app.click('duel');await app.click('battle');await app.click('strategy','outside');
-    if(i===0)await app.click(old.lastBattle.won?'next':'retry');
+    if(i===0){
+      await app.click(old.lastBattle.won?'next':'retry');
+      if(old.randomEvent){await app.click('event-safe',old.randomEvent.id);await app.click('event-confirm',old.randomEvent.id)}
+    }
   }
   C.finishRun(app.audit.getGame());await app.click('new');app.audit.setTalent('reserve_fund');await app.click('begin');await tick();
   assert.equal(app.audit.getGame().pendingCloudRuns.length,1);assert.equal(old.cloudOutbox.length,3);assert.equal(old.cloudOutbox[0].type,'battle');
@@ -466,7 +468,7 @@ test('home announcement opens, closes and preserves current save',async()=>{
   await app.click('announcement-open');assert.match(app.screens['game-modal'].output,/更多羁绊，更多搭配/);assert.match(app.screens['game-modal'].output,/数值调整/);assert.match(app.screens['game-modal'].output,/样式调整/);
   assert.match(app.screens['game-modal'].output,/羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。/);
   assert.match(app.screens['game-modal'].output,/class="announcement-note"/);
-  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');assert.equal(JSON.stringify(app.audit.getGame()),before);
+  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='2026-10-10';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
   const restored=app.audit.restoreGame(JSON.parse(before));assert.equal(restored.run.balanceRulesVersion,2);assert.equal(C.synergiesForRun(restored.run).length,84);
 });
 
@@ -537,6 +539,101 @@ test('archive migration preserves old collected entries once and never auto-unlo
   assert.equal(app.audit.restoreGame(JSON.parse(JSON.stringify(migrated))).profile.achievedBonds.length,legacy.length);
 });
 
+test('equipment collections switch pages and same-slot purchases survive restore without automatic sale',async()=>{
+  const app=runtime(),game=C.createGame(),run=game.run=C.createRun('steady_interest',911);run.cash=100;run.shopOffers.gear=['wrist','deep_wrist','curry_wrist'];app.audit.setGame(game);
+  app.audit.go('shop');await app.click('shop-tab','gear');await app.click('buy-gear','wrist');await app.click('buy-gear','deep_wrist');assert.deepEqual(run.gearReserve,['deep_wrist']);assert.equal(run.cash,76);
+  await app.click('shop-tab','my');assert.match(app.screens.shop.output,/装备收藏/);assert.match(app.screens.shop.output,/3D护腕/);assert.match(app.screens.shop.output,/data-act="gear-collection-tab"/);
+  await app.click('gear-collection-tab','jerseys');assert.match(app.screens.shop.output,/暂无收藏球衣/);await app.click('gear-collection-tab','gear');await app.click('equip-gear','deep_wrist');assert.deepEqual(run.gearReserve,['wrist']);assert.equal(run.cash,76);
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.deepEqual(Array.from(restored.run.gearReserve),['wrist']);assert.deepEqual(Array.from(restored.run.gear),['deep_wrist']);assert.equal(restored.run.cash,76);
+  restored.run.gear=[];restored.run.gearReserve=['wrist','deep_wrist'];const again=app.audit.restoreGame(JSON.parse(JSON.stringify(restored)));assert.deepEqual(Array.from(again.run.gearReserve),['wrist','deep_wrist']);assert.equal(again.run.gear.length,0);assert.equal(again.run.cash,76);
+});
+
+test('equipment storage upgrades and over-capacity saves survive reload',async()=>{
+  const app=runtime(),game=C.createGame();game.profile.legend=10000;app.audit.setGame(game);
+  await app.click('pointshop');assert.match(app.screens.pointshop.output,/装备收纳/);
+  for(let i=0;i<5;i++)await app.click('meta-upgrade','gearStorage');
+  assert.equal(game.profile.upgrades.gearStorage,5);
+  game.run=C.createRun('steady_interest',912,game.profile.upgrades);
+  game.run.gearReserve=C.GEAR.filter(g=>g.slot!=='球衣'&&!g.legendary).slice(0,11).map(g=>g.id);
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+  assert.equal(restored.run.gearReserveLimit,10);assert.equal(restored.run.gearReserve.length,11);
+  delete game.run.gearReserveLimit;
+  const old=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+  assert.equal(old.run.gearReserveLimit,5);assert.equal(old.run.gearReserve.length,11);
+});
+
+test('announcement update dot clears on first open and stays cleared after restore',async()=>{
+  const app=runtime(),game=C.createGame();app.audit.setGame(game);app.audit.go('home');
+  assert.match(app.screens.home.output,/home-announcement has-update/);
+  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'2026-10-10');
+  assert.doesNotMatch(app.screens.home.output,/home-announcement has-update/);
+  await app.click('announcement-close');const saved=JSON.parse(JSON.stringify(game));
+  const next=runtime(),restored=next.audit.restoreGame(saved);next.audit.setGame(restored);next.audit.go('home');
+  assert.equal(restored.profile.announcementReadVersion,'2026-10-10');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
+});
+
+test('all 36 event dialogs restore before and after payout without duplicate awards',async()=>{
+  for(const e of C.EVENTS){
+    const app=runtime(),game=C.createGame(),run=game.run=C.createRun('steady_interest',911,{jerseyUnlocks:e.jersey?[e.jersey]:[]});
+    const ids=[...new Set([...e.players,'curry','lebron','magic','shaq','jordan','bird'])].slice(0,6);
+    ids.forEach((id,i)=>{run.owned[id]={stars:1,train:0,trainedAt:0};run.slots[C.SLOTS[i].id]=id});
+    run.stage=Math.max(3,e.minStage);run.cash=100;run.rng=0;run.morale=e.type==='R'?2:3;
+    run.lastBattle={stage:run.stage,won:!e.afterLoss,us:11,them:1,foe:'curry',rating:100,goat:500,strategy:'outside',eventSnapshot:C.eventBattleSnapshot(run)};
+    run.eventState.seen=[e.id];run.randomEvent={id:e.id,choice:e.afterLoss?'retry':'next',stage:run.stage,ability:100,difficulty:C.eventDifficulty(run.stage),successRate:.9,snapshot:run.lastBattle.eventSnapshot,result:null};
+    let restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));app.audit.setGame(restored);app.audit.go('roster');
+    assert.match(app.screens['game-modal'].output,new RegExp(e.name));assert.equal(restored.run.randomEvent.successRate,.9);
+    await app.click('event-main',e.id);assert.equal(restored.run.randomEvent.result.success,true,e.id);
+    const result=JSON.stringify(restored.run.randomEvent.result),cash=restored.run.cash,morale=restored.run.morale;
+    restored=app.audit.restoreGame(JSON.parse(JSON.stringify(restored)));app.audit.setGame(restored);app.audit.go('roster');
+    assert.equal(JSON.stringify(restored.run.randomEvent.result),result);await app.click('event-main',e.id);
+    assert.equal(restored.run.cash,cash);assert.equal(restored.run.morale,morale);
+    await app.click('event-confirm',e.id);assert.equal(restored.run.randomEvent,null);assert.equal(restored.run.stage,e.afterLoss?Math.max(3,e.minStage):Math.max(3,e.minStage)+1);
+  }
+});
+
+test('jersey codex excludes shop unlocks and retains actual purchases through sale, settlement and reload',async()=>{
+  const app=runtime(),game=C.createGame();game.profile.legend=500;game.profile.jerseys=['curry_wrist'];const jersey=C.unlockJersey(game.profile,()=>0);app.audit.setGame(game);
+  app.audit.go('profile');await app.click('profile-tab','jerseys');assert.doesNotMatch(app.screens.profile.output,new RegExp(jersey.name));assert.match(app.screens.profile.output,/勇士·30号/);
+  const run=game.run=C.createRun('steady_interest',911,{jerseyUnlocks:game.profile.jerseyUnlocks});run.cash=100;run.shopOffers.gear=[jersey.id];assert.equal(C.buyGear(run,jersey.id),true);
+  app.audit.go('profile');assert.match(app.screens.profile.output,new RegExp(jersey.name));assert.equal(C.sellGear(run,jersey.id),jersey.sellPrice);app.audit.go('profile');assert.match(app.screens.profile.output,new RegExp(jersey.name));
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));app.audit.setGame(restored);app.audit.go('profile');assert.match(app.screens.profile.output,new RegExp(jersey.name));C.finishRun(restored);restored.run=C.createRun('steady_interest',912);app.audit.go('profile');assert.match(app.screens.profile.output,new RegExp(jersey.name));
+});
+
+test('legendary gear unlock is local, persists and is included in new-run progress',async()=>{
+  const requests=[],app=runtime({request:async args=>{requests.push(args);throw Error('Unexpected request')}}),game=C.createGame();game.profile.legend=900;app.audit.setGame(game);
+  await app.click('pointshop');await app.click('pointshop-tab','legendary');assert.match(app.screens.pointshop.output,/传奇商店/);assert.match(app.screens.pointshop.output,/300 点/);assert.match(app.screens.pointshop.output,/500 点/);assert.match(app.screens.pointshop.output,/legacy-jersey-showcase.png/);assert.doesNotMatch(app.screens.pointshop.output,/legacy-collection|legacy-gear-card|meta-jersey-grid/);
+  await app.click('legendary-gear-unlock');assert.equal(game.profile.legend,600);assert.equal(game.profile.gearUnlocks.length,1);assert.match(app.screens['game-modal'].output,/获得传奇装备/);
+  await app.click('legendary-gear-unlock');assert.equal(game.profile.legend,600);
+  await app.click('legendary-gear-unlock-confirm');await app.click('legendary-gear-unlock');assert.equal(game.profile.legend,300);assert.equal(new Set(game.profile.gearUnlocks).size,2);assert.equal(requests.length,0);
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.deepEqual(Array.from(restored.profile.gearUnlocks),game.profile.gearUnlocks);app.audit.setGame(restored);
+  await app.click('legendary-gear-unlock-confirm');app.audit.go('talent');app.audit.setTalent('reserve_fund');await app.click('begin');assert.deepEqual(Array.from(restored.run.unlockedGear),game.profile.gearUnlocks);
+});
+
+test('all ten legendary gear unlocks purchase, swap, sell and restore through the actual UI',async()=>{
+  const app=runtime(),game=C.createGame();game.profile.legend=3000;game.run=C.createRun('steady_interest',911);app.audit.setGame(game);
+  await app.click('pointshop');await app.click('pointshop-tab','legendary');
+  for(let i=0;i<10;i++){await app.click('legendary-gear-unlock');assert.equal(game.profile.legend,3000-300*(i+1));assert.equal(game.profile.gearUnlocks.length,i+1);assert.match(app.screens['game-modal'].output,/获得传奇装备/);await app.click('legendary-gear-unlock');assert.equal(game.profile.gearUnlocks.length,i+1);await app.click('legendary-gear-unlock-confirm')}
+  assert.equal(game.run.unlockedGear.length,0);assert.equal(game.run.gear.length,0);assert.equal(game.run.gearReserve.length,0);
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.equal(restored.profile.gearUnlocks.length,10);app.audit.setGame(restored);
+  await app.click('new');await app.click('new-confirm');app.audit.setTalent('steady_interest');await app.click('begin');const run=app.audit.getGame().run;
+  assert.equal(run.unlockedGear.length,10);run.cash=1000;
+  for(const item of C.GEAR.filter(g=>g.legendary)){run.shopOffers.gear=[item.id];run.gearSoldOffers=[];app.audit.go('shop');await app.click('shop-tab','gear');const cash=run.cash,price=C.gearPrice(run,item);await app.click('buy-gear',item.id);assert.equal(run.cash,cash-price);assert.ok([...run.gear,...run.gearReserve].includes(item.id));await app.click('buy-gear',item.id);assert.equal(run.cash,cash-price)}
+  assert.equal(run.gear.length,5);assert.equal(run.gearReserve.length,5);await app.click('shop-tab','my');assert.match(app.screens.shop.output,/装备收藏 5\/5 · 装备后生效/);
+  for(const id of [...run.gearReserve]){const item=C.GEAR.find(g=>g.id===id),old=run.gear.find(g=>C.GEAR.find(x=>x.id===g).slot===item.slot),cash=run.cash;await app.click('equip-gear',id);assert.ok(run.gear.includes(id));assert.ok(run.gearReserve.includes(old));assert.equal(run.cash,cash);assert.equal(run.gearReserve.length,5)}
+  const reloaded=app.audit.restoreGame(JSON.parse(JSON.stringify(app.audit.getGame())));assert.deepEqual(Array.from(reloaded.run.gear),run.gear);assert.deepEqual(Array.from(reloaded.run.gearReserve),run.gearReserve);app.audit.setGame(reloaded);
+  app.audit.go('shop');await app.click('shop-tab','my');const sold=reloaded.run.gearReserve[0],cash=reloaded.run.cash,item=C.GEAR.find(g=>g.id===sold);await app.click('sell-gear',sold);assert.equal(reloaded.run.cash,cash+item.sellPrice);assert.ok(!reloaded.run.gearReserve.includes(sold));await app.click('sell-gear',sold);assert.equal(reloaded.run.cash,cash+item.sellPrice);
+});
+
+test('fourth jersey offer and equipped heal counters survive re-entry without acquiring new unlocks',()=>{
+  const profile=C.createGame().profile;profile.gearUnlocks=C.GEAR.filter(g=>g.legendary).map(g=>g.id);let run;
+  for(let seed=1;seed<500;seed++){run=C.createRun('steady_interest',seed,{gearUnlocks:profile.gearUnlocks});if(run.shopOffers.gear.length===4)break}
+  assert.equal(run.shopOffers.gear.length,4);run.gear=['legacy_recovery_ring'];run.gearHealCounters={legacy_recovery_ring:2};run.gearPaidRefreshes=7;
+  const app=runtime(),restored=app.audit.restoreGame(JSON.parse(JSON.stringify({version:1,profile,run})));
+  assert.deepEqual(Array.from(restored.run.shopOffers.gear),run.shopOffers.gear);assert.equal(restored.run.gearHealCounters.legacy_recovery_ring,2);
+  assert.equal(C.shopRefreshCost(restored.run,'gear'),10);
+  const prior={...run,unlockedGear:[]};const old=app.audit.restoreGame(JSON.parse(JSON.stringify({version:1,profile,run:prior})));assert.equal(old.run.unlockedGear.length,0);
+});
+
 test('first migration, three new achievements, settlement and re-entry preserve the archive',async()=>{
   const app=runtime(),old=C.createGame();old.profile.discovered=C.STARS.map(s=>s.id);
   const migrated=app.audit.restoreGame(JSON.parse(JSON.stringify(old)));
@@ -565,7 +662,7 @@ test('first migration, three new achievements, settlement and re-entry preserve 
   for(const id of targetIds)assert.ok(nextApp.screens.profile.output.includes(C.SYNERGIES.find(b=>b.id===id).name));
   await nextApp.click('new');nextApp.audit.setTalent('steady_interest');await nextApp.click('begin');
   assert.equal(JSON.stringify(nextApp.audit.getGame().profile.achievedBonds),before);
-  assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,4);
+  assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,C.BALANCE_RULES_VERSION);
 });
 
 test('pending replacement takes priority over reopening the recruit sheet',async()=>{

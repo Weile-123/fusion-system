@@ -59,13 +59,16 @@
   },
   "lastFunctionUpdate": {
     "functionName": "activity_api",
-    "updatedAt": "2026-10-09T06:39:26.544Z",
-    "rulesVersion": 3,
+    "updatedAt": "2026-10-10T05:50:23.820Z",
+    "rulesVersion": 5,
     "supportedRulesVersions": [
       1,
       2,
-      3
+      3,
+      4,
+      5
     ],
+    "randomEvents": 36,
     "synergies": 100,
     "healthChecked": true,
     "legendReadChecked": true,
@@ -73,7 +76,15 @@
     "unauthorizedWriteRejected": true,
     "authenticatedGameplayChecked": false,
     "frontendPublished": false,
-    "databaseMigrationApplied": false
+    "databaseMigrationApplied": false,
+    "configurationPreserved": true,
+    "backup": ".local-tools/function-before-20261010.zip",
+    "legacyComparison": {
+      "runs": 120,
+      "battles": 2366,
+      "match": true
+    },
+    "localTests": 289
   },
   "deployment": {
     "date": "2026-10-08",
