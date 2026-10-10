@@ -22,3 +22,4 @@ dist/
 # 发布压缩包和批量数值测试产物
 /artifacts/frontend-release-*.zip
 /artifacts/balance/
+/artifacts/balance-*.log
