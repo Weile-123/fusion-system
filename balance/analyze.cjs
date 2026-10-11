@@ -214,5 +214,5 @@ ${eventTable}
   const highlights=`\n## 本批主要发现\n\n- 共执行${summary.runs}局；${runs.filter(x=>x.status==='death').length}局真实死亡，${summary.errors}局模拟器异常；${runs.filter(x=>x.status==='censored').length}局截尾。\n- 普通策略主线通关率${pct(byPolicy.ordinary.mainClears/200)}，高手${pct(byPolicy.expert.mainClears/200)}，有限搜索${pct(byPolicy.extreme.mainClears/200)}；普通/高手已通关P50分别为${interval(byPolicy.ordinary.p50)}/${interval(byPolicy.expert.p50)}关。\n- 最高已通关${strongest.highestCleared}关；${beyond50}局到达50关。${beyond50?'后期结论须结合逐关样本量。':'因此无法证明50～500关数值平衡。'}\n- 新账号无广告、无局外升级；这组数据不能代表成熟玩家，且策略资源分配仍有改进空间。\n- 正式数值保持，本次没有Git提交。\n`;
   fs.writeFileSync(reportFile,md.replace('## 已通关关卡分布',highlights+'\n## 已通关关卡分布')+supplement);console.log(JSON.stringify({report:reportFile,analysis:detailedDir,summary:analysis.summary,summaries,strongest,weakest,largestGap},null,2));return analysis;
 }
-if(require.main===module)analyze(path.resolve(process.argv[2]||'artifacts/balance/batch-1000-20261010'),path.resolve(process.argv[3]||'BALANCE_REPORT.md'));
+if(require.main===module)analyze(path.resolve(process.argv[2]||'artifacts/balance/batch-1000-20261010'),path.resolve(process.argv[3]||'docs/批量模拟报告.md'));
 module.exports={analyze,quantile,wilson};

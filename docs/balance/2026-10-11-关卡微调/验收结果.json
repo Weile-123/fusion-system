@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-11",
+  "rule": 9,
+  "newSamples": 300,
+  "baselineSamplesReused": 600,
+  "errors": 0,
+  "censored": 0,
+  "buildPassed": true,
+  "automaticTests": {
+    "tests": 382,
+    "pass": 382,
+    "fail": 0,
+    "skipped": 0
+  },
+  "referenceTests": {
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "protectedFiles": 647,
+  "goalCheck": [
+    {
+      "tier": "low",
+      "meanBetween": true,
+      "medianBetween": true,
+      "retainedGainPercent": 46.77
+    },
+    {
+      "tier": "mid",
+      "meanBetween": true,
+      "medianBetween": true,
+      "retainedGainPercent": 43.36
+    },
+    {
+      "tier": "high",
+      "meanBetween": true,
+      "medianBetween": true,
+      "retainedGainPercent": 35.14
+    }
+  ],
+  "replays": [
+    {
+      "tier": "low",
+      "validation": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 319,
+          "battles": 34
+        },
+        "cloud": {
+          "match": true,
+          "steps": 319,
+          "battles": 34
+        }
+      }
+    },
+    {
+      "tier": "mid",
+      "validation": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 195,
+          "battles": 19
+        },
+        "cloud": {
+          "match": true,
+          "steps": 195,
+          "battles": 19
+        }
+      }
+    },
+    {
+      "tier": "high",
+      "validation": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 3120,
+          "battles": 105
+        },
+        "cloud": {
+          "match": true,
+          "steps": 3120,
+          "battles": 105
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
+const root='docs/balance/2026-10-11-关卡微调',ready=fs.existsSync(root+'/三版本对比.json'),data=ready?JSON.parse(fs.readFileSync(root+'/三版本对比.json','utf8')):null;
+// Full traces are local-only; validate them when present and always validate summary evidence.
+const isTrace=file=>/(?:^|[\\/])完整记录[\\/](low|mid|high)-\d+\.json\.gz$/.test(file);
+test('tuning uses 300 fresh natural runs and preserves both prior reference directories',{skip:!ready},()=>{
+ for(const[f,h]of Object.entries(JSON.parse(fs.readFileSync(root+'/旧参考文件校验.json','utf8')))){if(!fs.existsSync(f)){assert.ok(isTrace(f),f);continue;}assert.equal(crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex'),h,f);}
+ for(const v of data.versions){const d=JSON.parse(fs.readFileSync(v.file,'utf8'));assert.equal(d.rulesVersion,v.rule);assert.deepEqual(d.seeds,data.seeds);assert.deepEqual(d.limits,data.limits);for(const g of d.groups){assert.equal(g.n,100);assert.equal(g.summary.errors,0);assert.equal(g.summary.censored,0);assert.equal(g.validation.cloud.match,true);assert.equal(g.validation.browserGlobal.match,true);for(const r of g.runs){assert.equal(r.status,'death');assert.equal(r.config.ads,g.id==='high'?'rewarded-success':'none');assert.ok(isTrace(r.log));if(fs.existsSync(path.join(path.dirname(v.file),'完整记录')))assert.ok(fs.existsSync(path.join(path.dirname(v.file),r.log)));}}}
+ for(const g of data.groups){assert.equal(g.pairs.length,100);for(const p of g.pairs){assert.equal(p.deltaOld,p.adjusted-p.old);assert.equal(p.deltaOriginal,p.adjusted-p.original);}}
+ assert.ok(data.goalCheck.every(g=>g.meanBetween&&g.medianBetween));
+});
+test('three-version charts use actual per-version opponents and first-battle observations',{skip:!ready},()=>{
+ const C=require('../h5/game-core.js');for(const v of data.versions){const foes=data.foes.find(f=>f.id===v.id);assert.equal(foes.values.length,1000);for(let s=1;s<=1000;s++)assert.equal(foes.values[s-1],C.opponent({stage:s,balanceRulesVersion:v.rule}).rating);for(const g of data.groups)for(const p of g.observations.find(o=>o.id===v.id).points)assert.equal(p.enemy,foes.values[p.stage-1]);}
+ assert.deepEqual(data.foes[0].values,data.foes[1].values);assert.ok(data.foes[2].values.every((v,i)=>v>data.foes[0].values[i]));
+});
+test('tuning comparison renders five curves over 1000 stages without extrapolating player observations',{skip:!ready},()=>{
+ class Element{constructor(){this.children=[];this.attributes={};this.listeners={}}append(x){this.children.push(x)}setAttribute(k,v){this.attributes[k]=v}addEventListener(k,v){this.listeners[k]=v}replaceChildren(){this.children=[]}getBoundingClientRect(){return{left:0,width:1100}}}
+ const elements=Object.fromEntries(['range','scale','charts'].map(id=>[id,new Element()]));elements.range.value='1000';elements.scale.value='linear';const document={getElementById:id=>elements[id],createElement:()=>new Element(),createElementNS:()=>new Element()},context=vm.createContext({document});
+ const html=fs.readFileSync(root+'/index.html','utf8');vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
+ for(const range of [10,50,100,1000])for(const scale of ['linear','log']){elements.range.value=String(range);elements.scale.value=scale;vm.runInContext('draw()',context);assert.equal(elements.charts.children.length,3);for(const[i,a]of elements.charts.children.entries()){const svg=a.children.find(e=>e.attributes.viewBox),ps=svg.children.filter(e=>e.attributes.d);assert.equal(ps.length,5);assert.ok(ps.every(p=>!/(NaN|Infinity)/.test(p.attributes.d)));for(let j=0;j<3;j++)assert.equal(ps[j].attributes.d.split(' ').length,data.groups[i].observations[j].points.filter(p=>p.stage<=range).length);for(let j=3;j<5;j++)assert.equal(ps[j].attributes.d.split(' ').length,range);if(range===1000){svg.listeners.pointermove({clientX:1000});assert.ok(a.children.find(e=>e.className==='tip').textContent.includes('无实测数据'));}}}
+});

@@ -111,12 +111,22 @@ function validateRun(run, strategy) {
 }
 async function handle(req, res) {
   const path = pathOf(req);
-  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:C.BALANCE_RULES_VERSION, supportedRulesVersions:[1,2,3,4,5,C.BALANCE_RULES_VERSION], randomEvents:C.EVENTS.length, synergies:C.SYNERGIES.length, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, talents:C.TALENTS.length} };
+  if (req.method === 'GET' && path === '/health') return { code: 0, message: 'ok', data: {rulesVersion:C.BALANCE_RULES_VERSION, supportedRulesVersions:Array.from({length:C.BALANCE_RULES_VERSION},(_,i)=>i+1), randomEvents:C.EVENTS.length, synergies:C.SYNERGIES.length, recoveryVersion:1, proofVersion:3, backgroundSyncVersion:1, weeklyLeaderboardVersion:1, talents:C.TALENTS.length} };
   if (req.method === 'GET' && path === '/leaderboard') {
     const query = new URL(req.url, 'http://localhost').searchParams;
     const board = boardOf(query.get('board'));
     const limit = Math.min(50, Math.max(1, Number.parseInt(query.get('limit') || '50', 10) || 50));
     if (board === 'ovr') {
+      if (query.get('scope') === 'weekly') {
+        const period = query.get('period') || 'current';
+        if (!['current','previous'].includes(period)) fail('排行榜周期无效');
+        const weekly = await rpc('get_weekly_ovr_page', {p_period:period,p_limit:limit});
+        if (weekly?.enabled === true) {
+          if (weekly.scope !== 'weekly' || weekly.period !== period || !Array.isArray(weekly.entries)) fail('周榜数据暂不可用',503);
+          return {code:0,message:'success',data:weekly};
+        }
+        if (weekly?.enabled !== false) fail('周榜数据暂不可用',503);
+      }
       const result = await rpc('get_ovr_leaderboard_page', { p_limit: limit });
       if (!Array.isArray(result?.entries)) fail('排行榜数据暂不可用', 503);
       return { code: 0, message: 'success', data: result.entries };
@@ -130,7 +140,16 @@ async function handle(req, res) {
   }
   if (req.method === 'GET' && path === '/leaderboard/me') {
     const puid = puidOf(req);
-    const board = boardOf(new URL(req.url, 'http://localhost').searchParams.get('board'));
+    const query = new URL(req.url, 'http://localhost').searchParams;
+    const board = boardOf(query.get('board'));
+    if (board === 'ovr' && query.get('scope') === 'weekly') {
+      const period = query.get('period') || 'current',weekId=query.get('weekId');
+      if (!['current','previous'].includes(period)) fail('排行榜周期无效');
+      if (weekId !== null && !/^\d{4}-\d{2}-\d{2}$/.test(weekId)) fail('排行榜周次无效');
+      const weekly=await rpc('get_weekly_ovr_rank',{p_puid:puid,p_period:period,p_week_id:weekId});
+      if (weekly?.enabled === true) return {code:0,message:'success',data:weekly};
+      if (weekly?.enabled !== false) fail('个人周排名暂不可用',503);
+    }
     return { code: 0, message: 'success', data: await rpc('get_game_leaderboard_rank', {
       p_puid: puid, p_board: board
     }) };
@@ -142,7 +161,7 @@ async function handle(req, res) {
     const displayName = typeof body.displayName === 'string' ? body.displayName.trim().slice(0, 40) : '玩家';
     const runId=body.requestId;
     const balanceRulesVersion=body.balanceRulesVersion??1;
-    if(![1,2,3,4,5,C.BALANCE_RULES_VERSION].includes(balanceRulesVersion))fail('游戏规则版本无效');
+    if(!Number.isInteger(balanceRulesVersion)||balanceRulesVersion<1||balanceRulesVersion>C.BALANCE_RULES_VERSION)fail('游戏规则版本无效');
     if(typeof runId!=='string'||!/^[0-9a-f-]{36}$/i.test(runId)||!Number.isInteger(body.seed)||body.seed<0||body.seed>4294967295)fail('开局请求无效');
     const prior=rowsOf(await rdb.from('leaderboard_runs').select('id, seed, talent, proof_version, state').eq('id',runId).eq('puid',puid).limit(1));
     if(prior.length){if(Number(prior[0].seed)!==body.seed||prior[0].talent!==body.talent||prior[0].proof_version!==3||(prior[0].state?.balanceRulesVersion||1)!==balanceRulesVersion)fail('开局记录不一致',409);return {code:0,message:'success',data:{runId,seed:body.seed,proofVersion:3,balanceRulesVersion}}}
@@ -150,7 +169,12 @@ async function handle(req, res) {
     const progress=body.progress||{};
     const cost=V.reconcileProgress(context.progress||{},progress,Number(context.earned)||0);
     const profile={...C.createGame().profile,...context.profile};
-    if(!C.talentUnlocked(C.KNOWN_TALENTS.find(item=>item.id===body.talent),profile))fail('该天赋尚无云端解锁记录；可继续本地游戏。',409);
+    const selectedTalent=C.talentForRun({talent:body.talent,balanceRulesVersion})||C.KNOWN_TALENTS.find(item=>item.id===body.talent);
+    if(balanceRulesVersion>=8&&body.talent==='win_bonus'&&!C.talentUnlocked(selectedTalent,profile)&&profile.runs>0){
+      const oldest=rowsOf(await rdb.from('leaderboard_runs').select('state').eq('puid',puid).order('created_at',{ascending:true}).limit(1))[0];
+      if(oldest&&(oldest.state?.balanceRulesVersion||1)<8)profile.metaUnlocks={...profile.metaUnlocks,talents:[...(profile.metaUnlocks?.talents||[]),'win_bonus']};
+    }
+    if(!C.talentUnlocked(selectedTalent,profile))fail('该天赋尚无云端解锁记录；可继续本地游戏。',409);
     const seed=body.seed;
     const state=C.createRun(body.talent,seed,progress,balanceRulesVersion);
     const result=await rpc('start_verified_game_run',{

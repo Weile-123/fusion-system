@@ -19,8 +19,9 @@ test('production chunks initialize event globals before the browser game core', 
       assert.equal(context.window.SupFusionEventData.length, 36);
       assert.equal(typeof context.window.SupFusionEventSystem.createSystem, 'function');
       assert.equal(core.EVENTS.length, 36);
-      assert.equal(core.BALANCE_RULES_VERSION, 6);
-      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 6);
+      assert.equal(core.BALANCE_RULES_VERSION, 9);
+      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 9);
+      assert.equal(core.RANDOM_SKILLS.length, 112);
       console.log('Production browser modules initialized');
     })().catch(error => { console.error(error); process.exitCode = 1; });
   `], { cwd: require('node:path').resolve(__dirname, '..'), encoding: 'utf8' });

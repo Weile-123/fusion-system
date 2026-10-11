@@ -2416,5 +2416,1271 @@
     "description": "持球创造 +13%、禁区终结 +9%"
   }
 ];
-  return {ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,STAR_ROWS,TALENT_DETAILS,SYNERGIES,LEGACY_SYNERGIES};
+  const RANDOM_SKILLS=[
+  {
+    "id": "sk_cmd_1",
+    "name": "运球好手",
+    "star": 1,
+    "description": "持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_atk_1",
+    "name": "篮下好手",
+    "star": 1,
+    "description": "禁区终结 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3
+      }
+    }
+  },
+  {
+    "id": "sk_str_1",
+    "name": "投篮好手",
+    "star": 1,
+    "description": "投射威胁 +3%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 3
+      }
+    }
+  },
+  {
+    "id": "sk_def_1",
+    "name": "贴身防守",
+    "star": 1,
+    "description": "外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_sus_1",
+    "name": "篮下站位",
+    "star": 1,
+    "description": "护框强度 +3%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_pln_1",
+    "name": "运投衔接",
+    "star": 1,
+    "description": "投射威胁 +2%；持球创造 +2%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 2,
+        "creation": 2
+      }
+    }
+  },
+  {
+    "id": "sk_cla_1",
+    "name": "强硬对位",
+    "star": 1,
+    "description": "禁区终结 +2%；外线限制 +2%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 2,
+        "perimeterStop": 2
+      }
+    }
+  },
+  {
+    "id": "sk_att_1",
+    "name": "禁区补位",
+    "star": 1,
+    "description": "护框强度 +4%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 4
+      }
+    }
+  },
+  {
+    "id": "sk_inc_1",
+    "name": "出场津贴",
+    "star": 1,
+    "description": "战后奖金 +1（胜负均生效）。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 1
+    }
+  },
+  {
+    "id": "sk_win_1",
+    "name": "胜场奖金",
+    "star": 1,
+    "description": "胜利奖金 +1。",
+    "effects": {
+      "dimensions": {},
+      "winCash": 1
+    }
+  },
+  {
+    "id": "sk_gold_2",
+    "name": "晋级奖励",
+    "star": 1,
+    "description": "每轮奖金 +1。",
+    "effects": {
+      "dimensions": {},
+      "stageCash": 1
+    }
+  },
+  {
+    "id": "sk_cmd_2",
+    "name": "变向高手",
+    "star": 2,
+    "description": "持球创造 +4%。",
+    "effects": {
+      "dimensions": {
+        "creation": 4
+      }
+    }
+  },
+  {
+    "id": "sk_atk_2",
+    "name": "强硬上篮",
+    "star": 2,
+    "description": "禁区终结 +4%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 4
+      }
+    }
+  },
+  {
+    "id": "sk_str_2",
+    "name": "稳定射手",
+    "star": 2,
+    "description": "投射威胁 +4%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 4
+      }
+    }
+  },
+  {
+    "id": "sk_def_2",
+    "name": "外线铁闸",
+    "star": 2,
+    "description": "外线限制 +4%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 4
+      }
+    }
+  },
+  {
+    "id": "sk_sus_2",
+    "name": "护筐好手",
+    "star": 2,
+    "description": "护框强度 +4%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 4
+      }
+    }
+  },
+  {
+    "id": "sk_pln_2",
+    "name": "急停跳投",
+    "star": 2,
+    "description": "投射威胁 +3%；持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 3,
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cla_2",
+    "name": "攻防拼劲",
+    "star": 2,
+    "description": "禁区终结 +3%；外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3,
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_att_2",
+    "name": "篮下威慑",
+    "star": 2,
+    "description": "护框强度 +6%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 6
+      }
+    }
+  },
+  {
+    "id": "sk_all_2",
+    "name": "全面身手",
+    "star": 2,
+    "description": "全能力 +3%。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 3
+    }
+  },
+  {
+    "id": "sk_inc_2",
+    "name": "轮换合同",
+    "star": 2,
+    "description": "战后奖金 +1（胜负均生效）；每轮奖金 +1。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 1,
+      "stageCash": 1
+    }
+  },
+  {
+    "id": "sk_gold_3",
+    "name": "闯关分红",
+    "star": 2,
+    "description": "每轮奖金 +2。",
+    "effects": {
+      "dimensions": {},
+      "stageCash": 2
+    }
+  },
+  {
+    "id": "sk_disc_3",
+    "name": "球鞋买手",
+    "star": 2,
+    "description": "装备售价 -1（最低1）。",
+    "effects": {
+      "dimensions": {},
+      "shopDiscount": 1
+    }
+  },
+  {
+    "id": "sk_see_3",
+    "name": "战术适应者",
+    "star": 2,
+    "description": "免除战术弱势惩罚。",
+    "effects": {
+      "dimensions": {},
+      "ignoreStrategyPenalty": true
+    }
+  },
+  {
+    "id": "sk_sup_4",
+    "name": "装备管家",
+    "star": 2,
+    "description": "每轮免费刷新装备商店 1 次。",
+    "effects": {
+      "dimensions": {},
+      "freeGearRefresh": true
+    }
+  },
+  {
+    "id": "sk_mpl_2",
+    "name": "安全控球",
+    "star": 2,
+    "description": "我方失误率 -2 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "turnoverReduction": 0.02
+    }
+  },
+  {
+    "id": "sk_mcl_2",
+    "name": "关键射手",
+    "star": 2,
+    "description": "关键分命中率 +2 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "clutchBonus": 0.02
+    }
+  },
+  {
+    "id": "sk_mat_2",
+    "name": "干扰好手",
+    "star": 2,
+    "description": "对手命中率 -2 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.02
+    }
+  },
+  {
+    "id": "sk_cb_19",
+    "name": "进阶合约",
+    "star": 2,
+    "description": "战后奖金 +1（胜负均生效）；每轮奖金 +1。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 1,
+      "stageCash": 1
+    }
+  },
+  {
+    "id": "sk_cmd_3",
+    "name": "节奏大师",
+    "star": 3,
+    "description": "持球创造 +6%。",
+    "effects": {
+      "dimensions": {
+        "creation": 6
+      }
+    }
+  },
+  {
+    "id": "sk_atk_3",
+    "name": "对抗终结者",
+    "star": 3,
+    "description": "禁区终结 +6%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 6
+      }
+    }
+  },
+  {
+    "id": "sk_str_3",
+    "name": "神射手",
+    "star": 3,
+    "description": "投射威胁 +6%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 6
+      }
+    }
+  },
+  {
+    "id": "sk_def_3",
+    "name": "持球压迫者",
+    "star": 3,
+    "description": "外线限制 +6%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 6
+      }
+    }
+  },
+  {
+    "id": "sk_sus_3",
+    "name": "禁区屏障",
+    "star": 3,
+    "description": "护框强度 +6%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 6
+      }
+    }
+  },
+  {
+    "id": "sk_pln_3",
+    "name": "运球投篮高手",
+    "star": 3,
+    "description": "投射威胁 +4%；持球创造 +4%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 4,
+        "creation": 4
+      }
+    }
+  },
+  {
+    "id": "sk_cla_3",
+    "name": "双向好手",
+    "star": 3,
+    "description": "禁区终结 +4%；外线限制 +4%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 4,
+        "perimeterStop": 4
+      }
+    }
+  },
+  {
+    "id": "sk_att_3",
+    "name": "护筐专家",
+    "star": 3,
+    "description": "护框强度 +8%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 8
+      }
+    }
+  },
+  {
+    "id": "sk_all_3",
+    "name": "全能好手",
+    "star": 3,
+    "description": "全能力 +4%。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 4
+    }
+  },
+  {
+    "id": "sk_eall_3",
+    "name": "出手干扰者",
+    "star": 3,
+    "description": "对手命中率 -1 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.01
+    }
+  },
+  {
+    "id": "sk_inc_3",
+    "name": "稳定合同",
+    "star": 3,
+    "description": "战后奖金 +2（胜负均生效）。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 2
+    }
+  },
+  {
+    "id": "sk_win_3",
+    "name": "赢球分红",
+    "star": 3,
+    "description": "胜利奖金 +2。",
+    "effects": {
+      "dimensions": {},
+      "winCash": 2
+    }
+  },
+  {
+    "id": "sk_gold_5",
+    "name": "晋级赞助",
+    "star": 3,
+    "description": "每轮奖金 +3。",
+    "effects": {
+      "dimensions": {},
+      "stageCash": 3
+    }
+  },
+  {
+    "id": "sk_disc_5",
+    "name": "品牌代言人",
+    "star": 3,
+    "description": "每轮奖金 +2；装备售价 -1（最低1）。",
+    "effects": {
+      "dimensions": {},
+      "stageCash": 2,
+      "shopDiscount": 1
+    }
+  },
+  {
+    "id": "sk_see_5",
+    "name": "战术大师",
+    "star": 3,
+    "description": "投射威胁 +2%；持球创造 +2%；免除战术弱势惩罚。",
+    "effects": {
+      "dimensions": {
+        "shooting": 2,
+        "creation": 2
+      },
+      "ignoreStrategyPenalty": true
+    }
+  },
+  {
+    "id": "sk_sup_5",
+    "name": "护筐补给",
+    "star": 3,
+    "description": "护框强度 +4%；每轮免费刷新装备商店 1 次。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 4
+      },
+      "freeGearRefresh": true
+    }
+  },
+  {
+    "id": "sk_ctr_3",
+    "name": "空间惩罚者",
+    "star": 3,
+    "description": "外线拉开克制护框收缩时，投射威胁 +3%。",
+    "effects": {
+      "dimensions": {},
+      "outsideCounterBonus": 3
+    }
+  },
+  {
+    "id": "sk_cnt_3",
+    "name": "护筐拉开",
+    "star": 3,
+    "description": "护框强度 +5%；外线拉开克制护框收缩时，投射威胁 +3%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 5
+      },
+      "outsideCounterBonus": 3
+    }
+  },
+  {
+    "id": "sk_heal_3",
+    "name": "赢球鼓舞",
+    "star": 3,
+    "description": "每 4 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {},
+      "healEveryWins": 4,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_rg_3",
+    "name": "防守振奋",
+    "star": 3,
+    "description": "对手命中率 -2 个百分点；每 5 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.02,
+      "healEveryWins": 5,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_cb_1",
+    "name": "突破铁闸",
+    "star": 3,
+    "description": "禁区终结 +3%；外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3,
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_4",
+    "name": "内外铁闸",
+    "star": 3,
+    "description": "外线限制 +3%；护框强度 +3%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 3,
+        "rimStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_14",
+    "name": "控球铁闸",
+    "star": 3,
+    "description": "持球创造 +3%；外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "creation": 3,
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_16",
+    "name": "攻防串联者",
+    "star": 3,
+    "description": "护框强度 +5%；投射威胁 +2.5%；持球创造 +2.5%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 5,
+        "shooting": 2.5,
+        "creation": 2.5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_18",
+    "name": "护筐合约",
+    "star": 3,
+    "description": "护框强度 +4%；战后奖金 +1（胜负均生效）。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 4
+      },
+      "battleCash": 1
+    }
+  },
+  {
+    "id": "sk_cb_26",
+    "name": "防守领袖",
+    "star": 3,
+    "description": "外线限制 +4%；每 6 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 4
+      },
+      "healEveryWins": 6,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_cb_29",
+    "name": "单挑多面手",
+    "star": 3,
+    "description": "全能力 +3%；我方失误率 -1 个百分点；关键分命中率 +1 个百分点；对手命中率 -1 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 3,
+      "turnoverReduction": 0.01,
+      "clutchBonus": 0.01,
+      "opponentPenalty": 0.01
+    }
+  },
+  {
+    "id": "sk_cmd_4",
+    "name": "控场核心",
+    "star": 4,
+    "description": "持球创造 +8%。",
+    "effects": {
+      "dimensions": {
+        "creation": 8
+      }
+    }
+  },
+  {
+    "id": "sk_atk_4",
+    "name": "隔扣高手",
+    "star": 4,
+    "description": "禁区终结 +8%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 8
+      }
+    }
+  },
+  {
+    "id": "sk_str_4",
+    "name": "远投专家",
+    "star": 4,
+    "description": "投射威胁 +8%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 8
+      }
+    }
+  },
+  {
+    "id": "sk_def_4",
+    "name": "锁防专家",
+    "star": 4,
+    "description": "外线限制 +8%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 8
+      }
+    }
+  },
+  {
+    "id": "sk_sus_4",
+    "name": "篮下守护者",
+    "star": 4,
+    "description": "护框强度 +8%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 8
+      }
+    }
+  },
+  {
+    "id": "sk_pln_4",
+    "name": "持球神射手",
+    "star": 4,
+    "description": "投射威胁 +5%；持球创造 +5%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 5,
+        "creation": 5
+      }
+    }
+  },
+  {
+    "id": "sk_cla_4",
+    "name": "攻防尖兵",
+    "star": 4,
+    "description": "禁区终结 +5%；外线限制 +5%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 5,
+        "perimeterStop": 5
+      }
+    }
+  },
+  {
+    "id": "sk_att_4",
+    "name": "禁区铁壁",
+    "star": 4,
+    "description": "护框强度 +10%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 10
+      }
+    }
+  },
+  {
+    "id": "sk_all_4",
+    "name": "全能核心",
+    "star": 4,
+    "description": "全能力 +5%。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 5
+    }
+  },
+  {
+    "id": "sk_eall_4",
+    "name": "投篮破坏者",
+    "star": 4,
+    "description": "对手命中率 -2 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.02
+    }
+  },
+  {
+    "id": "sk_inc_4",
+    "name": "主力合同",
+    "star": 4,
+    "description": "战后奖金 +2（胜负均生效）；每轮奖金 +1。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 2,
+      "stageCash": 1
+    }
+  },
+  {
+    "id": "sk_ctr_4",
+    "name": "收缩克星",
+    "star": 4,
+    "description": "外线拉开克制护框收缩时，投射威胁 +5%。",
+    "effects": {
+      "dimensions": {},
+      "outsideCounterBonus": 5
+    }
+  },
+  {
+    "id": "sk_amb_4",
+    "name": "攻防拉开",
+    "star": 4,
+    "description": "禁区终结 +3%；外线限制 +3%；外线拉开克制护框收缩时，投射威胁 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3,
+        "perimeterStop": 3
+      },
+      "outsideCounterBonus": 3
+    }
+  },
+  {
+    "id": "sk_mpl_4",
+    "name": "控球保险箱",
+    "star": 4,
+    "description": "我方失误率 -4 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "turnoverReduction": 0.04
+    }
+  },
+  {
+    "id": "sk_mcl_4",
+    "name": "关键先生",
+    "star": 4,
+    "description": "关键分命中率 +4 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "clutchBonus": 0.04
+    }
+  },
+  {
+    "id": "sk_mat_4",
+    "name": "窒息防守",
+    "star": 4,
+    "description": "对手命中率 -4 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.04
+    }
+  },
+  {
+    "id": "sk_rg_4",
+    "name": "稳控领袖",
+    "star": 4,
+    "description": "我方失误率 -2 个百分点；每 4 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {},
+      "turnoverReduction": 0.02,
+      "healEveryWins": 4,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_rg_4b",
+    "name": "关键攻防",
+    "star": 4,
+    "description": "关键分命中率 +3 个百分点；对手命中率 -3 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "clutchBonus": 0.03,
+      "opponentPenalty": 0.03
+    }
+  },
+  {
+    "id": "sk_cb_2",
+    "name": "内外开弓",
+    "star": 4,
+    "description": "投射威胁 +4%；禁区终结 +4%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 4,
+        "finishing": 4
+      }
+    }
+  },
+  {
+    "id": "sk_cb_6",
+    "name": "四维好手",
+    "star": 4,
+    "description": "禁区终结 +3%；外线限制 +3%；投射威胁 +3%；持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3,
+        "perimeterStop": 3,
+        "shooting": 3,
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_10",
+    "name": "控投护筐",
+    "star": 4,
+    "description": "护框强度 +4%；投射威胁 +3%；持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 4,
+        "shooting": 3,
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_11",
+    "name": "空间攻防手",
+    "star": 4,
+    "description": "禁区终结 +3%；外线限制 +3%；外线拉开克制护框收缩时，投射威胁 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3,
+        "perimeterStop": 3
+      },
+      "outsideCounterBonus": 3
+    }
+  },
+  {
+    "id": "sk_cb_13",
+    "name": "突破控场者",
+    "star": 4,
+    "description": "持球创造 +4%；禁区终结 +3%；外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "creation": 4,
+        "finishing": 3,
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_15",
+    "name": "防守支柱",
+    "star": 4,
+    "description": "外线限制 +5%；护框强度 +5%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 5,
+        "rimStop": 5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_17",
+    "name": "篮下镇守者",
+    "star": 4,
+    "description": "护框强度 +10%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 10
+      }
+    }
+  },
+  {
+    "id": "sk_cb_20",
+    "name": "装备赞助商",
+    "star": 4,
+    "description": "战后奖金 +2（胜负均生效）；装备售价 -1（最低1）。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 2,
+      "shopDiscount": 1
+    }
+  },
+  {
+    "id": "sk_cb_21",
+    "name": "球场领袖",
+    "star": 4,
+    "description": "全能力 +4%；每 5 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 4,
+      "healEveryWins": 5,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_cb_23",
+    "name": "持球狙击手",
+    "star": 4,
+    "description": "投射威胁 +6%；持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 6,
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_24",
+    "name": "禁区防守支柱",
+    "star": 4,
+    "description": "外线限制 +3%；护框强度 +6%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 3,
+        "rimStop": 6
+      }
+    }
+  },
+  {
+    "id": "sk_cb_28",
+    "name": "护筐空间手",
+    "star": 4,
+    "description": "护框强度 +6%；外线拉开克制护框收缩时，投射威胁 +4%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 6
+      },
+      "outsideCounterBonus": 4
+    }
+  },
+  {
+    "id": "sk_cmd_5",
+    "name": "脚踝终结者",
+    "star": 5,
+    "description": "持球创造 +10%。",
+    "effects": {
+      "dimensions": {
+        "creation": 10
+      }
+    }
+  },
+  {
+    "id": "sk_atk_5",
+    "name": "禁区统治者",
+    "star": 5,
+    "description": "禁区终结 +10%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 10
+      }
+    }
+  },
+  {
+    "id": "sk_str_5",
+    "name": "无限射程",
+    "star": 5,
+    "description": "投射威胁 +10%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 10
+      }
+    }
+  },
+  {
+    "id": "sk_def_5",
+    "name": "外线封锁者",
+    "star": 5,
+    "description": "外线限制 +10%。",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 10
+      }
+    }
+  },
+  {
+    "id": "sk_sus_5",
+    "name": "禁区守门人",
+    "star": 5,
+    "description": "护框强度 +10%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 10
+      }
+    }
+  },
+  {
+    "id": "sk_pln_5",
+    "name": "进攻万花筒",
+    "star": 5,
+    "description": "投射威胁 +6%；持球创造 +6%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 6,
+        "creation": 6
+      }
+    }
+  },
+  {
+    "id": "sk_cla_5",
+    "name": "双向统治者",
+    "star": 5,
+    "description": "禁区终结 +6%；外线限制 +6%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 6,
+        "perimeterStop": 6
+      }
+    }
+  },
+  {
+    "id": "sk_att_5",
+    "name": "篮筐封锁者",
+    "star": 5,
+    "description": "护框强度 +12%。",
+    "effects": {
+      "dimensions": {
+        "rimStop": 12
+      }
+    }
+  },
+  {
+    "id": "sk_all_5",
+    "name": "全能巨星",
+    "star": 5,
+    "description": "全能力 +7%。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 7
+    }
+  },
+  {
+    "id": "sk_eall_5",
+    "name": "投篮噩梦",
+    "star": 5,
+    "description": "对手命中率 -3 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "opponentPenalty": 0.03
+    }
+  },
+  {
+    "id": "sk_inc_5",
+    "name": "顶薪合同",
+    "star": 5,
+    "description": "战后奖金 +3（胜负均生效）。",
+    "effects": {
+      "dimensions": {},
+      "battleCash": 3
+    }
+  },
+  {
+    "id": "sk_win_5",
+    "name": "冠军红利",
+    "star": 5,
+    "description": "胜利奖金 +3。",
+    "effects": {
+      "dimensions": {},
+      "winCash": 3
+    }
+  },
+  {
+    "id": "sk_ctr_5",
+    "name": "禁区拆解者",
+    "star": 5,
+    "description": "外线拉开克制护框收缩时，投射威胁 +7%。",
+    "effects": {
+      "dimensions": {},
+      "outsideCounterBonus": 7
+    }
+  },
+  {
+    "id": "sk_pre_5",
+    "name": "空间掌控者",
+    "star": 5,
+    "description": "投射威胁 +4%；持球创造 +4%；外线拉开克制护框收缩时，投射威胁 +5%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 4,
+        "creation": 4
+      },
+      "outsideCounterBonus": 5
+    }
+  },
+  {
+    "id": "sk_mall_5",
+    "name": "决胜掌控者",
+    "star": 5,
+    "description": "我方失误率 -3 个百分点；关键分命中率 +3 个百分点；对手命中率 -3 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "turnoverReduction": 0.03,
+      "clutchBonus": 0.03,
+      "opponentPenalty": 0.03
+    }
+  },
+  {
+    "id": "sk_heal_5",
+    "name": "胜利领袖",
+    "star": 5,
+    "description": "每 3 场胜利士气 +1（可突破初始上限）。",
+    "effects": {
+      "dimensions": {},
+      "healEveryWins": 3,
+      "winHeal": 1
+    }
+  },
+  {
+    "id": "sk_cb_3",
+    "name": "持球进攻核心",
+    "star": 5,
+    "description": "持球创造 +5%；投射威胁 +5%。",
+    "effects": {
+      "dimensions": {
+        "creation": 5,
+        "shooting": 5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_5",
+    "name": "球场招牌",
+    "star": 5,
+    "description": "全能力 +4%；战后奖金 +2（胜负均生效）。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 4,
+      "battleCash": 2
+    }
+  },
+  {
+    "id": "sk_cb_7",
+    "name": "双向巨星",
+    "star": 5,
+    "description": "禁区终结 +3.5%；外线限制 +3.5%；全能力 +3%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 3.5,
+        "perimeterStop": 3.5
+      },
+      "allDimensions": 3
+    }
+  },
+  {
+    "id": "sk_cb_8",
+    "name": "运投大师",
+    "star": 5,
+    "description": "投射威胁 +7.5%；持球创造 +3.5%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 7.5,
+        "creation": 3.5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_9",
+    "name": "攻防发动机",
+    "star": 5,
+    "description": "持球创造 +4%；禁区终结 +3.5%；外线限制 +3.5%。",
+    "effects": {
+      "dimensions": {
+        "creation": 4,
+        "finishing": 3.5,
+        "perimeterStop": 3.5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_12",
+    "name": "双向进攻核心",
+    "star": 5,
+    "description": "投射威胁 +3%；持球创造 +3%；禁区终结 +3%；外线限制 +3%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 3,
+        "creation": 3,
+        "finishing": 3,
+        "perimeterStop": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_22",
+    "name": "关键终结者",
+    "star": 5,
+    "description": "禁区终结 +6%；关键分命中率 +2 个百分点。",
+    "effects": {
+      "dimensions": {
+        "finishing": 6
+      },
+      "clutchBonus": 0.02
+    }
+  },
+  {
+    "id": "sk_cb_25",
+    "name": "强力冲筐者",
+    "star": 5,
+    "description": "禁区终结 +9.5%；外线限制 +2.5%。",
+    "effects": {
+      "dimensions": {
+        "finishing": 9.5,
+        "perimeterStop": 2.5
+      }
+    }
+  },
+  {
+    "id": "sk_cb_27",
+    "name": "持球投篮大师",
+    "star": 5,
+    "description": "投射威胁 +9%；持球创造 +3%。",
+    "effects": {
+      "dimensions": {
+        "shooting": 9,
+        "creation": 3
+      }
+    }
+  },
+  {
+    "id": "sk_cb_30",
+    "name": "单挑之王",
+    "star": 5,
+    "description": "全能力 +5%；我方失误率 -2 个百分点；关键分命中率 +2 个百分点；对手命中率 -2 个百分点。",
+    "effects": {
+      "dimensions": {},
+      "allDimensions": 5,
+      "turnoverReduction": 0.02,
+      "clutchBonus": 0.02,
+      "opponentPenalty": 0.02
+    }
+  }
+];
+  return {RANDOM_SKILLS,ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,STAR_ROWS,TALENT_DETAILS,SYNERGIES,LEGACY_SYNERGIES};
 });

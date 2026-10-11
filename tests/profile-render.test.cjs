@@ -28,6 +28,64 @@ test('OVR medals show peak stage below score and list rows show it inline',()=>{
   assert.equal((ovr.match(/leaderboard-peak-stage/g)||[]).length,2);
   assert.ok(!render('点').includes('第58关'));
 });
+test('weekly OVR layout keeps the cumulative legend board and gates archive on backend support',()=>{
+  const source=read('src/react-screens.jsx');
+  const component=source.slice(source.indexOf('function LeaderboardPage('),source.indexOf('function TalentScreen('));
+  const context={React,module:{exports:{}}};
+  vm.runInNewContext(transformSync(component+'\nmodule.exports=LeaderboardScreen;', {loader:'jsx'}).code,context);
+  const props={boards:{legend:[],ovr:[]},mine:{legend:{rank:1,score:300},ovr:null},status:{legend:'',ovr:'暂无成绩'},playerName:'Me',busy:false,week:{range:'10月12日—10月18日 · 北京时间',countdown:'2天 08:35:16'}};
+  const render=extra=>renderToStaticMarkup(React.createElement(context.module.exports,{...props,...extra}));
+  const legacy=render({tab:'ovr'});
+  assert.ok(!legacy.includes('周榜即将开放，当前展示历史最高 OVR'));
+  assert.match(legacy,/disabled="".*查看上周前50名/);
+  assert.ok(!legacy.includes('本周最高 OVR'));
+  const weekly=render({tab:'ovr',weeklySupported:true});
+  assert.match(weekly,/本周最高 OVR/);assert.match(weekly,/距离下一周/);assert.match(weekly,/2天 08:35:16/);
+  const archive=render({tab:'ovr',weeklySupported:true,period:'previous'});
+  assert.match(archive,/上周最高 OVR/);assert.match(archive,/返回本周排行榜/);
+  assert.ok(archive.includes('我的排名'));assert.ok(archive.includes('未上榜'));assert.ok(!archive.includes('data-week-countdown'));
+  assert.ok(!archive.includes('上一周排名已封榜'));assert.ok(!archive.includes('已封榜'));
+  const rankedArchive=render({tab:'ovr',weeklySupported:true,period:'previous',boards:{legend:[],ovr:[{rank:12,name:'旧昵称',score:391,stage:58,isCurrent:true}]}});
+  assert.match(rankedArchive,/391 <small class="leaderboard-inline-rank" aria-label="第12名">#12/);
+  assert.ok(rankedArchive.includes('旧昵称'));assert.ok(weekly.indexOf('leaderboard-switch')<weekly.indexOf('leaderboard-my-rank'));
+  const legend=render({tab:'legend',weeklySupported:true});
+  assert.match(legend,/300/);assert.ok(!legend.includes('leaderboard-week-card'));assert.ok(!legend.includes('距离下一周'));
+});
+
+test('weekly clock uses Beijing Monday boundaries and accepts only explicit weekly metadata',()=>{
+  const source=read('h5/game-ui.js');
+  const fakeDate=class extends Date {static now(){return Date.parse('2026-10-11T15:59:59Z')}};
+  const context={Date:fakeDate,leaderboardWeek:null};
+  vm.createContext(context);
+  vm.runInContext(source.slice(source.indexOf('  function leaderboardWeekView('),source.indexOf("  document.addEventListener('visibilitychange'")),context);
+  assert.equal(context.leaderboardWeekView().countdown,'0天 00:00:01');
+  assert.equal(context.leaderboardWeekView().range,'10月5日—10月11日');
+  fakeDate.now=()=>Date.parse('2026-10-11T16:00:00Z');
+  assert.equal(context.leaderboardWeekView().countdown,'7天 00:00:00');
+  assert.equal(context.acceptLeaderboardWeek([]),null);
+  assert.equal(context.acceptLeaderboardWeek({scope:'weekly',weekId:'bad'}),null);
+  context.leaderboardWeek=context.acceptLeaderboardWeek({scope:'weekly',weekId:'2026-10-12',startsAt:'2026-10-11T16:00:00Z',endsAt:'2026-10-18T16:00:00Z',serverTime:'2026-10-12T16:00:00Z'});
+  assert.equal(context.leaderboardWeekView().countdown,'6天 00:00:00');
+});
+
+test('leaderboard fetch accepts old arrays but never shows them as last week rankings',async()=>{
+  const source=read('h5/game-ui.js');
+  const context={window:{ACTIVITY_API_BASE:'https://example.test',ColorboxAI:{cloud:{request:async()=>({statusCode:200,data:[{score:427,stage:58}]})}}},
+    leaderboardPeriod:'current',leaderboardWeek:null,leaderboardWeeklySupported:false,leaderboardPreview:null,leaderboardBoards:{legend:[],ovr:[]},leaderboardStatus:{},leaderboardMine:{legend:null,ovr:null},screen:'leaderboard',renderLeaderboard(){},withTimeout:value=>value};
+  vm.createContext(context);
+  vm.runInContext(source.slice(source.indexOf('  function acceptLeaderboardWeek('),source.indexOf("  document.addEventListener('visibilitychange'")),context);
+  vm.runInContext(source.slice(source.indexOf('  async function fetchLeaderboard('),source.indexOf('  function renderTalent(')),context);
+  await context.fetchLeaderboard();
+  assert.equal(context.leaderboardBoards.ovr[0].score,427);assert.equal(context.leaderboardWeeklySupported,false);
+  context.leaderboardPeriod='previous';context.leaderboardBoards.ovr=[];
+  await context.fetchLeaderboard();
+  assert.equal(context.leaderboardBoards.ovr.length,0);assert.match(context.leaderboardStatus.ovr,/暂不可用/);
+  context.window.ColorboxAI.cloud.request=async()=>({statusCode:200,data:{scope:'weekly',period:'current',weekId:'2026-10-12',startsAt:'2026-10-11T16:00:00Z',endsAt:'2026-10-18T16:00:00Z',serverTime:'2026-10-12T00:00:00Z',entries:[{score:500}]}});
+  await context.fetchLeaderboard();assert.equal(context.leaderboardBoards.ovr.length,0);
+  context.window.ColorboxAI.cloud.request=async()=>({statusCode:200,data:{scope:'weekly',period:'previous',weekId:'2026-10-05',startsAt:'2026-10-04T16:00:00Z',endsAt:'2026-10-11T16:00:00Z',serverTime:'2026-10-12T00:00:00Z',entries:[{score:427,stage:58,displayName:'旧昵称',isCurrent:true}]}});
+  await context.fetchLeaderboard();assert.equal(context.leaderboardBoards.ovr[0].isCurrent,true);assert.equal(context.leaderboardBoards.ovr[0].name,'旧昵称');
+});
+
 function profileMarkup({collected=true,tab='stars',tier='all',bondSize='all'}={}){
   const source=read('h5/game-ui.js'),game=C.createGame();
   if(collected)game.profile.discovered=C.STARS.map(star=>star.id);

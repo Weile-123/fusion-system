@@ -6,16 +6,19 @@
   const els=Object.fromEntries(['home','leaderboard','talent','recruit','roster','shop','duel','result','report','profile','pointshop'].map(id=>[id,document.getElementById(id)]));
   const batchActionRoot=document.getElementById('batch-action-root');
   let game=C.createGame(),screen='home',restoring=true,talentOffer=[],selectedTalent='',selectedOffer='',selectedPlace=null,showBonds=false,showStrategyPicker=false,showExpandConfirm=false,showNewJourneyConfirm=false,showTalentCatalog=false,showCurrentTalent=false,showRecruitSheet=false,recruitSheetMessage='',rewardVideoBusy=false,rewardTaskState=null,rewardTaskError='',reportReviveBusy=false,reportReviveMessage='',posterPhase='idle',posterMessage='',posterBlob=null,posterPreviewUrl='',showPosterPreview=false,detailStar='',detailContext=null,gearDetailId='',gearReplaceId='',strategy='collapse',shopTab='boost',shopSlideFrom='boost',gearCollectionTab='gear',gearCollectionSlideFrom='gear',rosterTraining=false,pointShopTab='upgrades',pointShopSlideFrom='upgrades',profileTier='all',profileTab='stars',profileSlideFrom='stars',batchRevealPending=false,lastJerseyUnlock='',playerName='玩家',playerNameNotice='',playerInfoChecked=false,playerInfoRequest=null,saveQueue=Promise.resolve();
-  let sellConfirm=null,talentAdBusy=false,talentAdUnlocked=false,talentAdMessage='',leaderboardTab='legend',cloudStartBusy=false,cloudQueue=Promise.resolve();
+  let sellConfirm=null,pendingSellConfirm=null,talentAdBusy=false,talentAdUnlocked=false,talentAdMessage='',leaderboardTab='legend',cloudStartBusy=false,cloudQueue=Promise.resolve();
   let leaderboardBoards={legend:[],ovr:[]},leaderboardStatus={legend:'正在加载榜单…',ovr:'正在加载榜单…'},leaderboardMine={legend:null,ovr:null};
   const cloudBattleRequests=new WeakMap();
   let leaderboardLoadRequest=null,leaderboardRefreshRequest=null,leaderboardBusy=false,leaderboardTimer=null;
+  let leaderboardPeriod='current',leaderboardWeek=null,leaderboardWeeklySupported=false,leaderboardClockTimer=null;
+  let leaderboardPreview=null;
   let pointShopMessage='',jerseyUnlockResult='',legendaryGearUnlockResult='';
   let profileBondSize='all';
+  let skillAdBusy=false,skillMessage='',skillPickCandidate='';
   const ANNOUNCEMENT_VERSION='2026-10-10';
   let showAnnouncement=false;
   let showFeedback=false,feedbackDraft='',feedbackBusy=false,feedbackMessage='';
-  const recordedActions=['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent'];
+  const recordedActions=['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','refreshRandomSkill','enterSkillAdPick','confirmSkillAdPick','cancelSkillAdPick','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent'];
   for(const name of recordedActions){
     const original=C[name];
     C[name]=function(first,...args){
@@ -173,7 +176,7 @@
     run.openingAPlusGroups=safeNumber(source.openingAPlusGroups,0,6,run.openingAPlusGroups);
     run.forceRareRecruit=source.forceRareRecruit===true;
     run.morale=safeNumber(source.morale,0,source.balanceRulesVersion>=2||source.talent==='captain'?13:3,3);
-    run.talentWinHealGranted=safeNumber(source.talentWinHealGranted,0,10,Math.min(10,Math.floor((source.wins||0)/2)));
+    run.talentWinHealGranted=safeNumber(source.talentWinHealGranted,0,run.balanceRulesVersion>=8?Number.MAX_SAFE_INTEGER:10,Math.min(10,Math.floor((source.wins||0)/2)));
     if(run.balanceRulesVersion>=2)run.bondWinHealCounters=Object.fromEntries(C.synergiesForRun(run).filter(bond=>bond.effect?.winHeal&&Number.isInteger(source.bondWinHealCounters?.[bond.id])).map(bond=>[bond.id,safeNumber(source.bondWinHealCounters[bond.id],0,bond.effect.healEveryWins-1,0)]));
     run.cash=safeNumber(source.cash,0,1000000,source.balanceRulesVersion>=2?12:16);
     run.free=safeNumber(source.free,0,1000,0);
@@ -287,6 +290,7 @@
     if(run.lastBattle&&source.lastBattle?.eventSnapshot)run.lastBattle.eventSnapshot=JSON.parse(JSON.stringify(source.lastBattle.eventSnapshot));
     C.restoreEventState(run,source);
     if(run.eventState)restored.profile.discoveredEvents=[...new Set([...restored.profile.discoveredEvents,...run.eventState.seen])];
+    C.restoreRandomSkills(run,source);
     restored.run=run;
     if(depth===0)recordBondAchievements(restored);
     return restored;
@@ -294,7 +298,7 @@
   function top(){
     const r=game.run;
     const header=document.querySelector('.top');
-    const currentTalent=C.KNOWN_TALENTS.find(item=>item.id===r?.talent);
+    const currentTalent=C.talentForRun(r)||C.KNOWN_TALENTS.find(item=>item.id===r?.talent);
     const back=screen==='roster'?['current-talent-open',`当前天赋：${currentTalent?.name||'未选择'}`]:
       screen==='talent'?['home','返回首页']:
       ['recruit','shop','duel'].includes(screen)?['roster','返回阵容']:
@@ -331,6 +335,7 @@
     }else if(!hideBack)header.appendChild(backButton('home','返回首页'));
   }
   function go(id){
+    pendingSellConfirm=null;
     if(id!=='leaderboard')clearLeaderboardTimer();
     if(id!=='report'&&showPosterPreview)resetCareerPoster();
     if(id!=='roster')sellConfirm=null;
@@ -385,8 +390,25 @@
        <button type="button" class="home-feedback button-7" data-act="feedback-open">反馈入口</button>`;
   }
   function renderLeaderboard(){
-    window.SupFusionReactScreens?.renderLeaderboard(els.leaderboard,{boards:leaderboardBoards,tab:leaderboardTab,status:leaderboardStatus,mine:leaderboardMine,playerName,busy:leaderboardBusy});
+    window.SupFusionReactScreens?.renderLeaderboard(els.leaderboard,{boards:leaderboardBoards,tab:leaderboardTab,status:leaderboardStatus,mine:leaderboardMine,playerName,busy:leaderboardBusy,period:leaderboardPeriod,weeklySupported:leaderboardWeeklySupported,week:leaderboardWeekView()});
   }
+  function leaderboardWeekView(){
+    const now=Date.now()+(leaderboardWeek?.clockOffset||0),day=86400000;
+    const beijing=new Date(now+8*3600000);
+    const monday=Date.UTC(beijing.getUTCFullYear(),beijing.getUTCMonth(),beijing.getUTCDate())-((beijing.getUTCDay()+6)%7)*day-8*3600000;
+    const start=leaderboardWeek?.startsAt??monday,end=leaderboardWeek?.endsAt??monday+7*day;
+    const date=value=>{const d=new Date(value+8*3600000);return `${d.getUTCMonth()+1}月${d.getUTCDate()}日`};
+    const remaining=Math.max(0,Math.ceil((end-now)/1000));
+    const pad=value=>String(value).padStart(2,'0');
+    return {range:`${date(start)}—${date(end-day)}`,countdown:`${Math.floor(remaining/86400)}天 ${pad(Math.floor(remaining/3600)%24)}:${pad(Math.floor(remaining/60)%60)}:${pad(remaining%60)}`,remaining};
+  }
+  function acceptLeaderboardWeek(data){
+    if(data?.scope!=='weekly')return null;
+    const startsAt=Date.parse(data.startsAt),endsAt=Date.parse(data.endsAt),serverTime=Date.parse(data.serverTime);
+    if(!data.weekId||![startsAt,endsAt,serverTime].every(Number.isFinite)||endsAt<=startsAt)return null;
+    return {weekId:String(data.weekId),startsAt,endsAt,clockOffset:serverTime-Date.now()};
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&screen==='leaderboard')void loadLeaderboard(true)});
   async function cloudApi(path,method='GET',data){
     const base=String(window.ACTIVITY_API_BASE||'').trim().replace(/\/$/,'');
     const envId=String(window.ACTIVITY_ENV_ID||'').trim();
@@ -466,9 +488,22 @@
   function clearLeaderboardTimer(){
     if(leaderboardTimer!==null)clearTimeout(leaderboardTimer);
     leaderboardTimer=null;
+    if(leaderboardClockTimer!==null)clearInterval(leaderboardClockTimer);
+    leaderboardClockTimer=null;
   }
   function scheduleLeaderboardRefresh(){
     clearLeaderboardTimer();
+    if(screen==='leaderboard')leaderboardClockTimer=setInterval(()=>{
+      const view=leaderboardWeekView();
+      // Keep the renderer's text-node records intact; replacing textContent on
+      // the parent leaves detached records that the next render inserts again.
+      if(leaderboardTab==='ovr')renderLeaderboard();
+      if(leaderboardWeeklySupported&&leaderboardPeriod==='current'&&view.remaining===0&&!leaderboardBusy){
+        leaderboardBoards={...leaderboardBoards,ovr:[]};leaderboardMine={...leaderboardMine,ovr:null};
+        leaderboardStatus={...leaderboardStatus,ovr:'正在加载榜单…'};
+        void loadLeaderboard();
+      }
+    },1000);
     if(screen==='leaderboard')leaderboardTimer=setTimeout(()=>{
       leaderboardTimer=null;
       if(screen==='leaderboard')void loadLeaderboard();
@@ -488,35 +523,57 @@
     return leaderboardLoadRequest;
   }
   async function fetchLeaderboard(){
+    if(leaderboardPreview){applyLeaderboardPreview();return}
     const base=String(window.ACTIVITY_API_BASE||'').trim().replace(/\/$/,'');
     if(!base){leaderboardBoards={legend:[],ovr:[]};leaderboardStatus={legend:'排行榜暂不可用。',ovr:'排行榜暂不可用。'};renderLeaderboard();return}
     if(typeof window.ColorboxAI?.cloud?.request!=='function'){
       leaderboardBoards={legend:[],ovr:[]};leaderboardStatus={legend:'当前环境无法读取排行榜。',ovr:'当前环境无法读取排行榜。'};renderLeaderboard();return;
     }
     const refreshId=Date.now();
+    const period=leaderboardPeriod;
     leaderboardStatus=Object.fromEntries(['legend','ovr'].map(board=>[board,leaderboardBoards[board].length?'':'正在加载榜单…']));renderLeaderboard();
     await Promise.all(['legend','ovr'].map(async board=>{
       try{
-        const response=await withTimeout(window.ColorboxAI.cloud.request({url:`${base}/api/leaderboard`,method:'GET',data:{board,limit:50,refreshId}}));
+        const response=await withTimeout(window.ColorboxAI.cloud.request({url:`${base}/api/leaderboard`,method:'GET',data:{board,limit:50,refreshId,...(board==='ovr'?{scope:'weekly',period}:{})}}));
+        if(leaderboardPreview||board==='ovr'&&period!==leaderboardPeriod)return;
         if(response?.statusCode!==200||response?.code!=null&&response.code!==0&&response.code!==200)throw new Error(response?.message||'排行榜读取失败。');
         const rows=Array.isArray(response.data)?response.data:response.data?.entries;
         if(!Array.isArray(rows))throw new Error('排行榜返回数据无效。');
+        if(board==='ovr'){
+          const week=response.data?.period===period?acceptLeaderboardWeek(response.data):null;
+          if(period==='previous'&&!week)throw new Error('历史周榜暂不可用。');
+          if(period==='current')leaderboardWeeklySupported=!!week;
+          leaderboardWeek=week;
+        }
         leaderboardBoards={...leaderboardBoards,[board]:rows.slice(0,50).map((row,index)=>({rank:Number.isSafeInteger(Number(row.rank))&&Number(row.rank)>0?Number(row.rank):index+1,name:String(row.displayName||row.name||'玩家').slice(0,20),score:Math.max(0,Math.floor(Number(row.score)||0)),stage:board==='ovr'&&Number.isSafeInteger(Number(row.stage))&&Number(row.stage)>0?Number(row.stage):null,isCurrent:row.isCurrent===true}))};
         leaderboardStatus={...leaderboardStatus,[board]:rows.length?'':'暂无成绩'};
+        leaderboardMine={...leaderboardMine,[board]:board==='ovr'&&period==='previous'?leaderboardBoards.ovr.find(entry=>entry.isCurrent&&entry.rank<=50)||null:null};
         if(window.ACTIVITY_ENV_ID){
           try{
-            const mineResponse=await withTimeout(window.ColorboxAI.cloud.request({url:`${base}/api/leaderboard/me`,method:'GET',data:{board,refreshId},auth:true,envId:window.ACTIVITY_ENV_ID}));
+            const mineResponse=await withTimeout(window.ColorboxAI.cloud.request({url:`${base}/api/leaderboard/me`,method:'GET',data:{board,refreshId,...(board==='ovr'&&leaderboardWeeklySupported?{scope:'weekly',period,weekId:leaderboardWeek.weekId}:{})},auth:true,envId:window.ACTIVITY_ENV_ID}));
+            if(leaderboardPreview||board==='ovr'&&period!==leaderboardPeriod)return;
             if(mineResponse?.statusCode===200&&(mineResponse?.code==null||mineResponse.code===0||mineResponse.code===200)){
               const row=mineResponse.data?.entry||mineResponse.data;
-              leaderboardMine={...leaderboardMine,[board]:row?.rank>0?{rank:Math.floor(row.rank),score:Math.max(0,Math.floor(Number(row.score)||0))}:null};
+              const ranked=row?.rank>0?{rank:Math.floor(row.rank),score:Math.max(0,Math.floor(Number(row.score)||0))}:null;
+              leaderboardMine={...leaderboardMine,[board]:board==='ovr'&&period==='previous'?leaderboardBoards.ovr.find(entry=>entry.rank===ranked?.rank&&entry.rank<=50)||null:ranked};
               leaderboardBoards={...leaderboardBoards,[board]:leaderboardBoards[board].map(entry=>({...entry,isCurrent:entry.rank===leaderboardMine[board]?.rank}))};
             }
             else leaderboardStatus={...leaderboardStatus,[board]:'个人名次暂不可用，请稍后再试。'};
-          }catch(_){leaderboardStatus={...leaderboardStatus,[board]:'个人名次暂不可用，请稍后再试。'};}
+          }catch(_){if(!leaderboardPreview&&(board!=='ovr'||period===leaderboardPeriod))leaderboardStatus={...leaderboardStatus,[board]:'个人名次暂不可用，请稍后再试。'};}
         }
-      }catch(_){leaderboardStatus={...leaderboardStatus,[board]:'排行榜暂不可用，请稍后再试。'}}
+      }catch(_){if(!leaderboardPreview&&(board!=='ovr'||period===leaderboardPeriod))leaderboardStatus={...leaderboardStatus,[board]:'排行榜暂不可用，请稍后再试。'}}
       if(screen==='leaderboard')renderLeaderboard();
     }));
+  }
+  function applyLeaderboardPreview(){
+    const data=leaderboardPreview;
+    if(!data)return;
+    leaderboardWeeklySupported=true;
+    leaderboardWeek={...data.weeks[leaderboardPeriod],clockOffset:0};
+    leaderboardBoards={legend:data.legend,ovr:leaderboardPeriod==='previous'?data.previous:data.ovr};
+    leaderboardMine={legend:data.legend.find(row=>row.isCurrent)||null,ovr:leaderboardBoards.ovr.find(row=>row.isCurrent)||null};
+    leaderboardStatus={legend:'本地模拟数据 · 不计入真实排名',ovr:'本地模拟数据 · 不计入真实排名'};
+    renderLeaderboard();
   }
   function renderTalent(){
     if(window.SupFusionReactScreens?.renderTalent){
@@ -530,31 +587,33 @@
       <div class="list">${talentOffer.map(t=>`<button class="talent button-6 ${selectedTalent===t.id?'selected':''}" data-act="talent" data-id="${t.id}"><b>✦ ${t.name} <small>${t.category}</small></b><span>${t.gain}</span><i>${t.cost==='无'?'无代价':`代价：${t.cost}`}</i></button>`).join('')}</div>
       <div class="floatingaction talent-actions"><button class="btn wide talent-confirm button-3" data-act="begin" ${talentAdBusy?'disabled':''}>确认天赋</button><button class="talent-ad button-4${talentAdBusy?' ad-busy':''}" data-act="talent-ad" ${talentAdBusy||talentAdUnlocked?'disabled':''}><span><b>${talentAdUnlocked?'已解锁自选天赋':'看广告自选天赋'}</b><small>${talentAdUnlocked?'请在上方选择天赋':'从所有已解锁天赋中自选一个'}</small></span>${talentAdBusy?'<i class="ad-loading-icon" aria-hidden="true"></i>':'<img src="assets/reward-video-icon.svg" alt="">'}</button>${talentAdMessage?`<p class="talent-ad-message" role="status">${escapeText(talentAdMessage)}</p>`:''}</div>`;
   }
-  function draftBondHints(id,extraIds=[]){
-    const identity=C.identityOf(id),baseOwned=new Set(Object.keys(game.run.owned).map(C.identityOf)),owned=new Set([...baseOwned,...extraIds.map(C.identityOf)]);
-    if(baseOwned.has(identity))return [];
-    return C.starSynergies(id,game.run).map(bond=>{
+  function draftBondHints(id,extraIds=[],run=game.run){
+    const identity=C.identityOf(id),baseOwned=new Set(Object.keys(run.owned).map(C.identityOf)),owned=new Set([...baseOwned,...extraIds.map(C.identityOf)]);
+    return C.starSynergies(id,run).map(bond=>{
       const ownedOthers=bond.ids.filter(player=>player!==identity&&owned.has(player)).length;
       if(!ownedOthers)return null;
       const afterCount=bond.ids.filter(player=>owned.has(player)||player===identity).length;
       return {name:bond.name,count:afterCount,total:bond.ids.length,active:afterCount===bond.ids.length};
-    }).filter(Boolean).sort((a,b)=>Number(b.active)-Number(a.active)||b.count-a.count).slice(0,2);
+    }).filter(Boolean).sort((a,b)=>Number(b.active)-Number(a.active)||b.count-a.count).slice(0,3);
   }
-  function draftCard(id,index){
-    const run=game.run,s=C.BY_ID[id],own=run.owned[id],value=s.attrs[s.best],batch=run.offerMode==='ten-batch';
+  function draftCard(id,index,run=game.run){
+    const s=C.BY_ID[id],own=run.owned[id],value=s.attrs[s.best],batch=run.offerMode==='ten-batch';
     const selected=batch?run.batchSelected[index]!==false:selectedOffer===id;
     const priorCopies=batch?run.offer.slice(0,index).filter((offerId,offerIndex)=>offerId===id&&run.batchSelected[offerIndex]!==false).length:0;
     const duplicate=!!own||priorCopies>0,nextStars=Math.min(C.starLimit(run,id),(own?.stars||0)+priorCopies+1);
     const batchIds=batch?run.offer.filter((_,offerIndex)=>run.batchSelected[offerIndex]!==false):[];
-    const bondHints=batch?(selected?draftBondHints(id,batchIds):[]):draftBondHints(id);
-    const bondHintMarkup=bondHints.length?`<span class="draft-bond-hints">${bondHints.map(b=>`<i class="${b.active?'active':''}">${b.name}${b.active?'':` ${b.count}/${b.total}`}</i>`).join('')}</span>`:'';
+    const bondHints=batch?(selected?draftBondHints(id,batchIds,run):[]):draftBondHints(id,[],run);
+    const bondHintMarkup=bondHints.length?`<span class="draft-bond-hints">${bondHints.map(b=>`<i class="${b.active?'active':''}" title="${escapeText(b.name+(b.active?'':` ${b.count}/${b.total}`))}">${b.name}${b.active?'':` ${b.count}/${b.total}`}</i>`).join('')}</span>`:'';
     const isSSR=s.tier==='SSR';
-    return `<div class="card ${tierClass[s.tier]} ${isSSR?'ssr-card ':''}${batch?(selected?'batch-selected':'batch-excluded'):selected?'selected':''}" style="--card-order:${index}">
-      <button class="card-select" data-act="select-offer" data-id="${id}" data-index="${index}"><span class="card-top"><span class="card-grade"><span class="rarity">${tierName[s.tier]}</span>${batch&&duplicate?`<span class="draft-upgrade">★ ${nextStars}级</span>`:''}</span>${batch?bondHintMarkup:''}</span>
-      <span class="card-visual">${isSSR?`<span class="ssr-player-art" data-player-art="${id}" aria-hidden="true"></span>`:''}<span class="visual-number">${value}</span>${batch?'':`<span class="visual-role">${duplicate?'升星':'球星招募'}${duplicate?`<span class="draft-upgrade">★ ${Math.min(C.starLimit(game.run,id),own.stars+1)}级</span>`:''}</span>`}${batch?'':bondHintMarkup}<strong>${s.name}</strong></span></button>
-      <div class="card-meta"><span>推荐 · ${C.LABELS[s.best]}位</span><button class="card-detail" data-act="star-detail" data-id="${id}">查看详情</button></div>
-      <div class="card-effect">◎ ${s.talent}：${s.talentEffect.description}</div>
+    return `<div class="card recruitment-card ${tierClass[s.tier]} ${isSSR?'ssr-card ':''}${batch?(selected?'batch-selected':'batch-excluded'):selected?'selected':''}" style="--card-order:${index}">
+      <button class="card-select" data-act="select-offer" data-id="${id}" data-index="${index}"><span class="card-top"><span class="card-grade"><span class="rarity">${tierName[s.tier]}</span></span></span>
+      <span class="card-visual"><span class="draft-court-lines" aria-hidden="true"></span><span class="visual-number"><small>OVR</small><b>${value}</b></span><span class="draft-center-hints">${duplicate?`<span class="draft-upgrade">升星·${nextStars}级</span>`:''}${bondHintMarkup}</span><strong>${escapeText(s.name)}</strong></span></button>
+      <div class="card-meta"><span class="draft-position-tags"><i>${escapeText(s.role)}</i><i>${C.LABELS[s.best]}位</i></span><button class="card-detail" data-act="star-detail" data-id="${id}">查看详情 <span aria-hidden="true">›</span></button></div>
+      <div class="draft-card-footer"><span class="draft-talent-name" title="${escapeText(s.talent+'：'+s.talentEffect.description)}">${escapeText(s.talent)}</span><span class="draft-skill-badges">${C.getRoleSkills(run,id).map(({skill})=>`<span class="random-skill-chip draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name+'：'+skill.description)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span>`).join('')}</span></div>
     </div>`;
+  }
+  function previewRecruitCards(run){
+    return `<div class="recruit-card-preview draft-style-material"><div class="draft-heading"><h1>DRAFT <small>招募卡片预览</small></h1></div><p class="draft-preview-note">模拟招募页面 · 包含升星、羁绊及各星级词条</p><div class="choicegrid grid grid-cols-2">${run.offer.map((id,index)=>draftCard(id,index,run)).join('')}</div></div>`.replace(/data-act="select-offer"/g,'data-dev="draft-select"').replace(/data-act="star-detail"/g,'data-dev="draft-detail"');
   }
   function renderBatchAction(batch,batchCount){
     if(!batchActionRoot)return;
@@ -577,7 +636,7 @@
       <div class="draft-heading"><div><h1>DRAFT <small>${batch?`十连招募 · 已选 ${batchCount}/10`:'招募'}</small></h1></div></div>
       <div class="draft-odds"><span class="draft-odd" aria-label="SSR 概率 ${pct(odds.ssrGroup)}%"><span class="tier-dot legend-dot"></span>${pct(odds.ssrGroup)}%</span><span class="draft-odd" aria-label="S 概率 ${pct(odds.S)}%"><span class="tier-dot s-dot"></span>${pct(odds.S)}%</span><span class="draft-odd" aria-label="A 概率 ${pct(odds.A)}%"><span class="tier-dot a-dot"></span>${pct(odds.A)}%</span><span class="draft-odd" aria-label="B 概率 ${pct(odds.B)}%"><span class="tier-dot b-dot"></span>${pct(odds.B)}%</span><span class="draft-odd" aria-label="C 概率 ${pct(odds.C)}%"><span class="tier-dot c-dot"></span>${pct(odds.C)}%</span></div>
       ${batch?'<p class="batch-recruit-hint">默认全部拿走 · 点击卡片取消，取消的球员将直接出售</p>':''}
-      <div class="choicegrid grid grid-cols-2">${r.offer.map(draftCard).join('')}</div>
+      <div class="choicegrid grid grid-cols-2">${r.offer.map((id,index)=>draftCard(id,index,r)).join('')}</div>
       ${batch?'':`<div class="floatingaction"><button class="btn wide" data-act="pick" ${!canSingleRecruit(r)?'disabled':''}>${r.offerMode==='rewarded-s'?`S级球员 4 选 1 · 选入 ${selected?selected.name:''} →`:!canSingleRecruit(r)?'奖金不足，无法招募':'确定选入 '+(selected?selected.name:'')+' →'}</button></div>`}`;
     renderBatchAction(batch,batchCount);
     batchRevealPending=false;
@@ -941,7 +1000,7 @@
     talentOffer=pool.slice(0,3+(game.profile.upgrades?.policyOffers||0));selectedTalent=talentOffer[0].id;talentAdBusy=false;talentAdUnlocked=false;talentAdMessage='';showNewJourneyConfirm=false;go('talent');
   }
   function unlockHint(talent){
-    return Object.entries(talent.unlock||{}).map(([key,value])=>({runs:`结算 ${value} 局`,clears:`通关主线 ${value} 次`,bestStage:`主线通过第 ${value} 关`,wins:`生涯获胜 ${value} 场`,discovered:`发现 ${value} 名球星`,bestEndless:`无尽到达第 ${value} 关`}[key]||'')).join(' · ');
+    return Object.entries(talent.unlock||{}).map(([key,value])=>({runs:`结算 ${value} 局`,clears:`通关主线 ${value} 次`,bestStage:`主线通过第 ${value} 关`,wins:`生涯获胜 ${value} 场`,discovered:`发现 ${value} 名球星`,discoveredEvents:`发现 ${value} 个事件`,bestEndless:`无尽到达第 ${value} 关`}[key]||'')).join(' · ');
   }
   function pendingPlayerPreview(id,r){
     const star=C.BY_ID[id],value=star.attrs[star.best];
@@ -968,7 +1027,20 @@
       :'<div class="event-chance"><span>'+(choices.chance?'成功率':'结算方式')+'</span><b>'+(choices.chance?Math.round(p.successRate*100)+'%':'直接获得')+'</b></div><div class="event-outcomes">'+row('成功',choices.success)+(choices.failure?row('失败',choices.failure):'')+row(choices.safe,choices.safeReward)+'</div>'+(choices.fatal?'<p class="event-risk">失败将结束本局</p>':'')+'<div class="event-actions"><button class="btn button-1 event-primary" data-act="event-main" data-id="'+e.id+'">'+escapeText(choices.main)+'</button><button class="btn event-secondary" data-act="event-safe" data-id="'+e.id+'">'+escapeText(choices.safe)+'</button></div>';
     return '<section class="modal-card event-modal event-dialog event-state-'+state+'" role="dialog" aria-modal="true" aria-labelledby="random-event-title"><div class="event-heading"><span class="event-category">'+escapeText(e.category)+' · 第 '+p.stage+' 关</span><h2 id="random-event-title">'+escapeText(e.name)+'</h2></div><p class="event-story">'+escapeText(e.story)+'</p>'+body+'</section>';
   }
+  function skillManagementAllowed(run,id){
+    if(!run?.owned[id]||detailStar!==id)return false;
+    return detailContext?.kind==='slot'?run.slots[detailContext.key]===id:detailContext?.kind==='bench'&&run.bench[detailContext.key]===id;
+  }
+  function playerSkillSection(run,id){
+    if(!C.hasRandomSkills(run))return '';
+    const entries=C.getRoleSkills(run,id),manage=skillManagementAllowed(run,id),locked=run.ended||run.lastBattle||run.pending||run.randomEvent||skillAdBusy;
+    return `<section class="detail-section random-skill-section"><span>本局随机词条</span>${entries.map(({skill,slot})=>{const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=C.SKILL_REFRESH_COSTS[used],adUsed=run.skillAdPickUsed[id]?.[slot-1],bonus=run.bonusSkillSlots?.[id]===slot;return `<div class="random-skill-entry skill-star-${skill.star}"><h3><span class="draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span></h3><p>${escapeText(skill.description)}</p>${bonus?'<p class="bonus-skill-note">满星补授 · 不可重随或广告替换</p>':manage?`<div class="random-skill-actions"><button class="button-7" data-act="skill-refresh" data-id="${id}" data-slot="${slot}" ${locked||cost===undefined||run.cash<cost?'disabled':''}>${cost===undefined?'重随次数已用完':`重随 · ${cost}奖金（${used}/3）`}</button><button class="button-4" data-act="skill-ad" data-id="${id}" data-slot="${slot}" ${locked||adUsed?'disabled':''}>${skillAdBusy?'广告加载中…':adUsed?'本槽已自选':'看广告 · 自选5星'}</button></div>`:''}</div>`}).join('')||'<p>本局首次招募出现时分配。</p>'}${manage&&skillMessage?`<p role="status">${escapeText(skillMessage)}</p>`:''}</section>`;
+  }
   function renderPending(){
+    if(game.run?.skillAdPick){
+      const r=game.run,pick=r.skillAdPick,candidate=C.SKILL_BY_ID[skillPickCandidate],choices=C.RANDOM_SKILLS.filter(s=>s.star===5&&!r.roleSkillMap[pick.playerId].includes(s.id));
+      modal.className='game-modal open';modal.markup=`<section class="modal-card skill-pick-modal" role="dialog" aria-modal="true" aria-labelledby="skill-pick-title"><div class="modal-head"><h2 id="skill-pick-title">${escapeText(C.BY_ID[pick.playerId].name)} · 5星词条自选</h2><button data-act="skill-pick-cancel" aria-label="取消选择">×</button></div>${candidate?`<h3>5★ ${escapeText(candidate.name)}</h3><p>${escapeText(candidate.description)}</p><p>将替换第${pick.slot}条词条，确认后消耗本槽自选机会。</p><div class="random-skill-actions"><button class="button-7" data-act="skill-pick-back">重新选择</button><button class="btn" data-act="skill-pick-confirm" data-id="${candidate.id}">确认替换</button></div>`:`<p>从${choices.length}条5星词条中选择，取消不消耗次数。</p><div class="skill-pick-list">${choices.map(s=>`<button class="random-skill-entry skill-star-5" data-act="skill-pick-select" data-id="${s.id}"><b>5★ ${escapeText(s.name)}</b><small>${escapeText(s.description)}</small></button>`).join('')}</div>`}</section>`;return;
+    }
     if(game.run?.randomEvent&&['roster','result','recruit','duel','shop'].includes(screen)){
       modal.className='game-modal open';modal.markup=randomEventMarkup(game.run);return;
     }
@@ -989,6 +1061,13 @@
       return;
     }
     const r=game.run,id=r?.pending;
+    if(pendingSellConfirm){
+      if(pendingSellConfirm.run!==r||pendingSellConfirm.id!==id||C.BY_ID[id]?.tier!=='SSR'){pendingSellConfirm=null;renderPending();return}
+      const star=C.BY_ID[id];
+      modal.className='game-modal open sell-confirm-modal';
+      modal.markup=`<section class="modal-card sell-confirm-sheet" role="dialog" aria-modal="true" aria-labelledby="pending-sell-confirm-title"><div class="recruit-sheet-head"><div class="recruit-sheet-heading"><span>SSR 球员</span><h2 id="pending-sell-confirm-title">确认出售${escapeText(star.name)}？</h2></div><button type="button" class="button-8" data-act="pending-sell-cancel" aria-label="取消出售">×</button></div><p>出售后将放弃这名 SSR 球员，保留当前阵容。</p><div class="sell-confirm-value">可获得 <b>${C.saleValue(id,1,r)}</b> 奖金</div><div class="expand-actions"><button class="btn dark button-2" data-act="pending-sell-cancel">取消</button><button class="btn button-1" data-act="pending-sell-confirm">确认出售</button></div></section>`;
+      return;
+    }
     if(sellConfirm&&screen==='roster'&&r){
       const {id:playerId,index}=sellConfirm,star=C.BY_ID[playerId];
       if(r.bench[index]!==playerId||!star||r.lastBattle){sellConfirm=null;renderPending();return}
@@ -1005,7 +1084,7 @@
     }
     if(showRecruitSheet&&screen==='roster'&&r){renderRecruitSheet(r);return}
     if(showCurrentTalent&&r){
-      const talent=C.KNOWN_TALENTS.find(item=>item.id===r.talent);
+      const talent=C.talentForRun(r)||C.KNOWN_TALENTS.find(item=>item.id===r.talent);
       modal.className='game-modal open';
       modal.markup=`<div class="modal-card current-talent-modal" role="dialog" aria-modal="true" aria-labelledby="current-talent-title"><div class="modal-head"><div><span>当前天赋 · ${talent?.category||'开局天赋'}</span><h2 id="current-talent-title">${talent?.name||'开局天赋'}</h2></div><button data-act="current-talent-close" aria-label="关闭">×</button></div><p>${talent?.gain||'当前旅程的开局天赋'}</p><p>代价：${talent?.cost||'无'}</p></div>`;
       return;
@@ -1063,14 +1142,13 @@
       const effective=own?C.playerEffectiveStats(r,s.id):null,shown=effective?.stats||s.attrs;
       const fits=[...C.ATTRS].sort((a,b)=>shown[b]-shown[a]).slice(0,3),bonds=C.starSynergies(s.id,r);
       const canSell=detailContext?.kind==='bench'&&r.bench[detailContext.key]===s.id&&!r.lastBattle;
-      const assigned=effective?.slot?C.LABELS[effective.slot]+'位':'未上阵';
       modal.className='game-modal open';
       modal.markup=`<div class="modal-card player-detail ${tierClass[s.tier]}">
-        <div class="modal-head detail-head"><div><span>${tierName[s.tier]} · 球员详情</span><h2>${s.name}</h2><small>${s.role} · ${s.talent}</small></div><button data-act="close-star-detail" aria-label="关闭">×</button></div>
+        <div class="modal-head detail-head"><div><span>${tierName[s.tier]} · 球员详情</span><h2>${s.name}</h2></div><button data-act="close-star-detail" aria-label="关闭">×</button></div>
         <div class="detail-scroll">
-          <div class="detail-growth"><b>${own?`${effective.stars}★/${C.starLimit(r,s.id)} · 训练 ${effective.train}/${C.trainingLimit(r,s.id)} · ${assigned}`:'未拥有 · 基础属性'}</b><span>${effective?.effect?'位置适配已激活':'当前位置无专属适配'}</span></div>
           <div class="detail-stats">${C.ATTRS.map(attr=>`<div><span>${C.LABELS[attr]}</span><b>${shown[attr]}</b>${own&&shown[attr]!==s.attrs[attr]?`<small>基础 ${s.attrs[attr]}</small>`:''}</div>`).join('')}</div>
           <section class="detail-section"><span>专属天赋</span><h3>${s.talent}</h3><p>${s.talentEffect.description}。</p></section>
+          ${playerSkillSection(r,s.id)}
           <section class="detail-section"><span>位置适配</span><div class="fit-list">${fits.map(attr=>`<b>${C.LABELS[attr]} ${shown[attr]}</b>`).join('')}</div></section>
           <section class="detail-section"><span>关联羁绊</span><div class="detail-bonds">${bonds.length?bonds.map(bond=>{const count=bond.ids.filter(player=>bondOwned.has(player)).length,active=count===bond.ids.length;return `<div class="${active?'active':''}"><strong>${bond.name}<small>${active?'已激活':`${count}/${bond.ids.length}`}</small></strong><p>${bond.ids.map(player=>`<em class="${bondOwned.has(player)?'owned':''}">${C.BY_ID[player].name}</em>`).join('')}</p><b>${bond.description}</b></div>`}).join(''):'<p>暂无关联羁绊</p>'}</div></section>
         </div>
@@ -1176,6 +1254,27 @@
   }
   async function performAction(action,button){
     const r=game.run,id=button.dataset.id;
+    if(skillAdBusy)return;
+    if(action.startsWith('skill-pick-')&&!r?.skillAdPick){skillPickCandidate='';renderPending();return;}
+    if(r?.skillAdPick&&!action.startsWith('skill-pick-')){renderPending();return;}
+    if(action==='skill-pick-select'){if(C.SKILL_BY_ID[id]?.star===5&&!r.roleSkillMap[r.skillAdPick.playerId].includes(id))skillPickCandidate=id;renderPending();return;}
+    if(action==='skill-pick-back'){skillPickCandidate='';renderPending();return;}
+    if(action==='skill-pick-cancel'){C.cancelSkillAdPick(r);skillPickCandidate='';save();renderPending();return;}
+    if(action==='skill-pick-confirm'){if(C.confirmSkillAdPick(r,id)){skillPickCandidate='';skillMessage='5星词条已替换';save();renderRoster();renderPending();}return;}
+    if(action==='skill-refresh'){if(!skillManagementAllowed(r,id))return;skillMessage=C.refreshRandomSkill(r,id,Number(button.dataset.slot))?'':'当前无法重随，请检查奖金和剩余次数';save();renderRoster();renderPending();return;}
+    if(action==='skill-ad'){
+      if(!skillManagementAllowed(r,id))return;
+      const slot=Number(button.dataset.slot);skillMessage='';
+      if(!r||!Number.isInteger(slot)||slot<1||slot>2||!r.roleSkillMap?.[id]?.[slot-1]||r.ended||r.lastBattle||r.pending||r.randomEvent||!r.owned[id]||r.skillAdPickUsed?.[id]?.[slot-1])return;
+      if(typeof window.ColorboxAI?.vatask?.completeRewardVideo!=='function'){skillMessage='请在支持激励广告的虎扑App中打开';renderPending();return;}
+      skillAdBusy=true;renderPending();
+      try{const response=await withTimeout(window.ColorboxAI.vatask.completeRewardVideo(),60000);
+        if(game.run!==r)return;
+        if(response?.code!==200||response?.data?.rewarded!==true){skillMessage=response?.message||'广告未完整观看，未获得自选机会';return;}
+        if(!C.enterSkillAdPick(r,id,slot)){skillMessage='当前无法选择词条';return;}
+        skillPickCandidate='';save();
+      }catch(_){skillMessage='广告拉起失败，请稍后再试';}finally{skillAdBusy=false;renderPending();}return;
+    }
     if(r?.randomEvent&&r.ended&&action==='new'){go('roster');return}
     if(action==='event-main'||action==='event-safe'){
       if(C.resolveRandomEvent(game,id,action==='event-main'?'main':'safe')){save();top();renderPending()}return;
@@ -1247,7 +1346,8 @@
       return;
     }
     if(action==='profile'){go('profile');return}
-    if(action==='leaderboard'){leaderboardTab='legend';go('leaderboard');void loadLeaderboard();return}
+    if(action==='leaderboard'){leaderboardTab='legend';leaderboardPeriod='current';leaderboardWeek=null;leaderboardBoards={...leaderboardBoards,ovr:[]};leaderboardMine={...leaderboardMine,ovr:null};go('leaderboard');void loadLeaderboard();return}
+    if(action==='leaderboard-period'){if(screen==='leaderboard'&&leaderboardWeeklySupported&&!leaderboardBusy&&['current','previous'].includes(id)){leaderboardPeriod=id;leaderboardWeek=null;leaderboardBoards={...leaderboardBoards,ovr:[]};leaderboardMine={...leaderboardMine,ovr:null};leaderboardStatus={...leaderboardStatus,ovr:'正在加载榜单…'};renderLeaderboard();void loadLeaderboard()}return}
     if(action==='leaderboard-refresh'){if(screen==='leaderboard'&&!leaderboardBusy)void loadLeaderboard();return}
     if(action==='legendary-gear-unlock-confirm'){legendaryGearUnlockResult='';renderPending();return}
     if(action==='legendary-gear-unlock'){
@@ -1255,7 +1355,15 @@
       if(item){legendaryGearUnlockResult=item.id;pointShopMessage='';save()}renderPointShop();renderPending();return;
     }
     if(action==='jersey-unlock-confirm'){jerseyUnlockResult='';renderPending();return}
-    if(action==='leaderboard-tab'){if(screen==='leaderboard'&&['legend','ovr'].includes(id)){leaderboardTab=id;renderLeaderboard()}return}
+    if(action==='leaderboard-tab'){
+      if(screen==='leaderboard'&&['legend','ovr'].includes(id)){
+        if(id==='legend'&&leaderboardPeriod==='previous'){
+          leaderboardPeriod='current';leaderboardWeek=null;leaderboardBoards={...leaderboardBoards,ovr:[]};leaderboardMine={...leaderboardMine,ovr:null};leaderboardStatus={...leaderboardStatus,ovr:'正在加载榜单…'};
+        }
+        leaderboardTab=id;renderLeaderboard();
+        if(id==='ovr'&&leaderboardStatus.ovr==='正在加载榜单…')void loadLeaderboard(true);
+      }return;
+    }
     if(action==='gear-collection-tab'){gearCollectionSlideFrom=gearCollectionTab;gearCollectionTab=id==='jerseys'?'jerseys':'gear';renderShop();return}
     if(action==='pointshop'){go('pointshop');return}
     if(action==='profile-bond-size'){profileBondSize=['2','3','4','5'].includes(id)?id:'all';renderProfile();return}
@@ -1372,8 +1480,13 @@
       if(answer.pending){renderPending();return}
       go('roster');return;
     }
-    if(action==='resolve'){
-      const mode=button.dataset.mode,target=mode==='replace-slot'?button.dataset.slot:Number(button.dataset.index);
+    if(action==='pending-sell-cancel'){pendingSellConfirm=null;renderPending();return}
+    if(action==='resolve'||action==='pending-sell-confirm'){
+      const confirmed=action==='pending-sell-confirm';
+      if(confirmed&&(!pendingSellConfirm||pendingSellConfirm.run!==r||pendingSellConfirm.id!==r?.pending||C.BY_ID[r.pending]?.tier!=='SSR')){pendingSellConfirm=null;renderPending();return}
+      const mode=confirmed?'sell':button.dataset.mode,target=mode==='replace-slot'?button.dataset.slot:Number(button.dataset.index);
+      if(!confirmed&&mode==='sell'&&C.BY_ID[r?.pending]?.tier==='SSR'){pendingSellConfirm={run:r,id:r.pending};renderPending();return}
+      pendingSellConfirm=null;
       if(!C.resolvePending(r,mode,target))return;
       selectedPlace=null;save();notify(mode==='sell'?'新球星已出售':'阵容已替换');
       if(r.batchQueue?.length){
@@ -1467,11 +1580,16 @@
     // Do not expose mutable game actions until the asynchronous local/cloud restore finishes.
     els.home.markup='<div class="panel game-loading" role="status">正在读取游戏存档…</div>';
     if(STORAGE.available()){
-      try{const loaded=await STORAGE.load();game=restoreGame(loaded);if(loaded&&(loaded.profile?.talentRulesVersion!==2||loaded.profile?.bondArchiveVersion!==1||JSON.stringify(loaded.profile?.achievedBonds||[])!==JSON.stringify(game.profile.achievedBonds||[])||loaded?.run&&JSON.stringify(loaded.run.gear)!==JSON.stringify(game.run?.gear)))save()}catch(_){notify('存档读取失败，本次从新旅程开始')}
+      try{const loaded=await STORAGE.load();game=restoreGame(loaded);if(loaded&&(loaded.profile?.talentRulesVersion!==3||loaded.profile?.bondArchiveVersion!==1||JSON.stringify(loaded.profile?.achievedBonds||[])!==JSON.stringify(game.profile.achievedBonds||[])||loaded?.run&&JSON.stringify(loaded.run.gear)!==JSON.stringify(game.run?.gear)))save()}catch(_){notify('存档读取失败，本次从新旅程开始')}
     }
     restoring=false;
-    window.SupFusionDevTools?.install({C,getGame:()=>game,save,render,go});
-    if(game.run?.randomEvent)go('roster');else go('home');
+    window.SupFusionDevTools?.install({C,getGame:()=>game,save,render,go,previewRecruitCards,previewLeaderboard:data=>{
+      leaderboardPreview=data;leaderboardPeriod='current';leaderboardTab='ovr';
+      if(data)applyLeaderboardPreview();
+      else{leaderboardBoards={legend:[],ovr:[]};leaderboardMine={legend:null,ovr:null};leaderboardWeek=null;leaderboardWeeklySupported=false}
+      go('leaderboard');void loadLeaderboard(true);
+    }});
+    if(game.run?.randomEvent||game.run?.skillAdPick)go('roster');else go('home');
     loadPlayerName();
     refreshRewardTaskState();
     syncSaveBackup();

@@ -1,6 +1,6 @@
 'use strict';
 const {clone}=require('./engine.cjs');
-const gameActions=new Set(['continueRun','resolveRandomEvent','acknowledgeRandomEvent']);
+const gameActions=new Set(['continueRun','resolveRandomEvent','acknowledgeRandomEvent','reviveRun']);
 const action=(name,args=[],extra={})=>({name,args,...extra});
 function enumerate(C,game,config){
   const r=game.run;if(r.randomEvent){
@@ -8,7 +8,8 @@ function enumerate(C,game,config){
     const choices=C.eventChoices(r,p);
     return [action('resolveRandomEvent',[p.id,'main'],{event:choices,risk:choices.fatal}),action('resolveRandomEvent',[p.id,'safe'],{event:choices})];
   }
-  if(r.ended)return [];
+  if(r.ended)return config.ads==='rewarded-success'&&!r.reviveUsed&&r.morale<=0&&r.lastBattle?.won===false?[action('reviveRun')]:[];
+  if(r.skillAdPick)return C.RANDOM_SKILLS.filter(s=>s.star===5&&!r.roleSkillMap[r.skillAdPick.playerId].includes(s.id)).map(skill=>action('confirmSkillAdPick',[skill.id],{skill:clone(skill)}));
   if(r.pending)return [action('resolvePending',['sell']),...r.bench.map((_,i)=>action('resolvePending',['replace',i])),...C.SLOTS.filter(s=>r.slots[s.id]).map(s=>action('resolvePending',['replace-slot',s.id]))];
   if(r.lastBattle)return [action('continueRun',[r.lastBattle.won?'next':'retry'])];
   if(r.offerMode==='ten-batch')return [action('confirmRecruitBatch',[r.offer.map(()=>true)]),action('confirmRecruitBatch',[r.offer.map(()=>false)])];
@@ -23,6 +24,7 @@ function enumerate(C,game,config){
   if(C.starterCount(r)<6)return out;
   if(!r.offer.length&&r.cash>=C.recruitPackCost(r,10))out.push(action('buyRecruitPack',[10]));
   if(config.ads==='rewarded-success'&&!r.rewardedRecruitUsed)out.push(action('grantRewardedSOffer'));
+  if(config.ads==='rewarded-success'&&C.hasRandomSkills?.(r))for(const id of Object.keys(r.owned))for(let slot=1;slot<=2;slot++)if(r.roleSkillMap[id]?.[slot-1]&&!r.skillAdPickUsed[id]?.[slot-1])out.push(action('enterSkillAdPick',[id,slot]));
   for(const id of Object.keys(r.owned))if(r.owned[id].train<C.trainingLimit(r,id)&&(r.endless||r.owned[id].trainedAt!==r.stage)&&r.cash>=C.trainingCost(r,id))out.push(action('train',[id]));
   for(let i=0;i<r.bench.length;i++){
     out.push(action('sellBench',[i]));
@@ -55,7 +57,7 @@ function snapshot(C,game){
     opponent:{id:foe.id,name:foe.name,rating:foe.rating,stats:clone(foe.stats),dimensions:clone(foe.dimensions)},
     event:r.randomEvent?clone(r.randomEvent):null,eventBonuses:clone(r.eventState?.bonuses||{}),objectives:require('./objectives.cjs').completion(C,r)};
 }
-const deterministic=new Set(['recruit','resolvePending','train','swapPositions','sellBench','equipGear','sellGear','buyGear','buyBoost','expandBench']);
+const deterministic=new Set(['recruit','resolvePending','train','swapPositions','sellBench','equipGear','sellGear','buyGear','buyBoost','expandBench','confirmSkillAdPick']);
 function metrics(C,game){const r=game.run,f=C.fused(r),income=C.incomeBreakdown(r),goal=require('./objectives.cjs').completion(C,r),items=r.gear.map(id=>C.GEAR.find(x=>x.id===id));return {rating:f.rating,bonds:f.bonds.length,cash:r.cash,income:income.victoryBase+income.lineupIncome+income.interest+f.bonds.reduce((s,b)=>s+(b.effect?.winCash||0),0)+items.reduce((s,g)=>s+(g.winCash||0)+(g.battleCash||0)+(g.shopDiscount||0)+(g.counterCash||0)/3+(g.lossCash||0)/3,0),heals:f.bonds.reduce((s,b)=>s+(b.effect?.winHeal||0)/(b.effect?.healEveryWins||1),0)+items.reduce((s,g)=>s+(g.healEveryWins?1/g.healEveryWins:0),0),saves:items.filter(x=>x.preventDefeat).length,members:goal.members,correctSlots:goal.correctSlots,jerseys:goal.jerseys}}
 function observe(C,game,config){
   const r=game.run,visible=snapshot(C,game),before=metrics(C,game),actions=enumerate(C,game,config);
@@ -70,7 +72,12 @@ function observe(C,game,config){
     const dominatedSwap=config.policy==='expert'&&a.name==='swapPositions'&&a.args[0].kind==='bench'&&!shortlist[a.args[1].key].has(a.args[0].key);
     const unusedTrain=config.policy==='expert'&&a.name==='train'&&r.bench.includes(a.args[0])&&!Object.values(require('./objectives.cjs').routeSlots).includes(C.identityOf(a.args[0]));
     if(deterministic.has(a.name)&&!dominatedSwap&&!unusedTrain){
-      const copy={run:clone(r),profile:clone(game.profile)};C[a.name](copy.run,...a.args);const after=metrics(C,copy);
+      const copy={run:clone(r),profile:clone(game.profile)};C[a.name](copy.run,...a.args);
+      // 满星新增词条尚未公开，候选价值只能计入当前持有或已预览的词条。
+      if(a.name==='recruit'&&C.hasRandomSkills?.(r)){
+        const id=a.args[0];copy.run.roleSkillMap[id]=[...(r.roleSkillMap[id]||[r.draftSkillPreview[id]])].filter(Boolean);
+      }
+      const after=metrics(C,copy);
       a.delta=Object.fromEntries(Object.keys(before).map(k=>[k,after[k]-before[k]]));
       if(config.policy==='expert'&&a.name==='train'){
         const wanted=Object.entries(require('./objectives.cjs').routeSlots).find(([,id])=>id===C.identityOf(a.args[0]));

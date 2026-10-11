@@ -1,0 +1,5 @@
+.random-skill-chip{display:inline-block;margin:3px 5px;padding:2px 6px;border:1px solid currentColor;border-radius:5px;font-size:10px;line-height:1.5;max-width:calc(100% - 10px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skill-star-1{color:#a4a7ad}.skill-star-2{color:#77b788}.skill-star-3{color:#79bfff}.skill-star-4{color:#c59afa}.skill-star-5{color:#ffd46a}
+.random-skill-entry{border:1px solid currentColor;border-radius:8px;padding:10px;margin:8px 0;text-align:left;background:rgba(255,255,255,.025)}
+.random-skill-entry h3,.random-skill-entry b{display:block;margin:0 0 5px;font-size:14px}.random-skill-entry p,.random-skill-entry small{display:block;color:var(--text,#e5e0d4);font-size:12px;line-height:1.7;margin:5px 0;white-space:normal}
+.random-skill-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.random-skill-actions button{flex:1;min-width:120px;padding:8px;font-size:12px}.skill-pick-list{max-height:60vh;overflow-y:auto}.skill-pick-list button{width:100%;cursor:pointer}.skill-pick-modal{max-height:90vh;overflow-y:auto}

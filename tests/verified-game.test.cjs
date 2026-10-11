@@ -1,17 +1,39 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
-function draft(seed=911){
-  const run=C.createRun('reserve_fund',seed),operations=[];
+function draft(seed=911,version=C.BALANCE_RULES_VERSION){
+  const run=C.createRun('reserve_fund',seed,{},version),operations=[];
   for(let i=0;i<6;i++){
     const id=run.offer[0];operations.push({action:'recruit',args:[id]});C.recruit(run,id);
     if(i<5){operations.push({action:'makeOffer',args:[]});C.makeOffer(run)}
   }
   return {run,operations};
 }
-test('authoritative seed and operation replay reproduce roster, money, RNG and combat',()=>{
-  const {run,operations}=draft(),game=C.createGame();game.run=run;const report=C.battle(game,'outside');
-  const replayed=V.replay(C.createRun('reserve_fund',911),operations,'battle','outside');
-  assert.deepEqual(replayed.state,run);assert.deepEqual(replayed.report,report);
+test('all supported rule versions replay recruitment, combat and settlement without upgrading saved rules',()=>{
+  for(const version of Array.from({length:C.BALANCE_RULES_VERSION},(_,i)=>i+1)){
+    const {run,operations}=draft(911,version),game=C.createGame();game.run=run;
+    const report=C.battle(game,'outside');
+    const replayed=V.replay(C.createRun('reserve_fund',911,{},version),operations,'battle','outside');
+    assert.deepEqual(replayed.state,run,`version ${version}: battle state`);
+    assert.deepEqual(replayed.report,report,`version ${version}: battle result`);
+    assert.equal(replayed.state.balanceRulesVersion||1,version);
+    C.finishRun(game);
+    const settled=V.replay(replayed.state,[],'finish');
+    assert.deepEqual(settled.state,run,`version ${version}: settlement`);
+    assert.equal(settled.state.awarded,true);
+  }
+});
+
+test('rules 1 through 8 retain frozen opening, recruitment, battle and settlement results for every known talent',()=>{
+ const frozen=require('../docs/balance/2026-10-11-词条天赋更新/源码快照/h5/game-core.js');
+ for(let version=1;version<=8;version++)for(const talent of C.KNOWN_TALENTS)for(const seed of [911,81101]){
+  const a=C.createRun(talent.id,seed,{},version),b=frozen.createRun(talent.id,seed,{},version);
+  assert.deepEqual(a,b,'opening '+version+' '+talent.id);
+  for(let i=0;i<6;i++){const id=a.offer[0];assert.deepEqual(C.recruit(a,id),frozen.recruit(b,id));if(i<5){C.makeOffer(a);frozen.makeOffer(b)}}
+  assert.deepEqual(a,b,'recruitment '+version+' '+talent.id);
+  const ga=C.createGame(),gb=frozen.createGame();ga.run=a;gb.run=b;
+  assert.deepEqual(C.battle(ga,'outside'),frozen.battle(gb,'outside'),'battle '+version+' '+talent.id);assert.deepEqual(a,b);
+  C.finishRun(ga);frozen.finishRun(gb);assert.deepEqual(a,b,'settlement '+version+' '+talent.id);
+ }
 });
 test('forged purchases, off-pool recruits, free rerolls and direct stat/RNG writes are rejected',()=>{
   const state=C.createRun('reserve_fund',911);

@@ -24,7 +24,11 @@
       "public.verified_game_progress",
       "public.verified_jersey_purchases",
       "public.leaderboard_entries_before_verification",
-      "public.leaderboard_legacy_credit"
+      "public.leaderboard_legacy_credit",
+      "public.weekly_ovr_settings",
+      "public.weekly_ovr_periods",
+      "public.weekly_ovr_entries",
+      "public.weekly_ovr_snapshots"
     ]
   },
   "publicBaseUrl": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com",
@@ -39,34 +43,42 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 2,
+    "rulesVersion": 6,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
       "20261008180000",
       "20261009100000",
       "20261009110000",
-      "20261009120000"
+      "20261009120000",
+      "20261010190000"
     ],
     "authenticatedBattleFinishChecked": true,
     "authenticatedPersonalRankChecked": true,
     "shareIdempotencyChecked": true,
     "historicalLegendCreditChecked": true,
-    "ovrPeakStageChecked": true
+    "ovrPeakStageChecked": true,
+    "weeklyLeaderboardVersion": 1,
+    "weeklyEnabled": true,
+    "weeklyWriteReadChecked": true,
+    "legacyRules1To6Checked": true,
+    "concurrentDuplicateBattleChecked": true,
+    "firstWeekBackfillChecked": true
   },
   "activity": {
     "status": "verified"
   },
   "lastFunctionUpdate": {
     "functionName": "activity_api",
-    "updatedAt": "2026-10-10T05:50:23.820Z",
-    "rulesVersion": 5,
+    "verifiedAt": "2026-10-10T14:43:42.291Z",
+    "rulesVersion": 6,
     "supportedRulesVersions": [
       1,
       2,
       3,
       4,
-      5
+      5,
+      6
     ],
     "randomEvents": 36,
     "synergies": 100,
@@ -74,22 +86,43 @@
     "legendReadChecked": true,
     "ovrReadChecked": true,
     "unauthorizedWriteRejected": true,
-    "authenticatedGameplayChecked": false,
+    "authenticatedGameplayChecked": true,
     "frontendPublished": false,
-    "databaseMigrationApplied": false,
+    "databaseMigrationApplied": true,
     "configurationPreserved": true,
-    "backup": ".local-tools/function-before-20261010.zip",
+    "backup": ".local-tools/weekly-ovr-live-20261010/function-before.zip",
+    "deployedZipSha256": "f54c66af2cbe92b5350232c756ab6db436c40e1b5a77250287258b8db07175c3",
     "legacyComparison": {
-      "runs": 120,
-      "battles": 2366,
+      "runs": 15,
+      "battles": 72,
+      "settlements": 15,
       "match": true
     },
-    "localTests": 289
+    "localTests": 328
   },
   "deployment": {
     "date": "2026-10-08",
     "reason": "Repair frontend/backend leaderboard protocol mismatch",
     "oldFunctionBackup": ".local-tools/function-before.zip",
     "functionTimeoutSeconds": 30
+  },
+  "weeklyLeaderboard": {
+    "enabled": true,
+    "enabledAt": "2026-10-10T22:40:22.203452+08:00",
+    "firstWeekId": "2026-10-05",
+    "firstEndsAt": "2026-10-12T00:00:00+08:00",
+    "serverTimezone": "Asia/Shanghai",
+    "archiveMode": "lazy immutable top50 snapshots",
+    "automaticWeeklyBoundary": true,
+    "frontendPublished": false,
+    "oldCumulativeEndpointsPreserved": true,
+    "verifiedAt": "2026-10-10T14:43:42.291Z",
+    "firstWeekHistoricalScoresIncluded": true,
+    "firstWeekPreActivationRunsIncluded": true,
+    "firstWeekBackfillScript": "activity/releases/weekly-ovr/backfill_first_week.sql",
+    "firstWeekBackfillVerifiedPlayers": 8210,
+    "firstWeekBackfillScoreMismatches": 0,
+    "firstWeekBackfillStageMismatches": 0,
+    "recurringHistoricalImport": false
   }
 }

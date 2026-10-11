@@ -66,12 +66,27 @@ export function forceEvent(C,game,id){
   return true;
 }
 export function clampPosition(x,y,width,height){return {x:Math.max(8,Math.min(x,Math.max(8,width-64))),y:Math.max(8,Math.min(y,Math.max(8,height-64)))}}
-function installDevTools(root,{C,getGame,save,render,go}){
+export function createLeaderboardPreview(now=Date.now()){
+  const day=86400000,beijing=new Date(now+8*3600000);
+  const start=Date.UTC(beijing.getUTCFullYear(),beijing.getUTCMonth(),beijing.getUTCDate())-((beijing.getUTCDay()+6)%7)*day-8*3600000;
+  const names=['弧顶追梦人','街球小队长','底角神射手','篮下守护者','球场漫游者','金色第六人'];
+  const rows=(board,previous=false)=>Array.from({length:50},(_,index)=>({rank:index+1,name:`${names[index%names.length]}${String(index+1).padStart(2,'0')}`,score:board==='legend'?12800-index*217:Math.max(80,(previous?436:468)-index*7),stage:board==='legend'?null:Math.max(3,(previous?65:72)-index),isCurrent:!previous&&index===(board==='legend'?23:11)}));
+  return {legend:rows('legend'),ovr:rows('ovr'),previous:rows('ovr',true),weeks:{current:{weekId:new Date(start).toISOString(),startsAt:start,endsAt:start+7*day},previous:{weekId:new Date(start-7*day).toISOString(),startsAt:start-7*day,endsAt:start}}};
+}
+export function createRecruitPreview(C){
+  const run=C.createRun('steady_interest',20261011);
+  const ids=['anunoby','caruso','horry','laimbeer','curry','klay','jordan',C.STARS.find(s=>s.tier==='SSR').id,'kawhi','jokic'];
+  run.offer=ids;run.offerMode='normal';run.owned={curry:{stars:2,train:0},lebron:{stars:1,train:0},pippen:{stars:1,train:0},rodman:{stars:1,train:0},[ids[7]]:{stars:1,train:0},caruso:{stars:1,train:0},davis:{stars:1,train:0},shaq:{stars:1,train:0}};
+  const samples=[2,1,4,1,5,3,4,5,3,4];
+  ids.forEach((id,index)=>{const skill=C.RANDOM_SKILLS.find(s=>s.star===samples[index]);if(run.owned[id])run.roleSkillMap[id]=[skill.id];else run.draftSkillPreview[id]=skill.id});
+  return run;
+}
+function installDevTools(root,{C,getGame,save,render,go,previewLeaderboard,previewRecruitCards}){
   if(root.document.getElementById('dev-test-button'))return;
   const doc=root.document,button=doc.createElement('button'),overlay=doc.createElement('div');
   button.id='dev-test-button';button.textContent='测试';button.setAttribute('aria-label','打开本地测试工具，可拖动');
   overlay.id='dev-test-overlay';overlay.hidden=true;doc.body.append(button,overlay);
-  let drag=null,moved=false,message='';
+  let drag=null,moved=false,message='',draftPreview=null;
   const place=(x,y)=>{const p=clampPosition(x,y,root.innerWidth,root.innerHeight);button.style.left=p.x+'px';button.style.top=p.y+'px';button.style.right='auto';button.style.bottom='auto'};
   button.addEventListener('pointerdown',e=>{if(e.button!==0)return;const r=button.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,left:r.left,top:r.top};moved=false;button.setPointerCapture(e.pointerId)});
   button.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>5)moved=true;if(moved)place(drag.left+dx,drag.top+dy)});
@@ -82,12 +97,24 @@ function installDevTools(root,{C,getGame,save,render,go}){
   function draw(){
     const run=getGame().run;
     const rows=C.EVENTS.map(event=>{const info=inspectEvent(C,run,event);return '<article class="dev-event"><header><b>'+escape(event.id+' '+event.name)+'</b><span class="'+(info.met?'met':'unmet')+'">'+(info.met?'已达成':'未达成')+'</span></header><p>'+escape(event.category)+'</p><ul>'+info.conditions.map(c=>'<li class="'+(c.met?'met':'unmet')+'">'+(c.met?'✓ ':'✗ ')+escape(c.label)+'</li>').join('')+'</ul>'+(info.met?'<p>事件出现率 '+info.chance+'% · 候选 '+info.eligibleCount+' 个（等概率） · '+(info.direct?'选项直接结算': '成功率 '+info.success+'%')+'</p>':'<p class="unmet">还差：'+escape(info.missing.join('；'))+'</p>')+'<button data-dev="event" data-id="'+event.id+'">强制触发</button></article>'}).join('');
-    overlay.innerHTML='<section class="dev-test-panel" role="dialog" aria-modal="true" aria-labelledby="dev-test-title"><header><h2 id="dev-test-title">本地测试</h2><button data-dev="close" aria-label="关闭测试弹窗">×</button></header><p>独立测试存档 · 排行榜同步已停用</p><div class="dev-test-actions"><button data-dev="cash">+999 奖金</button><button data-dev="legend">传奇点 +999</button><button data-dev="rarity">'+(run?.forceRareRecruit?'关闭':'开启')+' S / SSR 招募提升</button></div><p>招募提升开启时，每组优先加入 S、SSR 各一名（对应牌池可用时）；当前候选不重抽。</p><p role="status">'+escape(message)+'</p><h3>全部事件（'+C.EVENTS.length+'）</h3><p>强制触发会绕过筛选条件，并补齐结算所需奖金或球衣资格。</p>'+rows+'</section>';
+    overlay.innerHTML='<section class="dev-test-panel" role="dialog" aria-modal="true" aria-labelledby="dev-test-title"><header><h2 id="dev-test-title">本地测试</h2><button data-dev="close" aria-label="关闭测试弹窗">×</button></header><p>独立测试存档 · 排行榜同步已停用</p><div class="dev-test-actions"><button data-dev="cash">+999 奖金</button><button data-dev="legend">传奇点 +999</button><button data-dev="rarity">'+(run?.forceRareRecruit?'关闭':'开启')+' S / SSR 招募提升</button><button data-dev="recruit-preview">查看招募卡片</button><button data-dev="leaderboard">模拟排行榜 · 50条</button><button data-dev="leaderboard-clear">清除排行榜模拟</button></div><p>招募提升开启时，每组优先加入 S、SSR 各一名（对应牌池可用时）；当前候选不重抽。</p><p role="status">'+escape(message)+'</p><h3>全部事件（'+C.EVENTS.length+'）</h3><p>强制触发会绕过筛选条件，并补齐结算所需奖金或球衣资格。</p>'+rows+'</section>';
+  }
+  function drawRecruitPreview(detailId=''){
+    const player=C.BY_ID[detailId];
+    overlay.innerHTML='<section class="dev-test-panel dev-recruit-preview" role="dialog" aria-modal="true" aria-labelledby="dev-draft-title"><header><h2 id="dev-draft-title">查看招募卡片</h2><button data-dev="preview-back">返回测试</button><button data-dev="close" aria-label="关闭预览">×</button></header>'+previewRecruitCards(draftPreview)+(player?'<section class="dev-draft-detail"><h3>'+escape(player.name)+'</h3><p>'+escape(player.talent+'：'+player.talentEffect.description)+'</p>'+C.getRoleSkills(draftPreview,detailId).map(({skill})=>'<p>'+escape(skill.star+'★ '+skill.name+' · '+skill.description)+'</p>').join('')+'</section>':'')+'<p>点击卡片查看选中样式，点击详情或词条查看效果；不改变当前对局。</p></section>';
   }
   button.addEventListener('click',()=>{if(moved){moved=false;return}overlay.hidden=false;draw()});
   overlay.addEventListener('click',e=>{if(e.target===overlay){overlay.hidden=true;return}const target=e.target.closest('[data-dev]');if(!target)return;
     const action=target.dataset.dev,game=getGame();
     if(action==='close'){overlay.hidden=true;return}
+    if(action==='recruit-preview'){if(typeof previewRecruitCards!=='function'){message='招募卡片预览暂不可用。';draw();return}draftPreview=createRecruitPreview(C);drawRecruitPreview();return}
+    if(action==='preview-back'){draftPreview=null;draw();return}
+    if(action==='draft-select'){const card=target.closest('.card');if(card)card.classList.toggle('selected');return}
+    if(action==='draft-detail'){drawRecruitPreview(target.dataset.id);overlay.querySelector?.('.dev-draft-detail')?.scrollIntoView({block:'nearest'});return}
+    if(action==='leaderboard'||action==='leaderboard-clear'){
+      if(typeof previewLeaderboard!=='function'){message='排行榜预览暂不可用。';draw();return}
+      previewLeaderboard(action==='leaderboard'?createLeaderboardPreview():null);overlay.hidden=true;return;
+    }
     if(action==='event'){if(forceEvent(C,game,target.dataset.id)){save();overlay.hidden=true;go('roster')}else{message='装备槽位已占用或装备栏已满，请先腾出对应槽位。';draw()}return}
     if(action==='legend'){game.profile.legend=(game.profile.legend||0)+999;message='已增加 999 传奇点。';save();render();draw();return}
     if(!game.run||game.run.ended){message='请先开局，或点击事件创建测试对局。';draw();return}

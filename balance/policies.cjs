@@ -27,6 +27,11 @@ function createPolicy(name,seed){
     const turn=o.stage+':'+o.wins+':'+o.losses;if(turn!==key){key=turn;paid=0;refreshes=0}
     if(!o.actions.length)throw Error('No legal action');
     const first=o.actions[0];
+    if(first.name==='reviveRun')return first;
+    if(first.name==='confirmSkillAdPick')return [...o.actions].sort((a,b)=>{
+      const value=x=>{const e=x.skill.effects;return quality(x,o)+(e.winHeal||0)/(e.healEveryWins||1)*90+(e.winCash||0)*5+(e.battleCash||0)*5+(e.allDimensions||0)*2+Object.values(e.dimensions||{}).reduce((s,n)=>s+n,0)};
+      return value(b)-value(a);
+    })[0];
     if(['acknowledgeRandomEvent','continueRun','advanceRecruitBatch'].includes(first.name))return first;
     if(first.name==='resolveRandomEvent'){
       const ev=first.event,p=o.event.successRate;
@@ -47,6 +52,7 @@ function createPolicy(name,seed){
     }
     if(first.name==='resolvePending')return [...o.actions].sort((a,b)=>quality(b,o)-quality(a,o))[0];
     const ad=o.actions.find(a=>a.name==='grantRewardedSOffer');if(ad)return ad;
+    const skillAd=o.actions.find(a=>a.name==='enterSkillAdPick');if(skillAd)return skillAd;
     const free=o.actions.find(a=>a.name==='makeOffer');if(free&&o.free>0)return free;
     const pressure=o.rating/o.opponent.rating<(o.morale<=2?1.45:1.3);
     const reserve=name==='expert'?(pressure?0:15):o.stage<=3?0:8;

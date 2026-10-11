@@ -14,7 +14,7 @@ function simulate(options={},core=C){
     assertState(core,game.run);
     while(status==='running'){
       const r=game.run;
-      if(r.ended&&!r.randomEvent){status='death';break}
+      if(r.ended&&!r.randomEvent&&!(config.ads==='rewarded-success'&&!r.reviveUsed&&r.morale<=0&&r.lastBattle?.won===false)){status='death';break}
       if(!r.lastBattle&&!r.randomEvent&&r.stage>config.maxStage){status='censored';limit='stage';break}
       if(battles.length>=config.maxBattles&&!r.lastBattle&&!r.randomEvent){status='censored';limit='battles';break}
       if(performance.now()-started>=config.maxMs){status='censored';limit='time';break}
@@ -37,6 +37,7 @@ function simulate(options={},core=C){
   }catch(e){status='error';error={message:e.message,stack:e.stack}}
   record.outcome={status,limit,error,highestAttempted,highestCleared,stage:game.run.stage,battles:battles.length,actions:journal.length,wins:game.run.wins,losses:game.run.losses,
     finalCash:game.run.cash,finalMorale:game.run.morale,terminalCause:status==='death'?deathCause:null,elapsedMs:Math.round(performance.now()-started),finalHash:hash(game)};
+  record.outcome.adUsage={talentSelection:config.ads==='rewarded-success'?1:0,recruitment:journal.filter(r=>r.name==='grantRewardedSOffer').length,skillSelection:journal.filter(r=>r.name==='enterSkillAdPick').length,resurrection:journal.filter(r=>r.name==='reviveRun').length};
   record.finalGame=clone(game);return record;
 }
 function replay(record,core=C){
@@ -62,6 +63,9 @@ function validate(record){
       if(JSON.stringify(checked.state)!==JSON.stringify(stateAfter(record,row.index)))throw Error('Cloud battle state mismatch '+row.index);
       if(JSON.stringify(checked.report)!==JSON.stringify(row.result))throw Error('Cloud report mismatch '+row.index);
       state=clone(checked.state);operations=[];battles++;
+    }else if(row.name==='reviveRun'){
+      const checked=V.replay(state,operations,'resume');state=clone(checked.state);operations=[];
+      if(JSON.stringify(state)!==JSON.stringify(stateAfter(record,row.index)))throw Error('Cloud revive mismatch '+row.index);
     }else{
       operations.push({action:row.name,args:row.args});
       // 结算、事件也即时重放；允许最后的确认动作处理死亡事件。

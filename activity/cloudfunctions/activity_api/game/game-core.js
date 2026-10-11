@@ -73,8 +73,8 @@
     {id:'steal',name:'预判抢断',kind:'defense',slots:['def','handle'],turnover:.06,description:'对手失误率 +6 个百分点'},
     {id:'block',name:'追身封盖',kind:'defense',slots:['def','inside'],shot:'inside',accuracy:.10,description:'对手篮下命中 -10 个百分点'}
   ];
-  // 20 条开局路线：13 条默认、7 条由生涯纪录解锁。
-  const TALENTS = [
+  // Keep the previous talent configuration for runs using rules 1–7.
+  const PREVIOUS_TALENTS = [
     {id:'reserve_fund',name:'奖金储备',category:'经营',gain:'开局奖金 +8；每过一关奖金 +1；利息上限 +1',cost:'投射威胁、禁区终结各 -3%',effects:{startCash:8,stageCash:1,interestCap:1,dimensions:{shooting:-3,finishing:-3}}},
     {id:'scouting_network',name:'球探网络',category:'招募',gain:'S 出现权重 +30%；SSR 每组概率 +50%；每关免费招募 +1',cost:'付费招募 +2 奖金',effects:{draftSWeight:1.3,draftSSRWeight:1.5,freePerStage:1,paidRecruitDelta:2}},
     {id:'front_office',name:'精明经理',category:'经营',gain:'每场结算奖金 +2；装备购买价格 -2 奖金',cost:'赛前强化购买价格 +2 奖金',effects:{battleCash:2,gearDiscount:2,boostCostDelta:2}},
@@ -96,27 +96,161 @@
     {id:'phase_patient',name:'稳守反击',category:'阶段专精',gain:'布局、续航专精：投射威胁、持球创造、护框强度 +8%',cost:'对抗弱势：禁区终结、外线限制 -4%',effects:{dimensions:{shooting:8,creation:8,rimStop:8,finishing:-4,perimeterStop:-4}}},
     {id:'phase_tempo',name:'速战速决',category:'阶段专精',gain:'布局、对抗专精：投射威胁、持球创造、禁区终结、外线限制 +6%',cost:'续航弱势：护框强度 -8%',effects:{dimensions:{shooting:6,creation:6,finishing:6,perimeterStop:6,rimStop:-8}}}
   ];
+  const TALENT_UPDATES = {
+  "reserve_fund": {
+    "gain": "开局奖金 +15；每过一关奖金 +3；利息上限 +2",
+    "effects": {
+      "startCash": 15,
+      "stageCash": 3,
+      "interestCap": 2,
+      "dimensions": {
+        "shooting": -3,
+        "finishing": -3
+      }
+    }
+  },
+  "scouting_network": {
+    "cost": "付费招募 +1 奖金",
+    "effects": {
+      "draftSWeight": 1.3,
+      "draftSSRWeight": 1.5,
+      "freePerStage": 1,
+      "paidRecruitDelta": 1
+    }
+  },
+  "front_office": {
+    "gain": "每场结算奖金 +5；装备购买后返还10%奖金",
+    "effects": {
+      "battleCash": 5,
+      "gearCashback": 0.1,
+      "boostCostDelta": 2
+    }
+  },
+  "win_bonus": {
+    "name": "巨星传承",
+    "gain": "升至满星时再补授随机5星词条；补授槽禁止重随和广告替换",
+    "cost": "失败补偿 -1 奖金",
+    "unlock": {
+      "wins": 15,
+      "discovered": 20
+    },
+    "effects": {
+      "fullStarBonusSkill": true,
+      "lossCash": -1
+    }
+  },
+  "development": {
+    "gain": "每级训练额外 +1.5 个百分点",
+    "cost": "训练费用×1.5",
+    "effects": {
+      "trainingGrowthDelta": 0.015,
+      "trainingCostMultiplier": 1.5
+    }
+  },
+  "star_workshop": {
+    "cost": "备战席初始上限 -2",
+    "effects": {
+      "starGrowthDelta": 0.02,
+      "trainingGrowthDelta": 0.01,
+      "benchDelta": -2
+    }
+  },
+  "lockdown": {
+    "gain": "外线限制、护框强度各 +10%；每关免费刷新装备商店 1 次",
+    "effects": {
+      "dimensions": {
+        "perimeterStop": 10,
+        "rimStop": 10,
+        "shooting": -3
+      },
+      "freeGearRefresh": 1
+    }
+  },
+  "counter_coach": {
+    "gain": "战术克制额外加成从 6% 提高到 18%；每关免费招募 +1",
+    "cost": "无",
+    "effects": {
+      "counterBonus": 12,
+      "freePerStage": 1
+    }
+  },
+  "steady_interest": {
+    "gain": "利息上限 +2；每过一关奖金 +3；护框强度 +30%",
+    "cost": "禁区终结 -5%",
+    "effects": {
+      "interestCap": 2,
+      "stageCash": 3,
+      "dimensions": {
+        "rimStop": 30,
+        "finishing": -5
+      }
+    }
+  },
+  "film_room": {
+    "gain": "战术克制额外加成从 6% 提高到 18%；免除本方策略弱势惩罚",
+    "effects": {
+      "counterBonus": 12,
+      "ignoreStrategyPenalty": true,
+      "gearRefreshCostDelta": 1
+    }
+  },
+  "deep_bench": {
+    "gain": "备战席初始上限 +3；激活羁绊倍率×1.3",
+    "effects": {
+      "benchDelta": 3,
+      "benchExpansionDelta": 0,
+      "bondEffectScale": 1.3,
+      "paidRecruitDelta": 1
+    }
+  },
+  "streak_bonus": {
+    "name": "场外协助",
+    "category": "经营",
+    "unlock": {"bestEndless": 13, "discoveredEvents": 10},
+    "gain": "事件挑战成功率100%；永久事件增益×1.5；战后收入-2",
+    "effects": {
+      "eventAlwaysSuccess": true,
+      "eventBuffMultiplier": 1.5,
+      "battleCash": -2,
+      "lossCash": -2
+    }
+  },
+  "captain": {
+    "gain": "每累计两胜恢复 1 点士气；可超过初始士气，总士气最高13",
+    "effects": {
+      "winHeal": 1,
+      "healEveryWins": 2,
+      "dimensions": {
+        "creation": -3
+      }
+    }
+  }
+};
+  const TALENTS = PREVIOUS_TALENTS.map(talent=>({...talent,...TALENT_UPDATES[talent.id]}));
   const LEGACY_TALENTS = [
     {id:'outside',name:'外线速成'},{id:'inside',name:'禁区霸主'},{id:'defense',name:'铁血防线'},
     {id:'agent',name:'球星经纪人'},{id:'economy',name:'精算大师'}
   ];
   const KNOWN_TALENTS=[...TALENTS,...LEGACY_TALENTS];
   const TALENT_BY_ID=Object.fromEntries(TALENTS.map(talent=>[talent.id,talent]));
-  function openingEffect(run){return TALENT_BY_ID[run?.talent]?.effects||{}}
+  const PREVIOUS_TALENT_BY_ID=Object.fromEntries(PREVIOUS_TALENTS.map(talent=>[talent.id,talent]));
+  function talentForRun(run){return (run?.balanceRulesVersion>=8?TALENT_BY_ID:PREVIOUS_TALENT_BY_ID)[run?.talent]}
+  function openingEffect(run){return talentForRun(run)?.effects||{}}
   function talentUnlocked(talent,profile){
     if(profile?.metaUnlocks?.talents?.includes(talent.id))return true;
     if(!talent.unlock)return true;
-    return Object.entries(talent.unlock).every(([key,value])=>key==='discovered'?(profile?.discovered?.length||0)>=value:(profile?.[key]||0)>=value);
+    return Object.entries(talent.unlock).every(([key,value])=>key==='discovered'?(profile?.discovered?.length||0)>=value:key==='discoveredEvents'?new Set((profile?.discoveredEvents||[]).filter(id=>Object.hasOwn(api.EVENT_BY_ID,id))).size>=value:(profile?.[key]||0)>=value);
   }
   function availableTalents(profile){return TALENTS.filter(talent=>talentUnlocked(talent,profile)||profile?.metaUnlocks?.talents?.includes(talent.id))}
   function migrateTalentUnlocks(profile){
-    if(profile.talentRulesVersion===2)return profile;
+    if(profile.talentRulesVersion===3)return profile;
+    const previouslyMigrated=profile.talentRulesVersion===2;
     const old={steady_interest:{runs:1},championship_budget:{bestStage:5},dynasty:{bestStage:10},film_room:{wins:8},deep_bench:{discovered:20},streak_bonus:{bestEndless:13},captain:{runs:3}};
     profile.metaUnlocks ||= {talents:[],gear:[],players:[]};
-    profile.metaUnlocks.talents=[...new Set([...(profile.metaUnlocks.talents||[]),...Object.entries(old).filter(([,unlock])=>talentUnlocked({unlock},profile)).map(([id])=>id)])];
-    profile.talentRulesVersion=2;return profile;
+    profile.metaUnlocks.talents=[...new Set([...(profile.metaUnlocks.talents||[]),...(!previouslyMigrated?Object.entries(old).filter(([,unlock])=>talentUnlocked({unlock},profile)).map(([id])=>id):[]),...(profile.runs>0?['win_bonus']:[])])];
+    profile.talentRulesVersion=3;return profile;
   }
-  function benchExpansionLimit(run){return 10+Math.max(0,openingEffect(run).benchDelta||0)}
+  function benchExpansionLimit(run){const effect=openingEffect(run);return 10+(effect.benchExpansionDelta??Math.max(0,effect.benchDelta||0))}
   const STAR_ROWS = DATA.STAR_ROWS;
   const STARS = STAR_ROWS.map(r => ({
     id:r[0],name:r[1],tier:r[2],role:r[3],team:r[4],best:r[5],
@@ -210,7 +344,96 @@
   const SALE_BASE = { C:2, B:3, A:5, S:8, SSR:16 };
   const TRAINING_COSTS = [1,2,3,16,22,29,37,46,56,67];
   const LEGACY_TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
-  const BALANCE_RULES_VERSION=6,MORALE_HARD_CAP=13;
+  const RANDOM_SKILLS=DATA.RANDOM_SKILLS,SKILL_BY_ID=Object.fromEntries(RANDOM_SKILLS.map(s=>[s.id,s]));
+  const SKILL_REFRESH_COSTS=[10,30,50];
+  function hasRandomSkills(run){return run?.balanceRulesVersion>=7}
+  function initRandomSkills(run){Object.assign(run,{roleSkillMap:{},draftSkillPreview:{},skillRefreshCount:{},skillAdPickUsed:{},skillAdPick:null,skillHealCounters:{},skillHealGranted:{},skillFreeRefreshStage:0,skillStageCashPaid:0});if(run.balanceRulesVersion>=8)run.bonusSkillSlots={}}
+  function drawRandomSkill(run,minStar=1,exclude=[]){
+    const star=minStar+Math.floor(nextRandom(run)*(6-minStar)),pool=RANDOM_SKILLS.filter(s=>s.star===star&&!exclude.includes(s.id));
+    const candidates=pool.length?pool:RANDOM_SKILLS.filter(s=>!exclude.includes(s.id));
+    return candidates.length?candidates[Math.floor(nextRandom(run)*candidates.length)]:null;
+  }
+  function previewRandomSkills(run,ids){
+    if(!hasRandomSkills(run))return;
+    for(const id of new Set(ids))if(!run.roleSkillMap[id]?.length&&!run.draftSkillPreview[id])run.draftSkillPreview[id]=drawRandomSkill(run).id;
+  }
+  function acquireRandomSkill(run,id){
+    if(!hasRandomSkills(run)||run.roleSkillMap[id]?.length)return;
+    run.roleSkillMap[id]=[run.draftSkillPreview[id]||drawRandomSkill(run).id];delete run.draftSkillPreview[id];
+  }
+  function unlockFullStarSkill(run,id){
+    if(!hasRandomSkills(run)||run.owned[id]?.stars<starLimit(run,id))return;
+    if(run.roleSkillMap[id].length<2){const extra=drawRandomSkill(run,3,run.roleSkillMap[id]);if(extra)run.roleSkillMap[id].push(extra.id)}
+    if(openingEffect(run).fullStarBonusSkill&&!run.bonusSkillSlots[id]){const extra=drawRandomSkill(run,5,run.roleSkillMap[id]);if(extra){run.roleSkillMap[id].push(extra.id);run.bonusSkillSlots[id]=run.roleSkillMap[id].length}}
+  }
+  function getRoleSkills(run,id,preview=true){
+    if(!hasRandomSkills(run))return [];
+    const ids=run.roleSkillMap?.[id]?.length?run.roleSkillMap[id]:preview&&run.draftSkillPreview?.[id]?[run.draftSkillPreview[id]]:[];
+    return ids.map((skillId,i)=>({skill:SKILL_BY_ID[skillId],slot:i+1})).filter(entry=>entry.skill);
+  }
+  function activeRandomSkills(run){
+    if(!hasRandomSkills(run)||starterCount(run)<6)return [];
+    return [...new Set(Object.values(run.slots).filter(id=>id&&run.owned[id]))].flatMap(id=>getRoleSkills(run,id,false).map(entry=>({...entry,playerId:id})));
+  }
+  function randomSkillEffects(run){
+    const total={dimensions:{},allDimensions:0,outsideCounterBonus:0,turnoverReduction:0,clutchBonus:0,opponentPenalty:0,battleCash:0,winCash:0,stageCash:0,shopDiscount:0,ignoreStrategyPenalty:false,freeGearRefresh:false};
+    for(const {skill}of activeRandomSkills(run))for(const [key,value]of Object.entries(skill.effects)){
+      if(key==='dimensions'){for(const [dim,n]of Object.entries(value))total.dimensions[dim]=(total.dimensions[dim]||0)+n;}
+      else if(typeof value==='boolean')total[key]||=value;
+      else if(Object.hasOwn(total,key))total[key]+=value;
+    }
+    return total;
+  }
+  function canManageSkill(run,id,slot){return hasRandomSkills(run)&&!run.ended&&!run.lastBattle&&!run.pending&&!run.randomEvent&&!run.skillAdPick&&!!run.owned[id]&&Number.isInteger(slot)&&slot>=1&&slot<=2&&!!run.roleSkillMap[id]?.[slot-1]}
+  function refreshRandomSkill(run,id,slot){
+    if(!canManageSkill(run,id,slot))return false;
+    const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=SKILL_REFRESH_COSTS[used];if(cost===undefined||run.cash<cost)return false;
+    const skill=drawRandomSkill(run,slot>=2?3:1,run.roleSkillMap[id]);if(!skill)return false;
+    run.cash-=cost;run.roleSkillMap[id][slot-1]=skill.id;(run.skillRefreshCount[id]||=[])[slot-1]=used+1;return true;
+  }
+  function enterSkillAdPick(run,id,slot){
+    if(!canManageSkill(run,id,slot)||run.skillAdPickUsed[id]?.[slot-1]||!RANDOM_SKILLS.some(s=>s.star===5&&!run.roleSkillMap[id].includes(s.id)))return false;
+    run.skillAdPick={playerId:id,slot};return true;
+  }
+  function confirmSkillAdPick(run,skillId){
+    const pick=run?.skillAdPick,skill=SKILL_BY_ID[skillId];
+    if(!hasRandomSkills(run)||!pick||!Number.isInteger(pick.slot)||pick.slot<1||pick.slot>2||!run.roleSkillMap[pick.playerId]?.[pick.slot-1]||run.ended||run.lastBattle||run.pending||run.randomEvent||!run.owned[pick.playerId]||!skill||skill.star!==5||run.skillAdPickUsed[pick.playerId]?.[pick.slot-1]||run.roleSkillMap[pick.playerId]?.includes(skillId))return false;
+    run.roleSkillMap[pick.playerId][pick.slot-1]=skillId;(run.skillAdPickUsed[pick.playerId]||=[])[pick.slot-1]=true;run.skillAdPick=null;return true;
+  }
+  function cancelSkillAdPick(run){if(!hasRandomSkills(run)||!run.skillAdPick)return false;run.skillAdPick=null;return true}
+  function restoreRandomSkills(run,source){
+    if(!hasRandomSkills(run))return;if(run===source)source={...source};initRandomSkills(run);
+    for(const id of Object.keys(BY_ID)){
+      const ids=source.roleSkillMap?.[id],bonus=openingEffect(run).fullStarBonusSkill&&source.bonusSkillSlots?.[id]===3&&Array.isArray(ids)&&ids.length===3&&new Set(ids).size===3&&SKILL_BY_ID[ids[2]]?.star===5;
+      if(Array.isArray(ids))run.roleSkillMap[id]=[...new Set(ids.filter(s=>Object.hasOwn(SKILL_BY_ID,s)))].slice(0,bonus?3:2);
+      if(bonus&&run.roleSkillMap[id].length===3)run.bonusSkillSlots[id]=3;
+      const preview=source.draftSkillPreview?.[id];if(Object.hasOwn(SKILL_BY_ID,preview)&&!run.roleSkillMap[id]?.length)run.draftSkillPreview[id]=preview;
+      if(Array.isArray(source.skillRefreshCount?.[id]))run.skillRefreshCount[id]=source.skillRefreshCount[id].slice(0,2).map(n=>Number.isInteger(n)?clamp(n,0,3):0);
+      if(Array.isArray(source.skillAdPickUsed?.[id]))run.skillAdPickUsed[id]=source.skillAdPickUsed[id].slice(0,2).map(n=>n===true);
+      for(const skill of RANDOM_SKILLS)if(skill.effects.winHeal){
+        const key=id+':'+skill.id,counter=source.skillHealCounters?.[key],granted=source.skillHealGranted?.[key];
+        if(Number.isInteger(counter))run.skillHealCounters[key]=clamp(counter,0,skill.effects.healEveryWins-1);
+        if(Number.isSafeInteger(granted))run.skillHealGranted[key]=Math.max(0,granted);
+      }
+    }
+    for(const skill of RANDOM_SKILLS)if(skill.effects.winHeal){
+      const key='skill-'+skill.id,counter=source.skillHealCounters?.[key];
+      const legacy=Object.keys(BY_ID).reduce((sum,id)=>sum+(run.skillHealCounters[id+':'+skill.id]||0),0);
+      if(Number.isInteger(counter)||legacy>0)run.skillHealCounters[key]=Number.isInteger(counter)?clamp(counter,0,skill.effects.healEveryWins-1):legacy%skill.effects.healEveryWins;
+    }
+    for(const key of ['skillFreeRefreshStage','skillStageCashPaid'])run[key]=Number.isInteger(source[key])?clamp(source[key],0,run.stage):0;
+    const pick=source.skillAdPick;if(pick&&canManageSkill(run,pick.playerId,pick.slot)&&!run.skillAdPickUsed[pick.playerId]?.[pick.slot-1])run.skillAdPick={playerId:pick.playerId,slot:pick.slot};
+  }
+  function recoverSkillMorale(run,skills){
+    const detail=[];
+    for(const {skill,playerId}of skills){const e=skill.effects;if(!e.winHeal)continue;
+      const key='skill-'+skill.id,grantedKey=playerId+':'+skill.id;
+      run.skillHealCounters[key]=(run.skillHealCounters[key]||0)+1;
+      if(run.skillHealCounters[key]>=e.healEveryWins){run.skillHealCounters[key]=0;const heal=Math.min(e.winHeal,Math.max(0,MORALE_HARD_CAP-run.morale));if(heal>0){run.morale+=heal;run.skillHealGranted[grantedKey]=(run.skillHealGranted[grantedKey]||0)+heal;detail.push(skill.name+' · 士气 +'+heal)}}
+    }
+    return detail;
+  }
+  const BALANCE_RULES_VERSION=9,MORALE_HARD_CAP=13;
   function currentBalance(run){return run?.balanceRulesVersion>=2}
   function saleValue(id,stars=1,run=null){const star=BY_ID[id];return star?Math.floor(SALE_BASE[star.tier]*clamp(Math.floor(stars)||1,1,10)*(openingEffect(run).saleMultiplier||1)):0}
   function resolveTalentEffect(run,slotId){
@@ -244,11 +467,12 @@
 
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
-  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:2,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],gearUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0,gearStorage:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
+  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:3,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],gearUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0,gearStorage:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
   function createRun(talent,seed,progress={},rulesVersion=BALANCE_RULES_VERSION){
-    const effect=openingEffect({talent});
+    const effect=openingEffect({talent,balanceRulesVersion:rulesVersion});
     const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable&&item.slot==='球衣')))],unlockedGear:[...new Set((progress.gearUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.legendary)))],gearHealCounters:{},gearLimit:GEAR_LIMIT,gearReserveLimit:5+clamp(progress.gearStorage||0,0,5),maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,gearPaidRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
     if(rulesVersion>=2){run.balanceRulesVersion=rulesVersion;run.bondWinHealCounters={}}
+    if(rulesVersion>=7)initRandomSkills(run);
     if(rulesVersion>=4){run.eventState={seen:[],misses:0,lastBattle:-2,bonuses:{},jerseys:0,recovered:false};run.randomEvent=null}
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
@@ -269,7 +493,10 @@
   function completedSynergies(run){const ids=ownedIdentities(run);return synergiesForRun(run).filter(s=>(currentBalance(run)||!s.effect?.winHeal)&&s.ids.every(id=>ids.has(id)))}
   function activeSynergies(run){
     const completed=completedSynergies(run),highest=new Map();
-    if(run?.balanceRulesVersion>=3)return completed;
+    if(run?.balanceRulesVersion>=3){
+      const scale=openingEffect(run).bondEffectScale;if(!scale)return completed;
+      return completed.map(bond=>({...bond,effect:Object.fromEntries(Object.entries(bond.effect||{}).map(([key,value])=>[key,key==='dimensions'?Object.fromEntries(Object.entries(value).map(([dim,n])=>[dim,n*scale])):key==='healEveryWins'?value:typeof value==='number'?Math.floor(value*scale):value]))}));
+    }
     for(const bond of completed)if(bond.chainId)highest.set(bond.chainId,Math.max(highest.get(bond.chainId)||0,bond.chainLevel||0));
     return completed.filter(bond=>!bond.chainId||(bond.chainLevel||0)===highest.get(bond.chainId));
   }
@@ -355,6 +582,7 @@
     run.noSPlusGroups=hasS?0:(run.noSPlusGroups||0)+1;
     if(opening&&hasA)run.openingAPlusGroups=(run.openingAPlusGroups||0)+1;
     run.offer=chosen;
+    previewRandomSkills(run,chosen);
     return chosen;
   }
   function makeTenOffer(run,count=10){
@@ -397,15 +625,18 @@
     run.offerMode='rewarded-s';
     run.offer=chosen;
     run.offerOdds={C:0,B:0,A:0,S:100,SSR:0,sGroup:100,ssrGroup:0,aPityIn:0,sPityIn:0};
+    previewRandomSkills(run,chosen);
     return chosen;
   }
   function addRecruitedStar(run,id,track=true){
     const star=BY_ID[id];
+    acquireRandomSkill(run,id);
     if(track){run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.recruits++}
     if(!(run.collectedPlayers||(run.collectedPlayers=[])).includes(id))run.collectedPlayers.push(id);
     if(run.owned[id]){
       const own=run.owned[id];
       if(own.stars<starLimit(run,id))own.stars++;else run.cash+=4;
+      unlockFullStarSkill(run,id);
       return {ok:true,kind:'duplicate',star};
     }
     const vacant=SLOTS.filter(s=>!run.slots[s.id]);
@@ -512,7 +743,7 @@
   }
   function combatBonus(run,value){return run?.balanceRulesVersion>=3?(value<=30?Math.max(-30,value):30+(value-30)*.5):clamp(value,-30,40)}
   function fused(run,strategy='',foeStrategy=''){
-    const stats={},talents=[],talentEffects=[],bonds=activeSynergies(run),opening=openingEffect(run);
+    const stats={},talents=[],talentEffects=[],bonds=activeSynergies(run),opening=openingEffect(run),skills=activeRandomSkills(run),skillEffects=randomSkillEffects(run);
     for(const attr of ATTRS){
       let sum=0,weight=0;
       for(const slot of SLOTS){
@@ -545,6 +776,9 @@
     const dimensions=dimensionsFromSlots(slotScores),flat=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
     const percents=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
     const openingPercents=Object.fromEntries(COMBAT_KEYS.map(key=>[key,0]));
+    addDimensions(percents,skillEffects.dimensions);
+    for(const key of COMBAT_KEYS)percents[key]+=skillEffects.allDimensions;
+    if(strategy==='outside'&&foeStrategy==='collapse')percents.shooting+=skillEffects.outsideCounterBonus;
     if(run.balanceRulesVersion>=4)addDimensions(percents,run.eventState?.bonuses);
     for(const slot of SLOTS){
       const id=run.slots[slot.id],star=BY_ID[id],effect=resolveTalentEffect(run,slot.id);
@@ -583,11 +817,11 @@
       const tactic=STRATEGIES[strategy];
       percents[tactic.target]+=12+(tactic.beats===foeStrategy?6:0);
       if(tactic.beats===foeStrategy)openingPercents[tactic.target]+=(opening.counterBonus||0)+(run.metaFilmStudy||0);
-      if(!opening.ignoreStrategyPenalty)openingPercents[tactic.penalty]-=4+(opening.strategyPenalty||0);
+      if(!opening.ignoreStrategyPenalty&&!skillEffects.ignoreStrategyPenalty)openingPercents[tactic.penalty]-=4+(opening.strategyPenalty||0);
     }
     for(const key of COMBAT_KEYS)dimensions[key]=Math.max(0,(dimensions[key]+flat[key])*(1+combatBonus(run,percents[key])/100)*(1+combatBonus(run,openingPercents[key])/100));
     const rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
-    return {stats,slotScores,dimensions,rating,bonds,talents,talentEffects};
+    return {stats,slotScores,dimensions,rating,bonds,talents,talentEffects,skills,skillEffects};
   }
   function signatureMoves(run){
     const scores=Object.fromEntries(SLOTS.map(slot=>{
@@ -603,6 +837,7 @@
   }
   const opponentRatingCache=new Map();
   function opponent(run){
+    const curveVersion=run.balanceRulesVersion>=9?9:run.balanceRulesVersion>=6?6:5;
     const index=run.stage<=FOE_ROSTER.length?run.stage-1:LEGEND_FOE_START+(run.stage-51)%LEGEND_FOE_COUNT;
     const [id,strategy]=FOE_ROSTER[index],star=BY_ID[id];
     // 前九关保留入门坡度；第十关小幅抬升，无尽随后按凸曲线加速。
@@ -623,8 +858,15 @@
       slotScores=slotScoresFromStats(stats);dimensions=dimensionsFromSlots(slotScores);
       rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
     }
+    // 规则9收回部分词条与天赋收益：入门+3%，10关+6%，50关+9%，80关后+12%。
+    if(curveVersion===9){
+      const stage=run.stage,scale=stage<=3?1.03:stage<=10?1.03+.03*(stage-3)/7:stage<=20?1.06:stage<=50?1.06+.03*(stage-20)/30:1.09+.03*Math.min(30,stage-50)/30;
+      for(const attr of ATTRS)stats[attr]=Math.max(20,Math.round(stats[attr]*scale));
+      slotScores=slotScoresFromStats(stats);dimensions=dimensionsFromSlots(slotScores);
+      rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
+    }
     if(run.stage>1){
-      const previousKey=`${run.balanceRulesVersion>=6?6:5}:${run.stage-1}`;
+      const previousKey=`${curveVersion}:${run.stage-1}`;
       const previous=opponentRatingCache.has(previousKey)?opponentRatingCache.get(previousKey):opponent({stage:run.stage-1,balanceRulesVersion:run.balanceRulesVersion}).rating;
       while(rating<=previous){
         for(const attr of ATTRS)stats[attr]++;
@@ -633,7 +875,7 @@
       }
     }
     if(opponentRatingCache.size>=2048)opponentRatingCache.delete(opponentRatingCache.keys().next().value);
-    opponentRatingCache.set(`${run.balanceRulesVersion>=6?6:5}:${run.stage}`,rating);
+    opponentRatingCache.set(`${curveVersion}:${run.stage}`,rating);
     return {id,name:star.name,strategy,stars,stats,slotScores,dimensions,rating};
   }
   function gearMultiplier(run,item){
@@ -690,10 +932,10 @@
     if(!run.shopOffers.gear.length){run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     return run.shopOffers;
   }
-  function shopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0?0:3+(run.balanceRulesVersion>=5?(run.gearPaidRefreshes||0):0)+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
+  function shopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0||randomSkillEffects(run).freeGearRefresh&&run.skillFreeRefreshStage!==run.stage?0:3+(run.balanceRulesVersion>=5?(run.gearPaidRefreshes||0):0)+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
   function refreshShop(run,type='boost'){
     const cost=shopRefreshCost(run,type);if(run.cash<cost)return false;run.cash-=cost;
-    if(type==='gear'){if(run.balanceRulesVersion>=5&&cost>0)run.gearPaidRefreshes=(run.gearPaidRefreshes||0)+1;if(run.gearRefreshFree>0)run.gearRefreshFree--;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
+    if(type==='gear'){if(run.balanceRulesVersion>=5&&cost>0)run.gearPaidRefreshes=(run.gearPaidRefreshes||0)+1;if(run.gearRefreshFree>0)run.gearRefreshFree--;else if(cost===0&&hasRandomSkills(run))run.skillFreeRefreshStage=run.stage;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     else{run.shopRefreshes=(run.shopRefreshes||0)+1;run.shopOffers.boost=drawShopItems(run,BOOSTS,4,[]);run.boostBoughtOffers=[]}
     return true;
   }
@@ -701,10 +943,11 @@
     const star=BY_ID[id];if(!star)return 0;
     return run.endless||run.stage>10?run.stage:3;
   }
-  function trainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)];return base===undefined?Infinity:Math.max(1,base+(run.talent==='agent'?2:0)+(openingEffect(run).trainingCostDelta||0))}
+  function trainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)],effect=openingEffect(run);return base===undefined?Infinity:Math.max(1,Math.ceil((base+(run.talent==='agent'?2:0)+(effect.trainingCostDelta||0))*(effect.trainingCostMultiplier||1)))}
   function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const cost=trainingCost(run,id);if(run.cash<cost)return false;run.cash-=cost;own.train++;own.trainedAt=run.stage;return true}
   function boostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
-  function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0)-(run.balanceRulesVersion>=5?itemEffects(run).shopDiscount:0))*(effect.gearPriceMultiplier||1)))}
+  function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0)-(run.balanceRulesVersion>=5?itemEffects(run).shopDiscount:0)-randomSkillEffects(run).shopDiscount)*(effect.gearPriceMultiplier||1)))}
+  function gearCashback(run,price){return Math.floor(price*(openingEffect(run).gearCashback||0))}
   function boostPurchaseLimit(run){return run.balanceRulesVersion>=6?(run.stage<=10?2:10):Infinity}
   function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.boosts.filter(boostId=>boostId===id).length>=boostPurchaseLimit(run)||run.cash<boostPrice(run,item))return false;run.cash-=boostPrice(run,item);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
   function gearReserveCount(run){return (run.gearReserve||[]).filter(id=>GEAR.find(item=>item.id===id)?.slot!=='球衣').length}
@@ -716,7 +959,7 @@
     if(!item||!gearAvailable(run,item)||!run.shopOffers.gear.includes(id)||(run.gearSoldOffers||[]).includes(id)||run.cash<gearPrice(run,item)||run.gear.includes(id)||reserve.includes(id))return false;
     if(!(run.balanceRulesVersion>=5)&&item.slot!=='球衣'&&[...run.gear,...reserve].some(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot))return false;
     if(gearStorageFull(run,item))return false;
-    run.cash-=gearPrice(run,item);
+    const price=gearPrice(run,item);run.cash-=price;run.cash+=gearCashback(run,price);
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.gearPurchases++;
     const slotUsed=run.gear.some(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot);
     if(slotUsed||run.gear.length>=(run.gearLimit||GEAR_LIMIT))reserve.push(id);else run.gear.push(id);
@@ -732,7 +975,7 @@
     const reserveIndex=reserve.findIndex(gearId=>GEAR.find(g=>g.id===gearId)?.slot===item.slot);
     if(activeIndex<0&&reserveIndex<0)return false;
     const oldId=activeIndex>=0?run.gear[activeIndex]:reserve[reserveIndex],oldItem=GEAR.find(g=>g.id===oldId);
-    run.cash-=gearPrice(run,item);
+    const price=gearPrice(run,item);run.cash-=price;run.cash+=gearCashback(run,price);
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.gearPurchases++;
     if(oldItem)run.cash+=oldItem.sellPrice;
     if(activeIndex>=0)run.gear[activeIndex]=id;else reserve[reserveIndex]=id;
@@ -902,7 +1145,7 @@
     return messages;
   }
   function battle(game,strategy){
-    const run=game.run;if(!run||run.ended||run.lastBattle||run.randomEvent||starterCount(run)<6||!STRATEGIES[strategy])return null;
+    const run=game.run;if(!run||run.ended||run.lastBattle||run.randomEvent||run.skillAdPick||starterCount(run)<6||!STRATEGIES[strategy])return null;
     const opening=openingEffect(run);
     const foe=opponent(run),own=fused(run,strategy,foe.strategy),equipment=itemEffects(run);
     const foeDimensions=strategyDimensions(foe.dimensions,foe.strategy,strategy);
@@ -920,12 +1163,12 @@
       const activeMove=move&&move.uses<2&&possession-move.lastUse>=3&&(!move.shot||move.shot===type)?move:null;
       if(activeMove){activeMove.uses++;activeMove.lastUse=possession}
       const creationEdge=combatEdge(attackDimensions.creation,defenseDimensions.perimeterStop);
-      const turnover=clamp(.09-.12*creationEdge-(turn==='us'?equipment.turnoverReduction:0)+(activeMove?.turnoverPenalty||0)+(activeMove?.turnover||0)+(activeMove?.turnover?activeMove.trained*.02:0),.02,.18);
+      const turnover=clamp(.09-.12*creationEdge-(turn==='us'?equipment.turnoverReduction+own.skillEffects.turnoverReduction:0)+(activeMove?.turnoverPenalty||0)+(activeMove?.turnover||0)+(activeMove?.turnover?activeMove.trained*.02:0),.02,.18);
       let made=false;
       const lostBall=nextRandom(run)<=turnover;
       if(!lostBall){
         let chance=matchup.base+.22*combatEdge(matchup.attack,matchup.guard)+.08*creationEdge;
-        if(turn==='us'){chance+=Math.max(us,them)>=8?equipment.clutchBonus:0}else chance-=equipment.opponentPenalty;
+        if(turn==='us'){chance+=Math.max(us,them)>=8?equipment.clutchBonus+own.skillEffects.clutchBonus:0}else chance-=equipment.opponentPenalty+own.skillEffects.opponentPenalty;
         if(activeMove?.accuracy)chance+=(turn==='us'?1:-1)*(activeMove.accuracy+activeMove.trained*.02);
         made=nextRandom(run)<clamp(chance,.16,.79);
       }
@@ -943,6 +1186,8 @@
       if(own.rating>=foeRating)us++;else them++;
     }
     const won=us>them;
+    const skillCash=own.skillEffects.battleCash+(won?own.skillEffects.winCash:0)+own.skillEffects.stageCash;
+    if(won&&hasRandomSkills(run))run.skillStageCashPaid=run.stage;
     const counterCash=beats===1?equipment.counterCash:0;
     const postBattleCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.postBattleCash||0),0)+counterCash+equipment.battleCash;
     let reward=0,detail=[];
@@ -951,25 +1196,26 @@
       const bond=own.bonds.length?1:0,bondCash=Math.min(5,own.bonds.reduce((sum,item)=>sum+(item.effect?.winCash||0),0));
       const talentCash=own.talentEffects.reduce((sum,effect)=>sum+(effect.winCash||0),0);
       const openingCash=(opening.battleCash||0)+(own.bonds.length?(opening.bondWinCash||0):0);
-      const grossReward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash);
+      const grossReward=Math.max(0,base+lineupIncome+interest+bond+bondCash+talentCash+postBattleCash+equipment.winCash+openingCash+skillCash);
       reward=run.balanceRulesVersion>=5?Math.min(90,grossReward):grossReward;run.cash+=reward;run.wins++;
       if(opening.winHeal&&run.wins%(opening.healEveryWins||1)===0){
-        const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit||10)-granted));
+        const granted=run.talentWinHealGranted||0,heal=Math.min(opening.winHeal,Math.max(0,(opening.healLimit??(run.balanceRulesVersion>=8?Infinity:10))-granted));
         run.morale+=currentBalance(run)?Math.min(heal,Math.max(0,MORALE_HARD_CAP-run.morale)):heal;run.talentWinHealGranted=granted+heal;
       }
       detail=[`胜利 ${base}`,`阵容收入 ${lineupIncome}`,`利息 ${interest}`,`羁绊 ${bond+bondCash}`];
-      detail.push(...recoverBondMorale(run,own.bonds),...recoverGearMorale(run));
+      detail.push(...recoverBondMorale(run,own.bonds),...recoverGearMorale(run),...recoverSkillMorale(run,own.skills));
       if(equipment.winCash)detail.push(`装备胜利奖励 ${equipment.winCash}`);
       if(openingCash)detail.push(`开局天赋 ${openingCash}`);
       if(talentCash)detail.push(`球星技能 ${talentCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
       if(grossReward>reward)detail.push('胜利奖金上限90');
     }else{
-      run.morale--;run.losses++;run.free++;reward=Math.max(0,incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0)+equipment.lossCash);run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)-equipment.lossCash}`,'免费招募 +1'];
+      run.morale--;run.losses++;run.free++;reward=Math.max(0,incomeBreakdown(run).lossBase+postBattleCash+(opening.battleCash||0)+equipment.lossCash+skillCash);run.cash+=reward;detail=[`失败补偿 ${reward-postBattleCash-(opening.battleCash||0)-equipment.lossCash-skillCash}`,'免费招募 +1'];
       if(equipment.lossCash)detail.push(`装备失败奖励 ${equipment.lossCash}`);
       if(opening.battleCash)detail.push(`开局天赋 ${opening.battleCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
     }
+    if(skillCash)detail.push('随机词条奖金 '+skillCash);
     const rescued=preventGearDefeat(run);if(rescued)detail.push(rescued.name+'已消耗，生命恢复至1点');
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.prizeIncome+=reward;
     run.boosts=[];
@@ -992,7 +1238,7 @@
   function advanceAfterBattle(game,choice){
     const run=game.run;if(!run||!run.lastBattle)return false;
     if(run.ended)return false;
-    if(!run.lastBattle.won){run.lastBattle=null;return true}
+    if(!run.lastBattle.won){if(hasRandomSkills(run))run.skillFreeRefreshStage=0;run.lastBattle=null;return true}
     if(run.stage===10&&choice==='finish'){run.lastBattle.legendEarned=finishRun(game);return true}
     if(run.stage===10)run.endless=true;
     const bonds=activeSynergies(run),opening=openingEffect(run);
@@ -1004,12 +1250,13 @@
     run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;run.gearPaidRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
+  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,talentForRun,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
   const EVENT_SYSTEM=root.SupFusionEventSystem||(typeof require==='function'?require('./event-system.js'):null);
+  Object.assign(api,{RANDOM_SKILLS,SKILL_BY_ID,SKILL_REFRESH_COSTS,hasRandomSkills,getRoleSkills,activeRandomSkills,randomSkillEffects,refreshRandomSkill,enterSkillAdPick,confirmSkillAdPick,cancelSkillAdPick,restoreRandomSkills});
   if(!EVENT_SYSTEM)throw new Error('SupFusionEventSystem is required before game-core.js');
   Object.assign(api,EVENT_SYSTEM.createSystem({...api,nextRandom,advanceAfterBattle}));
-  for(const name of ['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','swapBench','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer']){
-    const original=api[name];api[name]=function(run,...args){return run?.randomEvent?false:original(run,...args)};
+  for(const name of ['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','swapBench','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','refreshRandomSkill','enterSkillAdPick']){
+    const original=api[name];api[name]=function(run,...args){return run?.randomEvent||run?.skillAdPick?false:original(run,...args)};
   }
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;

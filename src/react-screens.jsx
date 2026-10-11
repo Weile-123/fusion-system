@@ -164,20 +164,29 @@ function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
     <div className="modal-head"><div><small>最新更新 · 2026.10.10</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
-      <h3 className="announcement-version">2026.10.10 · 随机事件与传奇装备</h3>
-      <h3>无尽挑战调整</h3><p>第20关后对手按固定曲线逐步成长，50关后挑战压力持续提升，保留阵容养成与赛前强化的优势。同类赛前强化每场在前10关最多购买2次，无尽最多购买10次，刷新商店不重置次数。调整适用于新开局，已有对局继续使用原规则。</p>
-      <h3>单挑路上，更多故事</h3><p>新增36条随机事件：14条技巧较量、8条单挑挑战、6条剧情抉择、1条救援、1条交易及6条球衣传承。通过练习、挑战和投资，获得本局属性加成、奖金、装备或球衣。</p>
-      <h3>传奇商店上新</h3><p>球衣与装备解锁页合并为传奇商店。新增10件非球衣传奇装备；每次花费300传奇点随机解锁1件，解锁后从新开局进入装备池。新增胜利奖金、失败补偿、战术克制奖励、购买折扣等词条。</p>
-      <h3>装备商店</h3><p>装备商店前三栏只出现非球衣装备，球衣以独立概率出现并单独追加在第四栏。装备每次付费刷新后，下次费用增加1，进入下一关重置。</p>
-      <h3>装备收藏</h3><p>新增更衣室装备收藏，同部位装备可继续购买并存入收藏，随时换装；收藏列表只显示未装备物品。</p>
-      <h3>收藏扩容</h3><p>未装备的装备默认可收藏5件，新增天赋加成「装备收纳」，共5级、每级+1，最高10件；已装备物品及球衣不占容量，收藏满时需先出售再购买。</p>
-      <h3>界面与操作优化</h3><p>统一主要按钮的柔金渐变样式，优化点数商店入口及装备收藏文字；球衣展示不再附带所属球员姓名。</p>
-      <h3>Bug修复</h3><p>修复传奇商店解锁球衣后，尚未在对局中获得就点亮图鉴的问题。玩家已经解锁的球衣仍会保留，不会丢失。修复旧对局规则兼容问题。</p>
+      <h3 className="announcement-version">2026.10.10 · 数值调整</h3>
+      <section className="announcement-intro">
+        <h3><span className="announcement-priority">重要</span>关于数值调整与排行榜更新</h3>
+        <p>上一版本新增羁绊后，由于前期数值测试不够充分，后期战力成长超出了预期，玩家与关卡对手的实力差距过大，影响了游戏的挑战性。经过进一步测试，本次更新重新调整了关卡对手的成长曲线，游戏难度较此前版本将明显提升。</p>
+        <p>考虑到数值调整会影响不同版本成绩的可比性，本次更新将最高 OVR 排行榜改为北京时间每周一00:00更新的"周榜"，减少旧版本成绩长期占榜对后续排名的影响。总传奇点排行榜保持不变。</p>
+        <p>对于本次调整给当前榜单玩家带来的影响，深感抱歉。</p>
+        <p>下面是本次版本的其他更新:</p>
+      </section>
+      <h3>单挑路上，更多故事</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 新增36条随机事件：14条技巧较量、8条单挑挑战、6条剧情抉择、1条救援、1条交易及6条球衣传承。通过练习、挑战和投资，获得本局属性加成、奖金、装备或球衣。</p>
+      <h3>传奇商店上新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 球衣与装备解锁页合并为传奇商店。新增10件非球衣传奇装备；每次花费300传奇点随机解锁1件，解锁后从新开局进入装备池。新增胜利奖金、失败补偿、战术克制奖励、购买折扣等词条。</p>
+      <h3>赛前强化与装备</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 同类赛前强化每场在前10关最多购买2次，无尽最多购买10次，刷新商店不重置次数。<br />
+        <span className="announcement-bullet" aria-hidden="true">·</span> 装备商店前三栏只出现非球衣装备，球衣以独立概率出现并单独追加在第四栏。装备每次付费刷新后，下次费用增加1，进入下一关重置。<br />
+        <span className="announcement-bullet" aria-hidden="true">·</span> 新增更衣室装备收藏，同部位装备可继续购买并存入收藏，随时换装；收藏列表只显示未装备物品。<br />
+        <span className="announcement-bullet" aria-hidden="true">·</span> 未装备的装备默认可收藏5件，新增天赋加成「装备收纳」，共5级、每级+1，最高10件；已装备物品及球衣不占容量，收藏满时需先出售再购买。</p>
+      <h3>优化与bug修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 统一主要按钮的柔金渐变样式，优化点数商店入口及装备收藏文字；球衣展示不再附带所属球员姓名。<br />
+        <span className="announcement-bullet" aria-hidden="true">·</span> 修复传奇商店解锁球衣后，尚未在对局中获得就点亮图鉴的问题。玩家已经解锁的球衣仍会保留，不会丢失。修复旧对局规则兼容问题。</p>
       <p className="announcement-note">本次新规则与解锁内容适用于新开局；已有对局继续使用原规则。传奇点、已解锁装备与球衣、图鉴及生涯记录保留。</p>
       <h3 className="announcement-version">2026.10.09 · 阵容多样性更新</h3>
-      <h3>更多羁绊，更多搭配</h3><p>羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。</p>
-      <h3>数值调整</h3><p>重新分配羁绊的战力与奖金收益，对部分现有羁绊效果数值、战力成长进行调整。</p>
-      <h3>样式调整</h3><p>羁绊图鉴样式调整，页面内模块间距统一调整，修复现有操作问题。</p>
+      <h3>更多羁绊，更多搭配</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。</p>
+      <h3>数值调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 重新分配羁绊的战力与奖金收益，对部分现有羁绊效果数值、战力成长进行调整。</p>
+      <h3>样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 羁绊图鉴样式调整，页面内模块间距统一调整，修复现有操作问题。</p>
     </div>
     <button type="button" className="btn button-1 wide" data-act="announcement-close">知道了</button>
   </section>;
@@ -195,26 +204,37 @@ function FeedbackScreen({ draft, remaining, busy, message }) {
   </section>;
 }
 
-function LeaderboardPage({ entries, title, unit, status, playerName }) {
+function LeaderboardPage({ entries, title, unit, status, playerName, preserveNames = false }) {
   const podium = [entries[1], entries[0], entries[2]];
   return <section className="leaderboard-page" aria-label={title}>
     {status && <p className="leaderboard-status" role="status">{status}</p>}
     {entries.length > 0 && <>
-      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent ? playerName : entry.name}</b><small>{entry.score.toLocaleString()}{unit !== 'OVR' && ` ${unit}`}</small>{unit === 'OVR' && entry.stage > 0 && <small className="leaderboard-peak-stage">第{entry.stage}关</small>}</div>)}</div>
+      <div className="leaderboard-podium">{podium.map(entry => entry && <div className={`leaderboard-medal medal-${entry.rank}`} key={entry.rank}><span className="leaderboard-crown">{entry.rank === 1 ? '♛' : entry.rank === 2 ? '◆' : '★'}</span><strong>#{entry.rank}</strong><b>{entry.isCurrent && !preserveNames ? playerName : entry.name}</b><small>{entry.score.toLocaleString()}{unit !== 'OVR' && ` ${unit}`}</small>{unit === 'OVR' && entry.stage > 0 && <small className="leaderboard-peak-stage">第{entry.stage}关</small>}</div>)}</div>
       {entries.length > 3 && <div className="leaderboard-list-heading"><span>排名</span><span>玩家</span><span>{title}</span></div>}
-      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit === 'OVR' ? (entry.stage > 0 ? `第${entry.stage}关` : '') : unit}</small></b></div>)}</div>
+      <div className="leaderboard-list">{entries.slice(3, 50).map(entry => <div className={`leaderboard-row${entry.isCurrent ? ' current' : ''}`} key={entry.rank}><strong>{entry.rank}</strong><span>{entry.isCurrent && !preserveNames ? `${playerName} · 我` : entry.name}</span><b>{entry.score.toLocaleString()} <small>{unit === 'OVR' ? (entry.stage > 0 ? `第${entry.stage}关` : '') : unit}</small></b></div>)}</div>
     </>}
     {entries.length === 0 && (status === '' || status === '暂无成绩') && <p className="leaderboard-empty">暂时还没有成绩</p>}
   </section>;
 }
 
-function LeaderboardScreen({ boards, tab, status, mine, playerName, busy }) {
-  const current = mine[tab];
+function LeaderboardScreen({ boards, tab, status, mine, playerName, busy, period = 'current', weeklySupported = false, week = {} }) {
+  const previous = tab === 'ovr' && period === 'previous';
+  const current = previous ? boards.ovr.find(entry => entry.isCurrent && entry.rank <= 50) : mine[tab];
+  const ovrTitle = weeklySupported ? (previous ? '上周最高 OVR' : '本周最高 OVR') : '单局最高 OVR';
+  const rankText = current?.rank ? `#${current.rank}` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用';
   return <>
     <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><div className="leaderboard-heading-actions"><button className="leaderboard-refresh button-7" data-act="leaderboard-refresh" disabled={busy} aria-busy={busy}>{busy && <i className="leaderboard-loading-icon" aria-hidden="true" />}刷新</button><button className="leaderboard-home button-7" data-act="home">返回主页</button></div></div>
-    <div className="leaderboard-my-rank"><span>我的排名<small>{tab === 'legend' ? '总传奇点' : '单局最高 OVR'}</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}{tab === 'legend' && <small> 点</small>}</b></div>
-    <div className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">单局最高 OVR</button><i aria-hidden="true" /></div>
-    <div className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="点" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title="单局最高 OVR" unit="OVR" status={status.ovr} playerName={playerName} /></div></div>
+    <div key="leaderboard-switch" className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">{ovrTitle}</button><i aria-hidden="true" /></div>
+    {tab === 'legend' && <div key="leaderboard-summary" className="leaderboard-my-rank"><span>我的排名<small>总传奇点</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}<small> 点</small></b></div>}
+    {tab === 'ovr' && <div key="leaderboard-summary" className={`leaderboard-my-rank leaderboard-ovr-summary${previous ? ' archived' : ''}`} aria-label="OVR排名与周榜">
+      <div className="leaderboard-ovr-score"><span>我的排名</span><small>{ovrTitle}</small>{previous && !current ? <b>{status.ovr === '正在加载榜单…' ? '读取中' : status.ovr.includes('暂不可用') ? '暂不可用' : '未上榜'}</b> : <b>{current?.score?.toLocaleString() ?? '—'} <small className="leaderboard-inline-rank" aria-label={current?.rank ? `第${current.rank}名` : rankText}>{rankText}</small></b>}</div>
+      <div className="leaderboard-ovr-actions">
+        {!previous && <div className="leaderboard-countdown"><span>{weeklySupported ? '距离下一周' : '距离下次周一'}</span><strong data-week-countdown="true">{week.countdown || '—'}</strong></div>}
+        <button className="leaderboard-history-entry button-7" data-act="leaderboard-period" data-id={previous ? 'current' : 'previous'} disabled={busy || !weeklySupported}><span>{previous ? '← 返回本周排行榜' : '查看上周前50名'}</span><span>{!weeklySupported ? '尚未开放' : previous ? '本周' : '→'}</span></button>
+      </div>
+      <p className="leaderboard-week-rule">仅本周新开的对局参与本周排名。每周一零点后，上周对局的后续成绩不再计入周榜，传奇点奖励不受影响。</p>
+    </div>}
+    <div key="leaderboard-window" className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="点" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title={ovrTitle} unit="OVR" status={status.ovr} playerName={playerName} preserveNames={previous} /></div></div>
   </>;
 }
 

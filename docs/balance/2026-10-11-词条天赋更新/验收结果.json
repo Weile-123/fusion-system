@@ -1,0 +1,110 @@
+{
+  "completedAt": "2026-10-11T12:08:45.790Z",
+  "buildPassed": true,
+  "automaticTests": {
+    "tests": 378,
+    "pass": 378,
+    "fail": 0,
+    "skipped": 0
+  },
+  "naturalReferenceTests": {
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "old100SnapshotTests": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "skipped": 0
+  },
+  "samples": 600,
+  "errors": 0,
+  "censored": 0,
+  "historicalMatches": 60,
+  "protectedFilesUnchanged": true,
+  "replays": [
+    {
+      "tier": "low",
+      "old": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 366,
+          "battles": 41
+        },
+        "cloud": {
+          "match": true,
+          "steps": 366,
+          "battles": 41
+        }
+      },
+      "current": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 294,
+          "battles": 32
+        },
+        "cloud": {
+          "match": true,
+          "steps": 294,
+          "battles": 32
+        }
+      }
+    },
+    {
+      "tier": "mid",
+      "old": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 390,
+          "battles": 44
+        },
+        "cloud": {
+          "match": true,
+          "steps": 390,
+          "battles": 44
+        }
+      },
+      "current": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 324,
+          "battles": 34
+        },
+        "cloud": {
+          "match": true,
+          "steps": 324,
+          "battles": 34
+        }
+      }
+    },
+    {
+      "tier": "high",
+      "old": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 2165,
+          "battles": 77
+        },
+        "cloud": {
+          "match": true,
+          "steps": 2165,
+          "battles": 77
+        }
+      },
+      "current": {
+        "browserGlobal": {
+          "match": true,
+          "steps": 4263,
+          "battles": 144
+        },
+        "cloud": {
+          "match": true,
+          "steps": 4263,
+          "battles": 144
+        }
+      }
+    }
+  ]
+}

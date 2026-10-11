@@ -879,7 +879,7 @@ test('training is limited to once per stage and battle rewards cannot be claimed
 });
 
 test('boost and equipment shops keep their independent reference refresh rules', () => {
-  const run = C.createRun('outside', 707);
+  const run = C.createRun('outside', 707, {}, 6);
   assert.equal(run.shopOffers.boost.length, 4);
   assert.equal(run.shopOffers.gear.length, 3);
   assert.equal(new Set(run.shopOffers.boost).size, 4);
@@ -1279,7 +1279,7 @@ test('fatal battle consumes the rescue headband before settlement, with no repea
 test('legendary cash terms and healing settle on actual battle results',()=>{
   const outcomes=new Set();
   for(let seed=1;seed<=120&&outcomes.size<2;seed++){
-    const game=C.createGame(),run=game.run=draftedRun(seed);run.gear=['legacy_income_band','legacy_bounty_wrist','legacy_loss_shoes','legacy_income_ring','legacy_counter_board'];
+    const game=C.createGame(),run=game.run=draftedRun(seed);run.balanceRulesVersion=6;run.gear=['legacy_income_band','legacy_bounty_wrist','legacy_loss_shoes','legacy_income_ring','legacy_counter_board'];
     const income=C.incomeBreakdown(run),own=C.fused(run,'outside'),opening=C.openingEffect(run),before=run.cash;
     const report=C.battle(game,'outside');assert.ok(report);outcomes.add(report.won);
     const post=own.talentEffects.reduce((sum,e)=>sum+(e.postBattleCash||0),0)+(report.beats===1?4:0)+1;
@@ -1367,7 +1367,7 @@ test('strategy counter is awarded to the correct side', () => {
 });
 
 test('fifty distinct opponents rise in strength and end with all eight SSR players', () => {
-  const run = C.createRun('outside', 1001);
+  const run = C.createRun('outside', 1001, {}, 8);
   const opponents = Array.from({ length: 50 }, (_, index) => {
     run.stage = index + 1;
     return C.opponent(run);
@@ -1456,13 +1456,14 @@ test('automatic battle records bounded signature activations without extra playe
   assert.ok(report.log.length <= 7);
 });
 
-test('twenty opening talents include thirteen initial choices and seven career unlocks', () => {
+test('twenty opening talents include twelve initial choices and eight career unlocks', () => {
   assert.equal(C.TALENTS.length, 20);
   assert.equal(new Set(C.TALENTS.map(talent => talent.id)).size, 20);
   const profile = C.createGame().profile;
-  assert.equal(C.availableTalents(profile).length, 13);
+  assert.equal(C.availableTalents(profile).length, 12);
   Object.assign(profile, { clears:1, runs: 3, wins: 40, bestStage: 10, bestEndless: 13 });
   profile.discovered = C.STARS.slice(0, 35).map(star => star.id);
+  profile.discoveredEvents = C.EVENTS.slice(0, 10).map(event => event.id);
   assert.equal(C.availableTalents(profile).length, 20);
   assert.ok(C.TALENTS.every(talent => talent.gain && talent.cost && talent.category));
 });
@@ -1471,7 +1472,7 @@ test('opening talent effects reach recruitment, growth, shop pricing, and free r
   const base = C.createRun('win_bonus', 33);
   const scout = C.createRun('scouting_network', 33);
   assert.equal(scout.free, 7);
-  assert.equal(C.recruitCost(scout), C.recruitCost(base) + 2);
+  assert.equal(C.recruitCost(scout), C.recruitCost(base) + 1);
   assert.ok(C.tierOdds(scout).S > C.tierOdds(base).S);
   assert.ok(C.tierOdds(scout).SSR > C.tierOdds(base).SSR);
   const player = C.BY_ID.curry, own = { stars: 2, train: 1 };
@@ -1480,12 +1481,12 @@ test('opening talent effects reach recruitment, growth, shop pricing, and free r
   assert.ok(C.playerScore(player, own, player.best, workshop) > C.playerScore(player, own, player.best, development));
   development.owned[player.id] = { ...own, trainedAt: 0 };
   base.owned[player.id] = { ...own, trainedAt: 0 };
-  assert.equal(C.trainingCost(development, player.id), C.trainingCost(base, player.id) - 1);
-  assert.ok(C.saleValue(player.id, 2, development) > C.saleValue(player.id, 2, base));
-  assert.equal(workshop.benchLimit, 5);
+  assert.equal(C.trainingCost(development, player.id), Math.ceil(C.trainingCost(base, player.id) * 1.5));
+  assert.equal(C.saleValue(player.id, 2, development), C.saleValue(player.id, 2, base));
+  assert.equal(workshop.benchLimit, 4);
   assert.equal(C.createRun('deep_bench', 33).benchLimit, 9);
   const manager = C.createRun('front_office', 33);
-  assert.equal(C.gearPrice(manager, C.GEAR[0]), C.GEAR[0].price - 2);
+  assert.equal(C.gearPrice(manager, C.GEAR[0]), C.GEAR[0].price);
   assert.equal(C.boostPrice(manager, C.BOOSTS[0]), C.BOOSTS[0].price + 2);
   const lockdown = C.createRun('lockdown', 33);
   assert.equal(C.shopRefreshCost(lockdown, 'gear'), 0);
@@ -1710,7 +1711,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(css, /animation-delay:calc\(var\(--card-order\)\*55ms\)/);
   assert.match(css, /batch-excluded\{[^}]*grayscale\(1\)/);
   assert.match(css, /batch-excluded::after\{[^}]*inset:0[^}]*width:auto;height:auto/);
-  assert.match(ui, /selected\?draftBondHints\(id,batchIds\):\[\]/);
+  assert.match(ui, /selected\?draftBondHints\(id,batchIds,run\):\[\]/);
   assert.doesNotMatch(ui, /draftBondHints\(id,batchIds\)\.filter\(bond=>bond\.active\)/);
   assert.match(ui, /bondOwned\.add\(C\.identityOf\(s\.id\)\)/);
   assert.match(ui, /r\.offerMode==='ten-batch'.+bondOwned\.add\(C\.identityOf\(offerId\)\)/);
@@ -1727,7 +1728,7 @@ test('recruit entry renders a bottom sheet with normal, ten-pack, and ad actions
   assert.match(css, /draft-ten-mode \.card-grade\{display:flex;align-items:center/);
   assert.match(css, /draft-ten-mode \.card \.draft-bond-hints\{position:static/);
   assert.match(css, /draft-ten-mode \.card \.draft-bond-hints i\{[^}]*font-size:7px/);
-  assert.match(ui, /\$\{batch\?bondHintMarkup:''\}<\/span>/);
+  assert.match(ui, /class="draft-center-hints"[\s\S]*?\$\{bondHintMarkup\}<\/span>/);
   assert.doesNotMatch(ui, /style="--card-order:\$\{index\}" data-act="select-offer"/);
   assert.match(ui, /C\.toggleRecruitBatchSelection\(r,index\)/);
   assert.doesNotMatch(ui, /batchPointerClickSuppressedUntil/);
@@ -1923,7 +1924,7 @@ test('talent video choice and leaderboard use rewarded callbacks and bounded clo
   assert.match(ui, /void refreshRewardTaskState\(\)/);
   assert.doesNotMatch(ui, /mockBoard|MOCK_NAMES|SUPFUSION_DEMO_LEADERBOARD/);
   assert.match(ui, /rows\.slice\(0,50\)/);
-  assert.match(ui, /window\.ColorboxAI\.cloud\.request\(\{url:`\$\{base\}\/api\/leaderboard`,method:'GET',data:\{board,limit:50,refreshId\}\}\)/);
+  assert.match(ui, /window\.ColorboxAI\.cloud\.request\(\{url:`\$\{base\}\/api\/leaderboard`,method:'GET',data:\{board,limit:50,refreshId,/);
   assert.match(screens, /leaderboard-podium/);
   assert.match(screens, /entries\.slice\(3, 50\)/);
   assert.match(screens, /data-act="talent-ad"/);

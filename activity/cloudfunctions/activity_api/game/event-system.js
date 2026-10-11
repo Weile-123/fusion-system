@@ -35,7 +35,7 @@
     function eventDifficulty(stage){if(legacy)return stage<=3?80:stage<=7?105:stage<=10?125:125+(stage-10)*3;return stage<=3?70:stage<=7?85:stage<=10?100:Math.min(130,100+stage-10)}
     function eventChoices(run,pending){
       const event=byId[pending.id],kind=event.trialType||event.type;
-      const amount=value=>legacy?Math.min(value,Math.max(0,15-(run.eventState.bonuses[event.dimension]||0))):value,dimension=C.COMBAT_LABELS[event.dimension];
+      const amount=value=>legacy?Math.min(value,Math.max(0,15-(run.eventState.bonuses[event.dimension]||0))):value*(C.openingEffect(run).eventBuffMultiplier||1),dimension=C.COMBAT_LABELS[event.dimension];
       let main,safe,success,failure;
       if(event.gear){main='接受试用';success='获得 A级 '+C.GEAR.find(g=>g.id===event.gear).name;failure='无奖励'}
       else if(event.jersey){main=kind==='T'?'完成传承':'接受挑战';success='获得 '+C.GEAR.find(g=>g.id===event.jersey).name;failure=kind==='C'?'生命 -1':'无奖励'}
@@ -46,7 +46,7 @@
       const safeBonus=kind==='T'||event.id==='P05';
       safe=event.gear?'放弃试用':kind==='T'?'稳妥练习':event.id==='P05'?'修正站位':kind==='C'?'避开挑战':event.type==='R'?'暂不恢复':'放弃';
       const rescue=run.balanceRulesVersion>=5&&run.gear.some(id=>C.GEAR.find(g=>g.id===id)?.preventDefeat);
-      return {main,safe,success,failure,safeReward:safeBonus?dimension+' +'+amount(1)+'%':'不扣费、无奖励',chance:!['R','X'].includes(event.type),fatal:kind==='C'&&run.morale===1&&!rescue};
+      return {main,safe,success,failure,safeReward:safeBonus?dimension+' +'+amount(1)+'%':'不扣费、无奖励',chance:!['R','X'].includes(event.type),fatal:kind==='C'&&run.morale===1&&!rescue&&!C.openingEffect(run).eventAlwaysSuccess};
     }
     function maybeTriggerEvent(game,choice){
       const run=game.run;if(!(run.balanceRulesVersion>=4)||!run.lastBattle||run.ended||choice==='finish'||run.randomEvent)return false;
@@ -56,12 +56,12 @@
       const chance=Math.min(.6,.3+.1*state.misses);
       if(C.nextRandom(run)>=chance){state.misses=Math.min(3,state.misses+1);return false}
       const event=candidates[Math.floor(C.nextRandom(run)*candidates.length)],ability=eventAbility(event,snapshot),difficulty=eventDifficulty(snapshot.stage);
-      run.randomEvent={id:event.id,choice,stage:snapshot.stage,ability,difficulty,successRate:C.clamp((legacy?.65:.70)+(ability-difficulty)*(legacy?.02:.025),.35,.9),snapshot,result:null};
+      run.randomEvent={id:event.id,choice,stage:snapshot.stage,ability,difficulty,successRate:C.openingEffect(run).eventAlwaysSuccess?1:C.clamp((legacy?.65:.70)+(ability-difficulty)*(legacy?.02:.025),.35,.9),snapshot,result:null};
       state.seen.push(event.id);state.misses=0;state.lastBattle=snapshot.battle;
       game.profile.discoveredEvents=[...new Set([...(game.profile.discoveredEvents||[]),event.id])];
       return true;
     }
-    function addBonus(run,key,amount){const state=run.eventState;const added=legacy?Math.min(amount,Math.max(0,15-(state.bonuses[key]||0))):amount;state.bonuses[key]=(state.bonuses[key]||0)+added;return added}
+    function addBonus(run,key,amount){const state=run.eventState;const added=legacy?Math.min(amount,Math.max(0,15-(state.bonuses[key]||0))):amount*(C.openingEffect(run).eventBuffMultiplier||1);state.bonuses[key]=(state.bonuses[key]||0)+added;return added}
     function resolveRandomEvent(game,id,choice){
       const run=game?.run,pending=run?.randomEvent,event=byId[id],kind=event?.trialType||event?.type;
       if(!pending||!(run.balanceRulesVersion>=4)||pending.id!==id||pending.result||run.ended||!['main','safe'].includes(choice))return false;
@@ -74,7 +74,7 @@
         if(event.gear&&!canReceiveGear(run,event.gear))return false;
         run.cash-=event.cost;result.cash=-event.cost;
         run.stats.eventSpending=(run.stats.eventSpending||0)+event.cost;
-        result.success=['R','X'].includes(event.type)||C.nextRandom(run)<pending.successRate;
+        result.success=C.openingEffect(run).eventAlwaysSuccess||['R','X'].includes(event.type)||C.nextRandom(run)<pending.successRate;
         if(result.success){
           if(event.gear){const item=C.GEAR.find(g=>g.id===event.gear),occupied=run.gear.some(id=>C.GEAR.find(g=>g.id===id)?.slot===item.slot);(occupied||run.gear.length>=(run.gearLimit||C.GEAR_LIMIT)?run.gearReserve:run.gear).push(event.gear);result.gear=event.gear;result.message='获得 A级 '+C.GEAR.find(g=>g.id===event.gear).name}
           else if(event.jersey){
@@ -101,7 +101,7 @@
       run.eventState={seen:[...new Set((Array.isArray(state.seen)?state.seen:[]).filter(valid))],misses:number(state.misses,3),lastBattle:Number.isInteger(state.lastBattle)?state.lastBattle:-2,bonuses:Object.fromEntries(Object.keys(C.COMBAT_LABELS).map(k=>[k,number(state.bonuses?.[k],legacy?15:Number.MAX_SAFE_INTEGER)])),jerseys:number(state.jerseys,2),recovered:state.recovered===true};
       const p=source.randomEvent;
       if(p&&valid(p.id)&&['next','retry'].includes(p.choice)&&p.snapshot?.members?.length===6&&p.snapshot.members.every(m=>Object.hasOwn(C.BY_ID,m.id)&&C.ATTRS.every(attr=>Number.isFinite(m.stats?.[attr])))&&Number.isFinite(p.ability)&&Number.isFinite(p.difficulty)&&Number.isFinite(p.successRate)){
-        run.randomEvent=JSON.parse(JSON.stringify(p));run.randomEvent.successRate=C.clamp(p.successRate,.35,.9);
+        run.randomEvent=JSON.parse(JSON.stringify(p));run.randomEvent.successRate=C.openingEffect(run).eventAlwaysSuccess?1:C.clamp(p.successRate,.35,.9);
       }
     }
     return {EVENTS,EVENT_BY_ID:byId,eventBattleSnapshot,eventChoices,eventEligible,eventAbility,eventDifficulty,maybeTriggerEvent,resolveRandomEvent,acknowledgeRandomEvent,restoreEventState};

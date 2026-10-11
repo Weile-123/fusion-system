@@ -1,8 +1,8 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const C=require('../h5/game-core.js');
-function lineup(talent){
-  const run=C.createRun(talent,911);
+function lineup(talent,version=C.BALANCE_RULES_VERSION){
+  const run=C.createRun(talent,911,{},version);
   ['chef_curry','air_jordan','king_lebron','showtime_magic','diesel_shaq','reaper_durant'].forEach((id,index)=>{run.slots[C.SLOTS[index].id]=id;run.owned[id]={stars:1,train:0,trainedAt:0}});
   return run;
 }
@@ -12,7 +12,7 @@ test('migration retains legacy unlocks without giving them to new players',()=>{
   C.migrateTalentUnlocks(old);
   assert.equal(C.availableTalents(old).length,20);
   const snapshot=JSON.stringify(old);C.migrateTalentUnlocks(old);assert.equal(JSON.stringify(old),snapshot);
-  const fresh=C.createGame().profile;C.migrateTalentUnlocks(fresh);assert.equal(C.availableTalents(fresh).length,13);
+  const fresh=C.createGame().profile;C.migrateTalentUnlocks(fresh);assert.equal(C.availableTalents(fresh).length,12);
   fresh.bestStage=7;assert.equal(C.talentUnlocked(C.TALENTS.find(t=>t.id==='championship_budget'),fresh),false);
   fresh.wins=15;assert.equal(C.talentUnlocked(C.TALENTS.find(t=>t.id==='championship_budget'),fresh),true);
 });
@@ -26,11 +26,11 @@ test('discount is twenty percent with integer rounding and dynasty gets five-dim
 });
 test('bench talent survives maximum legacy capacity upgrades',()=>{
   const run=C.createRun('deep_bench',33,{benchSeat:5});assert.equal(run.benchLimit,14);
-  const expandable=C.createRun('deep_bench',33);expandable.cash=100;
+  const expandable=C.createRun('deep_bench',33,{},7);expandable.cash=100;
   while(C.expandBench(expandable)){}assert.equal(expandable.benchLimit,13);
 });
-test('captain heals only every second win, banks morale, and stops after ten grants',()=>{
-  function win(wins,granted,morale){const game=C.createGame();game.run=lineup('captain');Object.assign(game.run,{wins,talentWinHealGranted:granted,morale});assert.equal(C.battle(game,'outside').won,true);return game.run}
+test('legacy captain heals only every second win, banks morale, and stops after ten grants',()=>{
+  function win(wins,granted,morale){const game=C.createGame();game.run=lineup('captain',7);Object.assign(game.run,{wins,talentWinHealGranted:granted,morale});assert.equal(C.battle(game,'outside').won,true);return game.run}
   assert.equal(win(0,0,3).morale,3);
   const second=win(1,0,3);assert.equal(second.morale,4);assert.equal(second.talentWinHealGranted,1);
   const last=win(19,9,12);assert.equal(last.morale,13);assert.equal(last.talentWinHealGranted,10);

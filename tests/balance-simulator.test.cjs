@@ -62,6 +62,13 @@ test('limits are censored rather than failed and invalid actions spend nothing',
   const cfg=normalize({seed:7}),{game}=initialize(C,cfg),before=clone(game);
   assert.throws(()=>execute(C,game,{name:'train',args:['curry']},cfg),/Illegal action/);assert.deepEqual(game,before);
 });
+test('full-star recruitment estimates cannot reveal hidden random second or bonus skills',()=>{
+ const cfg=normalize({seed:81101,policy:'expert'}),game=C.createGame(),r=game.run=C.createRun('win_bonus',81101);
+ ['curry','durant','lebron','magic','shaq','jordan'].forEach((id,i)=>{r.owned[id]={stars:2,train:0,trainedAt:0};r.slots[C.SLOTS[i].id]=id;r.roleSkillMap[id]=['sk_cmd_1']});
+ r.offer=['curry','durant'];r.cash=100;r.free=1;
+ const before=hash(game),first=observe(C,game,cfg);assert.equal(hash(game),before);
+ for(const rng of [0,123,4294967295]){r.rng=rng;assert.deepEqual(observe(C,game,cfg),first)}
+});
 test('replay rejects altered trajectory and supports a labelled starting scenario',()=>{
   const r=simulate({seed:91,maxStage:2});assert.equal(replay(r).match,true);r.journal[0].args=['not-a-player'];assert.throws(()=>replay(r));
   const s=simulate({seed:3,maxStage:50,scenario:{label:'preset starting probe',stage:50,players:['curry','durant','lebron','magic','shaq','jordan'],cash:100,morale:3}});
@@ -72,4 +79,16 @@ test('ads only exist in explicitly configured reward-success scenario',()=>{
   for(let i=0;i<6;i++){if(!game.run.offer.length)C.makeOffer(game.run);C.recruit(game.run,game.run.offer[0])}
   assert.equal(enumerate(C,game,cfg).some(a=>a.name==='grantRewardedSOffer'),false);
   game.run.offer=[];assert.ok(enumerate(C,game,{...cfg,ads:'rewarded-success'}).some(a=>a.name==='grantRewardedSOffer'));
+});
+test('rewarded expert can select every unlocked talent and converts ordinary skill slots through legal ads',()=>{
+ const cfg=normalize({seed:4,policy:'expert',growthLevel:'full',ads:'rewarded-success'}),start=initialize(C,cfg);
+ assert.equal(start.talentOffer.length,20);assert.equal(start.chosen,'captain');
+ const record=simulate({...cfg,maxStage:3,maxMs:60000});assert.notEqual(record.outcome.status,'error',record.outcome.error?.stack);
+ const recruitAds=record.journal.filter(r=>r.name==='grantRewardedSOffer');assert.equal(recruitAds.length,3);assert.equal(new Set(recruitAds.map(r=>r.stage)).size,3);
+ assert.ok(record.journal.some(r=>r.name==='enterSkillAdPick'));assert.ok(record.journal.some(r=>r.name==='confirmSkillAdPick'));
+ assert.equal(validate(record).cloud.match,true);
+});
+test('rewarded resurrection occurs once through the same cloud resume terminal as the real UI',()=>{
+ const record=simulate({seed:9,policy:'expert',rulesVersion:6,ads:'rewarded-success',maxStage:100,maxBattles:6,maxMs:60000,scenario:{label:'late-stage resurrection probe',stage:100,players:['curry','durant','lebron','magic','shaq','jordan'],cash:0,morale:1}});
+ assert.notEqual(record.outcome.status,'error',record.outcome.error?.stack);assert.equal(record.journal.filter(r=>r.name==='reviveRun').length,1);assert.equal(validate(record).cloud.match,true);
 });

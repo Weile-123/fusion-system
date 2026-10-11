@@ -1,11 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const D = require('../h5/game-data.js');
+const D = require('../h5/game-core.js');
 
 const csv = rows => '\ufeff' + rows
   .map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(','))
   .join('\n') + '\n';
-const outDir = path.join(__dirname, '..', 'docs', 'data');
+const outDir = path.join(__dirname, '..', 'docs', '数据');
 fs.mkdirSync(outDir, { recursive: true });
 
 function writeFileIfChanged(file, content) {
@@ -13,14 +13,10 @@ function writeFileIfChanged(file, content) {
   fs.writeFileSync(file, content);
 }
 
-const players = D.STAR_ROWS.map(row => ({
-  id: row[0], name: row[1], tier: row[2], role: row[3], team: row[4], best: D.LABELS[row[5]],
-  attrs: Object.fromEntries(D.ATTRS.map((attr, index) => [attr, row[6][index]])),
-  talent: row[7], talentEffect: D.TALENT_DETAILS[row[0]].description, variantOf: row[8] || ''
-}));
+const players = D.STARS.map(star => ({...star,best:D.LABELS[star.best],talentEffect:star.talentEffect.description,variantOf:star.variantOf||''}));
 const byId = Object.fromEntries(players.map(player => [player.id, player]));
 
-writeFileIfChanged(path.join(outDir, 'my-game-players.csv'), csv([
+writeFileIfChanged(path.join(outDir, '球员数据.csv'), csv([
   ['ID', '球员', '等级', '位置', '球队/标签', '推荐槽位', '三分', '中投', '突破', '控球', '篮下', '防守', '专属天赋', '技能效果', 'SSR原型'],
   ...players.map(player => [player.id, player.name, player.tier, player.role, player.team, player.best,
     ...D.ATTRS.map(attr => player.attrs[attr]), player.talent, player.talentEffect,
@@ -36,9 +32,9 @@ const playerInfo = [
   ...players.map(player => `| ${[player.name, player.tier, player.role, player.best,
     ...D.ATTRS.map(attr => player.attrs[attr]), player.talent, player.talentEffect].map(mdCell).join(' | ')} |`), ''
 ].join('\n');
-writeFileIfChanged(path.join(outDir, 'current-player-information.md'), playerInfo);
+writeFileIfChanged(path.join(outDir, '全部球员信息.md'), playerInfo);
 
-writeFileIfChanged(path.join(outDir, 'my-game-bonds.csv'), csv([
+writeFileIfChanged(path.join(outDir, '羁绊数据.csv'), csv([
   ['羁绊', '人数', '成员', '效果'],
   ...D.SYNERGIES.map(bond => [bond.name, bond.ids.length, bond.ids.map(id => byId[id].name).join('、'), bond.description])
 ]));
@@ -58,11 +54,11 @@ const catalog = `# 球员与羁绊数据总表
 | --- | ---: | ---: |
 ${tierSummary}
 
-- [全部球员信息（Markdown）](data/current-player-information.md)
-- [全部球员信息（CSV）](data/my-game-players.csv)
-- [全部羁绊、成员与效果](data/my-game-bonds.csv)
+- [全部球员信息（Markdown）](全部球员信息.md)
+- [全部球员信息（CSV）](球员数据.csv)
+- [全部羁绊、成员与效果](羁绊数据.csv)
 
 当前共 ${players.length} 张卡（${players.filter(player => !player.variantOf).length} 名基础球员、${players.filter(player => player.variantOf).length} 张 SSR 异名卡）和 ${D.SYNERGIES.length} 组羁绊。
 `;
-writeFileIfChanged(path.join(__dirname, '..', 'docs', 'player-and-bond-catalog.md'), catalog);
+writeFileIfChanged(path.join(outDir, '球员与羁绊目录.md'), catalog);
 console.log(`Generated ${players.length} cards and ${D.SYNERGIES.length} game bonds.`);

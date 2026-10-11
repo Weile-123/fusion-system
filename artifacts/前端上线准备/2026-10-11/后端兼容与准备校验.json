@@ -1,0 +1,72 @@
+﻿{
+    "date":  "2026-10-11",
+    "preparedRules":  9,
+    "productionRulesObserved":  6,
+    "deploymentExecuted":  false,
+    "productionMigrationExecuted":  false,
+    "fullTests":  {
+                      "pass":  383,
+                      "skipped":  0,
+                      "fail":  0
+                  },
+    "compatibilityTests":  {
+                               "fail":  0,
+                               "pass":  36,
+                               "historicalScenarios":  400,
+                               "skipped":  0,
+                               "historicalRules":  [
+                                                       1,
+                                                       2,
+                                                       3,
+                                                       4,
+                                                       5,
+                                                       6,
+                                                       7,
+                                                       8
+                                                   ],
+                               "replayRules":  [
+                                                   1,
+                                                   2,
+                                                   3,
+                                                   4,
+                                                   5,
+                                                   6,
+                                                   7,
+                                                   8,
+                                                   9
+                                               ]
+                           },
+    "frontendInventoryMatched":  true,
+    "frontendArchiveSha256":  "b7779b76ab32f11db8308fd6b44944d4fbefa9e3c2f22ef57afd7edcdcf29a3d",
+    "backendArchiveSha256":  "7fd37736ea079fe9733b29dce58c06c0afe8bcff86cb2ec2d48dc30583727f62",
+    "backendArchiveEntries":  [
+                                  "game/event-data.js",
+                                  "game/event-system.js",
+                                  "game/game-core.js",
+                                  "game/game-data.js",
+                                  "game/gear-catalog.js",
+                                  "index.js",
+                                  "package-lock.json",
+                                  "package.json",
+                                  "scf_bootstrap",
+                                  "verified-game.js"
+                              ],
+    "backendSourcesMatched":  true,
+    "backendSourceHashes":  {
+                                "index.js":  "d7c798695d7113886a7048e5c48a33324c34e2909b9a53d770684c9d2d33dbf1",
+                                "package-lock.json":  "c7eb8dbd019b8e77ef1a2eadc39c35581c50b5626a038d43beec51b3135fe5fd",
+                                "package.json":  "3b81daebf9068593d5d0a992cc1c22cb5541ee3501a3fb1db382189a9ddee1a2",
+                                "scf_bootstrap":  "45275281d0581a5850204066a228237b4db504f0b15f0da752a57f336805f1f3",
+                                "verified-game.js":  "84759441b58f276c366dc30477c10bf92d57721f9dc173bcde80245b7da1be02",
+                                "game/event-data.js":  "3d8cb93af6edf520efb9f5adc7b75563579afbf2ad7f055e26e2997136b21662",
+                                "game/event-system.js":  "f805273f8e385954c4ec1223bee654e7444eebd55c9da700f4cbba96f78fca19",
+                                "game/game-core.js":  "2560ca486757848671c5770b12b8ecdf122909b52899f4ad9e45369a5f3c137f",
+                                "game/game-data.js":  "39a40b19a8db0229916569ff0a6796caad51def259cebffa19b92962acd910ea",
+                                "game/gear-catalog.js":  "1cdcc82d6542f1b22ad927c3b6a315ca4cd6e35c3e77597ed5be2549408e81bd"
+                            },
+    "migrationSha256":  "b3a5855d351c4b36238bcbe4c5059393095746d07f83973c36adc747af2d565d",
+    "testLogs":  [
+                     ".local-tools/backend-preparation-full-tests.log",
+                     ".local-tools/backend-compatibility-tests.log"
+                 ]
+}

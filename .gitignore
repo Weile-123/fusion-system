@@ -23,3 +23,6 @@ dist/
 /artifacts/frontend-release-*.zip
 /artifacts/balance/
 /artifacts/balance-*.log
+
+# 逐局完整测试记录仅保存在本地；报告、汇总和曲线继续入库
+/docs/balance/**/完整记录/*.json.gz

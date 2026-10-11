@@ -1,7 +1,7 @@
 'use strict';
 const C=require('./game/game-core.js');
 const crypto=require('crypto');
-const actions=new Set(['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent']);
+const actions=new Set(['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','refreshRandomSkill','enterSkillAdPick','confirmSkillAdPick','cancelSkillAdPick','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent']);
 function invalid(message='养成记录验证失败，请重新开局。'){throw Object.assign(new Error(message),{statusCode:409})}
 function replay(state,operations,terminal,strategy){
   if(!state||!Array.isArray(operations)||operations.length>1500)invalid();
@@ -22,6 +22,10 @@ function replay(state,operations,terminal,strategy){
     if(name==='continueRun'&&(run.lastBattle.won?!['next','finish'].includes(args[0]):args[0]!=='retry'))invalid();
     if(name==='continueRun'&&args[0]==='finish'&&(terminal!=='finish'||run.stage!==10))invalid();
     if(name==='confirmRecruitBatch'&&(!Array.isArray(args[0])||args[0].length!==10||args[0].some(value=>typeof value!=='boolean')))invalid();
+    if(run.skillAdPick&&!['confirmSkillAdPick','cancelSkillAdPick'].includes(name))invalid();
+    if(['refreshRandomSkill','enterSkillAdPick'].includes(name)&&(args.length!==2||typeof args[0]!=='string'||!Object.hasOwn(C.BY_ID,args[0])||!Number.isInteger(args[1])))invalid();
+    if(name==='confirmSkillAdPick'&&(args.length!==1||typeof args[0]!=='string'))invalid();
+    if(name==='cancelSkillAdPick'&&args.length)invalid();
     const before=JSON.stringify(run);
     const result=C[name](['continueRun','resolveRandomEvent','acknowledgeRandomEvent'].includes(name)?game:run,...args);
     if(result===false||result?.ok===false||before===JSON.stringify(run))invalid();

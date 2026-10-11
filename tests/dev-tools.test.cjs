@@ -7,13 +7,19 @@ function environment(){
  const nodes={},values=new Map();const element=()=>({style:{},dataset:{},listeners:{},hidden:false,innerHTML:'',setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return {left:300,top:600}},addEventListener(name,fn){this.listeners[name]=fn}});
  const root={innerWidth:400,innerHeight:800,localStorage:{getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)},document:{getElementById:id=>nodes[id],createElement:element,body:{append(...els){for(const el of els)nodes[el.id]=el}},addEventListener(){}},addEventListener(){}};
  D.prepareLocalRuntime(root);const game=C.createGame();game.run=C.createRun('steady_interest',911);
- const calls={saves:0,screen:''},copy=Object.create(C);root.SupFusionDevTools.install({C:copy,getGame:()=>game,save(){calls.saves++},render(){},go(screen){calls.screen=screen}});
+ const calls={saves:0,screen:''},copy=Object.create(C);root.SupFusionDevTools.install({C:copy,getGame:()=>game,save(){calls.saves++},render(){},go(screen){calls.screen=screen},previewRecruitCards:run=>{calls.draft=run;return '<div class="recruit-card-preview">'+run.offer.map(id=>C.BY_ID[id].name).join(' · ')+'</div>'},previewLeaderboard:data=>{calls.preview=data;calls.screen='leaderboard'}});
  const action=(name,id)=>nodes['dev-test-overlay'].listeners.click({target:{closest:()=>({dataset:{dev:name,id}})}});
  return {root,game,calls,nodes,values,action,copy};
 }
 test('local test storage is isolated and all cloud paths are disabled',async()=>{
  const {root,values,game}=environment();assert.equal(root.ACTIVITY_API_BASE,'');assert.equal(root.ACTIVITY_ENV_ID,'');assert.equal(root.FusionStorage.platformAvailable(),false);
  await root.FusionStorage.save(game);assert.equal(values.has('mySupFusionGameV1'),false);assert.equal(values.has('mySupFusionDevTestV1'),true);assert.deepEqual(await root.FusionStorage.load(),game);
+});
+test('recruit card preview opens without a run and leaves existing game and save state untouched',()=>{
+ const {game,action,calls,nodes}=environment(),before=JSON.stringify(game);nodes['dev-test-button'].listeners.click();assert.match(nodes['dev-test-overlay'].innerHTML,/查看招募卡片/);
+ action('recruit-preview');assert.equal(nodes['dev-test-overlay'].hidden,false);assert.match(nodes['dev-test-overlay'].innerHTML,/recruit-card-preview/);assert.equal(calls.draft.offer.length,10);assert.ok(calls.draft.offer.every(id=>C.BY_ID[id]));assert.deepEqual(new Set(calls.draft.offer.map(id=>C.BY_ID[id].tier)),new Set(['C','B','S','SSR','A']));assert.deepEqual(new Set(calls.draft.offer.map(id=>C.getRoleSkills(calls.draft,id)[0].skill.star)),new Set([1,2,3,4,5]));assert.equal(JSON.stringify(game),before);assert.equal(calls.saves,0);
+ action('draft-detail','anunoby');assert.match(nodes['dev-test-overlay'].innerHTML,/dev-draft-detail/);assert.equal(JSON.stringify(game),before);action('preview-back');assert.match(nodes['dev-test-overlay'].innerHTML,/全部事件/);
+ game.run=null;action('recruit-preview');assert.equal(game.run,null);assert.equal(calls.saves,0);
 });
 test('floating button opens, drags within bounds and does not open on a drag release',()=>{
  const {nodes}=environment(),b=nodes['dev-test-button'],o=nodes['dev-test-overlay'];b.listeners.click();assert.equal(o.hidden,false);assert.equal((o.innerHTML.match(/class="dev-event"/g)||[]).length,36);o.hidden=true;
@@ -28,6 +34,21 @@ test('legendary points button works before a run and persists in isolated local 
  const {game,action,calls,root,nodes}=environment();game.run=null;nodes['dev-test-button'].listeners.click();assert.match(nodes['dev-test-overlay'].innerHTML,/data-dev="legend">传奇点 \+999/);
  action('legend');assert.equal(game.profile.legend,999);action('legend');assert.equal(game.profile.legend,1998);assert.equal(calls.saves,2);
  await root.FusionStorage.save(game);assert.equal((await root.FusionStorage.load()).profile.legend,1998);assert.equal(root.ACTIVITY_API_BASE,'');
+});
+
+test('leaderboard test button generates fifty rows per board without changing saves',()=>{
+ const {game,action,calls,root,nodes}=environment();game.run=null;
+ nodes['dev-test-button'].listeners.click();assert.match(nodes['dev-test-overlay'].innerHTML,/模拟排行榜 · 50条/);
+ action('leaderboard');assert.equal(calls.screen,'leaderboard');assert.equal(nodes['dev-test-overlay'].hidden,true);
+ const data=calls.preview;
+ for(const board of ['legend','ovr','previous']){
+   assert.equal(data[board].length,50);assert.equal(data[board][49].rank,50);
+   assert.ok(data[board].every((row,index)=>index===0||row.score<=data[board][index-1].score));
+ }
+ assert.equal(data.ovr.filter(row=>row.isCurrent).length,1);assert.ok(data.previous.every(row=>!row.isCurrent));
+ assert.ok(data.ovr.every(row=>row.stage>0));assert.equal(data.weeks.current.startsAt-data.weeks.previous.startsAt,7*86400000);
+ assert.equal(calls.saves,0);assert.equal(root.ACTIVITY_API_BASE,'');
+ action('leaderboard-clear');assert.equal(calls.preview,null);assert.equal(calls.saves,0);
 });
 
 test('every event exposes missing conditions and qualified events show correct rates',()=>{

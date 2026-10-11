@@ -114,6 +114,6 @@ function main(){
   const formed=groups.filter(g=>g.policy==='expert').map(g=>{const a=goalRows.filter(x=>x.group===g.id&&x.everRoute);return [g.label,a.length,q(a.map(x=>x.firstRoute),.5)??'无样本',q(a.map(x=>x.highestCleared),.5)??'无样本',a.length?Math.max(...a.map(x=>x.highestCleared)):'无样本',q(a.map(x=>Math.max(0,x.highestCleared-x.firstRoute+1)),.5)??'无样本']});
   const formedText='### 只看曾完成路线1的对局\n\n'+table(['高手账号','局数','首次成型关中位数','最终通关中位数','最高通关','首次成型关起又通关的关数中位数'],formed)+'\n\n这里仅要求路线1的16名成员和六个主力位置齐全，不要求满星满训。最后一列从首次成型关开始计已通关数；后续可能因即时战力重新换位，不代表始终保持攻略位置。成型者本来就是筛选出的幸存者，不能与未成型者直接比较并认定因果收益。全体最高战绩与路线1成型者最高战绩须分别看。\n\n';
   const finalMd=md.replace('### 优先处理的问题',evidenceSummary(summaries,stageRows,goalRows)+'### 优先处理的问题').replace('### 局外成长到底帮助了多少',extra+formedText+'### 局外成长到底帮助了多少');
-  fs.writeFileSync('BALANCE_REPORT.md',finalMd);fs.writeFileSync(path.join(dir,'BALANCE_REPORT.md'),finalMd);console.log(JSON.stringify({summaries,actions,battles,eventCount,anomalies,checks:checks.map(x=>({group:x.group,seed:x.seed,match:x.cloud.match}))},null,2));
+  fs.writeFileSync('docs/批量模拟报告.md',finalMd);fs.writeFileSync(path.join(dir,'批量模拟报告.md'),finalMd);console.log(JSON.stringify({summaries,actions,battles,eventCount,anomalies,checks:checks.map(x=>({group:x.group,seed:x.seed,match:x.cloud.match}))},null,2));
 }
 if(require.main===module)main();

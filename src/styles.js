@@ -23,3 +23,5 @@ import '../h5/ssr-card.css';
 import '../h5/styles/codex.css';
 import '../h5/styles/release-polish.css';
 import '../h5/styles/events.css';
+import '../h5/styles/random-skills.css';
+import '../h5/styles/recruit-cards.css';

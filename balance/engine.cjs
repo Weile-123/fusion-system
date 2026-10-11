@@ -27,12 +27,14 @@ function normalize(options={}){
   return cfg;
 }
 function initialize(core,config){
+  const rulesVersion=config.rulesVersion??core.BALANCE_RULES_VERSION;
+  const catalog=core.TALENTS.map(t=>core.talentForRun?.({talent:t.id,balanceRulesVersion:rulesVersion})||t);
   const game=core.createGame();if(config.profile)game.profile=clone(config.profile);
-  else if(config.growthLevel)game.profile=require('./objectives.cjs').profileFor(core,config.growthLevel,config.seed);
+  else if(config.growthLevel)game.profile=require('./objectives.cjs').profileFor({...core,TALENTS:catalog},config.growthLevel,config.seed);
   const setupRandom=rng(config.setupSeed??(config.seed^0xa341316c));
-  const talents=[...core.availableTalents(game.profile)];
+  const talents=catalog.filter(t=>core.talentUnlocked(t,game.profile));
   for(let i=talents.length-1;i>0;i--){const j=Math.floor(setupRandom()*(i+1));[talents[i],talents[j]]=[talents[j],talents[i]]}
-  const talentOffer=talents.slice(0,3+(game.profile.upgrades?.policyOffers||0));
+  const talentOffer=config.ads==='rewarded-success'?talents:talents.slice(0,3+(game.profile.upgrades?.policyOffers||0));
   const preferences={novice:['dynasty','championship_budget','all_in','phase_tempo'],ordinary:['scouting_network','star_workshop','development','win_bonus'],expert:['captain','scouting_network','counter_coach','development','chemistry','star_workshop','streak_bonus','front_office']};
   const preferred=(preferences[config.policy]||[]).find(id=>talentOffer.some(t=>t.id===id));
   const chosen=config.talent||preferred||talentOffer[0].id;
