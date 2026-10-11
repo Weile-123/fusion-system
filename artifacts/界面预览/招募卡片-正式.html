@@ -706,7 +706,7 @@
   overflow: hidden
 }
 .game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card{padding:10px}
-.game-modal .modal-card.bonds-modal{padding:8px}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.bonds-modal{padding:8px}
 .game-modal .bonds-modal .modal-head{padding:0 0 3px}
 .game-modal .bonds-modal .bond-summary{padding:2px 0 8px}
 .game-modal .bonds-modal .bond-list{padding:0}
@@ -2087,12 +2087,8 @@ button[data-network-pending]::after { content: ''; display: inline-block; width:
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.ssr-card .visual-number{right:12px;opacity:1;color:transparent;text-shadow:none;filter:none}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.ssr-card .card-visual strong{max-width:none}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .draft-center-hints{top:13px;left:46px;right:52px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card:has(.draft-bond-hints) .card-top .rarity{font-size:60px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card:has(.draft-bond-hints) .visual-number b{font-size:46px}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:68px;right:49px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .card-top .rarity{font-size:38px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .visual-number b{font-size:34px}
-@media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:58px;right:44px}:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .card-top .rarity{font-size:30px}:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .visual-number b{font-size:30px}}
+@media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:58px;right:44px}}
 @media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .draft-bond-hints i{font-size:6.5px;padding:0 2px;line-height:1.15}}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .card-visual:has(.draft-bond-hints) strong{bottom:6px}
 </style><style>/* 首页方案一：所有视觉覆盖仅作用于首页。 */

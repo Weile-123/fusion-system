@@ -82,11 +82,7 @@
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.ssr-card .visual-number{right:12px;opacity:1;color:transparent;text-shadow:none;filter:none}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.ssr-card .card-visual strong{max-width:none}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .draft-center-hints{top:13px;left:46px;right:52px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card:has(.draft-bond-hints) .card-top .rarity{font-size:60px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card:has(.draft-bond-hints) .visual-number b{font-size:46px}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:68px;right:49px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .card-top .rarity{font-size:38px}
-:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .visual-number b{font-size:34px}
-@media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:58px;right:44px}:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .card-top .rarity{font-size:30px}:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend:has(.draft-bond-hints) .visual-number b{font-size:30px}}
+@media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:58px;right:44px}}
 @media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .draft-bond-hints i{font-size:6.5px;padding:0 2px;line-height:1.15}}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .card-visual:has(.draft-bond-hints) strong{bottom:6px}
