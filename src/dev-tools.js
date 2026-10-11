@@ -4,10 +4,19 @@ const key='mySupFusionDevTestV1';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function prepareLocalRuntime(root){
   root.ACTIVITY_API_BASE='';root.ACTIVITY_ENV_ID='';
+  const nativeSDK=root.ColorboxAI;
+  let adFree=false;
+  const setAdFree=enabled=>{
+    adFree=enabled===true;
+    root.ColorboxAI=adFree?{...nativeSDK,vatask:{...nativeSDK?.vatask,
+      async completeRewardVideo(){return {code:200,message:'本地免广告',data:{rewarded:true}}},
+      async getActivityTaskState(){return {code:200,data:{tasks:[{taskCode:'reward',status:'completed'}]}}}
+    }}:nativeSDK;
+  };
   root.FusionStorage={available:()=>!!root.localStorage,localAvailable:()=>!!root.localStorage,platformAvailable:()=>false,
     async load(){try{return JSON.parse(root.localStorage.getItem(key)||'null')}catch{return null}},
     async save(game){root.localStorage.setItem(key,JSON.stringify(game))},async syncToCloud(){}};
-  root.SupFusionDevTools={install:hooks=>installDevTools(root,hooks)};
+  root.SupFusionDevTools={get adFree(){return adFree},setAdFree,install:hooks=>installDevTools(root,hooks)};
 }
 function snapshot(C,run){
   if(run.lastBattle?.eventSnapshot)return run.lastBattle.eventSnapshot;
@@ -97,16 +106,17 @@ function installDevTools(root,{C,getGame,save,render,go,previewLeaderboard,previ
   function draw(){
     const run=getGame().run;
     const rows=C.EVENTS.map(event=>{const info=inspectEvent(C,run,event);return '<article class="dev-event"><header><b>'+escape(event.id+' '+event.name)+'</b><span class="'+(info.met?'met':'unmet')+'">'+(info.met?'已达成':'未达成')+'</span></header><p>'+escape(event.category)+'</p><ul>'+info.conditions.map(c=>'<li class="'+(c.met?'met':'unmet')+'">'+(c.met?'✓ ':'✗ ')+escape(c.label)+'</li>').join('')+'</ul>'+(info.met?'<p>事件出现率 '+info.chance+'% · 候选 '+info.eligibleCount+' 个（等概率） · '+(info.direct?'选项直接结算': '成功率 '+info.success+'%')+'</p>':'<p class="unmet">还差：'+escape(info.missing.join('；'))+'</p>')+'<button data-dev="event" data-id="'+event.id+'">强制触发</button></article>'}).join('');
-    overlay.innerHTML='<section class="dev-test-panel" role="dialog" aria-modal="true" aria-labelledby="dev-test-title"><header><h2 id="dev-test-title">本地测试</h2><button data-dev="close" aria-label="关闭测试弹窗">×</button></header><p>独立测试存档 · 排行榜同步已停用</p><div class="dev-test-actions"><button data-dev="cash">+999 奖金</button><button data-dev="legend">传奇点 +999</button><button data-dev="rarity">'+(run?.forceRareRecruit?'关闭':'开启')+' S / SSR 招募提升</button><button data-dev="recruit-preview">查看招募卡片</button><button data-dev="leaderboard">模拟排行榜 · 50条</button><button data-dev="leaderboard-clear">清除排行榜模拟</button></div><p>招募提升开启时，每组优先加入 S、SSR 各一名（对应牌池可用时）；当前候选不重抽。</p><p role="status">'+escape(message)+'</p><h3>全部事件（'+C.EVENTS.length+'）</h3><p>强制触发会绕过筛选条件，并补齐结算所需奖金或球衣资格。</p>'+rows+'</section>';
+    overlay.innerHTML='<section class="dev-test-panel" role="dialog" aria-modal="true" aria-labelledby="dev-test-title"><header><h2 id="dev-test-title">本地测试</h2><button data-dev="close" aria-label="关闭测试弹窗">×</button></header><p>独立测试存档 · 排行榜同步已停用</p><div class="dev-test-actions"><button data-dev="cash">+999 奖金</button><button data-dev="legend">传奇点 +999</button><button data-dev="rarity">'+(run?.forceRareRecruit?'关闭':'开启')+' S / SSR 招募提升</button><button data-dev="ads-free" aria-pressed="'+root.SupFusionDevTools.adFree+'">免广告：'+(root.SupFusionDevTools.adFree?'开启':'关闭')+'</button><button data-dev="recruit-preview">查看招募卡片</button><button data-dev="leaderboard">模拟排行榜 · 50条</button><button data-dev="leaderboard-clear">清除排行榜模拟</button></div><p>招募提升开启时，每组优先加入 S、SSR 各一名（对应牌池可用时）；当前候选不重抽。</p><p role="status">'+escape(message)+'</p><h3>全部事件（'+C.EVENTS.length+'）</h3><p>强制触发会绕过筛选条件，并补齐结算所需奖金或球衣资格。</p>'+rows+'</section>';
   }
   function drawRecruitPreview(detailId=''){
     const player=C.BY_ID[detailId];
-    overlay.innerHTML='<section class="dev-test-panel dev-recruit-preview" role="dialog" aria-modal="true" aria-labelledby="dev-draft-title"><header><h2 id="dev-draft-title">查看招募卡片</h2><button data-dev="preview-back">返回测试</button><button data-dev="close" aria-label="关闭预览">×</button></header>'+previewRecruitCards(draftPreview)+(player?'<section class="dev-draft-detail"><h3>'+escape(player.name)+'</h3><p>'+escape(player.talent+'：'+player.talentEffect.description)+'</p>'+C.getRoleSkills(draftPreview,detailId).map(({skill})=>'<p>'+escape(skill.star+'★ '+skill.name+' · '+skill.description)+'</p>').join('')+'</section>':'')+'<p>点击卡片查看选中样式，点击详情或词条查看效果；不改变当前对局。</p></section>';
+    overlay.innerHTML='<section class="dev-test-panel dev-recruit-preview" role="dialog" aria-modal="true" aria-labelledby="dev-draft-title"><header><h2 id="dev-draft-title">查看招募卡片</h2><button data-dev="preview-back">返回测试</button><button data-dev="close" aria-label="关闭预览">×</button></header>'+previewRecruitCards(draftPreview)+(player?'<section class="dev-draft-detail"><h3>'+escape(player.name)+'</h3><p>'+escape(player.talent+'：'+player.talentEffect.description)+'</p>'+C.getRoleSkills(draftPreview,detailId).map(({skill})=>'<p>'+escape(skill.star+'★ '+skill.name+' · '+skill.description)+'</p>').join('')+'</section>':'')+'<p>点击卡片查看选中样式，点击详情或徽章查看效果；不改变当前对局。</p></section>';
   }
   button.addEventListener('click',()=>{if(moved){moved=false;return}overlay.hidden=false;draw()});
   overlay.addEventListener('click',e=>{if(e.target===overlay){overlay.hidden=true;return}const target=e.target.closest('[data-dev]');if(!target)return;
     const action=target.dataset.dev,game=getGame();
     if(action==='close'){overlay.hidden=true;return}
+    if(action==='ads-free'){root.SupFusionDevTools.setAdFree(!root.SupFusionDevTools.adFree);message=root.SupFusionDevTools.adFree?'本地免广告已开启，广告按钮直接发放奖励；原有资格和次数限制继续生效。':'本地免广告已关闭。';draw();return}
     if(action==='recruit-preview'){if(typeof previewRecruitCards!=='function'){message='招募卡片预览暂不可用。';draw();return}draftPreview=createRecruitPreview(C);drawRecruitPreview();return}
     if(action==='preview-back'){draftPreview=null;draw();return}
     if(action==='draft-select'){const card=target.closest('.card');if(card)card.classList.toggle('selected');return}

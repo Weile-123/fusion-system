@@ -133,15 +133,15 @@ function HomeScreen({ active, stage, announcementUnread }) {
   return (
     <>
       <section className="home-hero">
-        <div className="home-orbit" aria-hidden="true"><span>11</span></div>
         <div className="home-eyebrow">BUILD YOUR OWN LEGEND</div>
         <h1>我的球星<br /><em>融合系统</em></h1>
         <div className="home-introduction">
           <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
+        </div>
           <button type="button" className={`home-announcement${announcementUnread ? ' has-update' : ''}`} data-act="announcement-open" aria-label="更新公告" title="更新公告">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
+            <span>更新公告</span>
           </button>
-        </div>
         <div className="home-scores">
           <div><b>06</b><small>能力槽位</small></div>
           <div><b>10</b><small>主线关卡</small></div>
@@ -149,7 +149,7 @@ function HomeScreen({ active, stage, announcementUnread }) {
         </div>
       </section>
       {active && <button className="btn wide home-primary home-continue" data-act="continue">继续第 {stage} 关 <span>→</span></button>}
-      <button className="btn wide home-primary home-new" data-act="new">{active ? '开启另一段旅程' : '开启新旅程'} <span>→</span></button>
+      <button className={`btn wide home-primary home-new${active ? '' : ' home-start'}`} data-act="new">{active ? '开启另一段旅程' : '开启新旅程'} <span>→</span></button>
       <button className="home-leaderboard-entry button-7" data-act="leaderboard">排行榜 <span>→</span></button>
       <div className="home-entry-row grid grid-cols-2">
         <button className="home-secondary home-pointshop" data-act="pointshop">点数商店</button>
@@ -162,8 +162,19 @@ function HomeScreen({ active, stage, announcementUnread }) {
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新更新 · 2026.10.10</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新更新 · 2026.10.12</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">2026.10.12 · 徽章与天赋更新</h3>
+      <h3>每位球星，都有新打法</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 为每名球星新增112条随机徽章，分为1—5星。首次招募出现时随机分配，普通满星后再获得一条3—5星徽章（可在招募卡片和球员详情中查看）。徽章拥有多种加成效果，但需上阵融合面板才能生效。</p>
+      <h3>开局天赋调整</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次对13条天赋进行调整，删除：<strong>赢球奖金</strong>、<strong>连胜分红</strong>；新增：<strong>巨星传承</strong>、<strong>场外协助</strong>。</p>
+      <div className="announcement-talent-changes">
+        <p><span className="announcement-bullet" aria-hidden="true">·</span> <strong>巨星传承：</strong>满星额外补授随机5星徽章，补授槽不可重随或广告替换；需生涯15胜且发现20名球星，旧玩家已有资格保留。</p>
+        <p><span className="announcement-bullet" aria-hidden="true">·</span> <strong>场外协助：</strong>事件挑战成功率100%、永久事件增益×1.5、战后收入-2；需发现10种事件且到达无尽第13关。</p>
+      </div>
+      <h3>招募与详情焕新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 调整招募卡片字体、等级渐变色、SSR钻石配色及技能徽章展示；升星和羁绊提示居中显示，羁绊最多显示三条。备战席已满时，直接出售新招募的SSR球员需再次确认。</p>
+      <h3>页面样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 首页焕新为暗色黑金风格，加入篮球与球场背景，优化标题、玩法指标和按钮布局，保留所有原有功能入口；5星徽章自选页面采用黑金徽章列表，优化选中状态与效果展示。</p>
+      <h3>关卡难度微调</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 配合新徽章与天赋调整对手数值，保持成长与闯关节奏。新数值仅对新开局生效，已有对局继续使用原规则；生涯记录、传奇点和已解锁内容保留。</p>
       <h3 className="announcement-version">2026.10.10 · 数值调整</h3>
       <section className="announcement-intro">
         <h3><span className="announcement-priority">重要</span>关于数值调整与排行榜更新</h3>
@@ -173,7 +184,7 @@ function AnnouncementScreen() {
         <p>下面是本次版本的其他更新:</p>
       </section>
       <h3>单挑路上，更多故事</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 新增36条随机事件：14条技巧较量、8条单挑挑战、6条剧情抉择、1条救援、1条交易及6条球衣传承。通过练习、挑战和投资，获得本局属性加成、奖金、装备或球衣。</p>
-      <h3>传奇商店上新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 球衣与装备解锁页合并为传奇商店。新增10件非球衣传奇装备；每次花费300传奇点随机解锁1件，解锁后从新开局进入装备池。新增胜利奖金、失败补偿、战术克制奖励、购买折扣等词条。</p>
+      <h3>传奇商店上新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 球衣与装备解锁页合并为传奇商店。新增10件非球衣传奇装备；每次花费300传奇点随机解锁1件，解锁后从新开局进入装备池。新增胜利奖金、失败补偿、战术克制奖励、购买折扣等徽章。</p>
       <h3>赛前强化与装备</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 同类赛前强化每场在前10关最多购买2次，无尽最多购买10次，刷新商店不重置次数。<br />
         <span className="announcement-bullet" aria-hidden="true">·</span> 装备商店前三栏只出现非球衣装备，球衣以独立概率出现并单独追加在第四栏。装备每次付费刷新后，下次费用增加1，进入下一关重置。<br />

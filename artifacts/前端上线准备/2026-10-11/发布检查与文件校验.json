@@ -36,9 +36,9 @@
     "应用或核验事件解锁迁移",
     "虎扑App广告、存档及新局入榜验收"
   ],
-  "archiveSha256": "b7779b76ab32f11db8308fd6b44944d4fbefa9e3c2f22ef57afd7edcdcf29a3d",
-  "archiveBytes": 2417933,
-  "fileCount": 62,
+  "archiveSha256": "be1e409d95e3fa5e0ce0216809d9424d6859722a36719d8790aa51d5fbb7e883",
+  "archiveBytes": 2618023,
+  "fileCount": 64,
   "files": {
     "assets/BarlowCondensed-ExtraBoldItalic-BCMzCgyJ.ttf": "331783dae9ec0c398f4d32c9fd5a56d4c602caa0c1628c2b9cbfe93f48eb68c9",
     "assets/boosts/clutch.svg": "929e3d7a14f3b98249b222177c88f255ccd1a38d822e5c5488e7655a78c57c12",
@@ -57,13 +57,15 @@
     "assets/fonts/BarlowCondensed-OFL.txt": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
     "assets/fusion-ace.png": "6c6fcaf0989c31412664c8e6b26cf9b722d90da3953f31cb41984bb9cff8c597",
     "assets/fusion-player-asian.png": "7f0108b4b48a28a1fa3c8a8bc091470baa0837231d5b5136d32a7666eb8fe2a7",
-    "assets/game-core-Bv-Nx17R.js": "1bd66daf9303c428ce1ac0209c572271112bb377ced8df0a8d88891964900b06",
-    "assets/game-data-CjFcoenY.js": "69dd5a7fee362390939e3b44dea1a7cbedead39db66537b2036bbdb588046d97",
+    "assets/game-core-CK7c7mV_.js": "3d59a9f694b2dcda6801f1de7ca99e6be67cf80dece8ad55f7943bacf229f1f1",
+    "assets/game-data-C4mJK3JT.js": "078fcfbdbbb4f25119c3275d97ecb2630fe6efe8687224e719d76fea542e758e",
     "assets/game-logo.png": "07856df4c820d247fc10feaedea9e90f07414332da98ca2d27e9a07b74df0ef4",
-    "assets/game-ui-Nd1Asaz_.js": "0768be379f166d35acaa6c13fd103c9f354bf386a0e9d21c2e0cf6d9b1d24df3",
+    "assets/game-ui-Da95ORcB.js": "ae11f1cfa2ed16f96f6af8152109e50d3beb8e589ca9da8b6408123992edb966",
     "assets/gear-catalog-DI6WHTCZ.js": "d4fe5ca29085f73384b201c68f83e1cc5ba6ef9bd8b6ba3ec172117f1e0a6bf0",
-    "assets/index-CElgJLOi.js": "9b8ffac316da8fe065b1b7572a8c061368275eb1ff5c6d0e9b6d1d1aff0aff83",
-    "assets/index-FTxUrxGb.css": "fbd9e43493a67626e20057e2573f723827c945b98b8ee849970871f7597e62cd",
+    "assets/home-gold-court-8EupCtBR.jpg": "e266444fe964f686f41d46b9218ea9270c09b335a70e4da6db19a2bfe40772f4",
+    "assets/home-gold-court.jpg": "e266444fe964f686f41d46b9218ea9270c09b335a70e4da6db19a2bfe40772f4",
+    "assets/index-CTgfJAKz.js": "404e2a315eec265c01c44bca23b6225b73151d4b9dfa4eb870bda430125457d6",
+    "assets/index-CZT2TM67.css": "8fd851971e916e66693c7b88e8dd9e57cf045c331519eb25e29072f20ebdee06",
     "assets/legacy-gift-box.svg": "3eb75270c32379bfe303d38753d650351c2aebfc804723de3d9c163507e29afb",
     "assets/legacy-jersey-showcase.png": "2d86e178031dba6e61add24285b8df365a7e20f4074a9c67cb21d75b908643ff",
     "assets/logos/atl.png": "cee5d101cc2c7544895c008d24ba1e01257a4068985ccc04b605eb11592aa19a",
@@ -101,6 +103,13 @@
     "assets/rival-forward.png": "b5b21558773898d3db905bc7221edc572eda73b05db73c2ccb6ff128dcd0efe0",
     "assets/storage-adapter-D3y-deFj.js": "7fb1c417b1ea6f511e79c654a27a888aa763c60b347ec9f251de3b57604e908a",
     "assets/user-feedback-B5cLp3WI.js": "38324fe4dc972b59e771747ce1af19f99aa97c28a16ce07d64029e40874c5a9d",
-    "index.html": "85435a06a58dc52595c4c2ddcc5b2ccf24949e8e987f2ce44a61a4fb007a8414"
-  }
+    "index.html": "cc5f95285df8c2efe43a4077e78724b6d7c52955028bed11ee1f7888fa3ed162"
+  },
+  "fullTests": {
+    "pass": 390,
+    "skipped": 0,
+    "fail": 0
+  },
+  "plannedReleaseDate": "2026-10-12",
+  "browserVisualValidation": "首页黑金布局已通过本地Chrome 320/390/480px有存档与无存档检查；虎扑App真机广告和存档验收待完成"
 }

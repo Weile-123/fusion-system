@@ -32,4 +32,4 @@ code=code.replace(/  const RANDOM_SKILLS=[\s\S]*?;\r?\n(?=  return \{)/,'');
 code=code.replace('  return {RANDOM_SKILLS,ATTRS,','  return {ATTRS,');
 code=code.replace('  return {ATTRS,','  const RANDOM_SKILLS='+JSON.stringify(skills,null,2)+';\n  return {RANDOM_SKILLS,ATTRS,');
 assert.ok(code.includes('return {RANDOM_SKILLS,ATTRS,'));fs.writeFileSync(file,code);
-console.log('生成112条篮球随机词条。');
+console.log('生成112条篮球随机徽章。');

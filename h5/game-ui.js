@@ -15,7 +15,7 @@
   let pointShopMessage='',jerseyUnlockResult='',legendaryGearUnlockResult='';
   let profileBondSize='all';
   let skillAdBusy=false,skillMessage='',skillPickCandidate='';
-  const ANNOUNCEMENT_VERSION='2026-10-10';
+  const ANNOUNCEMENT_VERSION='2026-10-12';
   let showAnnouncement=false;
   let showFeedback=false,feedbackDraft='',feedbackBusy=false,feedbackMessage='';
   const recordedActions=['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','refreshRandomSkill','enterSkillAdPick','confirmSkillAdPick','cancelSkillAdPick','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent'];
@@ -379,13 +379,13 @@
       return;
     }
     els.home.markup=`
-      <section class="home-hero"><div class="home-orbit" aria-hidden="true"><span>11</span></div><div class="home-eyebrow">BUILD YOUR OWN LEGEND</div>
+      <section class="home-hero"><div class="home-eyebrow">BUILD YOUR OWN LEGEND</div>
         <h1>我的球星<br><em>融合系统</em></h1>
-        <div class="home-introduction"><p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p><button type="button" class="home-announcement${game.profile.announcementReadVersion!==ANNOUNCEMENT_VERSION?' has-update':''}" data-act="announcement-open" aria-label="更新公告"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6"/></svg></button></div>
+        <div class="home-introduction"><p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p></div><button type="button" class="home-announcement${game.profile.announcementReadVersion!==ANNOUNCEMENT_VERSION?' has-update':''}" data-act="announcement-open" aria-label="更新公告"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6"/></svg><span>更新公告</span></button>
         <div class="home-scores"><div><b>06</b><small>能力槽位</small></div><div><b>10</b><small>主线关卡</small></div><div><b>∞</b><small>无尽挑战</small></div></div>
       </section>
       ${active?`<button class="btn wide home-primary home-continue" data-act="continue">继续第 ${r.stage} 关 <span>→</span></button>`:''}
-      <button class="btn wide home-primary home-new" data-act="new">${active?'开启另一段旅程':'开启新旅程'} <span>→</span></button><button class="home-leaderboard-entry button-7" data-act="leaderboard">排行榜 <span>→</span></button>
+      <button class="btn wide home-primary home-new${active?'':' home-start'}" data-act="new">${active?'开启另一段旅程':'开启新旅程'} <span>→</span></button><button class="home-leaderboard-entry button-7" data-act="leaderboard">排行榜 <span>→</span></button>
       <div class="home-entry-row grid grid-cols-2"><button class="home-secondary home-pointshop" data-act="pointshop">点数商店</button><button class="home-secondary home-profile" data-act="profile">传奇档案</button></div>
        <button type="button" class="home-feedback button-7" data-act="feedback-open">反馈入口</button>`;
   }
@@ -602,8 +602,8 @@
     const priorCopies=batch?run.offer.slice(0,index).filter((offerId,offerIndex)=>offerId===id&&run.batchSelected[offerIndex]!==false).length:0;
     const duplicate=!!own||priorCopies>0,nextStars=Math.min(C.starLimit(run,id),(own?.stars||0)+priorCopies+1);
     const batchIds=batch?run.offer.filter((_,offerIndex)=>run.batchSelected[offerIndex]!==false):[];
-    const bondHints=batch?(selected?draftBondHints(id,batchIds,run):[]):draftBondHints(id,[],run);
-    const bondHintMarkup=bondHints.length?`<span class="draft-bond-hints">${bondHints.map(b=>`<i class="${b.active?'active':''}" title="${escapeText(b.name+(b.active?'':` ${b.count}/${b.total}`))}">${b.name}${b.active?'':` ${b.count}/${b.total}`}</i>`).join('')}</span>`:'';
+    const bondHints=duplicate?[]:batch?(selected?draftBondHints(id,batchIds,run):[]):draftBondHints(id,[],run);
+    const bondHintMarkup=bondHints.length?`<span class="draft-bond-hints">${bondHints.map(b=>`<i class="${b.active?'active':''}" title="${escapeText(`${b.name} ${b.count}/${b.total}`)}">${escapeText(b.name)} ${b.count}/${b.total}</i>`).join('')}</span>`:'';
     const isSSR=s.tier==='SSR';
     return `<div class="card recruitment-card ${tierClass[s.tier]} ${isSSR?'ssr-card ':''}${batch?(selected?'batch-selected':'batch-excluded'):selected?'selected':''}" style="--card-order:${index}">
       <button class="card-select" data-act="select-offer" data-id="${id}" data-index="${index}"><span class="card-top"><span class="card-grade"><span class="rarity">${tierName[s.tier]}</span></span></span>
@@ -613,7 +613,7 @@
     </div>`;
   }
   function previewRecruitCards(run){
-    return `<div class="recruit-card-preview draft-style-material"><div class="draft-heading"><h1>DRAFT <small>招募卡片预览</small></h1></div><p class="draft-preview-note">模拟招募页面 · 包含升星、羁绊及各星级词条</p><div class="choicegrid grid grid-cols-2">${run.offer.map((id,index)=>draftCard(id,index,run)).join('')}</div></div>`.replace(/data-act="select-offer"/g,'data-dev="draft-select"').replace(/data-act="star-detail"/g,'data-dev="draft-detail"');
+    return `<div class="recruit-card-preview draft-style-material"><div class="draft-heading"><h1>DRAFT <small>招募卡片预览</small></h1></div><p class="draft-preview-note">模拟招募页面 · 包含升星、羁绊及各星级徽章</p><div class="choicegrid grid grid-cols-2">${run.offer.map((id,index)=>draftCard(id,index,run)).join('')}</div></div>`.replace(/data-act="select-offer"/g,'data-dev="draft-select"').replace(/data-act="star-detail"/g,'data-dev="draft-detail"');
   }
   function renderBatchAction(batch,batchCount){
     if(!batchActionRoot)return;
@@ -1034,12 +1034,15 @@
   function playerSkillSection(run,id){
     if(!C.hasRandomSkills(run))return '';
     const entries=C.getRoleSkills(run,id),manage=skillManagementAllowed(run,id),locked=run.ended||run.lastBattle||run.pending||run.randomEvent||skillAdBusy;
-    return `<section class="detail-section random-skill-section"><span>本局随机词条</span>${entries.map(({skill,slot})=>{const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=C.SKILL_REFRESH_COSTS[used],adUsed=run.skillAdPickUsed[id]?.[slot-1],bonus=run.bonusSkillSlots?.[id]===slot;return `<div class="random-skill-entry skill-star-${skill.star}"><h3><span class="draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span></h3><p>${escapeText(skill.description)}</p>${bonus?'<p class="bonus-skill-note">满星补授 · 不可重随或广告替换</p>':manage?`<div class="random-skill-actions"><button class="button-7" data-act="skill-refresh" data-id="${id}" data-slot="${slot}" ${locked||cost===undefined||run.cash<cost?'disabled':''}>${cost===undefined?'重随次数已用完':`重随 · ${cost}奖金（${used}/3）`}</button><button class="button-4" data-act="skill-ad" data-id="${id}" data-slot="${slot}" ${locked||adUsed?'disabled':''}>${skillAdBusy?'广告加载中…':adUsed?'本槽已自选':'看广告 · 自选5星'}</button></div>`:''}</div>`}).join('')||'<p>本局首次招募出现时分配。</p>'}${manage&&skillMessage?`<p role="status">${escapeText(skillMessage)}</p>`:''}</section>`;
+    return `<section class="detail-section random-skill-section"><span>本局随机徽章</span>${entries.map(({skill,slot})=>{const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=C.SKILL_REFRESH_COSTS[used],bonus=run.bonusSkillSlots?.[id]===slot;return `<div class="random-skill-entry skill-star-${skill.star}"><h3><span class="draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span></h3><p>${escapeText(skill.description)}</p>${bonus?'<p class="bonus-skill-note">满星补授 · 不可重随或广告替换</p>':manage?`<div class="random-skill-actions"><button class="button-7" data-act="skill-refresh" data-id="${id}" data-slot="${slot}" ${locked||cost===undefined||run.cash<cost?'disabled':''}>${cost===undefined?'重随次数已用完':`重随 · ${cost}奖金（${used}/3）`}</button><button class="button-4" data-act="skill-ad" data-id="${id}" data-slot="${slot}" ${locked?'disabled':''}>${skillAdBusy?'广告加载中…':'看广告 · 自选5星'}</button></div>`:''}</div>`}).join('')||'<p>本局首次招募出现时分配。</p>'}${manage&&skillMessage?`<p role="status">${escapeText(skillMessage)}</p>`:''}</section>`;
   }
   function renderPending(){
     if(game.run?.skillAdPick){
-      const r=game.run,pick=r.skillAdPick,candidate=C.SKILL_BY_ID[skillPickCandidate],choices=C.RANDOM_SKILLS.filter(s=>s.star===5&&!r.roleSkillMap[pick.playerId].includes(s.id));
-      modal.className='game-modal open';modal.markup=`<section class="modal-card skill-pick-modal" role="dialog" aria-modal="true" aria-labelledby="skill-pick-title"><div class="modal-head"><h2 id="skill-pick-title">${escapeText(C.BY_ID[pick.playerId].name)} · 5星词条自选</h2><button data-act="skill-pick-cancel" aria-label="取消选择">×</button></div>${candidate?`<h3>5★ ${escapeText(candidate.name)}</h3><p>${escapeText(candidate.description)}</p><p>将替换第${pick.slot}条词条，确认后消耗本槽自选机会。</p><div class="random-skill-actions"><button class="button-7" data-act="skill-pick-back">重新选择</button><button class="btn" data-act="skill-pick-confirm" data-id="${candidate.id}">确认替换</button></div>`:`<p>从${choices.length}条5星词条中选择，取消不消耗次数。</p><div class="skill-pick-list">${choices.map(s=>`<button class="random-skill-entry skill-star-5" data-act="skill-pick-select" data-id="${s.id}"><b>5★ ${escapeText(s.name)}</b><small>${escapeText(s.description)}</small></button>`).join('')}</div>`}</section>`;return;
+      const r=game.run,pick=r.skillAdPick,choices=C.randomSkillsForRun(r).filter(s=>s.star===5&&!r.roleSkillMap[pick.playerId].includes(s.id)),candidate=choices.find(s=>s.id===skillPickCandidate),current=C.randomSkillForRun(r,r.roleSkillMap[pick.playerId][pick.slot-1]);
+      const emblem='<svg viewBox="0 0 48 56" aria-hidden="true"><path d="M24 3 44 11v19c0 11-12 19-20 23C16 49 4 41 4 30V11Z"/><path d="M12 27a12 12 0 1 0 24 0 12 12 0 1 0-24 0Z"/><path d="M12 27h24M24 15v24M16 18c11 5 11 13 0 18M32 18c-11 5-11 13 0 18"/></svg>';
+      const scroll=modal.querySelector?.('.skill-pick-list')?.scrollTop||0;
+      modal.className='game-modal open skill-pick-overlay';modal.markup=`<section class="modal-card skill-pick-modal" role="dialog" aria-modal="true" aria-labelledby="skill-pick-title"><header class="skill-pick-header"><h2 id="skill-pick-title">5星徽章自选</h2><div class="skill-pick-stars" aria-label="5星">★★★★★</div><p>为 <strong>${escapeText(C.BY_ID[pick.playerId].name)}</strong> 的第${pick.slot}徽章选择</p></header><div class="skill-pick-current"><span>当前徽章</span><strong>${escapeText(current.name)}</strong><b aria-label="${current.star}星">${'★'.repeat(current.star)}</b></div><div class="skill-pick-list-heading"><strong>可选徽章 · ${choices.length}</strong><span>滑动查看更多</span></div><div class="skill-pick-list" aria-label="可选5星徽章">${choices.map(s=>`<button class="skill-pick-option${candidate?.id===s.id?' selected':''}" data-act="skill-pick-select" data-id="${s.id}" aria-pressed="${candidate?.id===s.id}"><span class="skill-pick-emblem">${emblem}</span><span class="skill-pick-option-copy"><strong>${escapeText(s.name)}</strong><b aria-label="5星">★★★★★</b><small>${escapeText(s.description)}</small></span><span class="skill-pick-check" aria-hidden="true">${candidate?.id===s.id?'✓':''}</span></button>`).join('')}</div><div class="skill-pick-footer"><div class="skill-pick-summary" role="status">${candidate?`<span class="skill-pick-emblem">${emblem}</span><div><span>已选择：<strong>${escapeText(candidate.name)}</strong></span><p>${escapeText(candidate.description)}</p></div>`:'<p>选择一枚徽章，查看效果并确认替换</p>'}</div><button class="btn skill-pick-confirm" data-act="skill-pick-confirm" data-id="${candidate?.id||''}" ${candidate?'':'disabled'}>确认替换</button><button class="skill-pick-cancel" data-act="skill-pick-cancel">取消，保留原徽章</button></div></section>`;
+      const list=modal.querySelector?.('.skill-pick-list');if(list)list.scrollTop=scroll;return;
     }
     if(game.run?.randomEvent&&['roster','result','recruit','duel','shop'].includes(screen)){
       modal.className='game-modal open';modal.markup=randomEventMarkup(game.run);return;
@@ -1257,21 +1260,21 @@
     if(skillAdBusy)return;
     if(action.startsWith('skill-pick-')&&!r?.skillAdPick){skillPickCandidate='';renderPending();return;}
     if(r?.skillAdPick&&!action.startsWith('skill-pick-')){renderPending();return;}
-    if(action==='skill-pick-select'){if(C.SKILL_BY_ID[id]?.star===5&&!r.roleSkillMap[r.skillAdPick.playerId].includes(id))skillPickCandidate=id;renderPending();return;}
+    if(action==='skill-pick-select'){if(C.randomSkillForRun(r,id)?.star===5&&!r.roleSkillMap[r.skillAdPick.playerId].includes(id))skillPickCandidate=id;renderPending();return;}
     if(action==='skill-pick-back'){skillPickCandidate='';renderPending();return;}
     if(action==='skill-pick-cancel'){C.cancelSkillAdPick(r);skillPickCandidate='';save();renderPending();return;}
-    if(action==='skill-pick-confirm'){if(C.confirmSkillAdPick(r,id)){skillPickCandidate='';skillMessage='5星词条已替换';save();renderRoster();renderPending();}return;}
+    if(action==='skill-pick-confirm'){if(id===skillPickCandidate&&C.confirmSkillAdPick(r,id)){skillPickCandidate='';skillMessage='';save();renderRoster();renderPending();}return;}
     if(action==='skill-refresh'){if(!skillManagementAllowed(r,id))return;skillMessage=C.refreshRandomSkill(r,id,Number(button.dataset.slot))?'':'当前无法重随，请检查奖金和剩余次数';save();renderRoster();renderPending();return;}
     if(action==='skill-ad'){
       if(!skillManagementAllowed(r,id))return;
       const slot=Number(button.dataset.slot);skillMessage='';
-      if(!r||!Number.isInteger(slot)||slot<1||slot>2||!r.roleSkillMap?.[id]?.[slot-1]||r.ended||r.lastBattle||r.pending||r.randomEvent||!r.owned[id]||r.skillAdPickUsed?.[id]?.[slot-1])return;
+      if(!r||!Number.isInteger(slot)||slot<1||slot>2||!r.roleSkillMap?.[id]?.[slot-1]||r.ended||r.lastBattle||r.pending||r.randomEvent||!r.owned[id])return;
       if(typeof window.ColorboxAI?.vatask?.completeRewardVideo!=='function'){skillMessage='请在支持激励广告的虎扑App中打开';renderPending();return;}
       skillAdBusy=true;renderPending();
       try{const response=await withTimeout(window.ColorboxAI.vatask.completeRewardVideo(),60000);
         if(game.run!==r)return;
         if(response?.code!==200||response?.data?.rewarded!==true){skillMessage=response?.message||'广告未完整观看，未获得自选机会';return;}
-        if(!C.enterSkillAdPick(r,id,slot)){skillMessage='当前无法选择词条';return;}
+        if(!C.enterSkillAdPick(r,id,slot)){skillMessage='当前无法选择徽章';return;}
         skillPickCandidate='';save();
       }catch(_){skillMessage='广告拉起失败，请稍后再试';}finally{skillAdBusy=false;renderPending();}return;
     }

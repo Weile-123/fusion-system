@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
 test('rule 9 keeps prior opponent curves intact and applies a smooth bounded increase with independent caches',()=>{
- const old=require('../docs/balance/2026-10-11-词条天赋更新/源码快照/h5/game-core.js');
+ const old=require('./helpers/load-frozen-core.cjs')(require('node:path').resolve(__dirname,'../docs/balance/2026-10-11-词条天赋更新/源码快照/h5'));
  let previous=0;
  for(let stage=1;stage<=1000;stage++){
   const current=C.opponent({stage,balanceRulesVersion:9});

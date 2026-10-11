@@ -15,6 +15,19 @@ test('local test storage is isolated and all cloud paths are disabled',async()=>
  const {root,values,game}=environment();assert.equal(root.ACTIVITY_API_BASE,'');assert.equal(root.ACTIVITY_ENV_ID,'');assert.equal(root.FusionStorage.platformAvailable(),false);
  await root.FusionStorage.save(game);assert.equal(values.has('mySupFusionGameV1'),false);assert.equal(values.has('mySupFusionDevTestV1'),true);assert.deepEqual(await root.FusionStorage.load(),game);
 });
+test('local ad-free toggle simulates successful SDK rewards without changing saves and restores the original SDK',async()=>{
+  const {root,game,action,nodes,calls}=environment(),before=JSON.stringify(game);
+  assert.equal(root.SupFusionDevTools.adFree,false);assert.equal(root.ColorboxAI,undefined);
+  action('ads-free');assert.equal(root.SupFusionDevTools.adFree,true);
+  assert.match(nodes['dev-test-overlay'].innerHTML,/免广告：开启/);
+  assert.deepEqual(await root.ColorboxAI.vatask.completeRewardVideo(),{code:200,message:'本地免广告',data:{rewarded:true}});
+  const task=await root.ColorboxAI.vatask.getActivityTaskState();assert.equal(task.data.tasks[0].status,'completed');
+  assert.equal(JSON.stringify(game),before);assert.equal(calls.saves,0);
+  action('ads-free');assert.equal(root.SupFusionDevTools.adFree,false);assert.equal(root.ColorboxAI,undefined);
+  const native={vatask:{completeRewardVideo:async()=>({code:500})}},otherRoot={ColorboxAI:native};D.prepareLocalRuntime(otherRoot);
+  otherRoot.SupFusionDevTools.setAdFree(true);assert.equal((await otherRoot.ColorboxAI.vatask.completeRewardVideo()).code,200);
+  otherRoot.SupFusionDevTools.setAdFree(false);assert.equal(otherRoot.ColorboxAI,native);
+});
 test('recruit card preview opens without a run and leaves existing game and save state untouched',()=>{
  const {game,action,calls,nodes}=environment(),before=JSON.stringify(game);nodes['dev-test-button'].listeners.click();assert.match(nodes['dev-test-overlay'].innerHTML,/查看招募卡片/);
  action('recruit-preview');assert.equal(nodes['dev-test-overlay'].hidden,false);assert.match(nodes['dev-test-overlay'].innerHTML,/recruit-card-preview/);assert.equal(calls.draft.offer.length,10);assert.ok(calls.draft.offer.every(id=>C.BY_ID[id]));assert.deepEqual(new Set(calls.draft.offer.map(id=>C.BY_ID[id].tier)),new Set(['C','B','S','SSR','A']));assert.deepEqual(new Set(calls.draft.offer.map(id=>C.getRoleSkills(calls.draft,id)[0].skill.star)),new Set([1,2,3,4,5]));assert.equal(JSON.stringify(game),before);assert.equal(calls.saves,0);
@@ -79,5 +92,5 @@ test('standalone forced event confirmation does not advance the real stage or gr
  copy.resolveRandomEvent(game,'P01','safe');assert.equal(copy.acknowledgeRandomEvent(game,'P01'),true);assert.equal(game.run.stage,stage);assert.equal(game.run.free,free);assert.equal(game.run.lastBattle,null);
 });
 test('production bundle excludes test panel, test storage and development module',()=>{
- for(const file of fs.readdirSync('dist/assets').filter(f=>/\.(js|css)$/.test(f))){const built=fs.readFileSync('dist/assets/'+file,'utf8');assert.ok(!built.includes('dev-test-button'),file);assert.ok(!built.includes('mySupFusionDevTestV1'),file);assert.ok(!built.includes('强制触发'),file)}
+ for(const file of fs.readdirSync('dist/assets').filter(f=>/\.(js|css)$/.test(f))){const built=fs.readFileSync('dist/assets/'+file,'utf8');assert.ok(!built.includes('dev-test-button'),file);assert.ok(!built.includes('mySupFusionDevTestV1'),file);assert.ok(!built.includes('强制触发'),file);assert.ok(!built.includes('setAdFree'),file);assert.ok(!built.includes('本地免广告'),file)}
 });

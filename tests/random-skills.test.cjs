@@ -6,7 +6,30 @@ test('112 unique basketball skills match every documented name, star and descrip
   const text=fs.readFileSync('docs/玩法/完整词条库.md','utf8');assert.equal(C.RANDOM_SKILLS.length,112);assert.equal(new Set(C.RANDOM_SKILLS.map(s=>s.name)).size,112);
   const rows=[...text.matchAll(/^\| (sk_\w+) \| ([^|]+) \| ([^|]+) \|$/gm)];assert.equal(rows.length,112);
   for(const [_,id,name,description]of rows){assert.equal(C.SKILL_BY_ID[id].name,name);assert.equal(C.SKILL_BY_ID[id].description,description);}
-  assert.deepEqual([1,2,3,4,5].map(n=>C.RANDOM_SKILLS.filter(s=>s.star===n).length),[11,18,27,30,26]);
+  assert.deepEqual([1,2,3,4,5].map(n=>C.RANDOM_SKILLS.filter(s=>s.star===n).length),[11,18,27,31,25]);
+});
+
+test('champion dividend is four stars in rule 9 and preserves historical five-star pools and saves',()=>{
+  assert.equal(C.SKILL_BY_ID.sk_win_5.star,4);assert.equal(C.SKILL_BY_ID.sk_win_5.effects.winCash,3);
+  for(const version of [7,8,9]){
+    const r=panel().run;r.balanceRulesVersion=version;r.roleSkillMap.curry=['sk_cmd_1'];
+    assert.equal(C.randomSkillsForRun(r).filter(s=>s.star===5).some(s=>s.id==='sk_win_5'),version<9);
+    assert.equal(C.enterSkillAdPick(r,'curry',1),true);assert.equal(C.confirmSkillAdPick(r,'sk_win_5'),version<9);
+    if(version>=9)C.cancelSkillAdPick(r);
+    r.roleSkillMap.curry=['sk_win_5'];const copy=structuredClone(r);C.restoreRandomSkills(copy,r);
+    assert.equal(C.getRoleSkills(copy,'curry')[0].skill.star,version<9?5:4);assert.equal(copy.roleSkillMap.curry[0],'sk_win_5');
+  }
+});
+test('every random skill produces finite battle values and identical cloud battle and final settlement',()=>{
+  for(const entry of C.RANDOM_SKILLS)for(const strategy of Object.keys(C.STRATEGIES))for(const seed of [911,81200]){
+    const game=panel(seed),run=game.run;run.roleSkillMap={};skill(run,'curry',entry.id);
+    const initial=structuredClone(run),rating=C.fused(run,strategy,C.opponent(run).strategy).rating;
+    assert.ok(Number.isFinite(rating)&&rating>0,entry.id);
+    const report=C.battle(game,strategy),cloud=V.replay(initial,[],'battle',strategy);
+    assert.ok(report,entry.id);assert.ok(Number.isFinite(report.rating)&&Number.isFinite(report.reward),entry.id);
+    assert.deepEqual(cloud.state,run,entry.id);assert.deepEqual(cloud.report,report,entry.id);
+    const settled=V.replay(run,[],'finish');C.finishRun(game);assert.deepEqual(settled.state,run,entry.id);
+  }
 });
 test('offer previews lock per character and tiers are approximately 20 percent each across seeds',()=>{
   const counts=[0,0,0,0,0];for(let seed=1;seed<=2000;seed++){const r=C.createRun('steady_interest',seed);for(const id of r.offer)counts[C.getRoleSkills(r,id)[0].skill.star-1]++;const prior=JSON.stringify(r.draftSkillPreview),rng=r.rng;C.makeOffer(r);assert.equal(r.rng,rng);assert.equal(JSON.stringify(r.draftSkillPreview),prior);}
@@ -37,9 +60,13 @@ test('each skill slot rerolls at 10/30/50, excludes all existing skills, and can
   const prior=JSON.stringify(r);assert.equal(C.refreshRandomSkill(r,'curry',2),false);assert.equal(JSON.stringify(r),prior);
   r.cash=0;assert.equal(C.refreshRandomSkill(r,'curry',1),false);r.cash=100;r.lastBattle={won:true};assert.equal(C.refreshRandomSkill(r,'curry',1),false);r.lastBattle=null;r.randomEvent={};assert.equal(C.refreshRandomSkill(r,'curry',1),false);
 });
-test('5-star ad selection consumes only on confirmation, can cancel, and rejects duplicates and non-5-star IDs',()=>{
+test('5-star ad selection can repeat after confirmation, can cancel, and rejects duplicates and non-5-star IDs',()=>{
   const g=panel(),r=g.run;assert.equal(C.enterSkillAdPick(r,'curry',1),true);assert.equal(C.battle(g,'outside'),null);assert.equal(C.refreshRandomSkill(r,'lebron',1),false);assert.equal(C.confirmSkillAdPick(r,'sk_cmd_1'),false);assert.equal(C.cancelSkillAdPick(r),true);assert.equal(r.skillAdPickUsed.curry,undefined);
-  assert.equal(C.enterSkillAdPick(r,'curry',1),true);assert.equal(C.confirmSkillAdPick(r,'sk_all_5'),true);assert.equal(r.roleSkillMap.curry[0],'sk_all_5');assert.equal(C.enterSkillAdPick(r,'curry',1),false);
+  assert.equal(C.enterSkillAdPick(r,'curry',1),true);assert.equal(C.confirmSkillAdPick(r,'sk_all_5'),true);assert.equal(r.roleSkillMap.curry[0],'sk_all_5');
+  const rng=r.rng,cash=r.cash;
+  for(let i=0;i<8;i++){assert.equal(C.enterSkillAdPick(r,'curry',1),true);assert.equal(C.confirmSkillAdPick(r,r.roleSkillMap.curry[0]),false);const id=i%2?'sk_all_5':'sk_cmd_5';assert.equal(C.confirmSkillAdPick(r,id),true);assert.equal(r.roleSkillMap.curry[0],id);}
+  assert.equal(r.rng,rng);assert.equal(r.cash,cash);assert.equal(r.skillRefreshCount.curry,undefined);
+  assert.equal(C.enterSkillAdPick(r,'curry',1),true);const restored=structuredClone(r);C.restoreRandomSkills(restored,r);assert.deepEqual(restored.skillAdPick,r.skillAdPick);assert.equal(C.confirmSkillAdPick(restored,'sk_cmd_5'),true);
 });
 test('one extra skill refresh per preparation stacks with talent but not another player and resets on retry',()=>{
   const g=panel(),r=g.run;skill(r,'curry','sk_sup_4');skill(r,'lebron','sk_sup_4');r.cash=100;r.gearRefreshFree=1;
@@ -50,7 +77,7 @@ test('one extra skill refresh per preparation stacks with talent but not another
 test('probability and income skills affect combat, settle terminal rewards, and restore independent recovery counters',()=>{
   for(let seed=1;seed<=20;seed++){
     const g=panel(seed),r=g.run;r.roleSkillMap={};const base=structuredClone(r);skill(r,'curry','sk_inc_5');skill(r,'lebron','sk_win_5');skill(r,'magic','sk_gold_5');
-    const plain=C.createGame();plain.run=base;const reference=C.battle(plain,'outside'),report=C.battle(g,'outside');assert.equal(report.won,reference.won);assert.equal(report.reward,reference.reward+6+(report.won?3:0));assert.match(report.detail.join(' '),/词条奖金/);
+    const plain=C.createGame();plain.run=base;const reference=C.battle(plain,'outside'),report=C.battle(g,'outside');assert.equal(report.won,reference.won);assert.equal(report.reward,reference.reward+6+(report.won?3:0));assert.match(report.detail.join(' '),/徽章奖金/);
     const restored=structuredClone(r);C.restoreRandomSkills(restored,r);assert.deepEqual(restored.roleSkillMap,r.roleSkillMap);
   }
   const g=panel(),r=g.run;skill(r,'curry','sk_heal_5');r.skillHealCounters['curry:sk_heal_5']=2;r.skillHealGranted['curry:sk_heal_5']=2;
@@ -76,10 +103,10 @@ test('same-name recovery shares the source skill counter, survives rerolls and r
   r.lastBattle=null;skill(r,'curry','sk_cmd_1');skill(r,'curry','sk_heal_5');const plain=C.createGame();plain.run=structuredClone(r);skill(plain.run,'curry');skill(plain.run,'lebron');assert.equal(C.battle(plain,'outside').won,true);assert.equal(C.battle(g,'outside').won,true);assert.equal(r.morale,plain.run.morale+1);assert.equal(r.skillHealCounters['skill-sk_heal_5'],1);
   const old=panel().run;old.skillHealCounters={'curry:sk_heal_5':1,'lebron:sk_heal_5':1};C.restoreRandomSkills(old,old);assert.equal(old.skillHealCounters['skill-sk_heal_5'],2);assert.ok(old.roleSkillMap.curry.length);
 });
-test('rerolls preserve the deterministic draw sequence across both ordinary slots',()=>{
+test('historical rerolls preserve the deterministic draw sequence across both ordinary slots',()=>{
   const crypto=require('node:crypto'),trace=[];
   for(let seed=1;seed<=100;seed++)for(const slot of [1,2]){
-    const r=panel(seed).run;r.cash=1000;skill(r,'curry','sk_cmd_1','sk_cmd_5');
+    const r=panel(seed).run;r.balanceRulesVersion=8;r.cash=1000;skill(r,'curry','sk_cmd_1','sk_cmd_5');
     for(let i=0;i<3;i++){
       const prior=[...r.roleSkillMap.curry];let rng=r.rng;
       for(let draw=0;draw<2;draw++)rng=(Math.imul(rng,1664525)+1013904223)>>>0;
@@ -112,10 +139,11 @@ test('round income pays again at the same stage on wins and losses without stage
   }
   assert.equal(results.size,2);
 });
-test('server replays new skill actions deterministically and rejects forged slot, star, and double-ad changes',()=>{
+test('server replays repeated ad picks deterministically and rejects unfinished picks, forged slots and stars',()=>{
   const initial=C.createRun('reserve_fund',125),r=structuredClone(initial),ops=[];const doAction=(action,...args)=>{const result=C[action](r,...args);assert.notEqual(result,false);ops.push({action,args});};
   for(let i=0;i<6;i++){doAction('recruit',r.offer[0]);if(i<5)doAction('makeOffer');}
   const id=Object.values(r.slots)[0];doAction('refreshRandomSkill',id,1);doAction('enterSkillAdPick',id,1);doAction('cancelSkillAdPick');doAction('enterSkillAdPick',id,1);const selected=C.RANDOM_SKILLS.find(s=>s.star===5&&!r.roleSkillMap[id].includes(s.id)).id;doAction('confirmSkillAdPick',selected);
+  doAction('enterSkillAdPick',id,1);const second=C.RANDOM_SKILLS.find(s=>s.star===5&&!r.roleSkillMap[id].includes(s.id)).id;doAction('confirmSkillAdPick',second);
   const g=C.createGame();g.run=r;const report=C.battle(g,'outside'),replayed=V.replay(initial,ops,'battle','outside');assert.deepEqual(replayed.state,r);assert.deepEqual(replayed.report,report);
   assert.throws(()=>V.replay(initial,[...ops,{action:'enterSkillAdPick',args:[id,1]}],'battle','outside'),/验证失败/);
   assert.throws(()=>V.replay(initial,[...ops.slice(0,-1),{action:'confirmSkillAdPick',args:['sk_cmd_1']}],'battle','outside'),/验证失败/);

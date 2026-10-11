@@ -49,6 +49,23 @@ function runtime(sdk={},timers={}){
   return {audit:window.audit,window,screens,saved,rendered,backups,document,fire:(name,event)=>listeners[name](event),input:value=>listeners.input({target:{id:'feedback-content',value}}),click:(act,id='')=>window.audit.handle(act,{dataset:{id}})};
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+test('local ad-free SDK drives talent, S recruitment, skill selection and revival through the real controller',async()=>{
+  const app=runtime(),local={exports:{}};
+  const code=transformSync(fs.readFileSync('src/dev-tools.js','utf8').replace("import '../h5/styles/dev-tools.css';",''),{format:'cjs'}).code;
+  new Function('module','exports',code)(local,local.exports);local.exports.prepareLocalRuntime(app.window);app.window.SupFusionDevTools.setAdFree(true);
+  const game=C.createGame();app.audit.setGame(game);app.audit.go('talent');await app.click('talent-ad');
+  assert.match(app.screens.talent.output,/已解锁自选天赋/);
+  const run=game.run=C.createRun('steady_interest',411);app.audit.go('recruit');await app.click('recruit-ad');
+  assert.equal(run.rewardedRecruitUsed,true);assert.equal(run.offerMode,'rewarded-s');const rng=run.rng;await app.click('recruit-ad');assert.equal(run.rng,rng);
+  const id=run.offer[0];assert.ok(C.recruit(run,id).ok);app.audit.go('roster');
+  await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key:Object.keys(run.slots).find(key=>run.slots[key]===id)}});
+  await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});assert.equal(run.skillAdPick.playerId,id);
+  const selected=C.RANDOM_SKILLS.find(s=>s.star===5&&!run.roleSkillMap[id].includes(s.id)).id;
+  await app.click('skill-pick-select',selected);await app.click('skill-pick-confirm',selected);assert.equal(run.roleSkillMap[id][0],selected);assert.equal(run.skillAdPickUsed[id][0],true);
+  run.morale=0;run.lastBattle={won:false,stage:1};C.finishRun(game);app.audit.go('report');await app.click('report-revive');
+  assert.equal(run.reviveUsed,true);assert.equal(run.morale,3);assert.equal(run.ended,false);
+  app.window.SupFusionDevTools.setAdFree(false);assert.equal(app.window.ColorboxAI.vatask,undefined);
+});
 test('rule 8 full-star bonus survives UI reload and offers controls only for the first two slots',async()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('win_bonus',911),id=r.offer[0];
   for(let i=0;i<3;i++){r.offer=[id];r.free=1;assert.ok(C.recruit(r,id).ok)}
@@ -93,14 +110,26 @@ test('draft caps bond hints at three and renders noninteractive talent and skill
   const html=app.screens.recruit.output;assert.ok(C.starSynergies('jordan',r).filter(b=>b.ids.some(id=>id!=='jordan'&&r.owned[id])).length>3);const hints=html.match(/class="draft-bond-hints">([\s\S]*?)<\/span>/)[1];assert.equal((hints.match(/<i /g)||[]).length,3);assert.doesNotMatch(html,/draft-position-label/);
   const footer=html.slice(html.indexOf('<div class="draft-card-footer">'));assert.ok(footer.includes(C.BY_ID.jordan.talent));assert.ok(footer.includes(C.SKILL_BY_ID.sk_cmd_1.name));assert.doesNotMatch(footer.slice(0,footer.indexOf('</div>')),/<button|data-act=|›/);assert.match(html,/class="visual-number"><small>OVR<\/small><b>100<\/b>/);
 });
-test('owned SSR preview shows upgrade and bond hints together and renders five stars in its pill',()=>{
+test('owned SSR recruitment shows only the upgrade hint and renders five stars in its pill',()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',415),id=C.STARS.find(s=>s.tier==='SSR').id;r.offer=[id];r.owned={[id]:{stars:1,train:0},caruso:{stars:1,train:0},davis:{stars:1,train:0},shaq:{stars:1,train:0}};r.roleSkillMap[id]=[C.RANDOM_SKILLS.find(s=>s.star===5).id];app.audit.setGame(game);app.audit.go('recruit');const html=app.screens.recruit.output;
-  assert.match(html,/draft-upgrade">升星·2级/);assert.match(html,/draft-bond-hints/);assert.match(html,/aria-label="5星">★★★★★/);assert.doesNotMatch(html,/>5★</);assert.equal((html.match(/<i class="(?:active)?" title=/g)||[]).length,3);
+  assert.match(html,/draft-upgrade">升星·2级/);assert.doesNotMatch(html,/draft-bond-hints/);assert.match(html,/aria-label="5星">★★★★★/);assert.doesNotMatch(html,/>5★</);
+});
+test('new recruits show full bond names with counts including completed bonds, and batch duplicate upgrades hide bonds',()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',414);
+  r.offer=['jordan'];r.owned={pippen:{stars:1,train:0},rodman:{stars:1,train:0},lebron:{stars:1,train:0}};
+  app.audit.setGame(game);app.audit.go('recruit');
+  const hints=app.screens.recruit.output.match(/class="draft-bond-hints">([\s\S]*?)<\/span>/)[1];
+  for(const hint of hints.matchAll(/<i class="[^"]*" title="([^"]*)">([^<]*)<\/i>/g)){assert.equal(hint[1],hint[2]);assert.match(hint[2],/ \d+\/\d+$/);}
+  assert.match(hints,/class="active" title="[^\"]* 2\/2"/);
+  r.offerMode='ten-batch';r.offer=Array(10).fill('jordan');r.batchSelected=Array(10).fill(true);app.audit.go('recruit');
+  const cards=app.screens.recruit.output.split('class="card recruitment-card').slice(1);
+  assert.equal(cards.length,10);assert.match(cards[0],/draft-bond-hints/);
+  for(const card of cards.slice(1)){assert.match(card,/draft-upgrade/);assert.doesNotMatch(card,/draft-bond-hints/);}
 });
 test('random skills render in draft and player detail, reroll once, and survive the actual UI restore',async()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',411);app.audit.setGame(game);app.audit.go('recruit');
   assert.match(app.screens.recruit.output,/random-skill-chip/);const id=r.offer[0];await app.click('select-offer',id);await app.click('pick');
-  r.cash=100;await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key:Object.keys(r.slots).find(key=>r.slots[key]===id)}});assert.match(app.screens['game-modal'].output,/本局随机词条/);const old=r.roleSkillMap[id][0];
+  r.cash=100;await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key:Object.keys(r.slots).find(key=>r.slots[key]===id)}});assert.match(app.screens['game-modal'].output,/本局随机徽章/);const old=r.roleSkillMap[id][0];
   await app.audit.handle('skill-refresh',{dataset:{id,slot:'1'}});assert.notEqual(r.roleSkillMap[id][0],old);assert.equal(r.cash,90);assert.equal(r.skillRefreshCount[id][0],1);
   const copy=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.deepEqual(JSON.parse(JSON.stringify(copy.run.roleSkillMap)),r.roleSkillMap);assert.equal(copy.run.skillRefreshCount[id][0],1);assert.equal(copy.run.rng,r.rng);
 });
@@ -108,12 +137,23 @@ test('skill ad failure and cancellation consume no slot; successful confirmed se
   let rewarded=false;
   const app=runtime({vatask:{completeRewardVideo:async()=>({code:200,data:{rewarded}})}}),game=C.createGame(),r=game.run=C.createRun('steady_interest',418),id=r.offer[0];C.recruit(r,id);r.cloudProofVersion=3;app.audit.setGame(game);app.audit.go('roster');await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key:Object.keys(r.slots).find(key=>r.slots[key]===id)}});
   await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});assert.equal(r.skillAdPick,null);assert.equal(r.skillAdPickUsed[id],undefined);
-  rewarded=true;await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});assert.match(app.screens['game-modal'].output,/5星词条自选/);assert.equal((app.screens['game-modal'].output.match(/data-act="skill-pick-select"/g)||[]).length,C.RANDOM_SKILLS.filter(s=>s.star===5&&!r.roleSkillMap[id].includes(s.id)).length);
-  const next=runtime(),copy=next.audit.restoreGame(JSON.parse(JSON.stringify(game)));next.audit.setGame(copy);next.audit.go('roster');assert.match(next.screens['game-modal'].output,/5星词条自选/);
+  rewarded=true;await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});assert.match(app.screens['game-modal'].output,/5星徽章自选/);assert.equal((app.screens['game-modal'].output.match(/data-act="skill-pick-select"/g)||[]).length,C.RANDOM_SKILLS.filter(s=>s.star===5&&!r.roleSkillMap[id].includes(s.id)).length);
+  const next=runtime(),copy=next.audit.restoreGame(JSON.parse(JSON.stringify(game)));next.audit.setGame(copy);next.audit.go('roster');assert.match(next.screens['game-modal'].output,/5星徽章自选/);
   await app.click('skill-pick-cancel');assert.equal(r.skillAdPickUsed[id],undefined);await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});
   const target=C.RANDOM_SKILLS.find(s=>s.star===5&&!r.roleSkillMap[id].includes(s.id)).id;await app.click('skill-pick-select',target);assert.match(app.screens['game-modal'].output,/确认替换/);await app.click('skill-pick-confirm',target);
   assert.equal(r.roleSkillMap[id][0],target);assert.equal(r.skillAdPickUsed[id][0],true);assert.ok(r.cloudOperations.some(o=>o.action==='confirmSkillAdPick'&&o.args[0]===target));
   const final=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.equal(final.run.skillAdPickUsed[id][0],true);assert.equal(final.run.roleSkillMap[id][0],target);
+  assert.doesNotMatch(app.screens['game-modal'].output,/5星徽章已替换|本槽已自选/);
+  app.audit.setGame(final);app.audit.go('roster');await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key:Object.keys(final.run.slots).find(key=>final.run.slots[key]===id)}});
+  for(let i=0;i<3;i++){
+    await app.audit.handle('skill-ad',{dataset:{id,slot:'1'}});assert.equal(final.run.skillAdPick.playerId,id);
+    assert.match(app.screens['game-modal'].output,/skill-pick-overlay|skill-pick-option/);assert.match(app.screens['game-modal'].output,/当前徽章/);
+    assert.doesNotMatch(app.screens['game-modal'].output,/词条|skill-pick-close|skill-pick-kicker|确认后替换/);
+    const chosen=C.RANDOM_SKILLS.find(s=>s.star===5&&!final.run.roleSkillMap[id].includes(s.id)).id;
+    await app.click('skill-pick-select',chosen);assert.match(app.screens['game-modal'].output,/aria-pressed="true"/);
+    assert.equal((app.screens['game-modal'].output.match(/data-act="skill-pick-select"/g)||[]).length,C.RANDOM_SKILLS.filter(s=>s.star===5&&!final.run.roleSkillMap[id].includes(s.id)).length);
+    await app.click('skill-pick-confirm',chosen);assert.equal(final.run.roleSkillMap[id][0],chosen);assert.equal(final.run.skillAdPick,null);assert.doesNotMatch(app.screens['game-modal'].output,/5星徽章已替换|本槽已自选/);
+  }
 });
 test('skill recovery history survives changing the skill away and back without resetting its limit',()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',422),id=r.offer[0];C.recruit(r,id);r.roleSkillMap[id]=['sk_cmd_1'];const key=id+':sk_heal_5';r.skillHealCounters[key]=2;r.skillHealGranted[key]=3;
@@ -121,7 +161,7 @@ test('skill recovery history survives changing the skill away and back without r
 });
 test('owned recruitment details omit management; lineup and bench details expose skill controls',async()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',423),id=r.offer[0];C.recruit(r,id);r.cash=100;app.audit.setGame(game);app.audit.go('recruit');await app.click('star-detail',id);const draft=app.screens['game-modal'].output;
-  assert.doesNotMatch(draft,/data-act="skill-refresh"|data-act="skill-ad"|detail-growth|首次1|招募预览|生效中/);assert.doesNotMatch(draft.slice(0,draft.indexOf('detail-scroll')),/<small>/);assert.match(draft,/本局随机词条<\/span>/);assert.match(draft,/draft-skill-badge/);const before=JSON.stringify(r);await app.audit.handle('skill-refresh',{dataset:{id,slot:'1'}});assert.equal(JSON.stringify(r),before);
+  assert.doesNotMatch(draft,/data-act="skill-refresh"|data-act="skill-ad"|detail-growth|首次1|招募预览|生效中/);assert.doesNotMatch(draft.slice(0,draft.indexOf('detail-scroll')),/<small>/);assert.match(draft,/本局随机徽章<\/span>/);assert.match(draft,/draft-skill-badge/);const before=JSON.stringify(r);await app.audit.handle('skill-refresh',{dataset:{id,slot:'1'}});assert.equal(JSON.stringify(r),before);
   app.audit.go('roster');assert.doesNotMatch(app.screens.roster.output,/random-skill-chip/);const key=Object.keys(r.slots).find(key=>r.slots[key]===id);await app.audit.handle('place',{dataset:{act:'place',kind:'slot',key}});assert.match(app.screens['game-modal'].output,/data-act="skill-refresh"/);assert.match(app.screens['game-modal'].output,/data-act="skill-ad"/);
   r.slots[key]='';r.bench.push(id);await app.audit.handle('place',{dataset:{act:'place',kind:'bench',key:String(r.bench.length-1)}});assert.match(app.screens['game-modal'].output,/data-act="skill-refresh"/);assert.match(app.screens['game-modal'].output,/data-act="skill-ad"/);
 });
@@ -589,7 +629,7 @@ test('home announcement opens, closes and preserves current save',async()=>{
   await app.click('announcement-open');assert.match(app.screens['game-modal'].output,/更多羁绊，更多搭配/);assert.match(app.screens['game-modal'].output,/数值调整/);assert.match(app.screens['game-modal'].output,/样式调整/);
   assert.match(app.screens['game-modal'].output,/羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。/);
   assert.match(app.screens['game-modal'].output,/class="announcement-note"/);
-  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='2026-10-10';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
+  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='2026-10-12';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
   const restored=app.audit.restoreGame(JSON.parse(before));assert.equal(restored.run.balanceRulesVersion,2);assert.equal(C.synergiesForRun(restored.run).length,84);
 });
 
@@ -684,13 +724,19 @@ test('equipment storage upgrades and over-capacity saves survive reload',async()
 });
 
 test('announcement update dot clears on first open and stays cleared after restore',async()=>{
-  const app=runtime(),game=C.createGame();app.audit.setGame(game);app.audit.go('home');
+  const app=runtime(),game=C.createGame();game.profile.announcementReadVersion='2026-10-10';app.audit.setGame(game);app.audit.go('home');
   assert.match(app.screens.home.output,/home-announcement has-update/);
-  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'2026-10-10');
+  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'2026-10-12');
+  assert.match(app.screens['game-modal'].output,/2026.10.12/);
+  for(const content of ['112条随机徽章','开局天赋调整','招募与详情焕新','关卡难度微调','已有对局继续使用原规则'])assert.ok(app.screens['game-modal'].output.includes(content),content);
+  const announcement=app.screens['game-modal'].output;
+  const changed=C.TALENTS.filter(t=>JSON.stringify(C.talentForRun({talent:t.id,balanceRulesVersion:7}))!==JSON.stringify(t));
+  assert.equal(changed.length,13);
+  for(const content of ['本次对13条天赋进行调整','赢球奖金','连胜分红','<strong>巨星传承：','<strong>场外协助：','页面样式调整','首页焕新为暗色黑金风格'])assert.ok(announcement.includes(content),content);
   assert.doesNotMatch(app.screens.home.output,/home-announcement has-update/);
   await app.click('announcement-close');const saved=JSON.parse(JSON.stringify(game));
   const next=runtime(),restored=next.audit.restoreGame(saved);next.audit.setGame(restored);next.audit.go('home');
-  assert.equal(restored.profile.announcementReadVersion,'2026-10-10');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
+  assert.equal(restored.profile.announcementReadVersion,'2026-10-12');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
 });
 
 test('all 36 event dialogs restore before and after payout without duplicate awards',async()=>{

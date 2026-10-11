@@ -24,15 +24,18 @@ test('all supported rule versions replay recruitment, combat and settlement with
 });
 
 test('rules 1 through 8 retain frozen opening, recruitment, battle and settlement results for every known talent',()=>{
- const frozen=require('../docs/balance/2026-10-11-词条天赋更新/源码快照/h5/game-core.js');
+ const frozen=require('./helpers/load-frozen-core.cjs')(require('node:path').resolve(__dirname,'../docs/balance/2026-10-11-词条天赋更新/源码快照/h5'));
+ assert.equal(frozen.SKILL_BY_ID.sk_win_5.star,5);assert.equal(C.SKILL_BY_ID.sk_win_5.star,4);
+ // Only normalize the renamed reward label; every numeric value and saved field still matches.
+ const badgeLabel=value=>JSON.parse(JSON.stringify(value).replaceAll('随机词条奖金','随机徽章奖金'));
  for(let version=1;version<=8;version++)for(const talent of C.KNOWN_TALENTS)for(const seed of [911,81101]){
   const a=C.createRun(talent.id,seed,{},version),b=frozen.createRun(talent.id,seed,{},version);
   assert.deepEqual(a,b,'opening '+version+' '+talent.id);
   for(let i=0;i<6;i++){const id=a.offer[0];assert.deepEqual(C.recruit(a,id),frozen.recruit(b,id));if(i<5){C.makeOffer(a);frozen.makeOffer(b)}}
   assert.deepEqual(a,b,'recruitment '+version+' '+talent.id);
   const ga=C.createGame(),gb=frozen.createGame();ga.run=a;gb.run=b;
-  assert.deepEqual(C.battle(ga,'outside'),frozen.battle(gb,'outside'),'battle '+version+' '+talent.id);assert.deepEqual(a,b);
-  C.finishRun(ga);frozen.finishRun(gb);assert.deepEqual(a,b,'settlement '+version+' '+talent.id);
+  assert.deepEqual(C.battle(ga,'outside'),badgeLabel(frozen.battle(gb,'outside')),'battle '+version+' '+talent.id);assert.deepEqual(a,badgeLabel(b));
+  C.finishRun(ga);frozen.finishRun(gb);assert.deepEqual(a,badgeLabel(b),'settlement '+version+' '+talent.id);
  }
 });
 test('forged purchases, off-pool recruits, free rerolls and direct stat/RNG writes are rejected',()=>{

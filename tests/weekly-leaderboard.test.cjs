@@ -39,6 +39,15 @@ test('verified career aggregates distinct event discoveries only from finished v
  assert.deepEqual(profile.discoveredEvents.sort(),['T01','T02','T03']);assert.equal(profile.runs,2);
  assert.deepEqual((await rpc('get_verified_game_profile',['new-player'])).profile.discoveredEvents,[]);
 });
+test('event profile migration remains idempotent and limits execution to the backend service role',async()=>{
+  const id=await run('events');await db.query('update leaderboard_runs set finished=true,state=$2::jsonb where id=$1',[id,JSON.stringify({eventState:{seen:['T01']},collectedPlayers:['curry'],endless:false})]);
+  const before=await rpc('get_verified_game_profile',['events']);
+  const migrationSql=fs.readFileSync('cloudbase/migrations/20261011210000_event_talent_unlock.sql','utf8');
+  await db.exec(migrationSql);await db.exec(migrationSql);
+  assert.deepEqual(await rpc('get_verified_game_profile',['events']),before);
+  const permissions=await one(`select has_function_privilege('anon','get_verified_game_profile(text)','EXECUTE') as anon,has_function_privilege('authenticated','get_verified_game_profile(text)','EXECUTE') as authenticated,has_function_privilege('service_role','get_verified_game_profile(text)','EXECUTE') as backend`);
+  assert.deepEqual(permissions,{anon:false,authenticated:false,backend:true});
+});
 
 test('migration leaves cumulative data and old RPC results intact; activation is explicit',async()=>{
   const id=await run();await battle(id,391);

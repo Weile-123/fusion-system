@@ -114,6 +114,15 @@ test('cloud start binds the balance version and keeps legacy starts compatible',
   await assert.rejects(retry.handle(request('/runs/start',body)));
   await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:C.BALANCE_RULES_VERSION+1})));
 });
+test('health advertises every supported rule and invalid rule types cannot access run storage',async()=>{
+  const health=await api().handle({method:'GET',url:'/api/health',headers:{}});
+  assert.equal(health.data.rulesVersion,C.BALANCE_RULES_VERSION);
+  assert.deepEqual(Array.from(health.data.supportedRulesVersions),Array.from({length:C.BALANCE_RULES_VERSION},(_,i)=>i+1));
+  for(const balanceRulesVersion of [0,-1,1.5,'9',true,{},[],C.BALANCE_RULES_VERSION+1]){
+    const server=api();await assert.rejects(server.handle(request('/runs/start',{requestId:'00000000-0000-4000-8000-000000000002',seed:911,talent:'reserve_fund',progress:{},balanceRulesVersion})),/规则版本无效/);
+    assert.equal(server.calls.length,0);
+  }
+});
 
 test('cloud inheritance unlock respects new thresholds, preserves old users, and keeps rule 7 open',async()=>{
   const body={requestId:'00000000-0000-4000-8000-000000000003',seed:911,talent:'win_bonus',balanceRulesVersion:8,progress:{}};

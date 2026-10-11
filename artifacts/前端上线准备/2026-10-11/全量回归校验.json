@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-11",
+  "plannedRelease": "2026-10-12",
+  "frontendRules": 9,
+  "coreCopiesMatch": true,
+  "gameplaySourceHashesMatchExistingNaturalTest": false,
+  "naturalTest": [
+    {
+      "tier": "low",
+      "count": 100,
+      "errors": 0,
+      "censored": 0,
+      "cloud": true,
+      "browserGlobal": true
+    },
+    {
+      "tier": "mid",
+      "count": 100,
+      "errors": 0,
+      "censored": 0,
+      "cloud": true,
+      "browserGlobal": true
+    },
+    {
+      "tier": "high",
+      "count": 100,
+      "errors": 0,
+      "censored": 0,
+      "cloud": true,
+      "browserGlobal": true
+    }
+  ],
+  "threeVersionEvidence": [
+    {
+      "rules": 6,
+      "runs": 300,
+      "errors": 0,
+      "censored": 0
+    },
+    {
+      "rules": 8,
+      "runs": 300,
+      "errors": 0,
+      "censored": 0
+    },
+    {
+      "rules": 9,
+      "runs": 300,
+      "errors": 0,
+      "censored": 0
+    }
+  ],
+  "skillMatrix": {
+    "skills": 112,
+    "strategies": 3,
+    "seeds": 2,
+    "battleAndSettlementScenarios": 672
+  },
+  "fullTests": {
+    "pass": 390,
+    "fail": 0,
+    "skipped": 0
+  },
+  "referenceTests": {
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "browserVisualValidation": "unavailable: no connected browser",
+  "nativeAppValidation": "pending",
+  "backendDeploymentExecuted": false,
+  "productionMigrationExecuted": false,
+  "sourceHashes": {
+    "h5/game-data.js": "052e0d1a765672badb6e2e3dd0591c93951d6e6d4bd6171fe8d2a2d0489ff70b",
+    "h5/gear-catalog.js": "1cdcc82d6542f1b22ad927c3b6a315ca4cd6e35c3e77597ed5be2549408e81bd",
+    "h5/event-data.js": "3d8cb93af6edf520efb9f5adc7b75563579afbf2ad7f055e26e2997136b21662",
+    "h5/event-system.js": "f805273f8e385954c4ec1223bee654e7444eebd55c9da700f4cbba96f78fca19",
+    "h5/game-core.js": "337f25e6cf5c64940ea2f6bce514cc0d43aa0b4641fff2a0eba6393ecd2d21c2",
+    "balance/engine.cjs": "a154d915354dabdce79dc258daf02bc8b1d740ada98b8ee7c06bef62948c0e26",
+    "balance/driver.cjs": "d5d8d96fa1661ef0abb5cfbbdcedc315dcc55339bb6709dba4592989a526d055",
+    "balance/policies.cjs": "0ab2ad9af6c35f9244d3337ec476fa1192ab0a36711a13e4e980686ea2bd7be3",
+    "balance/runner.cjs": "fa177a70248dcc1a389d65c164e9327941b8af8163a629298b7f935930cd8771",
+    "balance/cli.cjs": "51096ca0214a94153e55854a8d637448eb731f897bfb76bba8d2220c847238ad",
+    "balance/objectives.cjs": "395aa0acfbc240059dd2e7b7eb5663a015bd7df2caa6db763872c21a9d8972b6",
+    "balance/suite.cjs": "e4f79ec5a62c5ee619f6c26c5dfa5c2ac421af0829166940799e4b78a4d40c0a"
+  },
+  "frontendArchiveSha256": "48038e3f3fdb374839c0e143e63c8b30bdff1b5ac2e1a310574f3b0f064281f3",
+  "onlineHealthObserved": {
+    "code": 0,
+    "message": "ok",
+    "data": {
+      "rulesVersion": 6,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "randomEvents": 36,
+      "synergies": 100,
+      "recoveryVersion": 1,
+      "proofVersion": 3,
+      "backgroundSyncVersion": 1,
+      "weeklyLeaderboardVersion": 1,
+      "talents": 20
+    }
+  },
+  "naturalEvidenceNote": "历史300局采集于取消广告自选次数限制前；本次验证重复自选功能，未重跑数值模拟。",
+  "skillAdPick": {
+    "unlimitedOrdinarySlots": true,
+    "bonusSlotLocked": true,
+    "repeatedCorePicks": 8,
+    "repeatedUiPicksAfterReload": 3,
+    "cloudReplay": true
+  },
+  "badgeGrades": {
+    "championDividend": 4,
+    "total": 112,
+    "counts": [
+      11,
+      18,
+      27,
+      31,
+      25
+    ],
+    "historicalGradesPreserved": true
+  },
+  "testLog": ".local-tools/git-upload-tests-final.log",
+  "homepageLayoutCheck": "artifacts/界面预览/首页设计/实装布局检查.json"
+}

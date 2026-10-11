@@ -25,3 +25,4 @@ import '../h5/styles/release-polish.css';
 import '../h5/styles/events.css';
 import '../h5/styles/random-skills.css';
 import '../h5/styles/recruit-cards.css';
+import '../h5/styles/home-gold.css';

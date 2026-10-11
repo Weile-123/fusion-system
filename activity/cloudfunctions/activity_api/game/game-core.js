@@ -128,7 +128,7 @@
   },
   "win_bonus": {
     "name": "巨星传承",
-    "gain": "升至满星时再补授随机5星词条；补授槽禁止重随和广告替换",
+    "gain": "升至满星时再补授随机5星徽章；补授槽禁止重随和广告替换",
     "cost": "失败补偿 -1 奖金",
     "unlock": {
       "wins": 15,
@@ -345,12 +345,17 @@
   const TRAINING_COSTS = [1,2,3,16,22,29,37,46,56,67];
   const LEGACY_TRAINING_COSTS = [4,7,11,16,22,29,37,46,56,67];
   const RANDOM_SKILLS=DATA.RANDOM_SKILLS,SKILL_BY_ID=Object.fromEntries(RANDOM_SKILLS.map(s=>[s.id,s]));
+  // Preserve the grade and draw order of rules 7–8 without changing historical data files.
+  const LEGACY_RANDOM_SKILLS=RANDOM_SKILLS.filter(s=>s.id!=='sk_win_5');
+  LEGACY_RANDOM_SKILLS.splice(LEGACY_RANDOM_SKILLS.findIndex(s=>s.id==='sk_inc_5')+1,0,{...SKILL_BY_ID.sk_win_5,star:5});
+  function randomSkillsForRun(run){return run?.balanceRulesVersion<9?LEGACY_RANDOM_SKILLS:RANDOM_SKILLS}
+  function randomSkillForRun(run,id){return run?.balanceRulesVersion<9&&id==='sk_win_5'?LEGACY_RANDOM_SKILLS.find(s=>s.id===id):SKILL_BY_ID[id]}
   const SKILL_REFRESH_COSTS=[10,30,50];
   function hasRandomSkills(run){return run?.balanceRulesVersion>=7}
   function initRandomSkills(run){Object.assign(run,{roleSkillMap:{},draftSkillPreview:{},skillRefreshCount:{},skillAdPickUsed:{},skillAdPick:null,skillHealCounters:{},skillHealGranted:{},skillFreeRefreshStage:0,skillStageCashPaid:0});if(run.balanceRulesVersion>=8)run.bonusSkillSlots={}}
   function drawRandomSkill(run,minStar=1,exclude=[]){
-    const star=minStar+Math.floor(nextRandom(run)*(6-minStar)),pool=RANDOM_SKILLS.filter(s=>s.star===star&&!exclude.includes(s.id));
-    const candidates=pool.length?pool:RANDOM_SKILLS.filter(s=>!exclude.includes(s.id));
+    const skills=randomSkillsForRun(run),star=minStar+Math.floor(nextRandom(run)*(6-minStar)),pool=skills.filter(s=>s.star===star&&!exclude.includes(s.id));
+    const candidates=pool.length?pool:skills.filter(s=>!exclude.includes(s.id));
     return candidates.length?candidates[Math.floor(nextRandom(run)*candidates.length)]:null;
   }
   function previewRandomSkills(run,ids){
@@ -369,7 +374,7 @@
   function getRoleSkills(run,id,preview=true){
     if(!hasRandomSkills(run))return [];
     const ids=run.roleSkillMap?.[id]?.length?run.roleSkillMap[id]:preview&&run.draftSkillPreview?.[id]?[run.draftSkillPreview[id]]:[];
-    return ids.map((skillId,i)=>({skill:SKILL_BY_ID[skillId],slot:i+1})).filter(entry=>entry.skill);
+    return ids.map((skillId,i)=>({skill:randomSkillForRun(run,skillId),slot:i+1})).filter(entry=>entry.skill);
   }
   function activeRandomSkills(run){
     if(!hasRandomSkills(run)||starterCount(run)<6)return [];
@@ -392,19 +397,19 @@
     run.cash-=cost;run.roleSkillMap[id][slot-1]=skill.id;(run.skillRefreshCount[id]||=[])[slot-1]=used+1;return true;
   }
   function enterSkillAdPick(run,id,slot){
-    if(!canManageSkill(run,id,slot)||run.skillAdPickUsed[id]?.[slot-1]||!RANDOM_SKILLS.some(s=>s.star===5&&!run.roleSkillMap[id].includes(s.id)))return false;
+    if(!canManageSkill(run,id,slot)||!randomSkillsForRun(run).some(s=>s.star===5&&!run.roleSkillMap[id].includes(s.id)))return false;
     run.skillAdPick={playerId:id,slot};return true;
   }
   function confirmSkillAdPick(run,skillId){
-    const pick=run?.skillAdPick,skill=SKILL_BY_ID[skillId];
-    if(!hasRandomSkills(run)||!pick||!Number.isInteger(pick.slot)||pick.slot<1||pick.slot>2||!run.roleSkillMap[pick.playerId]?.[pick.slot-1]||run.ended||run.lastBattle||run.pending||run.randomEvent||!run.owned[pick.playerId]||!skill||skill.star!==5||run.skillAdPickUsed[pick.playerId]?.[pick.slot-1]||run.roleSkillMap[pick.playerId]?.includes(skillId))return false;
+    const pick=run?.skillAdPick,skill=randomSkillForRun(run,skillId);
+    if(!hasRandomSkills(run)||!pick||!Number.isInteger(pick.slot)||pick.slot<1||pick.slot>2||!run.roleSkillMap[pick.playerId]?.[pick.slot-1]||run.ended||run.lastBattle||run.pending||run.randomEvent||!run.owned[pick.playerId]||!skill||skill.star!==5||run.roleSkillMap[pick.playerId]?.includes(skillId))return false;
     run.roleSkillMap[pick.playerId][pick.slot-1]=skillId;(run.skillAdPickUsed[pick.playerId]||=[])[pick.slot-1]=true;run.skillAdPick=null;return true;
   }
   function cancelSkillAdPick(run){if(!hasRandomSkills(run)||!run.skillAdPick)return false;run.skillAdPick=null;return true}
   function restoreRandomSkills(run,source){
     if(!hasRandomSkills(run))return;if(run===source)source={...source};initRandomSkills(run);
     for(const id of Object.keys(BY_ID)){
-      const ids=source.roleSkillMap?.[id],bonus=openingEffect(run).fullStarBonusSkill&&source.bonusSkillSlots?.[id]===3&&Array.isArray(ids)&&ids.length===3&&new Set(ids).size===3&&SKILL_BY_ID[ids[2]]?.star===5;
+      const ids=source.roleSkillMap?.[id],bonus=openingEffect(run).fullStarBonusSkill&&source.bonusSkillSlots?.[id]===3&&Array.isArray(ids)&&ids.length===3&&new Set(ids).size===3&&randomSkillForRun(run,ids[2])?.star===5;
       if(Array.isArray(ids))run.roleSkillMap[id]=[...new Set(ids.filter(s=>Object.hasOwn(SKILL_BY_ID,s)))].slice(0,bonus?3:2);
       if(bonus&&run.roleSkillMap[id].length===3)run.bonusSkillSlots[id]=3;
       const preview=source.draftSkillPreview?.[id];if(Object.hasOwn(SKILL_BY_ID,preview)&&!run.roleSkillMap[id]?.length)run.draftSkillPreview[id]=preview;
@@ -422,7 +427,7 @@
       if(Number.isInteger(counter)||legacy>0)run.skillHealCounters[key]=Number.isInteger(counter)?clamp(counter,0,skill.effects.healEveryWins-1):legacy%skill.effects.healEveryWins;
     }
     for(const key of ['skillFreeRefreshStage','skillStageCashPaid'])run[key]=Number.isInteger(source[key])?clamp(source[key],0,run.stage):0;
-    const pick=source.skillAdPick;if(pick&&canManageSkill(run,pick.playerId,pick.slot)&&!run.skillAdPickUsed[pick.playerId]?.[pick.slot-1])run.skillAdPick={playerId:pick.playerId,slot:pick.slot};
+    const pick=source.skillAdPick;if(pick&&canManageSkill(run,pick.playerId,pick.slot))run.skillAdPick={playerId:pick.playerId,slot:pick.slot};
   }
   function recoverSkillMorale(run,skills){
     const detail=[];
@@ -858,7 +863,7 @@
       slotScores=slotScoresFromStats(stats);dimensions=dimensionsFromSlots(slotScores);
       rating=Math.round(COMBAT_KEYS.reduce((sum,key)=>sum+dimensions[key],0)/COMBAT_KEYS.length);
     }
-    // 规则9收回部分词条与天赋收益：入门+3%，10关+6%，50关+9%，80关后+12%。
+    // 规则9收回部分徽章与天赋收益：入门+3%，10关+6%，50关+9%，80关后+12%。
     if(curveVersion===9){
       const stage=run.stage,scale=stage<=3?1.03:stage<=10?1.03+.03*(stage-3)/7:stage<=20?1.06:stage<=50?1.06+.03*(stage-20)/30:1.09+.03*Math.min(30,stage-50)/30;
       for(const attr of ATTRS)stats[attr]=Math.max(20,Math.round(stats[attr]*scale));
@@ -1215,7 +1220,7 @@
       if(opening.battleCash)detail.push(`开局天赋 ${opening.battleCash}`);
       if(postBattleCash)detail.push(`${counterCash?'战术克制与':'战后'}技能 ${postBattleCash}`);
     }
-    if(skillCash)detail.push('随机词条奖金 '+skillCash);
+    if(skillCash)detail.push('随机徽章奖金 '+skillCash);
     const rescued=preventGearDefeat(run);if(rescued)detail.push(rescued.name+'已消耗，生命恢复至1点');
     run.stats||(run.stats={recruits:0,prizeIncome:0,gearPurchases:0});run.stats.prizeIncome+=reward;
     run.boosts=[];
@@ -1252,7 +1257,7 @@
   }
   const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,talentForRun,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
   const EVENT_SYSTEM=root.SupFusionEventSystem||(typeof require==='function'?require('./event-system.js'):null);
-  Object.assign(api,{RANDOM_SKILLS,SKILL_BY_ID,SKILL_REFRESH_COSTS,hasRandomSkills,getRoleSkills,activeRandomSkills,randomSkillEffects,refreshRandomSkill,enterSkillAdPick,confirmSkillAdPick,cancelSkillAdPick,restoreRandomSkills});
+  Object.assign(api,{RANDOM_SKILLS,SKILL_BY_ID,SKILL_REFRESH_COSTS,randomSkillsForRun,randomSkillForRun,hasRandomSkills,getRoleSkills,activeRandomSkills,randomSkillEffects,refreshRandomSkill,enterSkillAdPick,confirmSkillAdPick,cancelSkillAdPick,restoreRandomSkills});
   if(!EVENT_SYSTEM)throw new Error('SupFusionEventSystem is required before game-core.js');
   Object.assign(api,EVENT_SYSTEM.createSystem({...api,nextRandom,advanceAfterBattle}));
   for(const name of ['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','swapBench','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','refreshRandomSkill','enterSkillAdPick']){

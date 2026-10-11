@@ -1,0 +1,323 @@
+[
+  {
+    "active": true,
+    "width": 320,
+    "scroll": 320,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 204,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "continue",
+        "text": "继续第 32 关 →",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启另一段旅程 →",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 155,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 165,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "active": true,
+    "width": 390,
+    "scroll": 390,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 274,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "continue",
+        "text": "继续第 32 关 →",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启另一段旅程 →",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 190,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 200,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "active": true,
+    "width": 480,
+    "scroll": 480,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 364,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "continue",
+        "text": "继续第 32 关 →",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启另一段旅程 →",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 235,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 245,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "active": false,
+    "width": 320,
+    "scroll": 320,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 204,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启新旅程 →",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 155,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 165,
+        "right": 299,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 299,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "active": false,
+    "width": 390,
+    "scroll": 390,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 274,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启新旅程 →",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 190,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 200,
+        "right": 369,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 369,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "active": false,
+    "width": 480,
+    "scroll": 480,
+    "header": "none",
+    "buttons": [
+      {
+        "action": "announcement-open",
+        "text": "更新公告",
+        "left": 364,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "new",
+        "text": "开启新旅程 →",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "leaderboard",
+        "text": "排行榜 →",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "pointshop",
+        "text": "点数商店",
+        "left": 21,
+        "right": 235,
+        "visible": true
+      },
+      {
+        "action": "profile",
+        "text": "传奇档案",
+        "left": 245,
+        "right": 459,
+        "visible": true
+      },
+      {
+        "action": "feedback-open",
+        "text": "反馈入口",
+        "left": 21,
+        "right": 459,
+        "visible": true
+      }
+    ]
+  }
+]

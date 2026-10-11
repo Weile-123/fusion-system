@@ -1,0 +1,7 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "prompt": "Use case: stylized-concept. Asset: text-free portrait background for black and champagne gold basketball mobile game homepage. Reference image is approved design A, use its basketball and court visual style only. Produce ONLY background artwork, no typography, letters, numbers, UI, buttons, badges, borders or logos. Matte black #101213 indoor basketball arena, large realistic pebbled bronze/champagne-gold basketball cropped on upper right, delicate warm rim light, shadowy hoop at mid-right, faint reflective court markings across bottom, sparse golden dust. Left 65 percent and upper area mostly near-black negative space for live HTML title. Restrained cinematic contrast. Portrait aspect ratio 4:5. No people. No status bar.",
+  "reference": "artifacts/界面预览/首页设计/方案A-黑金经典.png",
+  "asset": "h5/assets/home-gold-court.jpg",
+  "optimization": "800x1000 JPEG quality 85"
+}

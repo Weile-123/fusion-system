@@ -3382,6 +3382,16 @@
     }
   },
   {
+    "id": "sk_win_5",
+    "name": "冠军红利",
+    "star": 4,
+    "description": "胜利奖金 +3。",
+    "effects": {
+      "dimensions": {},
+      "winCash": 3
+    }
+  },
+  {
     "id": "sk_cmd_5",
     "name": "脚踝终结者",
     "star": 5,
@@ -3499,16 +3509,6 @@
     "effects": {
       "dimensions": {},
       "battleCash": 3
-    }
-  },
-  {
-    "id": "sk_win_5",
-    "name": "冠军红利",
-    "star": 5,
-    "description": "胜利奖金 +3。",
-    "effects": {
-      "dimensions": {},
-      "winCash": 3
     }
   },
   {
