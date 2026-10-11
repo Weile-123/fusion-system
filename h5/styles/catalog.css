@@ -361,6 +361,10 @@
   overflow: hidden
 }
 .game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card{padding:10px}
+.game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.bonds-modal{padding:8px}
+.game-modal .bonds-modal .modal-head{padding:0 0 3px}
+.game-modal .bonds-modal .bond-summary{padding:2px 0 8px}
+.game-modal .bonds-modal .bond-list{padding:0}
 .game-modal:not(.recruit-sheet-modal):not(.sell-confirm-modal) .modal-card.player-detail{padding:0}
 .game-modal .player-detail .detail-head,.game-modal .player-detail .detail-scroll,.game-modal .player-detail .detail-actions{padding-left:10px;padding-right:10px}
 .game-modal.sell-confirm-modal{align-items:flex-end;padding:0;background:#000b}

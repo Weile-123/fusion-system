@@ -173,7 +173,7 @@ function AnnouncementScreen() {
         <p><span className="announcement-bullet" aria-hidden="true">·</span> <strong>场外协助：</strong>事件挑战成功率100%、永久事件增益×1.5、战后收入-2；需发现10种事件且到达无尽第13关。</p>
       </div>
       <h3>招募与详情焕新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 调整招募卡片字体、等级渐变色、SSR钻石配色及技能徽章展示；升星和羁绊提示居中显示，羁绊最多显示三条。备战席已满时，直接出售新招募的SSR球员需再次确认。</p>
-      <h3>页面样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 首页焕新为暗色黑金风格，加入篮球与球场背景，优化标题、玩法指标和按钮布局，保留所有原有功能入口；5星徽章自选页面采用黑金徽章列表，优化选中状态与效果展示。</p>
+      <h3>页面样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 首页焕新为暗色黑金风格，加入篮球与球场背景，优化标题、玩法指标和按钮布局，保留所有原有功能入口；招募卡片优化字体、等级渐变色与SSR钻石配色，调整技能、徽章展示及升星、羁绊提示布局；5星徽章自选页面采用黑金徽章列表，优化选中状态与效果展示。</p>
       <h3>关卡难度微调</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 配合新徽章与天赋调整对手数值，保持成长与闯关节奏。新数值仅对新开局生效，已有对局继续使用原规则；生涯记录、传奇点和已解锁内容保留。</p>
       <h3 className="announcement-version">2026.10.10 · 数值调整</h3>
       <section className="announcement-intro">
@@ -236,7 +236,7 @@ function LeaderboardScreen({ boards, tab, status, mine, playerName, busy, period
   return <>
     <div className="leaderboard-heading"><div><span>LEGENDS BOARD</span><h1>排行榜</h1></div><div className="leaderboard-heading-actions"><button className="leaderboard-refresh button-7" data-act="leaderboard-refresh" disabled={busy} aria-busy={busy}>{busy && <i className="leaderboard-loading-icon" aria-hidden="true" />}刷新</button><button className="leaderboard-home button-7" data-act="home">返回主页</button></div></div>
     <div key="leaderboard-switch" className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">{ovrTitle}</button><i aria-hidden="true" /></div>
-    {tab === 'legend' && <div key="leaderboard-summary" className="leaderboard-my-rank"><span>我的排名<small>总传奇点</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}<small> 点</small></b></div>}
+    {tab === 'legend' && <div key="leaderboard-summary" className="leaderboard-my-rank"><span>我的排名<small>总传奇点</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}</b></div>}
     {tab === 'ovr' && <div key="leaderboard-summary" className={`leaderboard-my-rank leaderboard-ovr-summary${previous ? ' archived' : ''}`} aria-label="OVR排名与周榜">
       <div className="leaderboard-ovr-score"><span>我的排名</span><small>{ovrTitle}</small>{previous && !current ? <b>{status.ovr === '正在加载榜单…' ? '读取中' : status.ovr.includes('暂不可用') ? '暂不可用' : '未上榜'}</b> : <b>{current?.score?.toLocaleString() ?? '—'} <small className="leaderboard-inline-rank" aria-label={current?.rank ? `第${current.rank}名` : rankText}>{rankText}</small></b>}</div>
       <div className="leaderboard-ovr-actions">
@@ -245,7 +245,7 @@ function LeaderboardScreen({ boards, tab, status, mine, playerName, busy, period
       </div>
       <p className="leaderboard-week-rule">仅本周新开的对局参与本周排名。每周一零点后，上周对局的后续成绩不再计入周榜，传奇点奖励不受影响。</p>
     </div>}
-    <div key="leaderboard-window" className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="点" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title={ovrTitle} unit="OVR" status={status.ovr} playerName={playerName} preserveNames={previous} /></div></div>
+    <div key="leaderboard-window" className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title={ovrTitle} unit="OVR" status={status.ovr} playerName={playerName} preserveNames={previous} /></div></div>
   </>;
 }
 
