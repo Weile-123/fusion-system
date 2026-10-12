@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const C=require('../h5/game-core.js'),V=require('../balance/replay-verifier.cjs');
 const starters=['chef_curry','reaper_durant','king_lebron','showtime_magic','diesel_shaq','stone_duncan'];
 function fixture(bondIds){
   const game=C.createGame(),run=game.run=C.createRun('steady_interest',911);

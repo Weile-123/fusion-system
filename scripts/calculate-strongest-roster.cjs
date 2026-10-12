@@ -1,5 +1,5 @@
 const fs=require('node:fs');
-const C=require('../h5/game-core.js');
+const core=require('../h5/game-core.js'),C={...core,...core.catalogForRun({balanceRulesVersion:2})};
 // Historical v2 hard-cap proof. New rules use calculate-diverse-rosters.cjs.
 const createLegacyRun=C.createRun;
 C.createRun=(talent,seed,progress)=>createLegacyRun(talent,seed,progress,2);

@@ -1,0 +1,1014 @@
+{
+  "revision": 7,
+  "status": "Design simulation; custom economy not implemented in production",
+  "checks": 13,
+  "policy": {
+    "status": "Design only; custom discounts/free purchases are not implemented by the current core",
+    "referenceWinRate": 0.6666666666666666,
+    "SPrimaryTargetPerBattle": 2,
+    "SSRPrimaryTargetPerBattle": 4,
+    "freeBasicBoostMaxValue": 5,
+    "eligibleFreeBoosts": [
+      "hot",
+      "paint",
+      "stopper"
+    ],
+    "scope": "仅指定主力槽；每场备战为额度窗口，包含战败后下一场；不按关卡编号重置。首次使用时冻结该身份全部经济类型额度，换槽、换SSR版本、出售重买不再发放。",
+    "rules": [
+      "战后4与胜利6按2/3胜率参考等值；S胜利3参考值2，胜率0.5/0.8时必须另列敏感性。",
+      "优惠按实际操作使用计算，不操作没有收益；不折成自动奖金。",
+      "免费强化仅三种基础价5的强化，每窗口全队最多一次，仍受商品售罄及强化购买上限约束；付费价更低时按实际原价估值。",
+      "优惠仅覆盖指定操作，球员商店购买及刷新不享受任何天赋折扣；单抽优惠不覆盖十连。",
+      "付费操作折扣后价格最低1；装备刷新允许降到0；已有免费刷新优先使用，不消耗减价额度。",
+      "同一操作仅选一名球员优惠，取实际节省最高者；不叠加，也不消耗未选中球员的额度。",
+      "复活、读档、重新进入商店不能刷新已消费额度；经济日志须进入新规则的服务端重放。"
+    ]
+  },
+  "rows": [
+    {
+      "id": "wade",
+      "name": "德维恩·韦德",
+      "tier": "S",
+      "slot": "drive",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 12,
+          "creation": 6
+        }
+      },
+      "economicEffect": "胜利奖金+3",
+      "postBattleCash": 0,
+      "winCash": 3,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 1.5
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 2
+        },
+        {
+          "winRate": 0.8,
+          "cash": 2.4000000000000004
+        },
+        {
+          "winRate": 1,
+          "cash": 3
+        }
+      ]
+    },
+    {
+      "id": "wade",
+      "name": "德维恩·韦德",
+      "tier": "S",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "shooting": 8,
+          "creation": 4
+        }
+      },
+      "economicEffect": "胜利奖金+2",
+      "postBattleCash": 0,
+      "winCash": 2,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 1
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 1.3333333333333333
+        },
+        {
+          "winRate": 0.8,
+          "cash": 1.6
+        },
+        {
+          "winRate": 1,
+          "cash": 2
+        }
+      ]
+    },
+    {
+      "id": "garnett",
+      "name": "凯文·加内特",
+      "tier": "S",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 10,
+          "perimeterStop": 8
+        }
+      },
+      "economicEffect": "每场前1次赛前强化购买各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "garnett",
+      "name": "凯文·加内特",
+      "tier": "S",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 8,
+          "rimStop": 6
+        }
+      },
+      "economicEffect": "每场前1次赛前强化购买各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 1,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "west",
+      "name": "杰里·韦斯特",
+      "tier": "S",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "shooting": 12,
+          "creation": 4
+        }
+      },
+      "economicEffect": "每场前1次招募刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "west",
+      "name": "杰里·韦斯特",
+      "tier": "S",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "creation": 10,
+          "shooting": 4
+        }
+      },
+      "economicEffect": "每场前1次招募刷新各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 1,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "wembanyama",
+      "name": "维克托·文班亚马",
+      "tier": "S",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 12,
+          "perimeterStop": 6
+        }
+      },
+      "economicEffect": "每场前1次装备刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "wembanyama",
+      "name": "维克托·文班亚马",
+      "tier": "S",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 8,
+          "rimStop": 4
+        }
+      },
+      "economicEffect": "每场前1次装备刷新各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 1,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "skyhook_kareem",
+      "name": "天勾·贾巴尔",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 12,
+        "dimensions": {
+          "finishing": 34,
+          "rimStop": 8
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "skyhook_kareem",
+      "name": "天勾·贾巴尔",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 22,
+          "perimeterStop": 10,
+          "finishing": 8
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "alien_wembanyama",
+      "name": "外星人·文班亚马",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 24,
+          "perimeterStop": 12,
+          "shooting": 4
+        }
+      },
+      "economicEffect": "每场前2次强化商店刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 4,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "alien_wembanyama",
+      "name": "外星人·文班亚马",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 22,
+          "rimStop": 10,
+          "shooting": 6
+        }
+      },
+      "economicEffect": "每场前2次强化商店刷新各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "dream_hakeem",
+      "name": "大梦·奥拉朱旺",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 20,
+          "perimeterStop": 15
+        }
+      },
+      "economicEffect": "每场一次免费基础强化（仅手感火热／禁区强攻／防守专家）",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 5,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "dream_hakeem",
+      "name": "大梦·奥拉朱旺",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 24,
+          "rimStop": 8
+        }
+      },
+      "economicEffect": "每场前1次赛前强化购买各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "big_bird",
+      "name": "大鸟·伯德",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 14,
+        "dimensions": {
+          "shooting": 24,
+          "creation": 10
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "big_bird",
+      "name": "大鸟·伯德",
+      "tier": "SSR",
+      "slot": "three",
+      "combat": {
+        "allDimensions": 12,
+        "dimensions": {
+          "shooting": 30,
+          "creation": 8
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "beard_harden",
+      "name": "大胡子·哈登",
+      "tier": "SSR",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "creation": 26,
+          "shooting": 10
+        }
+      },
+      "economicEffect": "每场前2次招募刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 4,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "beard_harden",
+      "name": "大胡子·哈登",
+      "tier": "SSR",
+      "slot": "three",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "shooting": 28,
+          "creation": 6
+        }
+      },
+      "economicEffect": "每场前2次招募刷新各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "wolf_garnett",
+      "name": "狼王·加内特",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "perimeterStop": 18,
+          "rimStop": 20
+        }
+      },
+      "economicEffect": "每场前2次球员训练各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 4,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "wolf_garnett",
+      "name": "狼王·加内特",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 20,
+          "rimStop": 14
+        }
+      },
+      "economicEffect": "每场前2次球员训练各减1",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "flash_wade",
+      "name": "闪电侠·韦德",
+      "tier": "SSR",
+      "slot": "drive",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "finishing": 26,
+          "creation": 12
+        }
+      },
+      "economicEffect": "胜利奖金+6",
+      "postBattleCash": 0,
+      "winCash": 6,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 3
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 4
+        },
+        {
+          "winRate": 0.8,
+          "cash": 4.800000000000001
+        },
+        {
+          "winRate": 1,
+          "cash": 6
+        }
+      ]
+    },
+    {
+      "id": "flash_wade",
+      "name": "闪电侠·韦德",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "shooting": 22,
+          "creation": 8
+        }
+      },
+      "economicEffect": "胜利奖金+3",
+      "postBattleCash": 0,
+      "winCash": 3,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 1.5
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 2
+        },
+        {
+          "winRate": 0.8,
+          "cash": 2.4000000000000004
+        },
+        {
+          "winRate": 1,
+          "cash": 3
+        }
+      ]
+    },
+    {
+      "id": "marshal_wilt",
+      "name": "大帅·张伯伦",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "finishing": 34,
+          "rimStop": 10
+        }
+      },
+      "economicEffect": "战后奖金+4",
+      "postBattleCash": 4,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 4
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 4
+        },
+        {
+          "winRate": 0.8,
+          "cash": 4
+        },
+        {
+          "winRate": 1,
+          "cash": 4
+        }
+      ]
+    },
+    {
+      "id": "marshal_wilt",
+      "name": "大帅·张伯伦",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "rimStop": 22,
+          "perimeterStop": 8,
+          "finishing": 8
+        }
+      },
+      "economicEffect": "战后奖金+2",
+      "postBattleCash": 2,
+      "winCash": 0,
+      "discountSavingsCeiling": 0,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 2
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 2
+        },
+        {
+          "winRate": 0.8,
+          "cash": 2
+        },
+        {
+          "winRate": 1,
+          "cash": 2
+        }
+      ]
+    },
+    {
+      "id": "ring_russell",
+      "name": "指环王·拉塞尔",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 28,
+          "perimeterStop": 14
+        }
+      },
+      "economicEffect": "每场前2次装备刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 4,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "ring_russell",
+      "name": "指环王·拉塞尔",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 16,
+          "rimStop": 16,
+          "perimeterStop": 6
+        }
+      },
+      "economicEffect": "每场前1次装备刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "logo_west",
+      "name": "LOGO·韦斯特",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "shooting": 24,
+          "creation": 8
+        }
+      },
+      "economicEffect": "每场前1次单抽招募各减4",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 4,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    },
+    {
+      "id": "logo_west",
+      "name": "LOGO·韦斯特",
+      "tier": "SSR",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "creation": 22,
+          "shooting": 12
+        }
+      },
+      "economicEffect": "每场前1次单抽招募各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "discountSavingsCeiling": 2,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0
+        },
+        {
+          "winRate": 1,
+          "cash": 0
+        }
+      ]
+    }
+  ]
+}

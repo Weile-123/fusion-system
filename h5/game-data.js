@@ -3,7 +3,7 @@
   'use strict';
   const data=factory();
   if(typeof module!=='undefined'&&module.exports)module.exports=data;
-  root.SupFusionGameData=data;
+  if(typeof window!=='undefined')root.SupFusionGameData=data;
 })(typeof window!=='undefined'?window:globalThis,function(){
   'use strict';
 
@@ -3682,5 +3682,7030 @@
     }
   }
 ];
-  return {RANDOM_SKILLS,ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,STAR_ROWS,TALENT_DETAILS,SYNERGIES,LEGACY_SYNERGIES};
+  // Rules 1–11 retain the original catalog for saved runs and server replay.
+  const PREVIOUS_CATALOG={STAR_ROWS,TALENT_DETAILS,SYNERGIES};
+  const CATALOG_V12={
+  "STAR_ROWS": [
+    [
+      "curry",
+      "斯蒂芬·库里",
+      "S",
+      "PG",
+      "勇士",
+      "three",
+      [
+        100,
+        87,
+        78,
+        94,
+        55,
+        67
+      ],
+      "超远射程",
+      null
+    ],
+    [
+      "lebron",
+      "勒布朗·詹姆斯",
+      "S",
+      "SF",
+      "湖人",
+      "drive",
+      [
+        72,
+        79,
+        99,
+        95,
+        91,
+        85
+      ],
+      "全能统治",
+      null
+    ],
+    [
+      "kobe",
+      "科比·布莱恩特",
+      "S",
+      "SG",
+      "湖人",
+      "mid",
+      [
+        84,
+        98,
+        94,
+        89,
+        77,
+        69
+      ],
+      "关键杀手",
+      null
+    ],
+    [
+      "duncan",
+      "蒂姆·邓肯",
+      "S",
+      "PF",
+      "马刺",
+      "inside",
+      [
+        51,
+        86,
+        75,
+        64,
+        99,
+        94
+      ],
+      "稳固根基",
+      null
+    ],
+    [
+      "kawhi",
+      "科怀·伦纳德",
+      "A",
+      "SF",
+      "快船",
+      "def",
+      [
+        78,
+        84,
+        74,
+        61,
+        69,
+        90
+      ],
+      "死亡缠绕",
+      null
+    ],
+    [
+      "irving",
+      "凯里·欧文",
+      "A",
+      "PG",
+      "独行侠",
+      "handle",
+      [
+        78,
+        70,
+        86,
+        94,
+        62,
+        50
+      ],
+      "脚踝终结",
+      null
+    ],
+    [
+      "durant",
+      "凯文·杜兰特",
+      "S",
+      "SF",
+      "太阳",
+      "mid",
+      [
+        94,
+        99,
+        90,
+        78,
+        84,
+        70
+      ],
+      "无解投射",
+      null
+    ],
+    [
+      "jokic",
+      "尼古拉·约基奇",
+      "A",
+      "C",
+      "掘金",
+      "inside",
+      [
+        67,
+        79,
+        58,
+        86,
+        92,
+        74
+      ],
+      "中轴策应",
+      null
+    ],
+    [
+      "giannis",
+      "扬尼斯·阿德托昆博",
+      "A",
+      "PF",
+      "雄鹿",
+      "drive",
+      [
+        52,
+        64,
+        94,
+        72,
+        86,
+        79
+      ],
+      "禁区冲击",
+      null
+    ],
+    [
+      "shaq",
+      "沙奎尔·奥尼尔",
+      "S",
+      "C",
+      "湖人",
+      "inside",
+      [
+        50,
+        64,
+        84,
+        74,
+        99,
+        92
+      ],
+      "篮下巨兽",
+      null
+    ],
+    [
+      "jordan",
+      "迈克尔·乔丹",
+      "S",
+      "SG",
+      "公牛",
+      "mid",
+      [
+        70,
+        100,
+        96,
+        79,
+        91,
+        85
+      ],
+      "最后一投",
+      null
+    ],
+    [
+      "wade",
+      "德维恩·韦德",
+      "S",
+      "SG",
+      "热火",
+      "drive",
+      [
+        56,
+        86,
+        99,
+        93,
+        68,
+        78
+      ],
+      "闪电突破",
+      null
+    ],
+    [
+      "harden",
+      "詹姆斯·哈登",
+      "S",
+      "SG",
+      "快船",
+      "handle",
+      [
+        94,
+        82,
+        89,
+        99,
+        74,
+        63
+      ],
+      "节奏大师",
+      null
+    ],
+    [
+      "klay",
+      "克莱·汤普森",
+      "A",
+      "SG",
+      "独行侠",
+      "three",
+      [
+        93,
+        86,
+        71,
+        63,
+        52,
+        78
+      ],
+      "接球即投",
+      null
+    ],
+    [
+      "green",
+      "德雷蒙德·格林",
+      "B",
+      "PF",
+      "勇士",
+      "def",
+      [
+        63,
+        56,
+        48,
+        75,
+        69,
+        83
+      ],
+      "防线指挥",
+      null
+    ],
+    [
+      "holiday",
+      "朱·霍勒迪",
+      "B",
+      "PG",
+      "凯尔特人",
+      "def",
+      [
+        64,
+        69,
+        58,
+        75,
+        51,
+        81
+      ],
+      "后场铁闸",
+      null
+    ],
+    [
+      "white",
+      "德里克·怀特",
+      "B",
+      "G",
+      "凯尔特人",
+      "def",
+      [
+        69,
+        64,
+        58,
+        74,
+        52,
+        80
+      ],
+      "追身封盖",
+      null
+    ],
+    [
+      "lillard",
+      "达米安·利拉德",
+      "B",
+      "PG",
+      "雄鹿",
+      "three",
+      [
+        85,
+        65,
+        71,
+        78,
+        56,
+        47
+      ],
+      "超远决胜",
+      null
+    ],
+    [
+      "tatum",
+      "杰森·塔图姆",
+      "B",
+      "SF",
+      "凯尔特人",
+      "mid",
+      [
+        71,
+        82,
+        76,
+        61,
+        66,
+        55
+      ],
+      "锋线得分",
+      null
+    ],
+    [
+      "booker",
+      "德文·布克",
+      "B",
+      "SG",
+      "太阳",
+      "mid",
+      [
+        77,
+        84,
+        65,
+        71,
+        58,
+        51
+      ],
+      "中投连击",
+      null
+    ],
+    [
+      "embiid",
+      "乔尔·恩比德",
+      "A",
+      "C",
+      "76人",
+      "inside",
+      [
+        72,
+        78,
+        66,
+        57,
+        91,
+        84
+      ],
+      "低位威慑",
+      null
+    ],
+    [
+      "davis",
+      "安东尼·戴维斯",
+      "A",
+      "PF",
+      "湖人",
+      "def",
+      [
+        64,
+        72,
+        77,
+        55,
+        85,
+        91
+      ],
+      "禁区屏障",
+      null
+    ],
+    [
+      "westbrook",
+      "拉塞尔·威斯布鲁克",
+      "B",
+      "PG",
+      "掘金",
+      "drive",
+      [
+        47,
+        56,
+        85,
+        77,
+        70,
+        63
+      ],
+      "全速冲锋",
+      null
+    ],
+    [
+      "paul",
+      "克里斯·保罗",
+      "A",
+      "PG",
+      "马刺",
+      "handle",
+      [
+        78,
+        85,
+        63,
+        93,
+        52,
+        71
+      ],
+      "精准掌控",
+      null
+    ],
+    [
+      "nash",
+      "史蒂夫·纳什",
+      "A",
+      "PG",
+      "太阳",
+      "handle",
+      [
+        78,
+        85,
+        70,
+        93,
+        61,
+        51
+      ],
+      "大师传球",
+      null
+    ],
+    [
+      "rodman",
+      "丹尼斯·罗德曼",
+      "B",
+      "PF",
+      "公牛",
+      "def",
+      [
+        39,
+        59,
+        68,
+        49,
+        75,
+        86
+      ],
+      "篮板狂人",
+      null
+    ],
+    [
+      "gobert",
+      "鲁迪·戈贝尔",
+      "B",
+      "C",
+      "森林狼",
+      "def",
+      [
+        38,
+        58,
+        66,
+        48,
+        75,
+        86
+      ],
+      "护框专家",
+      null
+    ],
+    [
+      "anunoby",
+      "OG·阿奴诺比",
+      "C",
+      "SF",
+      "尼克斯",
+      "drive",
+      [
+        62,
+        55,
+        79,
+        49,
+        44,
+        70
+      ],
+      "侧翼防线",
+      null
+    ],
+    [
+      "caruso",
+      "亚历克斯·卡鲁索",
+      "B",
+      "G",
+      "雷霆",
+      "handle",
+      [
+        71,
+        53,
+        63,
+        87,
+        43,
+        78
+      ],
+      "拼抢先锋",
+      null
+    ],
+    [
+      "lopez",
+      "布鲁克·洛佩兹",
+      "C",
+      "C",
+      "雄鹿",
+      "three",
+      [
+        85,
+        49,
+        31,
+        39,
+        61,
+        73
+      ],
+      "高塔投射",
+      null
+    ],
+    [
+      "magic",
+      "埃尔文·约翰逊",
+      "S",
+      "PG",
+      "湖人",
+      "handle",
+      [
+        68,
+        84,
+        95,
+        100,
+        90,
+        77
+      ],
+      "魔术传球",
+      null
+    ],
+    [
+      "bird",
+      "拉里·伯德",
+      "S",
+      "SF",
+      "凯尔特人",
+      "mid",
+      [
+        95,
+        99,
+        70,
+        85,
+        90,
+        78
+      ],
+      "预言绝杀",
+      null
+    ],
+    [
+      "kareem",
+      "卡里姆·阿卜杜尔-贾巴尔",
+      "S",
+      "C",
+      "湖人",
+      "inside",
+      [
+        51,
+        87,
+        66,
+        76,
+        100,
+        94
+      ],
+      "天勾",
+      null
+    ],
+    [
+      "hakeem",
+      "哈基姆·奥拉朱旺",
+      "S",
+      "C",
+      "火箭",
+      "def",
+      [
+        51,
+        86,
+        76,
+        66,
+        94,
+        100
+      ],
+      "梦幻脚步",
+      null
+    ],
+    [
+      "dirk",
+      "德克·诺维茨基",
+      "A",
+      "PF",
+      "独行侠",
+      "mid",
+      [
+        80,
+        92,
+        59,
+        73,
+        85,
+        67
+      ],
+      "金鸡独立",
+      null
+    ],
+    [
+      "garnett",
+      "凯文·加内特",
+      "S",
+      "PF",
+      "凯尔特人",
+      "def",
+      [
+        57,
+        86,
+        78,
+        69,
+        93,
+        98
+      ],
+      "全域协防",
+      null
+    ],
+    [
+      "pippen",
+      "斯科蒂·皮蓬",
+      "A",
+      "SF",
+      "公牛",
+      "def",
+      [
+        59,
+        74,
+        85,
+        79,
+        68,
+        91
+      ],
+      "锋线封锁",
+      null
+    ],
+    [
+      "rayallen",
+      "雷·阿伦",
+      "A",
+      "SG",
+      "凯尔特人",
+      "three",
+      [
+        91,
+        84,
+        71,
+        77,
+        55,
+        64
+      ],
+      "底角绝命",
+      null
+    ],
+    [
+      "pierce",
+      "保罗·皮尔斯",
+      "B",
+      "SF",
+      "凯尔特人",
+      "mid",
+      [
+        76,
+        83,
+        60,
+        71,
+        66,
+        53
+      ],
+      "真理单打",
+      null
+    ],
+    [
+      "iverson",
+      "阿伦·艾弗森",
+      "A",
+      "PG",
+      "76人",
+      "drive",
+      [
+        71,
+        79,
+        94,
+        86,
+        63,
+        52
+      ],
+      "变向风暴",
+      null
+    ],
+    [
+      "kidd",
+      "贾森·基德",
+      "A",
+      "PG",
+      "篮网",
+      "handle",
+      [
+        73,
+        79,
+        66,
+        92,
+        56,
+        85
+      ],
+      "全场视野",
+      null
+    ],
+    [
+      "malone",
+      "卡尔·马龙",
+      "A",
+      "PF",
+      "爵士",
+      "inside",
+      [
+        46,
+        77,
+        68,
+        59,
+        94,
+        85
+      ],
+      "强硬终结",
+      null
+    ],
+    [
+      "stockton",
+      "约翰·斯托克顿",
+      "A",
+      "PG",
+      "爵士",
+      "handle",
+      [
+        78,
+        85,
+        62,
+        94,
+        50,
+        70
+      ],
+      "挡拆手术刀",
+      null
+    ],
+    [
+      "bosh",
+      "克里斯·波什",
+      "B",
+      "PF",
+      "热火",
+      "mid",
+      [
+        65,
+        82,
+        59,
+        52,
+        76,
+        70
+      ],
+      "空间内线",
+      null
+    ],
+    [
+      "parker",
+      "托尼·帕克",
+      "B",
+      "PG",
+      "马刺",
+      "handle",
+      [
+        55,
+        72,
+        78,
+        86,
+        63,
+        46
+      ],
+      "陀螺突破",
+      null
+    ],
+    [
+      "ginobili",
+      "马努·吉诺比利",
+      "B",
+      "SG",
+      "马刺",
+      "drive",
+      [
+        65,
+        71,
+        84,
+        77,
+        51,
+        58
+      ],
+      "欧洲步",
+      null
+    ],
+    [
+      "pau",
+      "保罗·加索尔",
+      "B",
+      "PF",
+      "湖人",
+      "inside",
+      [
+        57,
+        77,
+        49,
+        64,
+        85,
+        71
+      ],
+      "高位策应",
+      null
+    ],
+    [
+      "benwallace",
+      "本·华莱士",
+      "B",
+      "C",
+      "活塞",
+      "def",
+      [
+        38,
+        48,
+        66,
+        58,
+        75,
+        86
+      ],
+      "禁区铁门",
+      null
+    ],
+    [
+      "mutombo",
+      "迪肯贝·穆托姆博",
+      "B",
+      "C",
+      "掘金",
+      "def",
+      [
+        38,
+        48,
+        66,
+        58,
+        75,
+        86
+      ],
+      "摇指封盖",
+      null
+    ],
+    [
+      "howard",
+      "德怀特·霍华德",
+      "A",
+      "C",
+      "魔术",
+      "inside",
+      [
+        46,
+        58,
+        76,
+        66,
+        93,
+        85
+      ],
+      "魔兽空接",
+      null
+    ],
+    [
+      "carter",
+      "文斯·卡特",
+      "B",
+      "SG",
+      "猛龙",
+      "drive",
+      [
+        72,
+        78,
+        86,
+        66,
+        58,
+        49
+      ],
+      "世纪扣篮",
+      null
+    ],
+    [
+      "melo",
+      "卡梅隆·安东尼",
+      "B",
+      "SF",
+      "掘金",
+      "mid",
+      [
+        58,
+        86,
+        72,
+        65,
+        78,
+        49
+      ],
+      "三威胁",
+      null
+    ],
+    [
+      "butler",
+      "吉米·巴特勒",
+      "B",
+      "SF",
+      "热火",
+      "drive",
+      [
+        53,
+        77,
+        83,
+        66,
+        61,
+        72
+      ],
+      "硬仗模式",
+      null
+    ],
+    [
+      "george",
+      "保罗·乔治",
+      "B",
+      "SF",
+      "快船",
+      "three",
+      [
+        82,
+        71,
+        66,
+        61,
+        54,
+        77
+      ],
+      "攻防侧翼",
+      null
+    ],
+    [
+      "bowen",
+      "布鲁斯·鲍文",
+      "C",
+      "SF",
+      "马刺",
+      "def",
+      [
+        73,
+        60,
+        42,
+        50,
+        35,
+        84
+      ],
+      "贴身压迫",
+      null
+    ],
+    [
+      "battier",
+      "肖恩·巴蒂尔",
+      "C",
+      "SF",
+      "热火",
+      "def",
+      [
+        72,
+        62,
+        40,
+        54,
+        47,
+        83
+      ],
+      "遮眼防守",
+      null
+    ],
+    [
+      "horry",
+      "罗伯特·霍里",
+      "C",
+      "PF",
+      "湖人",
+      "three",
+      [
+        82,
+        63,
+        43,
+        49,
+        56,
+        72
+      ],
+      "大心脏",
+      null
+    ],
+    [
+      "chandler",
+      "泰森·钱德勒",
+      "B",
+      "C",
+      "独行侠",
+      "def",
+      [
+        38,
+        48,
+        66,
+        58,
+        75,
+        86
+      ],
+      "冠军护框",
+      null
+    ],
+    [
+      "korver",
+      "凯尔·科沃尔",
+      "C",
+      "SG",
+      "老鹰",
+      "three",
+      [
+        89,
+        76,
+        36,
+        60,
+        27,
+        46
+      ],
+      "定点神射",
+      null
+    ],
+    [
+      "artest",
+      "罗恩·阿泰斯特",
+      "B",
+      "SF",
+      "湖人",
+      "def",
+      [
+        51,
+        65,
+        70,
+        58,
+        76,
+        83
+      ],
+      "强硬锁防",
+      null
+    ],
+    [
+      "tmac",
+      "特雷西·麦克格雷迪",
+      "A",
+      "SF",
+      "魔术",
+      "mid",
+      [
+        67,
+        92,
+        86,
+        79,
+        73,
+        56
+      ],
+      "干拔时刻",
+      null
+    ],
+    [
+      "doncic",
+      "卢卡·东契奇",
+      "A",
+      "PG",
+      "独行侠",
+      "handle",
+      [
+        70,
+        86,
+        80,
+        92,
+        75,
+        61
+      ],
+      "节奏掌控",
+      null
+    ],
+    [
+      "isiah",
+      "伊赛亚·托马斯",
+      "A",
+      "PG",
+      "活塞",
+      "handle",
+      [
+        73,
+        79,
+        86,
+        92,
+        57,
+        66
+      ],
+      "微笑刺客",
+      null
+    ],
+    [
+      "dumars",
+      "乔·杜马斯",
+      "B",
+      "SG",
+      "活塞",
+      "mid",
+      [
+        65,
+        82,
+        59,
+        76,
+        52,
+        71
+      ],
+      "沉默锁链",
+      null
+    ],
+    [
+      "laimbeer",
+      "比尔·兰比尔",
+      "B",
+      "C",
+      "活塞",
+      "three",
+      [
+        85,
+        61,
+        40,
+        50,
+        71,
+        78
+      ],
+      "强硬禁区",
+      null
+    ],
+    [
+      "robinson",
+      "大卫·罗宾逊",
+      "A",
+      "C",
+      "马刺",
+      "def",
+      [
+        48,
+        70,
+        78,
+        61,
+        87,
+        95
+      ],
+      "海军上将",
+      null
+    ],
+    [
+      "ewing",
+      "帕特里克·尤因",
+      "A",
+      "C",
+      "尼克斯",
+      "inside",
+      [
+        47,
+        78,
+        68,
+        59,
+        94,
+        86
+      ],
+      "纽约支柱",
+      null
+    ],
+    [
+      "iguodala",
+      "安德烈·伊戈达拉",
+      "B",
+      "SF",
+      "勇士",
+      "def",
+      [
+        64,
+        52,
+        70,
+        75,
+        59,
+        82
+      ],
+      "死亡拼图",
+      null
+    ],
+    [
+      "harper",
+      "罗恩·哈珀",
+      "B",
+      "PG",
+      "公牛",
+      "handle",
+      [
+        51,
+        64,
+        69,
+        81,
+        58,
+        75
+      ],
+      "高大后卫",
+      null
+    ],
+    [
+      "longley",
+      "卢克·朗利",
+      "C",
+      "C",
+      "公牛",
+      "inside",
+      [
+        25,
+        56,
+        33,
+        43,
+        87,
+        74
+      ],
+      "中路屏障",
+      null
+    ],
+    [
+      "fisher",
+      "德里克·费舍尔",
+      "C",
+      "PG",
+      "湖人",
+      "three",
+      [
+        84,
+        62,
+        44,
+        72,
+        36,
+        52
+      ],
+      "关键零点四",
+      null
+    ],
+    [
+      "fox",
+      "里克·福克斯",
+      "C",
+      "SF",
+      "湖人",
+      "mid",
+      [
+        62,
+        79,
+        49,
+        56,
+        44,
+        70
+      ],
+      "侧翼粘合",
+      null
+    ],
+    [
+      "byron_scott",
+      "拜伦·斯科特",
+      "B",
+      "SG",
+      "湖人",
+      "three",
+      [
+        82,
+        70,
+        75,
+        64,
+        50,
+        57
+      ],
+      "快攻终结",
+      null
+    ],
+    [
+      "worthy",
+      "詹姆斯·沃西",
+      "B",
+      "SF",
+      "湖人",
+      "drive",
+      [
+        46,
+        72,
+        86,
+        64,
+        78,
+        56
+      ],
+      "大赛眼镜蛇",
+      null
+    ],
+    [
+      "ac_green",
+      "AC·格林",
+      "C",
+      "PF",
+      "湖人",
+      "def",
+      [
+        32,
+        60,
+        49,
+        40,
+        73,
+        85
+      ],
+      "铁人篮板",
+      null
+    ],
+    [
+      "griffin",
+      "布雷克·格里芬",
+      "B",
+      "PF",
+      "快船",
+      "drive",
+      [
+        49,
+        70,
+        85,
+        64,
+        77,
+        57
+      ],
+      "暴力起飞",
+      null
+    ],
+    [
+      "deandre",
+      "德安德烈·乔丹",
+      "B",
+      "C",
+      "快船",
+      "inside",
+      [
+        38,
+        48,
+        67,
+        58,
+        85,
+        76
+      ],
+      "空接终点",
+      null
+    ],
+    [
+      "mchale",
+      "凯文·麦克海尔",
+      "B",
+      "PF",
+      "凯尔特人",
+      "inside",
+      [
+        43,
+        71,
+        63,
+        53,
+        87,
+        78
+      ],
+      "低位万花筒",
+      null
+    ],
+    [
+      "parish",
+      "罗伯特·帕里什",
+      "B",
+      "C",
+      "凯尔特人",
+      "inside",
+      [
+        39,
+        69,
+        60,
+        49,
+        87,
+        77
+      ],
+      "酋长镇守",
+      null
+    ],
+    [
+      "love",
+      "凯文·乐福",
+      "B",
+      "PF",
+      "骑士",
+      "three",
+      [
+        83,
+        70,
+        49,
+        57,
+        76,
+        64
+      ],
+      "长传炮台",
+      null
+    ],
+    [
+      "reggie",
+      "雷吉·米勒",
+      "A",
+      "SG",
+      "步行者",
+      "three",
+      [
+        92,
+        84,
+        71,
+        77,
+        53,
+        63
+      ],
+      "米勒时刻",
+      null
+    ],
+    [
+      "amare",
+      "阿马雷·斯塔德迈尔",
+      "B",
+      "PF",
+      "太阳",
+      "inside",
+      [
+        42,
+        71,
+        79,
+        52,
+        88,
+        62
+      ],
+      "太阳风暴",
+      null
+    ],
+    [
+      "marion",
+      "肖恩·马里昂",
+      "B",
+      "SF",
+      "太阳",
+      "drive",
+      [
+        57,
+        50,
+        83,
+        64,
+        71,
+        77
+      ],
+      "骇客全能",
+      null
+    ],
+    [
+      "murray",
+      "贾马尔·穆雷",
+      "B",
+      "PG",
+      "掘金",
+      "mid",
+      [
+        71,
+        85,
+        65,
+        78,
+        56,
+        48
+      ],
+      "季后赛升温",
+      null
+    ],
+    [
+      "aaron_gordon",
+      "阿隆·戈登",
+      "B",
+      "PF",
+      "掘金",
+      "drive",
+      [
+        57,
+        64,
+        83,
+        51,
+        70,
+        76
+      ],
+      "高空协防",
+      null
+    ],
+    [
+      "wilkins",
+      "多米尼克·威尔金斯",
+      "A",
+      "SF",
+      "老鹰",
+      "drive",
+      [
+        55,
+        85,
+        93,
+        72,
+        79,
+        65
+      ],
+      "人类电影精华",
+      null
+    ],
+    [
+      "wilt",
+      "威尔特·张伯伦",
+      "S",
+      "C",
+      "湖人",
+      "inside",
+      [
+        51,
+        75,
+        86,
+        64,
+        100,
+        93
+      ],
+      "百分神迹",
+      null
+    ],
+    [
+      "russell",
+      "比尔·拉塞尔",
+      "S",
+      "C",
+      "凯尔特人",
+      "def",
+      [
+        50,
+        63,
+        83,
+        73,
+        92,
+        99
+      ],
+      "冠军基石",
+      null
+    ],
+    [
+      "oscar",
+      "奥斯卡·罗伯特森",
+      "A",
+      "PG",
+      "雄鹿",
+      "handle",
+      [
+        61,
+        85,
+        80,
+        91,
+        75,
+        69
+      ],
+      "三双先驱",
+      null
+    ],
+    [
+      "west",
+      "杰里·韦斯特",
+      "S",
+      "SG",
+      "湖人",
+      "mid",
+      [
+        87,
+        98,
+        79,
+        93,
+        59,
+        70
+      ],
+      "标志原型",
+      null
+    ],
+    [
+      "baylor",
+      "埃尔金·贝勒",
+      "A",
+      "SF",
+      "湖人",
+      "drive",
+      [
+        53,
+        79,
+        93,
+        72,
+        86,
+        65
+      ],
+      "空中先驱",
+      null
+    ],
+    [
+      "moses",
+      "摩西·马龙",
+      "A",
+      "C",
+      "76人",
+      "inside",
+      [
+        46,
+        75,
+        66,
+        58,
+        93,
+        85
+      ],
+      "进攻篮板王",
+      null
+    ],
+    [
+      "barkley",
+      "查尔斯·巴克利",
+      "A",
+      "PF",
+      "太阳",
+      "drive",
+      [
+        54,
+        79,
+        92,
+        66,
+        86,
+        73
+      ],
+      "空中飞猪",
+      null
+    ],
+    [
+      "drexler",
+      "克莱德·德雷克斯勒",
+      "B",
+      "SG",
+      "开拓者",
+      "drive",
+      [
+        53,
+        77,
+        84,
+        71,
+        65,
+        60
+      ],
+      "滑翔机",
+      null
+    ],
+    [
+      "mullin",
+      "克里斯·穆林",
+      "B",
+      "SF",
+      "勇士",
+      "mid",
+      [
+        77,
+        84,
+        57,
+        70,
+        64,
+        49
+      ],
+      "左手神射",
+      null
+    ],
+    [
+      "payton",
+      "加里·佩顿",
+      "B",
+      "PG",
+      "超音速",
+      "handle",
+      [
+        59,
+        71,
+        65,
+        84,
+        52,
+        77
+      ],
+      "手套压迫",
+      null
+    ],
+    [
+      "kemp",
+      "肖恩·坎普",
+      "B",
+      "PF",
+      "超音速",
+      "inside",
+      [
+        40,
+        62,
+        79,
+        51,
+        88,
+        71
+      ],
+      "雨人暴扣",
+      null
+    ],
+    [
+      "penny",
+      "安芬尼·哈达威",
+      "B",
+      "PG",
+      "魔术",
+      "handle",
+      [
+        60,
+        72,
+        77,
+        84,
+        66,
+        53
+      ],
+      "便士魔法",
+      null
+    ],
+    [
+      "grant_hill",
+      "格兰特·希尔",
+      "B",
+      "SF",
+      "活塞",
+      "drive",
+      [
+        52,
+        72,
+        85,
+        78,
+        66,
+        60
+      ],
+      "全能前锋",
+      null
+    ],
+    [
+      "yao",
+      "姚明",
+      "B",
+      "C",
+      "火箭",
+      "inside",
+      [
+        54,
+        72,
+        45,
+        62,
+        87,
+        78
+      ],
+      "长城天勾",
+      null
+    ],
+    [
+      "billups",
+      "昌西·比卢普斯",
+      "B",
+      "PG",
+      "活塞",
+      "handle",
+      [
+        77,
+        71,
+        58,
+        85,
+        50,
+        65
+      ],
+      "大心脏控卫",
+      null
+    ],
+    [
+      "rip",
+      "理查德·汉密尔顿",
+      "B",
+      "SG",
+      "活塞",
+      "mid",
+      [
+        75,
+        83,
+        70,
+        64,
+        50,
+        57
+      ],
+      "无球永动",
+      null
+    ],
+    [
+      "rasheed",
+      "拉希德·华莱士",
+      "B",
+      "PF",
+      "活塞",
+      "def",
+      [
+        64,
+        71,
+        50,
+        57,
+        77,
+        84
+      ],
+      "怒吼协防",
+      null
+    ],
+    [
+      "webber",
+      "克里斯·韦伯",
+      "B",
+      "PF",
+      "国王",
+      "handle",
+      [
+        51,
+        72,
+        59,
+        85,
+        78,
+        66
+      ],
+      "高位华章",
+      null
+    ],
+    [
+      "peja",
+      "佩贾·斯托贾科维奇",
+      "B",
+      "SF",
+      "国王",
+      "three",
+      [
+        85,
+        77,
+        55,
+        69,
+        63,
+        47
+      ],
+      "国王神射",
+      null
+    ],
+    [
+      "rondo",
+      "拉简·隆多",
+      "B",
+      "PG",
+      "凯尔特人",
+      "handle",
+      [
+        45,
+        63,
+        71,
+        86,
+        54,
+        78
+      ],
+      "季后赛指挥",
+      null
+    ],
+    [
+      "erving",
+      "朱利叶斯·欧文",
+      "A",
+      "SF",
+      "76人",
+      "drive",
+      [
+        55,
+        79,
+        93,
+        73,
+        86,
+        67
+      ],
+      "J博士飞行",
+      null
+    ],
+    [
+      "brunson",
+      "杰伦·布伦森",
+      "B",
+      "PG",
+      "尼克斯",
+      "mid",
+      [
+        65,
+        85,
+        72,
+        78,
+        57,
+        50
+      ],
+      "低重心脚步",
+      null
+    ],
+    [
+      "shai",
+      "谢伊·吉尔杰斯-亚历山大",
+      "A",
+      "SG",
+      "雷霆",
+      "drive",
+      [
+        63,
+        80,
+        91,
+        86,
+        70,
+        75
+      ],
+      "节奏切割",
+      null
+    ],
+    [
+      "edwards",
+      "安东尼·爱德华兹",
+      "B",
+      "SG",
+      "森林狼",
+      "drive",
+      [
+        61,
+        72,
+        84,
+        77,
+        55,
+        66
+      ],
+      "蚁人升空",
+      null
+    ],
+    [
+      "king_lebron",
+      "天选·詹姆斯",
+      "SSR",
+      "SF",
+      "巅峰传奇",
+      "drive",
+      [
+        99,
+        108,
+        125,
+        110,
+        121,
+        112
+      ],
+      "霸王踏步",
+      "lebron"
+    ],
+    [
+      "air_jordan",
+      "GOAT·乔丹",
+      "SSR",
+      "SG",
+      "巅峰传奇",
+      "mid",
+      [
+        94,
+        125,
+        121,
+        106,
+        113,
+        120
+      ],
+      "神之领域",
+      "jordan"
+    ],
+    [
+      "mamba_kobe",
+      "黑曼巴·科比",
+      "SSR",
+      "SG",
+      "巅峰传奇",
+      "mid",
+      [
+        108,
+        120,
+        117,
+        108,
+        108,
+        117
+      ],
+      "曼巴时刻",
+      "kobe"
+    ],
+    [
+      "chef_curry",
+      "三分王·库里",
+      "SSR",
+      "PG",
+      "巅峰传奇",
+      "three",
+      [
+        125,
+        118,
+        111,
+        118,
+        99,
+        91
+      ],
+      "三分引力",
+      "curry"
+    ],
+    [
+      "diesel_shaq",
+      "大鲨鱼·奥尼尔",
+      "SSR",
+      "C",
+      "巅峰传奇",
+      "inside",
+      [
+        85,
+        94,
+        97,
+        90,
+        128,
+        125
+      ],
+      "禁区粉碎",
+      "shaq"
+    ],
+    [
+      "stone_duncan",
+      "石佛·邓肯",
+      "SSR",
+      "PF",
+      "巅峰传奇",
+      "def",
+      [
+        88,
+        104,
+        96,
+        91,
+        122,
+        128
+      ],
+      "石佛镇守",
+      "duncan"
+    ],
+    [
+      "showtime_magic",
+      "魔术师·约翰逊",
+      "SSR",
+      "PG",
+      "巅峰传奇",
+      "handle",
+      [
+        91,
+        104,
+        110,
+        125,
+        111,
+        103
+      ],
+      "表演时刻",
+      "magic"
+    ],
+    [
+      "reaper_durant",
+      "死神·杜兰特",
+      "SSR",
+      "SF",
+      "巅峰传奇",
+      "mid",
+      [
+        116,
+        122,
+        115,
+        109,
+        112,
+        105
+      ],
+      "死神终结",
+      "durant"
+    ],
+    [
+      "wembanyama",
+      "维克托·文班亚马",
+      "S",
+      "C",
+      "马刺",
+      "def",
+      [
+        86,
+        68,
+        78,
+        56,
+        93,
+        99
+      ],
+      "外星禁区",
+      null
+    ],
+    [
+      "havlicek",
+      "约翰·哈夫利切克",
+      "A",
+      "SF",
+      "凯尔特人",
+      "def",
+      [
+        72,
+        85,
+        78,
+        65,
+        55,
+        91
+      ],
+      "全场追防",
+      null
+    ],
+    [
+      "jaylen_brown",
+      "杰伦·布朗",
+      "B",
+      "SG",
+      "凯尔特人",
+      "drive",
+      [
+        64,
+        70,
+        83,
+        48,
+        56,
+        76
+      ],
+      "双探花突破",
+      null
+    ],
+    [
+      "duncan_robinson",
+      "邓肯·罗宾逊",
+      "B",
+      "SG",
+      "热火",
+      "three",
+      [
+        87,
+        78,
+        71,
+        63,
+        43,
+        53
+      ],
+      "无球投射",
+      null
+    ],
+    [
+      "redick",
+      "JJ·雷迪克",
+      "B",
+      "SG",
+      "快船",
+      "three",
+      [
+        87,
+        78,
+        63,
+        71,
+        43,
+        53
+      ],
+      "精准速射",
+      null
+    ],
+    [
+      "adebayo",
+      "巴姆·阿德巴约",
+      "B",
+      "C",
+      "热火",
+      "def",
+      [
+        43,
+        53,
+        63,
+        71,
+        78,
+        87
+      ],
+      "换防中枢",
+      null
+    ],
+    [
+      "terry",
+      "贾森·特里",
+      "B",
+      "SG",
+      "独行侠",
+      "three",
+      [
+        87,
+        71,
+        63,
+        78,
+        43,
+        53
+      ],
+      "喷气三分",
+      null
+    ],
+    [
+      "skyhook_kareem",
+      "天勾·贾巴尔",
+      "SSR",
+      "C",
+      "湖人",
+      "inside",
+      [
+        85,
+        94,
+        97,
+        90,
+        128,
+        125
+      ],
+      "天勾",
+      "kareem"
+    ],
+    [
+      "alien_wembanyama",
+      "外星人·文班亚马",
+      "SSR",
+      "传奇",
+      "传奇",
+      "def",
+      [
+        102,
+        96,
+        96,
+        85,
+        122,
+        128
+      ],
+      "外星人",
+      "wembanyama"
+    ],
+    [
+      "dream_hakeem",
+      "大梦·奥拉朱旺",
+      "SSR",
+      "C",
+      "火箭",
+      "def",
+      [
+        85,
+        104,
+        100,
+        86,
+        125,
+        128
+      ],
+      "梦幻脚步",
+      "hakeem"
+    ],
+    [
+      "big_bird",
+      "大鸟·伯德",
+      "SSR",
+      "SF",
+      "凯尔特人",
+      "mid",
+      [
+        122,
+        123,
+        100,
+        116,
+        105,
+        110
+      ],
+      "预言绝杀",
+      "bird"
+    ],
+    [
+      "beard_harden",
+      "大胡子·哈登",
+      "SSR",
+      "SG",
+      "快船",
+      "handle",
+      [
+        117,
+        104,
+        110,
+        125,
+        85,
+        103
+      ],
+      "节奏大师",
+      "harden"
+    ],
+    [
+      "wolf_garnett",
+      "狼王·加内特",
+      "SSR",
+      "PF",
+      "凯尔特人",
+      "def",
+      [
+        88,
+        104,
+        96,
+        91,
+        122,
+        128
+      ],
+      "全域协防",
+      "garnett"
+    ],
+    [
+      "flash_wade",
+      "闪电侠·韦德",
+      "SSR",
+      "SG",
+      "热火",
+      "drive",
+      [
+        96,
+        110,
+        125,
+        110,
+        121,
+        112
+      ],
+      "闪电突破",
+      "wade"
+    ],
+    [
+      "marshal_wilt",
+      "大帅·张伯伦",
+      "SSR",
+      "C",
+      "湖人",
+      "inside",
+      [
+        85,
+        94,
+        97,
+        90,
+        128,
+        125
+      ],
+      "百分神迹",
+      "wilt"
+    ],
+    [
+      "ring_russell",
+      "指环王·拉塞尔",
+      "SSR",
+      "C",
+      "凯尔特人",
+      "def",
+      [
+        85,
+        97,
+        96,
+        89,
+        120,
+        128
+      ],
+      "冠军基石",
+      "russell"
+    ],
+    [
+      "logo_west",
+      "LOGO·韦斯特",
+      "SSR",
+      "SG",
+      "湖人",
+      "mid",
+      [
+        110,
+        120,
+        108,
+        120,
+        91,
+        110
+      ],
+      "标志原型",
+      "west"
+    ]
+  ],
+  "TALENT_DETAILS": {
+    "curry": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 14,
+        "perimeterStop": -2,
+        "rimStop": -2
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +14%、外线限制 -2%、护框强度 -2%"
+    },
+    "lebron": {
+      "attr": "drive",
+      "slots": [
+        "drive",
+        "handle"
+      ],
+      "dimensions": {},
+      "allDimensions": 6,
+      "strategyDimensions": {},
+      "description": "安排在突破或控球槽时，战力五维 +6%"
+    },
+    "kobe": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 8.399999999999999,
+        "creation": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +8.4%、持球创造 +3.6%"
+    },
+    "duncan": {
+      "attr": "inside",
+      "slots": [
+        "inside",
+        "def"
+      ],
+      "slotEffects": {
+        "inside": {
+          "dimensions": {
+            "finishing": 11
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        },
+        "def": {
+          "dimensions": {
+            "perimeterStop": 3,
+            "rimStop": 3
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +11%；安排在防守槽时，外线限制 +3%、护框强度 +3%"
+    },
+    "kawhi": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "irving": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "durant": {
+      "attr": "mid",
+      "slots": [
+        "three",
+        "mid"
+      ],
+      "slotEffects": {
+        "three": {
+          "dimensions": {
+            "shooting": 10
+          },
+          "allDimensions": 4,
+          "strategyDimensions": {}
+        },
+        "mid": {
+          "dimensions": {
+            "shooting": 5.6,
+            "creation": 2.4
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，战力五维 +4%、投射威胁 +10%；安排在中投槽时，投射威胁 +5.6%、持球创造 +2.4%"
+    },
+    "jokic": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "giannis": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "shaq": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 16
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +16%"
+    },
+    "jordan": {
+      "attr": "mid",
+      "slots": [
+        "mid",
+        "drive"
+      ],
+      "slotEffects": {
+        "mid": {
+          "dimensions": {
+            "shooting": 7,
+            "creation": 3
+          },
+          "allDimensions": 5,
+          "strategyDimensions": {}
+        },
+        "drive": {
+          "dimensions": {
+            "creation": 4,
+            "finishing": 6
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，战力五维 +5%、投射威胁 +7%、持球创造 +3%；安排在突破槽时，持球创造 +4%、禁区终结 +6%"
+    },
+    "wade": {
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "finishing": 18,
+        "creation": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "winCash": 2,
+      "description": "安排在突破槽时，禁区终结 +18%、持球创造 +6%、胜利奖金+2",
+      "attr": "drive"
+    },
+    "harden": {
+      "attr": "handle",
+      "slots": [
+        "handle",
+        "three"
+      ],
+      "slotEffects": {
+        "handle": {
+          "dimensions": {
+            "creation": 10
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {
+            "outside": {
+              "shooting": 5
+            }
+          }
+        },
+        "three": {
+          "dimensions": {
+            "shooting": 6
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，持球创造 +10%、采用外线拉开时投射威胁 +5%；安排在三分槽时，投射威胁 +6%"
+    },
+    "klay": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "green": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "holiday": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "white": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "lillard": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "tatum": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "booker": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "embiid": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "davis": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "westbrook": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "paul": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "nash": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "rodman": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "gobert": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "anunoby": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "caruso": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "lopez": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "magic": {
+      "attr": "handle",
+      "slots": [
+        "handle",
+        "drive"
+      ],
+      "slotEffects": {
+        "handle": {
+          "postBattleCash": 2,
+          "recruitDiscount": 1,
+          "dimensions": {
+            "creation": 6
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        },
+        "drive": {
+          "postBattleCash": 2,
+          "dimensions": {
+            "creation": 2.4000000000000004,
+            "finishing": 3.5999999999999996
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，持球创造 +6%、每次战后 +2 奖金、付费招募 -1 奖金；安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%、每次战后 +2 奖金"
+    },
+    "bird": {
+      "attr": "mid",
+      "slots": [
+        "mid",
+        "three"
+      ],
+      "slotEffects": {
+        "mid": {
+          "dimensions": {},
+          "allDimensions": 6,
+          "strategyDimensions": {}
+        },
+        "three": {
+          "dimensions": {
+            "shooting": 8
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，战力五维 +6%；安排在三分槽时，投射威胁 +8%"
+    },
+    "kareem": {
+      "attr": "inside",
+      "slots": [
+        "inside",
+        "def"
+      ],
+      "slotEffects": {
+        "inside": {
+          "dimensions": {
+            "finishing": 12
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        },
+        "def": {
+          "dimensions": {
+            "perimeterStop": 4,
+            "rimStop": 4,
+            "shooting": -4
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +12%；安排在防守槽时，外线限制 +4%、护框强度 +4%、投射威胁 -4%"
+    },
+    "hakeem": {
+      "attr": "def",
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "slotEffects": {
+        "def": {
+          "dimensions": {
+            "perimeterStop": 5,
+            "rimStop": 5
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {},
+          "postBattleCash": 2
+        },
+        "inside": {
+          "dimensions": {
+            "finishing": 5
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +5%、护框强度 +5%、战后奖金+2；安排在篮下槽时，禁区终结 +5%"
+    },
+    "dirk": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "garnett": {
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 10,
+            "perimeterStop": 8
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {},
+          "stageCash": 1
+        },
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 8,
+            "rimStop": 6
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在防守槽时，护框强度 +10%、外线限制 +8%、过关奖金+1；安排在篮下槽时，禁区终结 +8%、护框强度 +6%",
+      "attr": "def"
+    },
+    "pippen": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "rayallen": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "pierce": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "iverson": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "kidd": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "malone": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "stockton": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "bosh": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "parker": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "ginobili": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "pau": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "benwallace": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "mutombo": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "howard": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "carter": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "melo": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "butler": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "george": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "bowen": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "battier": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "horry": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "chandler": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "korver": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "artest": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "tmac": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "doncic": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "isiah": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "dumars": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "laimbeer": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "robinson": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "ewing": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "iguodala": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "harper": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "longley": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "fisher": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "fox": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "byron_scott": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "worthy": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "ac_green": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "griffin": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "deandre": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "mchale": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "parish": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "love": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "reggie": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "amare": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "marion": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "murray": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "aaron_gordon": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "wilkins": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "wilt": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 14,
+        "creation": -4
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +14%、持球创造 -4%"
+    },
+    "russell": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 6,
+        "rimStop": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +6%、护框强度 +6%"
+    },
+    "oscar": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "west": {
+      "slots": [
+        "mid",
+        "handle"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "mid": {
+          "slots": [],
+          "dimensions": {},
+          "allDimensions": 0,
+          "strategyDimensions": {},
+          "designEconomies": [
+            {
+              "type": "freeBoostRefresh",
+              "uses": 1,
+              "referenceValue": 4
+            },
+            {
+              "type": "freeGearRefresh",
+              "uses": 1,
+              "referenceValue": 3
+            }
+          ]
+        },
+        "handle": {
+          "slots": [],
+          "dimensions": {},
+          "allDimensions": 0,
+          "strategyDimensions": {},
+          "designEconomies": [
+            {
+              "type": "freeBoostRefresh",
+              "uses": 1,
+              "referenceValue": 4
+            },
+            {
+              "type": "freeGearRefresh",
+              "uses": 1,
+              "referenceValue": 3
+            }
+          ]
+        }
+      },
+      "description": "安排在中投槽或控球槽时，每场强化商店、装备商店首次刷新免费",
+      "attr": "mid"
+    },
+    "baylor": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "moses": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "barkley": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "drexler": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "mullin": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "payton": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "kemp": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "penny": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "grant_hill": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "yao": {
+      "attr": "inside",
+      "slots": [
+        "inside"
+      ],
+      "dimensions": {
+        "finishing": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，禁区终结 +10%"
+    },
+    "billups": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "rip": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "rasheed": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "webber": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "peja": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "rondo": {
+      "attr": "handle",
+      "slots": [
+        "handle"
+      ],
+      "postBattleCash": 1,
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，每次战后 +1 奖金"
+    },
+    "erving": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "brunson": {
+      "attr": "mid",
+      "slots": [
+        "mid"
+      ],
+      "dimensions": {
+        "shooting": 4.199999999999999,
+        "creation": 1.7999999999999998
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，投射威胁 +4.2%、持球创造 +1.8%"
+    },
+    "shai": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "edwards": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "king_lebron": {
+      "attr": "drive",
+      "slots": [
+        "drive",
+        "handle"
+      ],
+      "slotEffects": {
+        "drive": {
+          "dimensions": {
+            "creation": 10,
+            "finishing": 15
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        },
+        "handle": {
+          "dimensions": {
+            "creation": 18
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，战力五维 +12%、持球创造 +10%、禁区终结 +15%；安排在控球槽时，战力五维 +10%、持球创造 +18%"
+    },
+    "air_jordan": {
+      "attr": "mid",
+      "slots": [
+        "mid",
+        "drive"
+      ],
+      "slotEffects": {
+        "mid": {
+          "dimensions": {
+            "shooting": 21,
+            "creation": 9
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        },
+        "drive": {
+          "dimensions": {
+            "creation": 12,
+            "finishing": 18
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，战力五维 +12%、投射威胁 +21%、持球创造 +9%；安排在突破槽时，战力五维 +12%、持球创造 +12%、禁区终结 +18%"
+    },
+    "mamba_kobe": {
+      "attr": "mid",
+      "slots": [
+        "mid",
+        "drive"
+      ],
+      "slotEffects": {
+        "mid": {
+          "dimensions": {
+            "shooting": 19.599999999999998,
+            "creation": 8.4
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {
+            "outside": {
+              "shooting": 7,
+              "creation": 3
+            }
+          }
+        },
+        "drive": {
+          "dimensions": {
+            "creation": 10.4,
+            "finishing": 15.6
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {
+            "drive": {
+              "shooting": 7,
+              "creation": 3
+            }
+          }
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，战力五维 +10%、投射威胁 +19.6%、持球创造 +8.4%、采用外线拉开时投射威胁 +7%、持球创造 +3%；安排在突破槽时，战力五维 +10%、持球创造 +10.4%、禁区终结 +15.6%、采用突破冲筐时投射威胁 +7%、持球创造 +3%"
+    },
+    "chef_curry": {
+      "attr": "three",
+      "slots": [
+        "three",
+        "handle"
+      ],
+      "slotEffects": {
+        "three": {
+          "dimensions": {
+            "shooting": 35
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {
+            "outside": {
+              "creation": 12
+            }
+          }
+        },
+        "handle": {
+          "dimensions": {
+            "shooting": 20,
+            "creation": 20
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，战力五维 +10%、投射威胁 +35%、采用外线拉开时持球创造 +12%；安排在控球槽时，战力五维 +8%、投射威胁 +20%、持球创造 +20%"
+    },
+    "diesel_shaq": {
+      "attr": "inside",
+      "slots": [
+        "inside",
+        "def"
+      ],
+      "slotEffects": {
+        "inside": {
+          "dimensions": {
+            "finishing": 35
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {}
+        },
+        "def": {
+          "dimensions": {
+            "finishing": 18,
+            "perimeterStop": 9,
+            "rimStop": 9
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在篮下槽时，战力五维 +10%、禁区终结 +35%；安排在防守槽时，战力五维 +8%、禁区终结 +18%、外线限制 +9%、护框强度 +9%"
+    },
+    "stone_duncan": {
+      "attr": "def",
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "slotEffects": {
+        "def": {
+          "dimensions": {
+            "perimeterStop": 17.5,
+            "rimStop": 17.5
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {
+            "collapse": {
+              "finishing": 12
+            }
+          }
+        },
+        "inside": {
+          "dimensions": {
+            "finishing": 20,
+            "perimeterStop": 10,
+            "rimStop": 10
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，战力五维 +10%、外线限制 +17.5%、护框强度 +17.5%、采用护框收缩时禁区终结 +12%；安排在篮下槽时，战力五维 +8%、禁区终结 +20%、外线限制 +10%、护框强度 +10%"
+    },
+    "showtime_magic": {
+      "attr": "handle",
+      "slots": [
+        "handle",
+        "drive"
+      ],
+      "slotEffects": {
+        "handle": {
+          "postBattleCash": 3,
+          "recruitDiscount": 1,
+          "dimensions": {
+            "creation": 22
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        },
+        "drive": {
+          "dimensions": {
+            "creation": 8,
+            "finishing": 12
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在控球槽时，战力五维 +8%、持球创造 +22%、战后奖金+3、付费招募-1；安排在突破槽时，战力五维 +10%、持球创造 +8%、禁区终结 +12%"
+    },
+    "reaper_durant": {
+      "attr": "mid",
+      "slots": [
+        "mid",
+        "three"
+      ],
+      "slotEffects": {
+        "mid": {
+          "dimensions": {
+            "shooting": 19.599999999999998,
+            "creation": 8.4
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        },
+        "three": {
+          "dimensions": {
+            "shooting": 26
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        }
+      },
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在中投槽时，战力五维 +12%、投射威胁 +19.6%、持球创造 +8.4%；安排在三分槽时，战力五维 +12%、投射威胁 +26%"
+    },
+    "wembanyama": {
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 12,
+            "perimeterStop": 6
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        },
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 8,
+            "rimStop": 4
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在防守槽时，护框强度 +12%、外线限制 +6%；安排在篮下槽时，禁区终结 +8%、护框强度 +4%",
+      "attr": "def"
+    },
+    "havlicek": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "jaylen_brown": {
+      "attr": "drive",
+      "slots": [
+        "drive"
+      ],
+      "dimensions": {
+        "creation": 2.4000000000000004,
+        "finishing": 3.5999999999999996
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在突破槽时，持球创造 +2.4%、禁区终结 +3.6%"
+    },
+    "duncan_robinson": {
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 10
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "attr": "three",
+      "description": "安排在三分槽时，投射威胁 +10%"
+    },
+    "redick": {
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 8,
+        "creation": 2
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "attr": "three",
+      "description": "安排在三分槽时，投射威胁 +8%、持球创造 +2%"
+    },
+    "adebayo": {
+      "attr": "def",
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "perimeterStop": 2.5,
+        "rimStop": 2.5,
+        "creation": 5
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，外线限制 +2.5%、护框强度 +2.5%、持球创造 +5%"
+    },
+    "terry": {
+      "attr": "three",
+      "slots": [
+        "three"
+      ],
+      "dimensions": {
+        "shooting": 6
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在三分槽时，投射威胁 +6%"
+    },
+    "skyhook_kareem": {
+      "slots": [
+        "inside",
+        "def"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 30,
+            "rimStop": 5
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {}
+        },
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 27,
+            "perimeterStop": 25,
+            "finishing": 24
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在篮下槽时，战力五维 +10%、禁区终结 +30%、护框强度 +5%；安排在防守槽时，护框强度 +27%、外线限制 +25%、禁区终结 +24%",
+      "attr": "inside"
+    },
+    "alien_wembanyama": {
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 20,
+            "perimeterStop": 15
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "designEconomy": {
+            "type": "boostRefreshDiscount",
+            "amount": 2,
+            "uses": 2,
+            "reset": "next-battle-preparation",
+            "identityQuota": true
+          }
+        },
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 20,
+            "rimStop": 10,
+            "shooting": 6
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在防守槽时，战力五维 +10%、护框强度 +20%、外线限制 +15%、每场前2次强化商店刷新各减2；安排在篮下槽时，战力五维 +8%、禁区终结 +20%、护框强度 +10%、投射威胁 +6%",
+      "attr": "def"
+    },
+    "dream_hakeem": {
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 20,
+            "perimeterStop": 15
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "designEconomy": {
+            "type": "freeBasicBoost",
+            "amount": 5,
+            "uses": 1,
+            "eligibleBoosts": [
+              "hot",
+              "paint",
+              "stopper"
+            ],
+            "reset": "next-battle-preparation",
+            "identityQuota": true
+          }
+        },
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 24,
+            "rimStop": 8
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在防守槽时，战力五维 +10%、护框强度 +20%、外线限制 +15%、每场一次免费基础强化；安排在篮下槽时，战力五维 +8%、禁区终结 +24%、护框强度 +8%",
+      "attr": "def"
+    },
+    "big_bird": {
+      "slots": [
+        "mid",
+        "three"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "mid": {
+          "slots": [],
+          "dimensions": {
+            "shooting": 20,
+            "creation": 8
+          },
+          "allDimensions": 12,
+          "strategyDimensions": {}
+        },
+        "three": {
+          "slots": [],
+          "dimensions": {
+            "shooting": 28,
+            "creation": 6
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在中投槽时，战力五维 +12%、投射威胁 +20%、持球创造 +8%；安排在三分槽时，战力五维 +10%、投射威胁 +28%、持球创造 +6%",
+      "attr": "mid"
+    },
+    "beard_harden": {
+      "slots": [
+        "handle",
+        "three"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "handle": {
+          "slots": [],
+          "dimensions": {
+            "creation": 22,
+            "shooting": 10
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {},
+          "designEconomy": {
+            "type": "recruitRefreshDiscount",
+            "amount": 2,
+            "uses": 2,
+            "reset": "next-battle-preparation",
+            "identityQuota": true
+          }
+        },
+        "three": {
+          "slots": [],
+          "dimensions": {
+            "shooting": 28,
+            "creation": 6
+          },
+          "allDimensions": 8,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在控球槽时，战力五维 +8%、持球创造 +22%、投射威胁 +10%、每场前2次招募刷新各减2；安排在三分槽时，战力五维 +8%、投射威胁 +28%、持球创造 +6%",
+      "attr": "handle"
+    },
+    "wolf_garnett": {
+      "slots": [
+        "def",
+        "inside"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "perimeterStop": 17,
+            "rimStop": 18
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "designEconomy": {
+            "type": "trainingDiscount",
+            "amount": 2,
+            "uses": 2,
+            "reset": "next-battle-preparation",
+            "identityQuota": true
+          }
+        },
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 30,
+            "rimStop": 24,
+            "perimeterStop": 16
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在防守槽时，战力五维 +10%、外线限制 +17%、护框强度 +18%、每场前2次球员训练各减2；安排在篮下槽时，禁区终结 +30%、护框强度 +24%、外线限制 +16%",
+      "attr": "def"
+    },
+    "flash_wade": {
+      "slots": [
+        "drive",
+        "mid"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "drive": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 24,
+            "creation": 10
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "winCash": 6
+        },
+        "mid": {
+          "slots": [],
+          "dimensions": {
+            "shooting": 33,
+            "creation": 21,
+            "finishing": 12
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在突破槽时，战力五维 +10%、禁区终结 +24%、持球创造 +10%、胜利奖金+6；安排在中投槽时，投射威胁 +33%、持球创造 +21%、禁区终结 +12%",
+      "attr": "drive"
+    },
+    "marshal_wilt": {
+      "slots": [
+        "inside",
+        "def"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "inside": {
+          "slots": [],
+          "dimensions": {
+            "finishing": 30,
+            "rimStop": 5
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "postBattleCash": 4
+        },
+        "def": {
+          "slots": [],
+          "dimensions": {
+            "rimStop": 27,
+            "perimeterStop": 25,
+            "finishing": 24
+          },
+          "allDimensions": 0,
+          "strategyDimensions": {}
+        }
+      },
+      "description": "安排在篮下槽时，战力五维 +10%、禁区终结 +30%、护框强度 +5%、战后奖金+4；安排在防守槽时，护框强度 +27%、外线限制 +25%、禁区终结 +24%",
+      "attr": "inside"
+    },
+    "ring_russell": {
+      "slots": [
+        "def"
+      ],
+      "dimensions": {
+        "rimStop": 35,
+        "perimeterStop": 35
+      },
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "description": "安排在防守槽时，护框强度 +35%、外线限制 +35%",
+      "attr": "def"
+    },
+    "logo_west": {
+      "slots": [
+        "mid",
+        "handle"
+      ],
+      "dimensions": {},
+      "allDimensions": 0,
+      "strategyDimensions": {},
+      "slotEffects": {
+        "mid": {
+          "dimensions": {
+            "shooting": 24,
+            "creation": 8
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "designEconomies": [
+            {
+              "type": "freeBoostRefresh",
+              "uses": 1,
+              "referenceValue": 4
+            },
+            {
+              "type": "freeGearRefresh",
+              "uses": 1,
+              "referenceValue": 3
+            },
+            {
+              "type": "freeTraining",
+              "uses": 1,
+              "referenceValue": 1
+            }
+          ]
+        },
+        "handle": {
+          "dimensions": {
+            "shooting": 24,
+            "creation": 8
+          },
+          "allDimensions": 10,
+          "strategyDimensions": {},
+          "designEconomies": [
+            {
+              "type": "freeBoostRefresh",
+              "uses": 1,
+              "referenceValue": 4
+            },
+            {
+              "type": "freeGearRefresh",
+              "uses": 1,
+              "referenceValue": 3
+            },
+            {
+              "type": "freeTraining",
+              "uses": 1,
+              "referenceValue": 1
+            }
+          ]
+        }
+      },
+      "description": "安排在中投槽或控球槽时，战力五维 +10%、投射威胁 +24%、持球创造 +8%、每场强化商店、装备商店首次刷新免费、每场首次训练免费",
+      "attr": "mid"
+    }
+  },
+  "SYNERGIES": [
+    {
+      "id": "royal_recovery",
+      "name": "王者续航",
+      "ids": [
+        "jordan",
+        "lebron",
+        "shaq"
+      ],
+      "attr": "mid",
+      "gain": 1,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 2
+      },
+      "description": "禁区终结 +7%、投射威胁 +5% · 每2胜恢复1点士气",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "purple_gold_recovery",
+      "name": "紫金薪火",
+      "ids": [
+        "magic",
+        "worthy",
+        "byron_scott"
+      ],
+      "attr": "handle",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 3
+      },
+      "description": "持球创造 +7%、投射威胁 +5% · 每3胜恢复1点士气",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "champion_recovery",
+      "name": "冠军拼图",
+      "ids": [
+        "horry",
+        "fisher",
+        "battier"
+      ],
+      "attr": "def",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 4
+      },
+      "description": "外线限制 +7%、护框强度 +5% · 每4胜恢复1点士气",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "splash",
+      "name": "水花兄弟",
+      "ids": [
+        "curry",
+        "klay"
+      ],
+      "attr": "three",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +6%、持球创造 +4% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "warrior_brain",
+      "name": "勇士轴心",
+      "ids": [
+        "curry",
+        "green"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "ok_combo",
+      "name": "紫金OK",
+      "ids": [
+        "kobe",
+        "shaq"
+      ],
+      "attr": "inside",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "mamba_pau",
+      "name": "冠军内外线",
+      "ids": [
+        "kobe",
+        "pau"
+      ],
+      "attr": "inside",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、投射威胁 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "laker_twin",
+      "name": "湖人双核",
+      "ids": [
+        "lebron",
+        "davis"
+      ],
+      "attr": "inside",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "finishing": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +6%、外线限制 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "buck_champs",
+      "name": "雄鹿冠军组",
+      "ids": [
+        "giannis",
+        "holiday"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +6%、持球创造 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "celtic_guards",
+      "name": "绿军双闸",
+      "ids": [
+        "holiday",
+        "white"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "buck_stars",
+      "name": "雄鹿双星",
+      "ids": [
+        "lillard",
+        "giannis"
+      ],
+      "attr": "three",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "shooting": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +6%、禁区终结 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "phoenix_blades",
+      "name": "太阳双刃",
+      "ids": [
+        "durant",
+        "booker"
+      ],
+      "attr": "mid",
+      "gain": 6,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "process_battle",
+      "name": "费城硬仗",
+      "ids": [
+        "embiid",
+        "butler"
+      ],
+      "attr": "inside",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "wolves_core",
+      "name": "狼群内外",
+      "ids": [
+        "edwards",
+        "gobert"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "knicks_core",
+      "name": "纽约双核",
+      "ids": [
+        "anunoby",
+        "brunson"
+      ],
+      "attr": "mid",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +6%、外线限制 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "lake_show",
+      "name": "湖人火花",
+      "ids": [
+        "lebron",
+        "caruso"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "buck_towers",
+      "name": "密城双塔",
+      "ids": [
+        "giannis",
+        "lopez"
+      ],
+      "attr": "inside",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "pick_roll",
+      "name": "挡拆教科书",
+      "ids": [
+        "stockton",
+        "malone"
+      ],
+      "attr": "handle",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、禁区终结 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "spurs_heritage",
+      "name": "圣城锋线传承",
+      "ids": [
+        "bowen",
+        "kawhi"
+      ],
+      "attr": "three",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "heat_shield",
+      "name": "热火侧翼屏障",
+      "ids": [
+        "lebron",
+        "battier"
+      ],
+      "attr": "drive",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +7%、护框强度 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "mavs_wall",
+      "name": "达拉斯冠军内线",
+      "ids": [
+        "dirk",
+        "chandler"
+      ],
+      "attr": "inside",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "cavs_arc",
+      "name": "克城火力网",
+      "ids": [
+        "lebron",
+        "korver"
+      ],
+      "attr": "three",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "laker_tough",
+      "name": "洛城硬仗",
+      "ids": [
+        "kobe",
+        "artest"
+      ],
+      "attr": "mid",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "wallace_brothers",
+      "name": "华莱士双塔",
+      "ids": [
+        "benwallace",
+        "rasheed"
+      ],
+      "attr": "inside",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "sixers_final",
+      "name": "费城总决赛双核",
+      "ids": [
+        "iverson",
+        "mutombo"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "magic_heritage",
+      "name": "魔术一号传承",
+      "ids": [
+        "penny",
+        "howard"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、禁区终结 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "buck_origin",
+      "name": "雄鹿冠军起点",
+      "ids": [
+        "oscar",
+        "kareem"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、禁区终结 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "lake_pioneers",
+      "name": "湖人远古双翼",
+      "ids": [
+        "west",
+        "baylor"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "philly_mentors",
+      "name": "费城内线传承",
+      "ids": [
+        "barkley",
+        "moses"
+      ],
+      "attr": "inside",
+      "gain": 5,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "rocket_reunion",
+      "name": "休城老友",
+      "ids": [
+        "drexler",
+        "hakeem"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "warrior_old_days",
+      "name": "勇士旧梦",
+      "ids": [
+        "mullin",
+        "webber"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "sonics_duo",
+      "name": "手套与雨人",
+      "ids": [
+        "payton",
+        "kemp"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "duke_wings",
+      "name": "全能锋线传承",
+      "ids": [
+        "grant_hill",
+        "tmac"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "yao_tmac",
+      "name": "姚麦组合",
+      "ids": [
+        "yao",
+        "tmac"
+      ],
+      "attr": "mid",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "pistons_backcourt",
+      "name": "活塞后场双核",
+      "ids": [
+        "billups",
+        "rip"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "kings_duo",
+      "name": "国王双核",
+      "ids": [
+        "webber",
+        "peja"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "rondo_truth",
+      "name": "波士顿新旧指挥",
+      "ids": [
+        "rondo",
+        "pierce"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、投射威胁 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "fo_fo_fo",
+      "name": "费城冠军双核",
+      "ids": [
+        "erving",
+        "moses"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "thunder_mentor",
+      "name": "雷霆师徒",
+      "ids": [
+        "shai",
+        "paul"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、禁区终结 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "showtime_pair",
+      "name": "表演时刻",
+      "ids": [
+        "magic",
+        "kareem"
+      ],
+      "attr": "handle",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、禁区终结 +4% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "mavs_origin",
+      "name": "达拉斯双星",
+      "ids": [
+        "dirk",
+        "nash"
+      ],
+      "attr": "mid",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、投射威胁 +4% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "magic_bird",
+      "name": "魔鸟争霸",
+      "ids": [
+        "magic",
+        "bird"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +7%、投射威胁 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "jordan_kobe",
+      "name": "飞人传承",
+      "ids": [
+        "jordan",
+        "kobe"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、持球创造 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "bad_boys_backcourt",
+      "name": "坏孩子双枪",
+      "ids": [
+        "isiah",
+        "dumars"
+      ],
+      "attr": "handle",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、外线限制 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "finals_94",
+      "name": "九四中锋决战",
+      "ids": [
+        "hakeem",
+        "ewing"
+      ],
+      "attr": "inside",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "mavs_new_core",
+      "name": "独行侠双核",
+      "ids": [
+        "doncic",
+        "irving"
+      ],
+      "attr": "handle",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、投射威胁 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "nets_flight",
+      "name": "篮网飞翼",
+      "ids": [
+        "kidd",
+        "carter"
+      ],
+      "attr": "handle",
+      "gain": 2,
+      "effect": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +6%、禁区终结 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "thunder_three",
+      "name": "雷霆三少",
+      "ids": [
+        "durant",
+        "westbrook",
+        "harden"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +11%、投射威胁 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "heat_big_three",
+      "name": "南海岸三巨头",
+      "ids": [
+        "lebron",
+        "wade",
+        "bosh"
+      ],
+      "attr": "drive",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +11%、持球创造 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "celtic_big_three",
+      "name": "绿军三巨头",
+      "ids": [
+        "pierce",
+        "garnett",
+        "rayallen"
+      ],
+      "attr": "mid",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +11%、外线限制 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "bull_triangle",
+      "name": "公牛铁三角",
+      "ids": [
+        "jordan",
+        "pippen",
+        "rodman"
+      ],
+      "attr": "def",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +11%、外线限制 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "gdp",
+      "name": "GDP",
+      "ids": [
+        "duncan",
+        "parker",
+        "ginobili"
+      ],
+      "attr": "inside",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +11%、持球创造 +7% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "nets_big_three",
+      "name": "篮网三巨头",
+      "ids": [
+        "durant",
+        "harden",
+        "irving"
+      ],
+      "attr": "mid",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +13%、持球创造 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "lob_city",
+      "name": "空接之城",
+      "ids": [
+        "paul",
+        "griffin",
+        "deandre"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +13%、持球创造 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "celtic_dynasty",
+      "name": "凯尔特人王朝",
+      "ids": [
+        "bird",
+        "mchale",
+        "parish"
+      ],
+      "attr": "mid",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +13%、投射威胁 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "ok3",
+      "name": "OK3",
+      "ids": [
+        "westbrook",
+        "george",
+        "melo"
+      ],
+      "attr": "drive",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +13%、持球创造 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "mamba_students",
+      "name": "曼巴门徒",
+      "ids": [
+        "kobe",
+        "irving",
+        "tatum"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +13%、投射威胁 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "cavs_big_three",
+      "name": "骑士三巨头",
+      "ids": [
+        "lebron",
+        "irving",
+        "love"
+      ],
+      "attr": "drive",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +11%、投射威胁 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "era_shooters",
+      "name": "划时代射手",
+      "ids": [
+        "reggie",
+        "rayallen",
+        "curry"
+      ],
+      "attr": "three",
+      "gain": 6,
+      "effect": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +13%、持球创造 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "seven_seconds",
+      "name": "7秒进攻",
+      "ids": [
+        "nash",
+        "amare",
+        "marion"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "creation": 11,
+          "finishing": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +11%、禁区终结 +7% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "nuggets_core",
+      "name": "掘金三核",
+      "ids": [
+        "jokic",
+        "murray",
+        "aaron_gordon"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +11%、持球创造 +7% · 每关奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "floor_generals",
+      "name": "2011冠军核心",
+      "ids": [
+        "dirk",
+        "kidd",
+        "terry"
+      ],
+      "attr": "handle",
+      "gain": 5,
+      "effect": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +13%、投射威胁 +9%",
+      "status": "rewired-preserving-original-strength",
+      "history": {
+        "basis": "2011年独行侠夺冠队友",
+        "source": "https://www.nba.com/news/dallas-mavericks-nba-championship"
+      }
+    },
+    {
+      "id": "violent_dunkers",
+      "name": "暴力扣将",
+      "ids": [
+        "wilkins",
+        "carter",
+        "griffin"
+      ],
+      "attr": "drive",
+      "gain": 5,
+      "effect": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +13%、持球创造 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "four_shooting_guards",
+      "name": "四大分位",
+      "ids": [
+        "kobe",
+        "tmac",
+        "carter",
+        "iverson"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +17%、持球创造 +11% · 胜利奖金 +2",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "banana_boat",
+      "name": "香蕉船兄弟",
+      "ids": [
+        "lebron",
+        "wade",
+        "paul",
+        "melo"
+      ],
+      "attr": "drive",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "creation": 17,
+          "finishing": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +17%、禁区终结 +11% · 胜利奖金 +2",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "draft_96",
+      "name": "96黄金一代",
+      "ids": [
+        "kobe",
+        "iverson",
+        "nash",
+        "rayallen"
+      ],
+      "attr": "three",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "description": "投射威胁 +17%、持球创造 +11% · 每关免费招募 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "european_kings",
+      "name": "欧洲天王",
+      "ids": [
+        "dirk",
+        "pau",
+        "jokic",
+        "doncic"
+      ],
+      "attr": "mid",
+      "gain": 4,
+      "effect": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "description": "投射威胁 +17%、持球创造 +11% · 每关免费招募 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "bad_boys",
+      "name": "坏孩子军团",
+      "ids": [
+        "isiah",
+        "dumars",
+        "laimbeer",
+        "rodman"
+      ],
+      "attr": "def",
+      "gain": 5,
+      "effect": {
+        "dimensions": {
+          "creation": 17,
+          "perimeterStop": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +17%、外线限制 +11% · 胜利奖金 +2",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "four_centers",
+      "name": "四大中锋",
+      "ids": [
+        "hakeem",
+        "shaq",
+        "robinson",
+        "ewing"
+      ],
+      "attr": "inside",
+      "gain": 8,
+      "effect": {
+        "dimensions": {
+          "finishing": 20,
+          "perimeterStop": 14
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "禁区终结 +20%、外线限制 +14%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "death_lineup",
+      "name": "死亡五小",
+      "ids": [
+        "curry",
+        "klay",
+        "iguodala",
+        "durant",
+        "green"
+      ],
+      "attr": "three",
+      "gain": 5,
+      "effect": {
+        "dimensions": {
+          "shooting": 24,
+          "creation": 16
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "description": "投射威胁 +24%、持球创造 +16% · 每关免费招募 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "bulls_dynasty",
+      "name": "公牛王朝",
+      "ids": [
+        "harper",
+        "jordan",
+        "pippen",
+        "rodman",
+        "longley"
+      ],
+      "attr": "def",
+      "gain": 6,
+      "effect": {
+        "dimensions": {
+          "creation": 24,
+          "perimeterStop": 16
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +24%、外线限制 +16% · 每关奖金 +3",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "ok_dynasty",
+      "name": "OK王朝",
+      "ids": [
+        "fisher",
+        "kobe",
+        "fox",
+        "horry",
+        "shaq"
+      ],
+      "attr": "inside",
+      "gain": 6,
+      "effect": {
+        "dimensions": {
+          "shooting": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +24%、禁区终结 +16% · 胜利奖金 +3",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "showtime_five",
+      "name": "Showtime",
+      "ids": [
+        "magic",
+        "byron_scott",
+        "worthy",
+        "ac_green",
+        "kareem"
+      ],
+      "attr": "handle",
+      "gain": 6,
+      "effect": {
+        "dimensions": {
+          "creation": 32,
+          "finishing": 22
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +32%、禁区终结 +22% · 每关奖金 +3",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "final_answer",
+      "name": "最终答案",
+      "ids": [
+        "magic",
+        "jordan",
+        "lebron",
+        "duncan",
+        "shaq"
+      ],
+      "attr": "handle",
+      "gain": 3,
+      "effect": {
+        "dimensions": {
+          "creation": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +24%、禁区终结 +16% · 胜利奖金 +3",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_1",
+      "name": "金州双核",
+      "ids": [
+        "curry",
+        "durant"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +6%、持球创造 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_2",
+      "name": "格林公式",
+      "ids": [
+        "durant",
+        "green"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +6%、护框强度 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_3",
+      "name": "金州防守枢纽",
+      "ids": [
+        "green",
+        "iguodala"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +6%、护框强度 +4% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_4",
+      "name": "一哥掩护",
+      "ids": [
+        "curry",
+        "iguodala"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_5",
+      "name": "侧翼接力",
+      "ids": [
+        "klay",
+        "iguodala"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "投射威胁 +7%、外线限制 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_6",
+      "name": "芝城双翼",
+      "ids": [
+        "jordan",
+        "pippen"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +7%、护框强度 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_7",
+      "name": "篮板与锁链",
+      "ids": [
+        "pippen",
+        "rodman"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +7%、护框强度 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "diversity_pair_8",
+      "name": "飞人与篮板王",
+      "ids": [
+        "jordan",
+        "rodman"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +7%、护框强度 +5%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "warriors_connect",
+      "name": "金州连接器",
+      "ids": [
+        "curry",
+        "green",
+        "iguodala"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +11%、护框强度 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "spurs_lock",
+      "name": "圣城迎新夜",
+      "ids": [
+        "duncan",
+        "robinson",
+        "wembanyama"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "护框强度 +11%、外线限制 +7% · 胜利奖金 +1",
+      "status": "rewired-preserving-original-strength",
+      "history": {
+        "basis": "2023年马刺迎新晚宴中实际见面的三人，不宣称同期队友",
+        "source": "https://www.nba.com/news/spurs-roll-out-red-carpet-victor-wembanyama"
+      }
+    },
+    {
+      "id": "detroit_champs",
+      "name": "汽车城铁三角",
+      "ids": [
+        "billups",
+        "benwallace",
+        "rasheed"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "外线限制 +11%、护框强度 +7% · 胜利奖金 +1",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "rocket_axes",
+      "name": "休城内外策应",
+      "ids": [
+        "hakeem",
+        "drexler",
+        "yao"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 13,
+          "finishing": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "护框强度 +13%、禁区终结 +9%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "bird_circle",
+      "name": "魔鸟与天勾",
+      "ids": [
+        "bird",
+        "magic",
+        "kareem"
+      ],
+      "effect": {
+        "dimensions": {
+          "creation": 18,
+          "finishing": 12
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "description": "持球创造 +18%、禁区终结 +12%",
+      "status": "retained-original-strength"
+    },
+    {
+      "id": "integration_pair_1",
+      "name": "六十年代宿敌",
+      "ids": [
+        "wilt",
+        "russell"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "rimStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "1960年代多次季后赛宿敌",
+        "source": "https://www.nba.com/news/history-nba-legend-bill-russell"
+      },
+      "description": "禁区终结 +7%、护框强度 +5%"
+    },
+    {
+      "id": "integration_pair_2",
+      "name": "洛城首冠",
+      "ids": [
+        "west",
+        "wilt"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "finishing": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "1972年湖人夺冠队友",
+        "source": "https://www.nba.com/lakers/history/alumni/wilt-chamberlain"
+      },
+      "description": "投射威胁 +7%、禁区终结 +5%"
+    },
+    {
+      "id": "integration_pair_3",
+      "name": "冠军致敬",
+      "ids": [
+        "garnett",
+        "russell"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 7,
+          "perimeterStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2008年夺冠后加内特拥抱拉塞尔致敬",
+        "source": "https://www.nba.com/watch/video/paul-pierce-and-kevin-garnett-embrace-bill-russell-following-celtics-2008-title"
+      },
+      "description": "护框强度 +7%、外线限制 +5%"
+    },
+    {
+      "id": "integration_pair_4",
+      "name": "波士顿复兴",
+      "ids": [
+        "garnett",
+        "rayallen"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 7,
+          "finishing": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2007年共同加盟绿军，2008年夺冠",
+        "source": "https://www.nba.com/news/history-top-moments-celtics-win-championship-2008"
+      },
+      "description": "护框强度 +7%、禁区终结 +5%"
+    },
+    {
+      "id": "integration_pair_5",
+      "name": "灯泡组合",
+      "ids": [
+        "paul",
+        "harden"
+      ],
+      "effect": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2017—2019火箭队友，2018年西决",
+        "source": "https://www.nba.com/news/houston-rockets-chris-paul-out-game-6-hamstring-strain"
+      },
+      "description": "持球创造 +7%、投射威胁 +5%"
+    },
+    {
+      "id": "integration_pair_6",
+      "name": "西决巨人战",
+      "ids": [
+        "wilt",
+        "kareem"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "rimStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "1972年西部决赛对手",
+        "source": "https://www.nba.com/news/history-season-review-1971-72"
+      },
+      "description": "禁区终结 +7%、护框强度 +5%"
+    },
+    {
+      "id": "integration_pair_7",
+      "name": "绿军连冠骨干",
+      "ids": [
+        "havlicek",
+        "russell"
+      ],
+      "effect": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "1962—1969绿军队友，共同夺冠",
+        "source": "https://www.nba.com/news/history-nba-legend-john-havlicek"
+      },
+      "description": "外线限制 +7%、护框强度 +5%"
+    },
+    {
+      "id": "integration_pair_8",
+      "name": "六九总决赛",
+      "ids": [
+        "havlicek",
+        "west"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "1969年总决赛对手",
+        "source": "https://www.nba.com/news/history-nba-legend-jerry-west"
+      },
+      "description": "禁区终结 +7%、外线限制 +5%"
+    },
+    {
+      "id": "integration_pair_9",
+      "name": "法国引路人",
+      "ids": [
+        "wembanyama",
+        "parker"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 7,
+          "finishing": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "文班效力过帕克拥有的ASVEL，曾受到其指导",
+        "source": "https://api-hub.nba.com/news/tony-parker-hall-of-fame-profile-2023"
+      },
+      "description": "护框强度 +7%、禁区终结 +5%"
+    },
+    {
+      "id": "integration_pair_10",
+      "name": "上将点拨",
+      "ids": [
+        "wembanyama",
+        "robinson"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 7,
+          "perimeterStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2023年文班与罗宾逊等马刺名宿迎新晚宴",
+        "source": "https://www.nba.com/news/spurs-roll-out-red-carpet-victor-wembanyama"
+      },
+      "description": "护框强度 +7%、外线限制 +5%"
+    },
+    {
+      "id": "integration_pair_11",
+      "name": "绿军双探花",
+      "ids": [
+        "tatum",
+        "jaylen_brown"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "同为绿军探花秀，2024年夺冠队友",
+        "source": "https://www.nba.com/news/nba-finals-mvp-2024"
+      },
+      "description": "禁区终结 +7%、投射威胁 +5%"
+    },
+    {
+      "id": "integration_pair_12",
+      "name": "绿军FMVP",
+      "ids": [
+        "pierce",
+        "jaylen_brown"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "皮尔斯2008、布朗2024分别获得绿军FMVP",
+        "source": "https://www.nba.com/news/legendary-moments-paul-pierce-boston-celtics-2008-finals-mvp"
+      },
+      "description": "投射威胁 +7%、外线限制 +5%"
+    },
+    {
+      "id": "integration_pair_13",
+      "name": "热火黑八",
+      "ids": [
+        "butler",
+        "duncan_robinson"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "finishing": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2023年热火黑八闯入总决赛的队友",
+        "source": "https://www.nba.com/playoffs/2023/east-final"
+      },
+      "description": "投射威胁 +7%、禁区终结 +5%"
+    },
+    {
+      "id": "integration_pair_14",
+      "name": "迈城谢幕季",
+      "ids": [
+        "wade",
+        "duncan_robinson"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2018—2019韦德谢幕季热火队友",
+        "source": "https://cdn.nba.com/teams/uploads/sites/1610612748/2023/11/2023-24-Miami-Heat-Media-Guide_39884007.pdf"
+      },
+      "description": "投射威胁 +7%、持球创造 +5%"
+    },
+    {
+      "id": "integration_pair_15",
+      "name": "空接之城后场",
+      "ids": [
+        "paul",
+        "redick"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2013—2017快船后场队友",
+        "source": "https://www.nba.com/clippers/news/clippers-2015-16-season-review"
+      },
+      "description": "投射威胁 +7%、持球创造 +5%"
+    },
+    {
+      "id": "integration_pair_16",
+      "name": "快船空间走廊",
+      "ids": [
+        "griffin",
+        "redick"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2013—2017快船队友，内线与外线空间配合",
+        "source": "https://www.nba.com/clippers/news/clippers-2015-16-season-review"
+      },
+      "description": "禁区终结 +7%、投射威胁 +5%"
+    },
+    {
+      "id": "integration_pair_17",
+      "name": "迈城更衣室",
+      "ids": [
+        "wade",
+        "adebayo"
+      ],
+      "effect": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2018—2019热火队友",
+        "source": "https://cdn.nba.com/teams/uploads/sites/1610612748/2023/11/2023-24-Miami-Heat-Media-Guide_39884007.pdf"
+      },
+      "description": "禁区终结 +7%、外线限制 +5%"
+    },
+    {
+      "id": "integration_pair_18",
+      "name": "迈城总决赛",
+      "ids": [
+        "butler",
+        "adebayo"
+      ],
+      "effect": {
+        "dimensions": {
+          "rimStop": 7,
+          "creation": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2020及2023热火总决赛队友",
+        "source": "https://www.nba.com/playoffs/2023/east-final"
+      },
+      "description": "护框强度 +7%、持球创造 +5%"
+    },
+    {
+      "id": "integration_pair_19",
+      "name": "2011夺冠搭档",
+      "ids": [
+        "dirk",
+        "terry"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        }
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2011年独行侠夺冠队友",
+        "source": "https://www.nba.com/news/dallas-mavericks-nba-championship"
+      },
+      "description": "投射威胁 +7%、持球创造 +5%"
+    },
+    {
+      "id": "integration_celtics_five",
+      "name": "1969抢七大战",
+      "ids": [
+        "havlicek",
+        "russell",
+        "west",
+        "wilt",
+        "baylor"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 24,
+          "perimeterStop": 16
+        },
+        "freeRecruit": 1
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "五人均参与1969年湖凯总决赛，包含对手，不标为同队阵容",
+        "source": "https://www.nba.com/game/bos-vs-lal-0046800100/box-score"
+      },
+      "description": "投射威胁 +24%、外线限制 +16% · 每关免费招募 +1"
+    },
+    {
+      "id": "integration_mavs_five",
+      "name": "达拉斯冠军五人组",
+      "ids": [
+        "kidd",
+        "terry",
+        "marion",
+        "dirk",
+        "chandler"
+      ],
+      "effect": {
+        "dimensions": {
+          "shooting": 28,
+          "creation": 18
+        },
+        "stageCash": 3
+      },
+      "status": "new-integration",
+      "history": {
+        "basis": "2011年独行侠冠军成员",
+        "source": "https://www.nba.com/mavs/dirk-nowitzki-is-amazing-but-he-didnt-win-it-by-himself-in-2011"
+      },
+      "description": "投射威胁 +28%、持球创造 +18% · 每关奖金 +3"
+    }
+  ]
+};
+  return {RANDOM_SKILLS,ATTRS,LABELS,COMBAT_LABELS,ATTR_TO_COMBAT,mapToCombat,combatText,TIER_RULES,...CATALOG_V12,PREVIOUS_CATALOG,LEGACY_SYNERGIES};
 });

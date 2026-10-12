@@ -8,7 +8,7 @@ test('production chunks initialize event globals before the browser game core', 
     const context = vm.createContext({ window: {}, console });
     const files = fs.readdirSync('dist/assets');
     (async () => {
-      for (const prefix of ['game-data-', 'gear-catalog-', 'event-data-', 'event-system-', 'game-core-']) {
+      for (const prefix of ['game-data-', 'gear-catalog-', 'event-data-', 'event-system-', 'player-economy-', 'game-core-']) {
         const file = files.find(name => name.startsWith(prefix) && name.endsWith('.js'));
         assert.ok(file, 'Missing production chunk: ' + prefix);
         const module = new vm.SourceTextModule(fs.readFileSync('dist/assets/' + file, 'utf8'), { context });
@@ -19,8 +19,10 @@ test('production chunks initialize event globals before the browser game core', 
       assert.equal(context.window.SupFusionEventData.length, 36);
       assert.equal(typeof context.window.SupFusionEventSystem.createSystem, 'function');
       assert.equal(core.EVENTS.length, 36);
-      assert.equal(core.BALANCE_RULES_VERSION, 9);
-      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 9);
+      assert.equal(core.BALANCE_RULES_VERSION, 12);
+      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 12);
+      assert.equal(core.STARS.length, 135);
+      assert.equal(core.SYNERGIES.length, 108);
       assert.equal(core.RANDOM_SKILLS.length, 112);
       console.log('Production browser modules initialized');
     })().catch(error => { console.error(error); process.exitCode = 1; });

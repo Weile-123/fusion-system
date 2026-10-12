@@ -7,7 +7,7 @@
 #home .home-eyebrow{min-height:0;color:#dac9a3;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:10px;letter-spacing:.19em;line-height:1.5}
 #home .home-hero h1{position:relative;margin:18px 0 16px;color:#f4eddb;font-family:'Noto Serif SC','Songti SC','STSong','SimSun',serif;font-size:clamp(40px,12.8vw,62px);font-weight:900;letter-spacing:-.035em;line-height:1.15;text-shadow:0 3px 18px #0009}
 #home .home-hero h1 em{font-style:normal;color:#d9b976;background:linear-gradient(145deg,#f7e7bd,#c29b55);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-#home .home-introduction{display:block;position:relative;z-index:1;margin-bottom:54px}
+#home .home-introduction{display:block;position:relative;z-index:1;margin-bottom:28px}
 #home .home-introduction p{width:100%;max-width:340px;margin:0;color:#d3c7b0;font-size:12px;line-height:1.9;text-shadow:0 1px 5px #000}
 #home .home-announcement{position:absolute;top:22px;right:21px;width:auto;height:38px;gap:7px;padding:0 11px;border:1px solid #9d8a63;border-radius:8px;background:linear-gradient(130deg,#242421e8,#131515e8);box-shadow:none;color:#ead6a7;font-size:11px;font-weight:700}
 #home .home-announcement svg{width:20px;height:20px;flex-shrink:0}
@@ -32,4 +32,4 @@
 #home :is(.home-primary,.home-secondary,.home-leaderboard-entry,.home-feedback,.home-announcement):hover{filter:brightness(1.1)}
 #home :is(.home-primary,.home-secondary,.home-leaderboard-entry,.home-feedback,.home-announcement):active{transform:translateY(1px)}
 #home button:focus-visible{outline:2px solid #f4dfaf;outline-offset:3px}
-@media(max-width:360px){#home .home-hero{padding-top:76px}#home .home-eyebrow{font-size:9px;letter-spacing:.12em}#home .home-introduction{margin-bottom:42px}#home .home-hero h1{font-size:42px}#home .home-entry-row .home-secondary{font-size:12px;gap:7px}}
+@media(max-width:360px){#home .home-hero{padding-top:76px}#home .home-eyebrow{font-size:9px;letter-spacing:.12em}#home .home-introduction{margin-bottom:24px}#home .home-hero h1{font-size:42px}#home .home-entry-row .home-secondary{font-size:12px;gap:7px}}

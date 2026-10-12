@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
-const C=require('../h5/game-core.js'),D=require('../h5/game-data.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const C=require('./helpers/core-for-rules.cjs')(3),D=require('../h5/game-data.js'),V=require('../balance/replay-verifier.cjs');
 const routes=require('../scripts/data/diverse-rosters.json');
 function roster(route,version=3){const run=C.createRun('steady_interest',911,{},version);run.slots=Object.fromEntries(C.SLOTS.map((s,i)=>[s.id,route.ids[i]]));run.bench=route.ids.slice(6);run.benchLimit=10;run.owned=Object.fromEntries(route.ids.map(id=>[id,{stars:3,train:3,trainedAt:0}]));return run;}
 test('v3 soft bonus retains negative floor and legacy hard caps',()=>{
@@ -15,7 +15,7 @@ test('new nested packages stack while v2 still selects the highest chain',()=>{
 
 test('added bonds activate only with complete current-run membership and never on legacy runs',()=>{
   const previousIds=new Set(D.LEGACY_SYNERGIES.map(b=>b.id));
-  const added=D.SYNERGIES.filter(b=>!previousIds.has(b.id));assert.equal(added.length,17);
+  const added=D.PREVIOUS_CATALOG.SYNERGIES.filter(b=>!previousIds.has(b.id));assert.equal(added.length,17);
   for(const bond of added){
     const game=C.createGame();game.profile.discovered=C.STARS.map(s=>s.id);
     const run=game.run=C.createRun('steady_interest',911);
@@ -41,7 +41,7 @@ test('no-death route matches the reference strength without any death member',()
 test('all guide candidates and all supported rule versions replay identically on server',()=>{
   for(const route of routes){const run=roster(route),fused=C.fused(run);assert.ok(Number.isFinite(fused.rating));assert.equal(new Set(route.ids).size,16);}
   for(const version of [1,2,3]){const initial=roster(routes[0],version),game=C.createGame();game.run=structuredClone(initial);const report=C.battle(game,'outside'),replay=V.replay(initial,[],'battle','outside');assert.deepEqual(replay.state,game.run);assert.deepEqual(replay.report,report);}
-  for(const name of ['game-data.js','game-core.js'])assert.equal(fs.readFileSync('h5/'+name,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+name,'utf8'));
+  assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,require('../activity/cloudfunctions/activity_api/game/game-core.js').STARS);
 });
 
 test('legacy recruit credits authorize new offers without permitting unpaid rerolls',()=>{

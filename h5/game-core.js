@@ -2,7 +2,7 @@
 (function (root) {
   'use strict';
 
-  const DATA=root.SupFusionGameData||(typeof require==='function'?require('./game-data.js'):null);
+  const DATA=typeof window==='undefined'&&typeof require==='function'?require('./game-data.js'):root.SupFusionGameData;
   if(!DATA)throw new Error('SupFusionGameData is required before game-core.js');
   const GEAR_DATA=root.SupFusionGearCatalog||(typeof require==='function'?require('./gear-catalog.js'):null);
   if(!GEAR_DATA)throw new Error('SupFusionGearCatalog is required before game-core.js');
@@ -252,12 +252,17 @@
   }
   function benchExpansionLimit(run){const effect=openingEffect(run);return 10+(effect.benchExpansionDelta??Math.max(0,effect.benchDelta||0))}
   const STAR_ROWS = DATA.STAR_ROWS;
-  const STARS = STAR_ROWS.map(r => ({
+  function makeStars(catalog){return catalog.STAR_ROWS.map(r => ({
     id:r[0],name:r[1],tier:r[2],role:r[3],team:r[4],best:r[5],
-    attrs:Object.fromEntries(ATTRS.map((a,i)=>[a,r[6][i]])),talent:r[7],talentEffect:DATA.TALENT_DETAILS[r[0]],variantOf:r[8]||null,
+    attrs:Object.fromEntries(ATTRS.map((a,i)=>[a,r[6][i]])),talent:r[7],talentEffect:catalog.TALENT_DETAILS[r[0]],variantOf:r[8]||null,
     maxStars:['S','SSR'].includes(r[2])?10:20
-  }));
-  const BY_ID = Object.fromEntries(STARS.map(s=>[s.id,s]));
+  }));}
+  function makeCatalog(data){const stars=makeStars(data);return {STARS:stars,BY_ID:Object.fromEntries(stars.map(s=>[s.id,s])),SYNERGIES:data.SYNERGIES};}
+  const LATEST_CATALOG=makeCatalog(DATA),PREVIOUS_CATALOG=makeCatalog(DATA.PREVIOUS_CATALOG||DATA);
+  let STARS=LATEST_CATALOG.STARS,BY_ID=LATEST_CATALOG.BY_ID,SYNERGIES=LATEST_CATALOG.SYNERGIES;
+  function catalogForRun(run){return run&&(run.balanceRulesVersion||1)<12?PREVIOUS_CATALOG:LATEST_CATALOG;}
+  function withCatalog(run,fn){const previous={STARS,BY_ID,SYNERGIES},catalog=run?catalogForRun(run):previous;({STARS,BY_ID,SYNERGIES}=catalog);try{return fn()}finally{({STARS,BY_ID,SYNERGIES}=previous);}}
+
   // 关卡顺序按球员基础等级与单挑强度递进；倾向只用于战斗计算，不在赛前揭示。
   const FOE_ROSTER = [
     ['caruso','collapse'],['fox','collapse'],['anunoby','drive'],['fisher','outside'],['bowen','collapse'],
@@ -274,7 +279,7 @@
     ['diesel_shaq','collapse'],['king_lebron','drive'],['air_jordan','drive']
   ];
   const FOES = FOE_ROSTER.map(([id])=>id);
-  const LEGEND_FOE_COUNT=STARS.filter(star=>star.tier==='SSR').length;
+  const LEGEND_FOE_COUNT=FOE_ROSTER.filter(([id])=>BY_ID[id].tier==='SSR').length;
   const LEGEND_FOE_START=FOE_ROSTER.length-LEGEND_FOE_COUNT;
   // Keep the onboarding stages forgiving, then accelerate into the back half.
   // Stage 11+ deliberately uses a convex curve so future meta progression does
@@ -293,7 +298,7 @@
     const depth=stage-50;
     return 500*(1+depth/125)*Math.exp(.004*depth);
   }
-  const SYNERGIES = DATA.SYNERGIES;
+  // The catalog is selected for each synchronous core operation.
   const BOOSTS = [
     { id:'hot', name:'手感火热', type:'投射', price:5, stats:{three:8}, description:'下一场三分 +8%' },
     { id:'paint', name:'禁区强攻', type:'终结', price:5, stats:{inside:8}, description:'下一场篮下 +8%' },
@@ -438,7 +443,8 @@
     }
     return detail;
   }
-  const BALANCE_RULES_VERSION=9,MORALE_HARD_CAP=13;
+  const BALANCE_RULES_VERSION=12,MORALE_HARD_CAP=13;
+  const PLAYER_SHOP_PRICES=Object.freeze({A:14,S:24}),PLAYER_SHOP_REFRESH_COST=4;
   function currentBalance(run){return run?.balanceRulesVersion>=2}
   function saleValue(id,stars=1,run=null){const star=BY_ID[id];return star?Math.floor(SALE_BASE[star.tier]*clamp(Math.floor(stars)||1,1,10)*(openingEffect(run).saleMultiplier||1)):0}
   function resolveTalentEffect(run,slotId){
@@ -472,16 +478,27 @@
 
   function nextRandom(run){run.rng=(Math.imul(run.rng,1664525)+1013904223)>>>0;return run.rng/4294967296}
   function randomChoice(run,arr){return arr[Math.floor(nextRandom(run)*arr.length)]}
-  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:3,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],gearUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0,gearStorage:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
+  const LEGENDARY_PLAYER_UNLOCK_PRICE=400;
+  const LEGENDARY_PLAYERS=Object.freeze(LATEST_CATALOG.STARS.filter(star=>star.tier==='SSR'&&!PREVIOUS_CATALOG.BY_ID[star.id]));
+  function playerAvailable(run,id){return !(run.balanceRulesVersion>=12)||!LEGENDARY_PLAYERS.some(star=>star.id===id)||(run.unlockedPlayers||[]).includes(id)}
+  function unlockLegendaryPlayer(profile,random=Math.random){
+    const owned=profile.playerUnlocks||(profile.playerUnlocks=[]),pool=LEGENDARY_PLAYERS.filter(star=>!owned.includes(star.id));
+    if(!pool.length||!Number.isFinite(profile.legend)||profile.legend<LEGENDARY_PLAYER_UNLOCK_PRICE)return null;
+    const star=pool[Math.min(pool.length-1,Math.floor(clamp(random(),0,.999999)*pool.length))];
+    profile.legend-=LEGENDARY_PLAYER_UNLOCK_PRICE;owned.push(star.id);return star;
+  }
+  function createGame(){return { version:1, run:null, profile:{talentRulesVersion:3,runs:0,wins:0,clears:0,bestStage:0,highestStage:0,bestEndless:0,bestGoat:0,bestOvr:0,legend:0,discovered:[],discoveredEvents:[],jerseys:[],jerseyUnlocks:[],gearUnlocks:[],playerUnlocks:[],upgrades:{startGold:0,scouting:0,interestCap:0,trainingBoost:0,policyOffers:0,benchSeat:0,filmStudy:0,gearStorage:0},metaUnlocks:{talents:[],gear:[],players:[]}} }}
   function createRun(talent,seed,progress={},rulesVersion=BALANCE_RULES_VERSION){
     const effect=openingEffect({talent,balanceRulesVersion:rulesVersion});
     const run={seed:seed>>>0,rng:seed>>>0,talent,stage:1,endless:false,rarityBonus:clamp(progress.scouting??progress.rarityBonus??0,0,5),metaInterestCap:clamp(progress.interestCap||0,0,5),metaTrainingBoost:clamp(progress.trainingBoost||0,0,3),metaPolicyOffers:clamp(progress.policyOffers||0,0,1),metaFilmStudy:clamp(progress.filmStudy||0,0,3),unlockedJerseys:[...new Set((progress.jerseyUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.unlockable&&item.slot==='球衣')))],unlockedGear:[...new Set((progress.gearUnlocks||[]).filter(id=>GEAR.some(item=>item.id===id&&item.legendary)))],gearHealCounters:{},gearLimit:GEAR_LIMIT,gearReserveLimit:5+clamp(progress.gearStorage||0,0,5),maxGoat:0,maxOvr:0,endlessWins:0,collectedPlayers:[],collectedJerseys:[],morale:clamp(3+(effect.startMorale||0),1,3),cash:Math.max(0,(rulesVersion>=2?12:16)+clamp(progress.startGold||0,0,5)*5+(effect.startCash||0)),free:6+(effect.freePerStage||0),recruitCredits:0,rewardedRecruitUsed:false,offerMode:'normal',batchSelected:[],batchQueue:[],refreshFree:1,gearRefreshFree:effect.freeGearRefresh||0,forceRareRecruit:false,owned:{},slots:Object.fromEntries(SLOTS.map(s=>[s.id,null])),bench:[],talentWinHealGranted:0,benchLimit:clamp(6+clamp(progress.benchSeat||0,0,5)+(effect.benchDelta||0),1,11+Math.max(0,effect.benchDelta||0)),offer:[],offerOdds:null,pending:null,boosts:[],boostBoughtOffers:[],gear:[],gearReserve:[],gearSoldOffers:[],shopOffers:{boost:[],gear:[]},shopRefreshes:0,gearRefreshes:0,gearPaidRefreshes:0,wins:0,losses:0,stats:{recruits:0,prizeIncome:0,gearPurchases:0},reviveUsed:false,posterRewarded:false,settlement:null,lastBattle:null,ended:false,awarded:false,recruitGroups:0,noAPlusGroups:0,noSPlusGroups:0,openingAPlusGroups:0};
+    if(rulesVersion>=12)run.unlockedPlayers=[...new Set((Array.isArray(progress.playerUnlocks)?progress.playerUnlocks:[]).filter(id=>LEGENDARY_PLAYERS.some(star=>star.id===id)))];
     if(rulesVersion>=2){run.balanceRulesVersion=rulesVersion;run.bondWinHealCounters={}}
     if(rulesVersion>=7)initRandomSkills(run);
     if(rulesVersion>=4){run.eventState={seen:[],misses:0,lastBattle:-2,bonuses:{},jerseys:0,recovered:false};run.randomEvent=null}
     if(talent==='outside')run.free+=1;
     if(talent==='economy')run.free-=1;
     if(effect.startGearRarity){const pool=GEAR.filter(item=>item.rarity===effect.startGearRarity&&item.kind!=='signature'&&(rulesVersion>=5?gearAvailable(run,item):!item.legendary));if(pool.length){const id=randomChoice(run,pool).id;run.gear.push(id);if(GEAR.find(item=>item.id===id)?.slot==='球衣')run.collectedJerseys.push(id)}}
+    if(rulesVersion>=12)playerEconomy.reset(run);
     makeOffer(run);
     makeShopOffers(run);
     return run;
@@ -545,7 +562,7 @@
   }
   function recruitPool(run,tier,chosen,opening){
     const chosenIdentities=new Set(chosen.map(identityOf)),ownedIds=new Set(Object.keys(run.owned));
-    const usable=star=>!chosen.includes(star.id)&&!chosenIdentities.has(identityOf(star.id))
+    const usable=star=>playerAvailable(run,star.id)&&!chosen.includes(star.id)&&!chosenIdentities.has(identityOf(star.id))
       &&(!opening||!ownedIds.has(star.id))
       &&(!run.owned[star.id]||run.owned[star.id].stars<starLimit(run,star.id));
     let pool=STARS.filter(star=>star.tier===tier&&usable(star));
@@ -687,14 +704,21 @@
     const result=advanceRecruitBatch(run);
     return {...result,sold,kept};
   }
+  function resetSoldBonusSkills(run,id){
+    if(run.balanceRulesVersion<11||!hasRandomSkills(run))return;
+    if(run.roleSkillMap[id])run.roleSkillMap[id]=run.roleSkillMap[id].slice(0,1);
+    delete run.bonusSkillSlots[id];
+    if(run.skillRefreshCount[id])run.skillRefreshCount[id]=run.skillRefreshCount[id].slice(0,1);
+    if(run.skillAdPickUsed[id])run.skillAdPickUsed[id]=run.skillAdPickUsed[id].slice(0,1);
+  }
   function resolvePending(run,mode,target){
     const id=run.pending;if(!id)return false;
     if(mode==='sell'){run.cash+=saleValue(id,1,run)}
     else if(mode==='replace' && Number.isInteger(target) && target>=0 && target<run.bench.length){
-      const old=run.bench[target];run.cash+=saleValue(old,run.owned[old]?.stars,run);delete run.owned[old];
+      const old=run.bench[target];run.cash+=saleValue(old,run.owned[old]?.stars,run);delete run.owned[old];resetSoldBonusSkills(run,old);
       run.owned[id]={stars:1,train:0,trainedAt:0};run.bench[target]=id;
     } else if(mode==='replace-slot'&&SLOTS.some(slot=>slot.id===target)&&run.slots[target]){
-      const old=run.slots[target];run.cash+=saleValue(old,run.owned[old]?.stars,run);delete run.owned[old];
+      const old=run.slots[target];run.cash+=saleValue(old,run.owned[old]?.stars,run);delete run.owned[old];resetSoldBonusSkills(run,old);
       run.owned[id]={stars:1,train:0,trainedAt:0};run.slots[target]=id;
     } else return false;
     run.pending=null;return true;
@@ -728,10 +752,11 @@
   function sellBench(run,index){
     if(run.ended||run.lastBattle||!Number.isInteger(index)||index<0||index>=run.bench.length)return 0;
     const id=run.bench[index],value=saleValue(id,run.owned[id]?.stars,run);
-    run.bench.splice(index,1);delete run.owned[id];run.cash+=value;
+    run.bench.splice(index,1);delete run.owned[id];resetSoldBonusSkills(run,id);run.cash+=value;
     return value;
   }
   function playerScore(star,own,key,run=null){
+    if(run&&(run.balanceRulesVersion||1)<12)star=BY_ID[star.id]||star;
     const effect=openingEffect(run),starGrowth=(star.tier==='SSR'?.2:.1)+(effect.starGrowthDelta||0),trainingGrowth=(star.tier==='SSR'?.04:.03)+(effect.trainingGrowthDelta||0)+(run?.metaTrainingBoost||0)/100;
     return Math.round(star.attrs[key]*(1+(own.stars-1)*starGrowth+own.train*trainingGrowth));
   }
@@ -842,7 +867,7 @@
   }
   const opponentRatingCache=new Map();
   function opponent(run){
-    const curveVersion=run.balanceRulesVersion>=9?9:run.balanceRulesVersion>=6?6:5;
+    const curveVersion=run.balanceRulesVersion>=12?12:run.balanceRulesVersion>=9?9:run.balanceRulesVersion>=6?6:5;
     const index=run.stage<=FOE_ROSTER.length?run.stage-1:LEGEND_FOE_START+(run.stage-51)%LEGEND_FOE_COUNT;
     const [id,strategy]=FOE_ROSTER[index],star=BY_ID[id];
     // 前九关保留入门坡度；第十关小幅抬升，无尽随后按凸曲线加速。
@@ -929,7 +954,48 @@
   function makeShopOffers(run){
     run.shopOffers={boost:drawShopItems(run,BOOSTS,4,[]),gear:drawGearItems(run,3)};
     run.boostBoughtOffers=[];run.gearSoldOffers=[];
+    if(run.balanceRulesVersion>=10)makePlayerShopOffers(run);
     return run.shopOffers;
+  }
+  function playerShopUnlocked(run){return !!run&&run.balanceRulesVersion>=10&&run.stage>=(run.balanceRulesVersion>=11?5:6)}
+  function playerShopReady(run){return playerShopUnlocked(run)&&!run.ended&&!run.lastBattle&&!run.pending&&!run.randomEvent&&!run.skillAdPick}
+  function makePlayerShopOffers(run){
+    if(!run||run.balanceRulesVersion<10)return [];
+    run.playerShopOffers=[];run.playerShopOffersInitialized=true;
+    if(run.balanceRulesVersion>=12)run.playerShopSoldOffers=[];
+    if(!playerShopUnlocked(run))return run.playerShopOffers;
+    const tiers=['A','A',nextRandom(run)<.3?'S':'A'],excluded=new Set(STARS.filter(star=>run.owned[star.id]?.stars>=starLimit(run,star.id)).map(star=>star.id));
+    for(const tier of tiers){
+      let pool=STARS.filter(star=>star.tier===tier&&!excluded.has(star.id));
+      if(!pool.length)pool=STARS.filter(star=>['A','S'].includes(star.tier)&&!excluded.has(star.id));
+      if(pool.length){const id=randomChoice(run,pool).id;excluded.add(id);run.playerShopOffers.push(id)}
+    }
+    previewRandomSkills(run,run.playerShopOffers);
+    return run.playerShopOffers;
+  }
+  function ensurePlayerShop(run){
+    if(!playerShopUnlocked(run))return [];
+    if(!run.playerShopOffersInitialized)makePlayerShopOffers(run);
+    return run.playerShopOffers||[];
+  }
+  function playerShopPrice(run,id){
+    const star=BY_ID[id],base=PLAYER_SHOP_PRICES[star?.tier];
+    if(base===undefined)return Infinity;
+    if(run.balanceRulesVersion>=11)return base;
+    const discount=(openingEffect(run).gearDiscount||0)+itemEffects(run).shopDiscount+randomSkillEffects(run).shopDiscount;
+    return Math.max(1,Math.ceil(base-discount));
+  }
+  function refreshPlayerShop(run){
+    if(!playerShopReady(run)||run.cash<PLAYER_SHOP_REFRESH_COST)return false;
+    run.cash-=PLAYER_SHOP_REFRESH_COST;makePlayerShopOffers(run);return true;
+  }
+  function buyShopPlayer(run,id){
+    if(!playerShopReady(run)||!BY_ID[id]||!ensurePlayerShop(run).includes(id)||(run.balanceRulesVersion>=12&&(run.playerShopSoldOffers||[]).includes(id))||run.owned[id]?.stars>=starLimit(run,id))return {ok:false,reason:'球员不可购买'};
+    const price=playerShopPrice(run,id);if(run.cash<price)return {ok:false,reason:'奖金不足'};
+    run.cash-=price;
+    if(run.balanceRulesVersion>=12)(run.playerShopSoldOffers||(run.playerShopSoldOffers=[])).push(id);
+    else run.playerShopOffers=run.playerShopOffers.filter(offered=>offered!==id);
+    return addRecruitedStar(run,id);
   }
   function ensureShop(run){
     if(!run.shopOffers||!Array.isArray(run.shopOffers.boost)||!Array.isArray(run.shopOffers.gear))run.shopOffers={boost:[],gear:[]};
@@ -937,10 +1003,12 @@
     if(!run.shopOffers.gear.length){run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     return run.shopOffers;
   }
-  function shopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0||randomSkillEffects(run).freeGearRefresh&&run.skillFreeRefreshStage!==run.stage?0:3+(run.balanceRulesVersion>=5?(run.gearPaidRefreshes||0):0)+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
+  function baseShopRefreshCost(run,type='boost'){return type==='gear'?(run.gearRefreshFree>0||randomSkillEffects(run).freeGearRefresh&&run.skillFreeRefreshStage!==run.stage?0:3+(run.balanceRulesVersion>=5?(run.gearPaidRefreshes||0):0)+(openingEffect(run).gearRefreshCostDelta||0)):Math.min(10,4+(run.shopRefreshes||0))}
+  function shopRefreshCost(run,type='boost'){return playerEconomy.quote(run,type==='gear'?'gearRefresh':'boostRefresh',baseShopRefreshCost(run,type)).price;}
   function refreshShop(run,type='boost'){
-    const cost=shopRefreshCost(run,type);if(run.cash<cost)return false;run.cash-=cost;
-    if(type==='gear'){if(run.balanceRulesVersion>=5&&cost>0)run.gearPaidRefreshes=(run.gearPaidRefreshes||0)+1;if(run.gearRefreshFree>0)run.gearRefreshFree--;else if(cost===0&&hasRandomSkills(run))run.skillFreeRefreshStage=run.stage;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
+    if(!['boost','gear'].includes(type))return false;
+    const base=baseShopRefreshCost(run,type),quote=playerEconomy.quote(run,type==='gear'?'gearRefresh':'boostRefresh',base),cost=quote.price;if(run.cash<cost)return false;run.cash-=cost;playerEconomy.consume(run,quote);
+    if(type==='gear'){if(run.balanceRulesVersion>=5&&cost>0)run.gearPaidRefreshes=(run.gearPaidRefreshes||0)+1;if(run.gearRefreshFree>0)run.gearRefreshFree--;else if(base===0&&hasRandomSkills(run))run.skillFreeRefreshStage=run.stage;run.gearRefreshes=(run.gearRefreshes||0)+1;run.shopOffers.gear=drawGearItems(run,3);run.gearSoldOffers=[]}
     else{run.shopRefreshes=(run.shopRefreshes||0)+1;run.shopOffers.boost=drawShopItems(run,BOOSTS,4,[]);run.boostBoughtOffers=[]}
     return true;
   }
@@ -948,13 +1016,15 @@
     const star=BY_ID[id];if(!star)return 0;
     return run.endless||run.stage>10?run.stage:3;
   }
-  function trainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)],effect=openingEffect(run);return base===undefined?Infinity:Math.max(1,Math.ceil((base+(run.talent==='agent'?2:0)+(effect.trainingCostDelta||0))*(effect.trainingCostMultiplier||1)))}
-  function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const cost=trainingCost(run,id);if(run.cash<cost)return false;run.cash-=cost;own.train++;own.trainedAt=run.stage;return true}
-  function boostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
+  function baseTrainingCost(run,id){const level=run.owned[id]?.train??0,costs=currentBalance(run)?TRAINING_COSTS:LEGACY_TRAINING_COSTS,base=costs[Math.min(level,costs.length-1)],effect=openingEffect(run);return base===undefined?Infinity:Math.max(1,Math.ceil((base+(run.talent==='agent'?2:0)+(effect.trainingCostDelta||0))*(effect.trainingCostMultiplier||1)))}
+  function trainingCost(run,id){return playerEconomy.quote(run,'training',baseTrainingCost(run,id)).price;}
+  function train(run,id){const own=run.owned[id],star=BY_ID[id];if(!own||!star||own.train>=trainingLimit(run,id)||(!run.endless&&own.trainedAt===run.stage))return false;const quote=playerEconomy.quote(run,'training',baseTrainingCost(run,id)),cost=quote.price;if(run.cash<cost)return false;run.cash-=cost;playerEconomy.consume(run,quote);own.train++;own.trainedAt=run.stage;return true}
+  function baseBoostPrice(run,item){return Math.max(1,item.price+(openingEffect(run).boostCostDelta||0))}
+  function boostPrice(run,item){return playerEconomy.quote(run,'boostPurchase',baseBoostPrice(run,item),item.id).price;}
   function gearPrice(run,item){const effect=openingEffect(run);return Math.max(1,Math.ceil((item.price-(effect.gearDiscount||0)-(run.balanceRulesVersion>=5?itemEffects(run).shopDiscount:0)-randomSkillEffects(run).shopDiscount)*(effect.gearPriceMultiplier||1)))}
   function gearCashback(run,price){return Math.floor(price*(openingEffect(run).gearCashback||0))}
   function boostPurchaseLimit(run){return run.balanceRulesVersion>=6?(run.stage<=10?2:10):Infinity}
-  function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.boosts.filter(boostId=>boostId===id).length>=boostPurchaseLimit(run)||run.cash<boostPrice(run,item))return false;run.cash-=boostPrice(run,item);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
+  function buyBoost(run,id){ensureShop(run);const item=BOOSTS.find(b=>b.id===id);if(!item||!run.shopOffers.boost.includes(id)||(run.boostBoughtOffers||[]).includes(id)||run.boosts.filter(boostId=>boostId===id).length>=boostPurchaseLimit(run)||run.cash<boostPrice(run,item))return false;const quote=playerEconomy.quote(run,'boostPurchase',baseBoostPrice(run,item),id);run.cash-=quote.price;playerEconomy.consume(run,quote);run.boosts.push(id);(run.boostBoughtOffers||(run.boostBoughtOffers=[])).push(id);return true}
   function gearReserveCount(run){return (run.gearReserve||[]).filter(id=>GEAR.find(item=>item.id===id)?.slot!=='球衣').length}
   function gearReserveLimit(run){return clamp(run.gearReserveLimit||5,5,10)}
   function gearStorageFull(run,item){return run.balanceRulesVersion>=5&&item?.slot!=='球衣'&&(run.gear.some(id=>GEAR.find(g=>g.id===id)?.slot===item.slot)||run.gear.length>=(run.gearLimit||GEAR_LIMIT))&&gearReserveCount(run)>=gearReserveLimit(run)}
@@ -1004,7 +1074,8 @@
     run.cash+=item.sellPrice;return item.sellPrice;
   }
   function expandBench(run){if(run.cash<10||run.benchLimit>=benchExpansionLimit(run))return false;run.cash-=10;run.benchLimit++;return true}
-  function refreshOffer(run){if(run.refreshFree>0)run.refreshFree--;else if(run.cash>=5)run.cash-=5;else return false;run.offer=[];run.offerOdds=null;makeOffer(run);return true}
+  function recruitRefreshCost(run){return run.refreshFree>0?0:playerEconomy.quote(run,'recruitRefresh',5).price;}
+  function refreshOffer(run){if(run.refreshFree>0)run.refreshFree--;else{const quote=playerEconomy.quote(run,'recruitRefresh',5);if(run.cash<quote.price)return false;run.cash-=quote.price;playerEconomy.consume(run,quote);}run.offer=[];run.offerOdds=null;makeOffer(run);return true}
   function shotType(run,strategy,attacker,move=null){
     const n=nextRandom(run),bias=attacker==='us'?(move?.threeBias||0):0;
     if(strategy==='outside')return n<.57+bias?'three':n<.79+bias?'mid':'inside';
@@ -1228,6 +1299,7 @@
     const goat=Math.round(goatPhases.planning+goatPhases.clash+goatPhases.endurance);
     const report={stage:run.stage,won,us,them,reward,detail,log:log.slice(-7),signatures:signatures.map(({id,name,kind,uses})=>({id,name,kind,uses})),strategy,foe:foe.id,foeName:foe.name,foeStars:foe.stars,foeStrategy:foe.strategy,beats,rating:own.rating,foeRating:foe.rating,goat,goatPhases};
     run.maxGoat=Math.max(run.maxGoat||0,goat);run.maxOvr=Math.max(run.maxOvr||0,own.rating);if(won&&run.stage>10)run.endlessWins=(run.endlessWins||0)+1;
+    if(run.balanceRulesVersion>=12)report.playerStageCash=won?own.talentEffects.reduce((sum,effect)=>sum+(effect.stageCash||0),0):0;
     run.lastBattle=report;
     if(run.balanceRulesVersion>=4)report.eventSnapshot=api.eventBattleSnapshot(run);
     if(!won&&run.morale<=0)report.legendEarned=finishRun(game);
@@ -1243,25 +1315,37 @@
   function advanceAfterBattle(game,choice){
     const run=game.run;if(!run||!run.lastBattle)return false;
     if(run.ended)return false;
-    if(!run.lastBattle.won){if(hasRandomSkills(run))run.skillFreeRefreshStage=0;run.lastBattle=null;return true}
+    if(!run.lastBattle.won){if(hasRandomSkills(run))run.skillFreeRefreshStage=0;playerEconomy.reset(run);run.lastBattle=null;if(run.balanceRulesVersion>=10)makePlayerShopOffers(run);return true}
     if(run.stage===10&&choice==='finish'){run.lastBattle.legendEarned=finishRun(game);return true}
     if(run.stage===10)run.endless=true;
     const bonds=activeSynergies(run),opening=openingEffect(run);
     const bondFree=Math.min(2,bonds.reduce((sum,item)=>sum+(item.effect?.freeRecruit||0),0));
     const bondCash=Math.min(5,bonds.reduce((sum,item)=>sum+(item.effect?.stageCash||0),0));
     run.stage++;run.free=1+bondFree+(opening.freePerStage||0);
-    run.cash=Math.max(0,run.cash+bondCash+(opening.stageCash||0));
+    run.cash=Math.max(0,run.cash+bondCash+(opening.stageCash||0)+(run.balanceRulesVersion>=12?(run.lastBattle.playerStageCash||0):0));
+    playerEconomy.reset(run);
     run.gearRefreshFree=opening.freeGearRefresh||0;
     run.refreshFree=1;run.rewardedRecruitUsed=false;run.offer=[];run.offerOdds=null;run.shopRefreshes=0;run.gearRefreshes=0;run.gearPaidRefreshes=0;makeShopOffers(run);run.lastBattle=null;
     return true;
   }
-  const api={BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,talentForRun,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
+  const api={LEGENDARY_PLAYER_UNLOCK_PRICE,LEGENDARY_PLAYERS,playerAvailable,unlockLegendaryPlayer,catalogForRun,resolveTalentEffect,recruitRefreshCost,BALANCE_RULES_VERSION,MORALE_HARD_CAP,ATTRS,LABELS,COMBAT_LABELS,SLOTS,STRATEGIES,SIGNATURE_MOVES,signatureMoves,TALENTS,KNOWN_TALENTS,availableTalents,talentUnlocked,migrateTalentUnlocks,benchExpansionLimit,openingEffect,talentForRun,STARS,BY_ID,FOES,SYNERGIES,BOOSTS,GEAR,GEAR_LIMIT,JERSEY_COLLECTION_SCALE,JERSEY_EQUIPPED_BONUS,JERSEY_UNLOCK_PRICE,LEGENDARY_GEAR_UNLOCK_PRICE,META_UPGRADES,META_UNLOCKS,createGame,createRun,synergiesForRun,combatBonus,tierOdds,recruitProbabilitySummary,makeOffer,makeTenOffer,toggleRecruitBatchSelection,grantRewardedSOffer,recruit,confirmRecruitBatch,advanceRecruitBatch,recruitCost,recruitPackCost,buyRecruitPack,resolvePending,swapBench,swapPositions,saleValue,sellBench,starterCount,ownedCount,starLimit,identityOf,starSynergies,activeSynergies,playerScore,playerEffectiveStats,incomeBreakdown,fused,opponent,trainingLimit,trainingCost,train,boostPrice,boostPurchaseLimit,gearPrice,gearRarityWeights,gearAvailable,makeShopOffers,ensureShop,shopRefreshCost,refreshShop,PLAYER_SHOP_PRICES,PLAYER_SHOP_REFRESH_COST,playerShopUnlocked,makePlayerShopOffers,ensurePlayerShop,playerShopPrice,refreshPlayerShop,buyShopPlayer,buyBoost,buyGear,gearReserveCount,gearReserveLimit,gearStorageFull,replaceGear,equipGear,gearMultiplier,sellGear,expandBench,refreshOffer,battle,continueRun,finishRun,recoverBondMorale,reviveRun,goatPhases,goatScore,clearedMainStage,legendPoints,legendPointBreakdown,buyMetaUpgrade,buyMetaUnlock,unlockJersey,unlockLegendaryGear,recoverGearMorale,preventGearDefeat,clamp};
+  for(const key of ['STARS','BY_ID','SYNERGIES'])Object.defineProperty(api,key,{enumerable:true,get:()=>({STARS,BY_ID,SYNERGIES})[key]});
+  const ECONOMY_SYSTEM=root.SupFusionPlayerEconomy||(typeof require==='function'?require('./player-economy.js'):null);
+  if(!ECONOMY_SYSTEM)throw new Error('SupFusionPlayerEconomy is required before game-core.js');
+  const playerEconomy=ECONOMY_SYSTEM.createSystem(api);api.restorePlayerEconomy=playerEconomy.restore;
   const EVENT_SYSTEM=root.SupFusionEventSystem||(typeof require==='function'?require('./event-system.js'):null);
   Object.assign(api,{RANDOM_SKILLS,SKILL_BY_ID,SKILL_REFRESH_COSTS,randomSkillsForRun,randomSkillForRun,hasRandomSkills,getRoleSkills,activeRandomSkills,randomSkillEffects,refreshRandomSkill,enterSkillAdPick,confirmSkillAdPick,cancelSkillAdPick,restoreRandomSkills});
   if(!EVENT_SYSTEM)throw new Error('SupFusionEventSystem is required before game-core.js');
-  Object.assign(api,EVENT_SYSTEM.createSystem({...api,nextRandom,advanceAfterBattle}));
+  Object.assign(api,EVENT_SYSTEM.createSystem(Object.assign(Object.create(api),{nextRandom,advanceAfterBattle})));
   for(const name of ['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','swapBench','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','refreshRandomSkill','enterSkillAdPick']){
     const original=api[name];api[name]=function(run,...args){return run?.randomEvent||run?.skillAdPick?false:original(run,...args)};
+  }
+  // Old rules must use their original roster during every operation, including events.
+  for(const name of Object.keys(api))if(typeof api[name]==='function'&&name!=='catalogForRun'){
+    const original=api[name];api[name]=function(...args){
+      const run=name==='createRun'?{balanceRulesVersion:args[3]??BALANCE_RULES_VERSION}:args.map(arg=>arg?.run||arg).find(arg=>arg&&typeof arg==='object'&&(arg.slots&&arg.owned||Object.hasOwn(arg,'balanceRulesVersion')||Object.hasOwn(arg,'stage')));
+      return withCatalog(run,()=>original(...args));
+    };
   }
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.SupFusionGameCore=api;

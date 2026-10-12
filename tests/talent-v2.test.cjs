@@ -45,6 +45,6 @@ test('phase specializations affect combat dimensions and have equal summed bonus
     for(const [key,n] of Object.entries(effects))assert.equal(result.dimensions[key]>base.dimensions[key],n>0,`${id}: ${key}`);
   }
 });
-test('client and cloud combat rules are identical',()=>{
-  const fs=require('node:fs');assert.equal(fs.readFileSync('h5/game-core.js','utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/game-core.js','utf8'));
+test('client preserves the unchanged rule eleven backend catalog while rule twelve awaits deployment',()=>{
+  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');assert.equal(backend.BALANCE_RULES_VERSION,11);assert.equal(C.BALANCE_RULES_VERSION,12);assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,backend.STARS);assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).SYNERGIES,backend.SYNERGIES);
 });

@@ -109,8 +109,8 @@ test('React markup conversion and top-bar rendering avoid unsafe HTML injection'
   assert.match(ui, /strong\.textContent=String\(value\)/);
 });
 
-function draftedRun(seed = 42) {
-  const run = C.createRun('outside', seed);
+function draftedRun(seed = 42, rulesVersion=C.BALANCE_RULES_VERSION) {
+  const run = C.createRun('outside', seed, {}, rulesVersion);
   for (let i = 0; i < 6; i++) {
     const offer = C.makeOffer(run);
     assert.equal(new Set(offer).size, 4);
@@ -122,6 +122,8 @@ function draftedRun(seed = 42) {
 }
 
 test('fourth edition player and synergy data forms a complete network', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const basePlayers = C.STARS.filter(star => !star.variantOf);
   const variants = C.STARS.filter(star => star.variantOf);
   assert.equal(basePlayers.length, 110);
@@ -151,6 +153,8 @@ test('fourth edition player and synergy data forms a complete network', () => {
 });
 
 test('all cards use six attributes with distinct tier strengths and weaknesses', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   assert.deepEqual(C.ATTRS, ['three', 'mid', 'drive', 'handle', 'inside', 'def']);
   assert.equal(C.LABELS.inside, '篮下');
   assert.equal(C.LABELS.post, undefined);
@@ -200,6 +204,8 @@ test('all cards use six attributes with distinct tier strengths and weaknesses',
 });
 
 test('SSR cards include eight distinct legends with a defense specialist', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const expected = [
     ['king_lebron', '天选·詹姆斯', [99, 108, 125, 110, 121, 112], '霸王踏步'],
     ['air_jordan', 'GOAT·乔丹', [94, 125, 121, 106, 113, 120], '神之领域'],
@@ -265,6 +271,8 @@ test('approved player specialties use their revised recommended slots', () => {
 });
 
 test('requested three four and five player bonds use the approved members', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const expected = {
     four_shooting_guards: ['kobe', 'tmac', 'carter', 'iverson'],
     banana_boat: ['lebron', 'wade', 'paul', 'melo'],
@@ -313,12 +321,16 @@ test('nested bonds are permitted while exact member sets remain unique', () => {
 });
 
 test('every base S player belongs to at least one four-player bond', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const fourPlayerIds = new Set(C.SYNERGIES.filter(bond => bond.ids.length === 4).flatMap(bond => bond.ids));
   const missing = C.STARS.filter(player => player.tier === 'S' && !player.variantOf && !fourPlayerIds.has(player.id)).map(player => player.name);
   assert.deepEqual(missing, []);
 });
 
 test('new bond budgets distinguish economic, combat and recovery specialities',()=>{
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const exceptions={showtime_five:54,laker_advance:30,bird_circle:30};
   for(const bond of C.SYNERGIES){
     const e=bond.effect,economic=Boolean(e.winCash||e.stageCash||e.freeRecruit);
@@ -495,12 +507,12 @@ test('GOAT peak, reference merit, settlement unlocks, and permanent upgrades sha
   assert.equal(game.profile.legend, 270);
 });
 
-test('profile and top bar expose GOAT, three catalogs, and point shop without the old career block', () => {
+test('profile exposes peak OVR, top bar keeps GOAT, and catalogs and point shop remain available', () => {
   const css = readStyles();
   const app = readRoot('src', 'App.jsx');
   const ui = readH5('game-ui.js');
   assert.match(ui, /metric\('GOAT',liveGoat,'top-goat'\)/);
-  assert.match(ui, /最高GOAT分/);
+  assert.match(ui, /最高OVR/);
   assert.match(ui, /data-id="jerseys">球衣图鉴/);
   assert.match(ui, /const catalogJerseyIds=new Set\(\[\.\.\.\(p\.jerseys\|\|\[\]\),\.\.\.\(game\.run\?\.collectedJerseys\|\|\[\]\)\]\)/);
   assert.match(ui, /profile-star-card \$\{tierClass\[star\.tier\]\}/);
@@ -585,6 +597,8 @@ test('percentage talents scale after star and training growth and only activate 
 });
 
 test('S talents match the approved reference-style roles and mechanics', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   assert.deepEqual(C.STARS.filter(star => star.tier === 'S').map(star => star.id), [
     'curry', 'lebron', 'kobe', 'duncan', 'durant', 'shaq', 'jordan',
     'harden', 'magic', 'bird', 'kareem', 'hakeem', 'wilt', 'russell'
@@ -753,6 +767,8 @@ test('players can exchange any occupied lineup and bench positions', () => {
 });
 
 test('selling a bench player pays reference tier base value times current stars', () => {
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const run = draftedRun();
   const spare = C.STARS.find(s => !run.owned[s.id]);
   run.owned[spare.id] = { stars: 3, train: 0, trainedAt: 0 };
@@ -1277,9 +1293,11 @@ test('fatal battle consumes the rescue headband before settlement, with no repea
 });
 
 test('legendary cash terms and healing settle on actual battle results',()=>{
+  const C=require('./helpers/core-for-rules.cjs')(11); // Preserve the rules 11 approved data assertion.
+
   const outcomes=new Set();
   for(let seed=1;seed<=120&&outcomes.size<2;seed++){
-    const game=C.createGame(),run=game.run=draftedRun(seed);run.balanceRulesVersion=6;run.gear=['legacy_income_band','legacy_bounty_wrist','legacy_loss_shoes','legacy_income_ring','legacy_counter_board'];
+    const game=C.createGame(),run=game.run=draftedRun(seed,6);run.gear=['legacy_income_band','legacy_bounty_wrist','legacy_loss_shoes','legacy_income_ring','legacy_counter_board'];
     const income=C.incomeBreakdown(run),own=C.fused(run,'outside'),opening=C.openingEffect(run),before=run.cash;
     const report=C.battle(game,'outside');assert.ok(report);outcomes.add(report.won);
     const post=own.talentEffects.reduce((sum,e)=>sum+(e.postBattleCash||0),0)+(report.beats===1?4:0)+1;

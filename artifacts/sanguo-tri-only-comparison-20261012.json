@@ -1,0 +1,5084 @@
+{
+  "date": "2026-10-12",
+  "source": "https://activity-static.hupu.com/shaper/published/app_7acc4e2a0e/index.html?night=0",
+  "filter": "保留蜀汉、曹魏、东吴、群雄；包含汉末人物及三国演义人物；排除春秋、战国、西汉、唐、南宋、明。羁绊仅保留全体成员都在上述范围内的组合。",
+  "all": {
+    "cards": 171,
+    "tiers": {
+      "SSR": 28,
+      "S": 44,
+      "A": 31,
+      "B": 58,
+      "C": 10
+    },
+    "bonds": 131
+  },
+  "threeKingdoms": {
+    "cards": 135,
+    "identities": 117,
+    "tiers": {
+      "SSR": 18,
+      "S": 18,
+      "A": 31,
+      "B": 58,
+      "C": 10
+    },
+    "factions": {
+      "蜀汉": {
+        "cards": 33,
+        "tiers": {
+          "SSR": 4,
+          "S": 5,
+          "A": 6,
+          "B": 16,
+          "C": 2
+        }
+      },
+      "曹魏": {
+        "cards": 35,
+        "tiers": {
+          "SSR": 5,
+          "S": 5,
+          "A": 10,
+          "B": 13,
+          "C": 2
+        }
+      },
+      "东吴": {
+        "cards": 31,
+        "tiers": {
+          "SSR": 5,
+          "S": 4,
+          "A": 9,
+          "B": 11,
+          "C": 2
+        }
+      },
+      "群雄": {
+        "cards": 36,
+        "tiers": {
+          "SSR": 4,
+          "S": 4,
+          "A": 6,
+          "B": 18,
+          "C": 4
+        }
+      }
+    },
+    "bonds": 108,
+    "bondSizes": {
+      "2": 71,
+      "3": 24,
+      "4": 6,
+      "5": 7
+    },
+    "highestMemberTier": {
+      "SSR": 0,
+      "S": 69,
+      "A": 23,
+      "B": 14,
+      "C": 2
+    },
+    "tierParticipation": {
+      "SSR": 0,
+      "S": 69,
+      "A": 51,
+      "B": 59,
+      "C": 11
+    },
+    "ssrSubstitutableBonds": 67,
+    "combinations": [
+      [
+        "S+B",
+        18
+      ],
+      [
+        "S+A",
+        15
+      ],
+      [
+        "S+S",
+        9
+      ],
+      [
+        "A+A",
+        8
+      ],
+      [
+        "B+B",
+        7
+      ],
+      [
+        "A+B",
+        7
+      ],
+      [
+        "A+A+B",
+        4
+      ],
+      [
+        "B+C",
+        3
+      ],
+      [
+        "S+B+B",
+        3
+      ],
+      [
+        "S+S+B",
+        3
+      ],
+      [
+        "S+S+S+A+A",
+        3
+      ],
+      [
+        "C+C",
+        2
+      ],
+      [
+        "S+C",
+        2
+      ],
+      [
+        "S+S+S",
+        2
+      ],
+      [
+        "S+B+C",
+        2
+      ],
+      [
+        "A+B+B",
+        2
+      ],
+      [
+        "S+A+A",
+        2
+      ],
+      [
+        "B+B+B",
+        2
+      ],
+      [
+        "S+S+A",
+        2
+      ],
+      [
+        "B+B+C",
+        1
+      ],
+      [
+        "S+S+A+A",
+        1
+      ],
+      [
+        "S+B+B+B",
+        1
+      ],
+      [
+        "A+B+B+B",
+        1
+      ],
+      [
+        "B+B+B+B",
+        1
+      ],
+      [
+        "S+A+B+B",
+        1
+      ],
+      [
+        "S+B+C+C",
+        1
+      ],
+      [
+        "S+A+A+B+B",
+        1
+      ],
+      [
+        "S+S+A+B+B",
+        1
+      ],
+      [
+        "S+S+A+A+A",
+        1
+      ],
+      [
+        "A+A+A",
+        1
+      ],
+      [
+        "S+A+A+A+A",
+        1
+      ]
+    ]
+  },
+  "ours": {
+    "cards": 118,
+    "identities": 110,
+    "tiers": {
+      "SSR": 8,
+      "S": 14,
+      "A": 32,
+      "B": 53,
+      "C": 11
+    },
+    "bonds": 100,
+    "bondSizes": {
+      "2": 52,
+      "3": 29,
+      "4": 14,
+      "5": 5
+    },
+    "highestMemberTier": {
+      "SSR": 0,
+      "S": 56,
+      "A": 30,
+      "B": 13,
+      "C": 1
+    },
+    "tierParticipation": {
+      "SSR": 0,
+      "S": 56,
+      "A": 53,
+      "B": 63,
+      "C": 11
+    },
+    "ssrSubstitutableBonds": 48,
+    "combinations": [
+      [
+        "A+B",
+        12
+      ],
+      [
+        "B+B",
+        10
+      ],
+      [
+        "S+B",
+        9
+      ],
+      [
+        "S+B+B",
+        6
+      ],
+      [
+        "A+A",
+        6
+      ],
+      [
+        "S+S",
+        5
+      ],
+      [
+        "S+A",
+        4
+      ],
+      [
+        "S+S+B",
+        4
+      ],
+      [
+        "S+A+B",
+        4
+      ],
+      [
+        "A+B+B",
+        4
+      ],
+      [
+        "S+S+A+A",
+        4
+      ],
+      [
+        "S+C",
+        3
+      ],
+      [
+        "S+A+A+B",
+        3
+      ],
+      [
+        "S+A+A+A",
+        3
+      ],
+      [
+        "S+S+S",
+        2
+      ],
+      [
+        "A+C",
+        2
+      ],
+      [
+        "A+A+B",
+        2
+      ],
+      [
+        "B+B+B",
+        2
+      ],
+      [
+        "A+A+A",
+        2
+      ],
+      [
+        "C+C+C",
+        1
+      ],
+      [
+        "B+C",
+        1
+      ],
+      [
+        "S+A+A",
+        1
+      ],
+      [
+        "A+A+A+B",
+        1
+      ],
+      [
+        "A+B+B+B",
+        1
+      ],
+      [
+        "S+A+B+B",
+        1
+      ],
+      [
+        "S+S+S+A",
+        1
+      ],
+      [
+        "S+S+B+B+B",
+        1
+      ],
+      [
+        "S+A+B+B+C",
+        1
+      ],
+      [
+        "S+S+C+C+C",
+        1
+      ],
+      [
+        "S+S+B+B+C",
+        1
+      ],
+      [
+        "S+S+S+S+S",
+        1
+      ],
+      [
+        "S+A+C",
+        1
+      ]
+    ]
+  },
+  "excludedRoles": [
+    {
+      "id": 301,
+      "name": "韩信",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 90,
+        "intelligence": 100,
+        "politics": 76,
+        "charisma": 89
+      },
+      "rating": "S",
+      "talentId": "grand_commander"
+    },
+    {
+      "id": 302,
+      "name": "张良",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 77,
+        "force": 30,
+        "intelligence": 100,
+        "politics": 97,
+        "charisma": 90
+      },
+      "rating": "S",
+      "talentId": "strategist_sage"
+    },
+    {
+      "id": 303,
+      "name": "霍去病",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 97,
+        "force": 100,
+        "intelligence": 77,
+        "politics": 49,
+        "charisma": 83
+      },
+      "rating": "S",
+      "talentId": "fierce_general"
+    },
+    {
+      "id": 304,
+      "name": "卫青",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 92,
+        "intelligence": 85,
+        "politics": 67,
+        "charisma": 87
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 305,
+      "name": "李牧",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 89,
+        "intelligence": 93,
+        "politics": 65,
+        "charisma": 77
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 306,
+      "name": "廉颇",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 95,
+        "force": 100,
+        "intelligence": 74,
+        "politics": 53,
+        "charisma": 78
+      },
+      "rating": "S",
+      "talentId": "fierce_general"
+    },
+    {
+      "id": 307,
+      "name": "王翦",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 85,
+        "intelligence": 95,
+        "politics": 75,
+        "charisma": 79
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 308,
+      "name": "白起",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 100,
+        "intelligence": 86,
+        "politics": 48,
+        "charisma": 64
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 309,
+      "name": "孙膑",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 88,
+        "force": 35,
+        "intelligence": 100,
+        "politics": 85,
+        "charisma": 76
+      },
+      "rating": "S",
+      "talentId": "strategist_sage"
+    },
+    {
+      "id": 310,
+      "name": "吴起",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 88,
+        "intelligence": 88,
+        "politics": 89,
+        "charisma": 72
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 311,
+      "name": "司马穰苴",
+      "faction": "春秋",
+      "dynasty": "春秋",
+      "locked": true,
+      "stats": {
+        "command": 94,
+        "force": 62,
+        "intelligence": 100,
+        "politics": 80,
+        "charisma": 76
+      },
+      "rating": "S",
+      "talentId": "sima_fa"
+    },
+    {
+      "id": 312,
+      "name": "伍子胥",
+      "faction": "春秋",
+      "dynasty": "春秋",
+      "locked": true,
+      "stats": {
+        "command": 89,
+        "force": 81,
+        "intelligence": 100,
+        "politics": 89,
+        "charisma": 76
+      },
+      "rating": "S",
+      "talentId": "strategist_sage"
+    },
+    {
+      "id": 313,
+      "name": "岳飞",
+      "faction": "南宋",
+      "dynasty": "南宋",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 100,
+        "intelligence": 91,
+        "politics": 75,
+        "charisma": 95
+      },
+      "rating": "S",
+      "talentId": "grand_commander"
+    },
+    {
+      "id": 314,
+      "name": "韩世忠",
+      "faction": "南宋",
+      "dynasty": "南宋",
+      "locked": true,
+      "stats": {
+        "command": 91,
+        "force": 99,
+        "intelligence": 74,
+        "politics": 51,
+        "charisma": 79
+      },
+      "rating": "S",
+      "talentId": "fierce_general"
+    },
+    {
+      "id": 315,
+      "name": "李靖",
+      "faction": "唐",
+      "dynasty": "唐",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 89,
+        "intelligence": 97,
+        "politics": 73,
+        "charisma": 82
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 316,
+      "name": "徐达",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 98,
+        "force": 94,
+        "intelligence": 85,
+        "politics": 66,
+        "charisma": 83
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 317,
+      "name": "戚继光",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 96,
+        "force": 93,
+        "intelligence": 86,
+        "politics": 70,
+        "charisma": 81
+      },
+      "derivedOverride": {
+        "discipline": 98
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 318,
+      "name": "张居正",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 72,
+        "force": 32,
+        "intelligence": 96,
+        "politics": 100,
+        "charisma": 93
+      },
+      "rating": "S",
+      "talentId": "reform_minister"
+    },
+    {
+      "id": 319,
+      "name": "商鞅",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 76,
+        "force": 47,
+        "intelligence": 95,
+        "politics": 100,
+        "charisma": 72
+      },
+      "rating": "S",
+      "talentId": "reform_minister"
+    },
+    {
+      "id": 320,
+      "name": "萧何",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 75,
+        "force": 35,
+        "intelligence": 93,
+        "politics": 100,
+        "charisma": 92
+      },
+      "derivedOverride": {
+        "logistics": 98
+      },
+      "rating": "S",
+      "talentId": "logistics"
+    },
+    {
+      "id": 321,
+      "name": "孙武",
+      "faction": "春秋",
+      "dynasty": "春秋",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 49,
+        "intelligence": 100,
+        "politics": 88,
+        "charisma": 85
+      },
+      "rating": "S",
+      "talentId": "strategist_sage"
+    },
+    {
+      "id": 322,
+      "name": "李世民",
+      "faction": "唐",
+      "dynasty": "唐",
+      "locked": true,
+      "stats": {
+        "command": 100,
+        "force": 87,
+        "intelligence": 94,
+        "politics": 92,
+        "charisma": 100
+      },
+      "rating": "S",
+      "talentId": "founder_lord"
+    },
+    {
+      "id": 323,
+      "name": "刘彻",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 93,
+        "force": 59,
+        "intelligence": 90,
+        "politics": 97,
+        "charisma": 100
+      },
+      "rating": "S",
+      "talentId": "founder_lord"
+    },
+    {
+      "id": 324,
+      "name": "朱元璋",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 96,
+        "force": 76,
+        "intelligence": 88,
+        "politics": 94,
+        "charisma": 92
+      },
+      "rating": "S",
+      "talentId": "founder_lord"
+    },
+    {
+      "id": 325,
+      "name": "兵圣孙武",
+      "faction": "春秋",
+      "dynasty": "春秋",
+      "locked": true,
+      "stats": {
+        "command": 126,
+        "force": 73,
+        "intelligence": 136,
+        "politics": 106,
+        "charisma": 104
+      },
+      "rating": "SSR",
+      "talentId": "sun_tzu_art",
+      "bondRoleId": 321
+    },
+    {
+      "id": 326,
+      "name": "天可汗李世民",
+      "faction": "唐",
+      "dynasty": "唐",
+      "locked": true,
+      "stats": {
+        "command": 126,
+        "force": 111,
+        "intelligence": 119,
+        "politics": 115,
+        "charisma": 120
+      },
+      "rating": "SSR",
+      "talentId": "tian_kehan",
+      "bondRoleId": 322
+    },
+    {
+      "id": 327,
+      "name": "汉武刘彻",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 120,
+        "force": 86,
+        "intelligence": 115,
+        "politics": 114,
+        "charisma": 122
+      },
+      "derivedOverride": {
+        "logistics": 125
+      },
+      "rating": "SSR",
+      "talentId": "hanwu_might",
+      "bondRoleId": 323
+    },
+    {
+      "id": 328,
+      "name": "武穆岳飞",
+      "faction": "南宋",
+      "dynasty": "南宋",
+      "locked": true,
+      "stats": {
+        "command": 128,
+        "force": 124,
+        "intelligence": 114,
+        "politics": 99,
+        "charisma": 117
+      },
+      "rating": "SSR",
+      "talentId": "jingzhong",
+      "bondRoleId": 313
+    },
+    {
+      "id": 329,
+      "name": "洪武朱元璋",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 122,
+        "force": 101,
+        "intelligence": 111,
+        "politics": 118,
+        "charisma": 117
+      },
+      "rating": "SSR",
+      "talentId": "hongwu_founder",
+      "bondRoleId": 324
+    },
+    {
+      "id": 332,
+      "name": "李勣",
+      "faction": "唐",
+      "dynasty": "唐",
+      "locked": true,
+      "stats": {
+        "command": 98,
+        "force": 90,
+        "intelligence": 93,
+        "politics": 80,
+        "charisma": 85
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 333,
+      "name": "乐毅",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 98,
+        "force": 85,
+        "intelligence": 90,
+        "politics": 78,
+        "charisma": 80
+      },
+      "rating": "S",
+      "talentId": "commander"
+    },
+    {
+      "id": 339,
+      "name": "兵仙韩信",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 131,
+        "force": 122,
+        "intelligence": 110,
+        "politics": 90,
+        "charisma": 108
+      },
+      "rating": "SSR",
+      "talentId": "war_immortal",
+      "bondRoleId": 301
+    },
+    {
+      "id": 340,
+      "name": "谋圣张良",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 99,
+        "force": 42,
+        "intelligence": 131,
+        "politics": 123,
+        "charisma": 115
+      },
+      "rating": "SSR",
+      "talentId": "sage_counsel",
+      "bondRoleId": 302
+    },
+    {
+      "id": 341,
+      "name": "冠军侯霍去病",
+      "faction": "西汉",
+      "dynasty": "西汉",
+      "locked": true,
+      "stats": {
+        "command": 125,
+        "force": 128,
+        "intelligence": 100,
+        "politics": 64,
+        "charisma": 108
+      },
+      "rating": "SSR",
+      "talentId": "champion_marquis",
+      "bondRoleId": 303
+    },
+    {
+      "id": 342,
+      "name": "杀神白起",
+      "faction": "战国",
+      "dynasty": "战国",
+      "locked": true,
+      "stats": {
+        "command": 127,
+        "force": 130,
+        "intelligence": 110,
+        "politics": 62,
+        "charisma": 82
+      },
+      "rating": "SSR",
+      "talentId": "slaughter_god",
+      "bondRoleId": 308
+    },
+    {
+      "id": 343,
+      "name": "元辅张居正",
+      "faction": "明",
+      "dynasty": "明",
+      "locked": true,
+      "stats": {
+        "command": 93,
+        "force": 44,
+        "intelligence": 123,
+        "politics": 131,
+        "charisma": 117
+      },
+      "rating": "SSR",
+      "talentId": "reform_grand",
+      "bondRoleId": 318
+    }
+  ],
+  "excludedBonds": [
+    {
+      "name": "帝国双璧",
+      "memberIds": [
+        304,
+        303
+      ],
+      "members": [
+        "卫青",
+        "霍去病"
+      ]
+    },
+    {
+      "name": "汉初三杰",
+      "memberIds": [
+        301,
+        302,
+        320
+      ],
+      "members": [
+        "韩信",
+        "张良",
+        "萧何"
+      ]
+    },
+    {
+      "name": "封狼居胥",
+      "memberIds": [
+        323,
+        303
+      ],
+      "members": [
+        "刘彻",
+        "霍去病"
+      ]
+    },
+    {
+      "name": "北击匈奴",
+      "memberIds": [
+        323,
+        304
+      ],
+      "members": [
+        "刘彻",
+        "卫青"
+      ]
+    },
+    {
+      "name": "兵法三杰",
+      "memberIds": [
+        321,
+        309,
+        310
+      ],
+      "members": [
+        "孙武",
+        "孙膑",
+        "吴起"
+      ]
+    },
+    {
+      "name": "吴宫教战",
+      "memberIds": [
+        321,
+        312
+      ],
+      "members": [
+        "孙武",
+        "伍子胥"
+      ]
+    },
+    {
+      "name": "赵之双璧",
+      "memberIds": [
+        305,
+        306
+      ],
+      "members": [
+        "李牧",
+        "廉颇"
+      ]
+    },
+    {
+      "name": "秦灭六国",
+      "memberIds": [
+        308,
+        307
+      ],
+      "members": [
+        "白起",
+        "王翦"
+      ]
+    },
+    {
+      "name": "大唐双星",
+      "memberIds": [
+        322,
+        315
+      ],
+      "members": [
+        "李世民",
+        "李靖"
+      ]
+    },
+    {
+      "name": "中兴三将",
+      "memberIds": [
+        313,
+        314,
+        317
+      ],
+      "members": [
+        "岳飞",
+        "韩世忠",
+        "戚继光"
+      ]
+    },
+    {
+      "name": "布衣君臣",
+      "memberIds": [
+        324,
+        316
+      ],
+      "members": [
+        "朱元璋",
+        "徐达"
+      ]
+    },
+    {
+      "name": "铁腕治世",
+      "memberIds": [
+        324,
+        318
+      ],
+      "members": [
+        "朱元璋",
+        "张居正"
+      ]
+    },
+    {
+      "name": "战国双相",
+      "memberIds": [
+        319,
+        310
+      ],
+      "members": [
+        "商鞅",
+        "吴起"
+      ]
+    },
+    {
+      "name": "千古兵书",
+      "memberIds": [
+        321,
+        311
+      ],
+      "members": [
+        "孙武",
+        "司马穰苴"
+      ]
+    },
+    {
+      "name": "关岳同祀",
+      "memberIds": [
+        313,
+        3
+      ],
+      "members": [
+        "岳飞",
+        "关羽"
+      ]
+    },
+    {
+      "name": "魏武注孙",
+      "memberIds": [
+        321,
+        26
+      ],
+      "members": [
+        "孙武",
+        "曹操"
+      ]
+    },
+    {
+      "name": "暗度陈仓",
+      "memberIds": [
+        301,
+        37
+      ],
+      "members": [
+        "韩信",
+        "邓艾"
+      ]
+    },
+    {
+      "name": "老当益壮",
+      "memberIds": [
+        306,
+        7
+      ],
+      "members": [
+        "廉颇",
+        "黄忠"
+      ]
+    },
+    {
+      "name": "兵法薪传",
+      "memberIds": [
+        321,
+        309,
+        2
+      ],
+      "members": [
+        "孙武",
+        "孙膑",
+        "诸葛亮"
+      ]
+    },
+    {
+      "name": "鞠躬尽瘁",
+      "memberIds": [
+        313,
+        2,
+        11
+      ],
+      "members": [
+        "岳飞",
+        "诸葛亮",
+        "姜维"
+      ]
+    },
+    {
+      "name": "武庙名将",
+      "memberIds": [
+        302,
+        301,
+        3,
+        4
+      ],
+      "members": [
+        "张良",
+        "韩信",
+        "关羽",
+        "张飞"
+      ]
+    },
+    {
+      "name": "武庙十哲·左列",
+      "memberIds": [
+        308,
+        301,
+        315,
+        332,
+        2
+      ],
+      "members": [
+        "白起",
+        "韩信",
+        "李靖",
+        "李勣",
+        "诸葛亮"
+      ]
+    },
+    {
+      "name": "武庙十哲·右列",
+      "memberIds": [
+        302,
+        311,
+        321,
+        310,
+        333
+      ],
+      "members": [
+        "张良",
+        "司马穰苴",
+        "孙武",
+        "吴起",
+        "乐毅"
+      ]
+    }
+  ],
+  "roleList": [
+    {
+      "id": 1,
+      "name": "刘备",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 88,
+        "force": 78,
+        "intelligence": 80,
+        "politics": 88,
+        "charisma": 99
+      },
+      "rating": "S",
+      "talentId": "anmin"
+    },
+    {
+      "id": 2,
+      "name": "诸葛亮",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 90,
+        "force": 38,
+        "intelligence": 100,
+        "politics": 100,
+        "charisma": 92
+      },
+      "rating": "S",
+      "talentId": "chancellor_strategy"
+    },
+    {
+      "id": 3,
+      "name": "关羽",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 96,
+        "force": 98,
+        "intelligence": 76,
+        "politics": 62,
+        "charisma": 90
+      },
+      "rating": "S",
+      "talentId": "awe"
+    },
+    {
+      "id": 4,
+      "name": "张飞",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 88,
+        "force": 99,
+        "intelligence": 60,
+        "politics": 38,
+        "charisma": 78
+      },
+      "rating": "S",
+      "talentId": "changban"
+    },
+    {
+      "id": 5,
+      "name": "赵云",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 90,
+        "force": 97,
+        "intelligence": 78,
+        "politics": 65,
+        "charisma": 88
+      },
+      "rating": "S",
+      "talentId": "dragon_courage"
+    },
+    {
+      "id": 6,
+      "name": "马超",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 88,
+        "force": 95,
+        "intelligence": 56,
+        "politics": 40,
+        "charisma": 78
+      },
+      "rating": "A"
+    },
+    {
+      "id": 7,
+      "name": "黄忠",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 85,
+        "force": 95,
+        "intelligence": 65,
+        "politics": 50,
+        "charisma": 70
+      },
+      "rating": "A"
+    },
+    {
+      "id": 8,
+      "name": "魏延",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 88,
+        "force": 92,
+        "intelligence": 72,
+        "politics": 45,
+        "charisma": 65
+      },
+      "rating": "A"
+    },
+    {
+      "id": 9,
+      "name": "庞统",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 84,
+        "force": 35,
+        "intelligence": 98,
+        "politics": 76,
+        "charisma": 76
+      },
+      "rating": "A",
+      "talentId": "phoenix_scheme"
+    },
+    {
+      "id": 10,
+      "name": "法正",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 80,
+        "force": 40,
+        "intelligence": 94,
+        "politics": 78,
+        "charisma": 70
+      },
+      "rating": "A"
+    },
+    {
+      "id": 11,
+      "name": "姜维",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 92,
+        "force": 89,
+        "intelligence": 90,
+        "politics": 68,
+        "charisma": 75
+      },
+      "rating": "A"
+    },
+    {
+      "id": 12,
+      "name": "蒋琬",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 75,
+        "force": 30,
+        "intelligence": 82,
+        "politics": 90,
+        "charisma": 75
+      },
+      "derivedOverride": {
+        "logistics": 98
+      },
+      "rating": "B"
+    },
+    {
+      "id": 13,
+      "name": "费祎",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 72,
+        "force": 32,
+        "intelligence": 80,
+        "politics": 88,
+        "charisma": 78
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 14,
+      "name": "徐庶",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 72,
+        "force": 60,
+        "intelligence": 95,
+        "politics": 82,
+        "charisma": 82
+      },
+      "rating": "B",
+      "talentId": "strategist_enhance"
+    },
+    {
+      "id": 15,
+      "name": "关平",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 78,
+        "force": 85,
+        "intelligence": 68,
+        "politics": 50,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 16,
+      "name": "关兴",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 75,
+        "force": 86,
+        "intelligence": 65,
+        "politics": 48,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 17,
+      "name": "张苞",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 72,
+        "force": 87,
+        "intelligence": 55,
+        "politics": 40,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 18,
+      "name": "马岱",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 78,
+        "force": 84,
+        "intelligence": 68,
+        "politics": 55,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 19,
+      "name": "王平",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 82,
+        "force": 80,
+        "intelligence": 75,
+        "politics": 50,
+        "charisma": 65
+      },
+      "derivedOverride": {
+        "discipline": 92
+      },
+      "rating": "B"
+    },
+    {
+      "id": 20,
+      "name": "廖化",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 75,
+        "force": 78,
+        "intelligence": 65,
+        "politics": 55,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 21,
+      "name": "周仓",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 65,
+        "force": 85,
+        "intelligence": 45,
+        "politics": 35,
+        "charisma": 65
+      },
+      "rating": "B"
+    },
+    {
+      "id": 22,
+      "name": "严颜",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 78,
+        "force": 88,
+        "intelligence": 65,
+        "politics": 50,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 23,
+      "name": "马谡",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 70,
+        "force": 40,
+        "intelligence": 85,
+        "politics": 65,
+        "charisma": 60
+      },
+      "rating": "B"
+    },
+    {
+      "id": 24,
+      "name": "黄月英",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 65,
+        "force": 30,
+        "intelligence": 88,
+        "politics": 78,
+        "charisma": 65
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 25,
+      "name": "刘禅",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 65,
+        "force": 30,
+        "intelligence": 60,
+        "politics": 80,
+        "charisma": 98
+      },
+      "rating": "B"
+    },
+    {
+      "id": 26,
+      "name": "曹操",
+      "faction": "曹魏",
+      "stats": {
+        "command": 96,
+        "force": 68,
+        "intelligence": 88,
+        "politics": 89,
+        "charisma": 92
+      },
+      "rating": "S",
+      "talentId": "weiwu_order"
+    },
+    {
+      "id": 27,
+      "name": "司马懿",
+      "faction": "曹魏",
+      "stats": {
+        "command": 96,
+        "force": 60,
+        "intelligence": 97,
+        "politics": 93,
+        "charisma": 75
+      },
+      "derivedOverride": {
+        "logistics": 95
+      },
+      "rating": "S",
+      "talentId": "jianbi"
+    },
+    {
+      "id": 28,
+      "name": "郭嘉",
+      "faction": "曹魏",
+      "stats": {
+        "command": 72,
+        "force": 30,
+        "intelligence": 98,
+        "politics": 82,
+        "charisma": 86
+      },
+      "rating": "S",
+      "talentId": "guicai"
+    },
+    {
+      "id": 29,
+      "name": "张辽",
+      "faction": "曹魏",
+      "stats": {
+        "command": 94,
+        "force": 93,
+        "intelligence": 78,
+        "politics": 60,
+        "charisma": 82
+      },
+      "rating": "S",
+      "talentId": "xiaoyaojin"
+    },
+    {
+      "id": 30,
+      "name": "荀彧",
+      "faction": "曹魏",
+      "stats": {
+        "command": 70,
+        "force": 35,
+        "intelligence": 96,
+        "politics": 98,
+        "charisma": 90
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "S",
+      "talentId": "royal_support"
+    },
+    {
+      "id": 31,
+      "name": "贾诩",
+      "faction": "曹魏",
+      "stats": {
+        "command": 75,
+        "force": 30,
+        "intelligence": 97,
+        "politics": 85,
+        "charisma": 60
+      },
+      "rating": "A"
+    },
+    {
+      "id": 32,
+      "name": "夏侯惇",
+      "faction": "曹魏",
+      "stats": {
+        "command": 85,
+        "force": 94,
+        "intelligence": 60,
+        "politics": 70,
+        "charisma": 80
+      },
+      "rating": "A"
+    },
+    {
+      "id": 33,
+      "name": "夏侯渊",
+      "faction": "曹魏",
+      "stats": {
+        "command": 87,
+        "force": 93,
+        "intelligence": 58,
+        "politics": 40,
+        "charisma": 72
+      },
+      "rating": "A"
+    },
+    {
+      "id": 34,
+      "name": "徐晃",
+      "faction": "曹魏",
+      "stats": {
+        "command": 90,
+        "force": 92,
+        "intelligence": 75,
+        "politics": 55,
+        "charisma": 75
+      },
+      "rating": "A"
+    },
+    {
+      "id": 35,
+      "name": "张郃",
+      "faction": "曹魏",
+      "stats": {
+        "command": 88,
+        "force": 91,
+        "intelligence": 80,
+        "politics": 50,
+        "charisma": 70
+      },
+      "rating": "A"
+    },
+    {
+      "id": 36,
+      "name": "曹仁",
+      "faction": "曹魏",
+      "stats": {
+        "command": 92,
+        "force": 85,
+        "intelligence": 70,
+        "politics": 60,
+        "charisma": 75
+      },
+      "derivedOverride": {
+        "discipline": 98
+      },
+      "rating": "A",
+      "talentId": "iron_wall"
+    },
+    {
+      "id": 37,
+      "name": "邓艾",
+      "faction": "曹魏",
+      "stats": {
+        "command": 93,
+        "force": 87,
+        "intelligence": 88,
+        "politics": 70,
+        "charisma": 70
+      },
+      "rating": "A",
+      "talentId": "tuntian"
+    },
+    {
+      "id": 38,
+      "name": "典韦",
+      "faction": "曹魏",
+      "stats": {
+        "command": 78,
+        "force": 99,
+        "intelligence": 44,
+        "politics": 28,
+        "charisma": 72
+      },
+      "derivedOverride": {
+        "discipline": 86
+      },
+      "rating": "A",
+      "talentId": "tiger_guard"
+    },
+    {
+      "id": 39,
+      "name": "许褚",
+      "faction": "曹魏",
+      "stats": {
+        "command": 76,
+        "force": 98,
+        "intelligence": 42,
+        "politics": 30,
+        "charisma": 74
+      },
+      "derivedOverride": {
+        "discipline": 85
+      },
+      "rating": "A",
+      "talentId": "tiger_guard"
+    },
+    {
+      "id": 40,
+      "name": "钟会",
+      "faction": "曹魏",
+      "stats": {
+        "command": 85,
+        "force": 70,
+        "intelligence": 92,
+        "politics": 80,
+        "charisma": 65
+      },
+      "rating": "A"
+    },
+    {
+      "id": 41,
+      "name": "荀攸",
+      "faction": "曹魏",
+      "stats": {
+        "command": 72,
+        "force": 30,
+        "intelligence": 92,
+        "politics": 80,
+        "charisma": 75
+      },
+      "rating": "B"
+    },
+    {
+      "id": 42,
+      "name": "程昱",
+      "faction": "曹魏",
+      "stats": {
+        "command": 75,
+        "force": 40,
+        "intelligence": 88,
+        "politics": 82,
+        "charisma": 65
+      },
+      "rating": "B"
+    },
+    {
+      "id": 43,
+      "name": "于禁",
+      "faction": "曹魏",
+      "stats": {
+        "command": 85,
+        "force": 82,
+        "intelligence": 72,
+        "politics": 60,
+        "charisma": 60
+      },
+      "derivedOverride": {
+        "discipline": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 44,
+      "name": "乐进",
+      "faction": "曹魏",
+      "stats": {
+        "command": 80,
+        "force": 85,
+        "intelligence": 60,
+        "politics": 50,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 45,
+      "name": "庞德",
+      "faction": "曹魏",
+      "stats": {
+        "command": 78,
+        "force": 92,
+        "intelligence": 60,
+        "politics": 45,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 46,
+      "name": "文聘",
+      "faction": "曹魏",
+      "stats": {
+        "command": 82,
+        "force": 83,
+        "intelligence": 70,
+        "politics": 55,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 47,
+      "name": "满宠",
+      "faction": "曹魏",
+      "stats": {
+        "command": 80,
+        "force": 65,
+        "intelligence": 82,
+        "politics": 80,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 48,
+      "name": "陈群",
+      "faction": "曹魏",
+      "stats": {
+        "command": 60,
+        "force": 30,
+        "intelligence": 80,
+        "politics": 90,
+        "charisma": 78
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 49,
+      "name": "曹丕",
+      "faction": "曹魏",
+      "stats": {
+        "command": 75,
+        "force": 60,
+        "intelligence": 78,
+        "politics": 85,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 50,
+      "name": "曹植",
+      "faction": "曹魏",
+      "stats": {
+        "command": 40,
+        "force": 35,
+        "intelligence": 82,
+        "politics": 60,
+        "charisma": 85
+      },
+      "rating": "B"
+    },
+    {
+      "id": 51,
+      "name": "曹洪",
+      "faction": "曹魏",
+      "stats": {
+        "command": 78,
+        "force": 85,
+        "intelligence": 55,
+        "politics": 60,
+        "charisma": 65
+      },
+      "rating": "B"
+    },
+    {
+      "id": 52,
+      "name": "孙坚",
+      "faction": "东吴",
+      "stats": {
+        "command": 88,
+        "force": 92,
+        "intelligence": 70,
+        "politics": 60,
+        "charisma": 80
+      },
+      "rating": "A",
+      "talentId": "jiangdong_tiger"
+    },
+    {
+      "id": 53,
+      "name": "孙策",
+      "faction": "东吴",
+      "stats": {
+        "command": 90,
+        "force": 95,
+        "intelligence": 75,
+        "politics": 70,
+        "charisma": 88
+      },
+      "rating": "A"
+    },
+    {
+      "id": 54,
+      "name": "孙权",
+      "faction": "东吴",
+      "stats": {
+        "command": 88,
+        "force": 55,
+        "intelligence": 78,
+        "politics": 82,
+        "charisma": 100
+      },
+      "rating": "S",
+      "talentId": "balance"
+    },
+    {
+      "id": 55,
+      "name": "周瑜",
+      "faction": "东吴",
+      "stats": {
+        "command": 97,
+        "force": 70,
+        "intelligence": 96,
+        "politics": 80,
+        "charisma": 90
+      },
+      "rating": "S",
+      "talentId": "fire_attack"
+    },
+    {
+      "id": 56,
+      "name": "陆逊",
+      "faction": "东吴",
+      "stats": {
+        "command": 95,
+        "force": 65,
+        "intelligence": 95,
+        "politics": 88,
+        "charisma": 80
+      },
+      "rating": "S",
+      "talentId": "general_minister"
+    },
+    {
+      "id": 57,
+      "name": "鲁肃",
+      "faction": "东吴",
+      "stats": {
+        "command": 72,
+        "force": 50,
+        "intelligence": 88,
+        "politics": 84,
+        "charisma": 82
+      },
+      "derivedOverride": {
+        "logistics": 93
+      },
+      "rating": "A",
+      "talentId": "alliance"
+    },
+    {
+      "id": 58,
+      "name": "吕蒙",
+      "faction": "东吴",
+      "stats": {
+        "command": 90,
+        "force": 88,
+        "intelligence": 85,
+        "politics": 60,
+        "charisma": 75
+      },
+      "rating": "A",
+      "talentId": "baiyi_raid"
+    },
+    {
+      "id": 59,
+      "name": "太史慈",
+      "faction": "东吴",
+      "stats": {
+        "command": 96,
+        "force": 104,
+        "intelligence": 70,
+        "politics": 55,
+        "charisma": 80
+      },
+      "rating": "S",
+      "talentId": "divine_archer"
+    },
+    {
+      "id": 60,
+      "name": "甘宁",
+      "faction": "东吴",
+      "stats": {
+        "command": 80,
+        "force": 95,
+        "intelligence": 65,
+        "politics": 40,
+        "charisma": 72
+      },
+      "rating": "A",
+      "talentId": "jinfan_raid"
+    },
+    {
+      "id": 61,
+      "name": "周泰",
+      "faction": "东吴",
+      "stats": {
+        "command": 78,
+        "force": 93,
+        "intelligence": 50,
+        "politics": 45,
+        "charisma": 70
+      },
+      "rating": "A",
+      "talentId": "blood_battle"
+    },
+    {
+      "id": 62,
+      "name": "程普",
+      "faction": "东吴",
+      "stats": {
+        "command": 85,
+        "force": 88,
+        "intelligence": 75,
+        "politics": 65,
+        "charisma": 78
+      },
+      "rating": "A",
+      "talentId": "jiangbiao_veteran"
+    },
+    {
+      "id": 63,
+      "name": "陆抗",
+      "faction": "东吴",
+      "stats": {
+        "command": 90,
+        "force": 65,
+        "intelligence": 85,
+        "politics": 78,
+        "charisma": 75
+      },
+      "derivedOverride": {
+        "discipline": 95
+      },
+      "rating": "A",
+      "talentId": "xiling_defense"
+    },
+    {
+      "id": 64,
+      "name": "张昭",
+      "faction": "东吴",
+      "stats": {
+        "command": 55,
+        "force": 30,
+        "intelligence": 82,
+        "politics": 90,
+        "charisma": 75
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 65,
+      "name": "凌统",
+      "faction": "东吴",
+      "stats": {
+        "command": 75,
+        "force": 88,
+        "intelligence": 68,
+        "politics": 50,
+        "charisma": 75
+      },
+      "rating": "B"
+    },
+    {
+      "id": 66,
+      "name": "黄盖",
+      "faction": "东吴",
+      "stats": {
+        "command": 82,
+        "force": 90,
+        "intelligence": 72,
+        "politics": 58,
+        "charisma": 80
+      },
+      "rating": "A",
+      "talentId": "kurou"
+    },
+    {
+      "id": 67,
+      "name": "韩当",
+      "faction": "东吴",
+      "stats": {
+        "command": 75,
+        "force": 83,
+        "intelligence": 60,
+        "politics": 50,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 68,
+      "name": "丁奉",
+      "faction": "东吴",
+      "stats": {
+        "command": 80,
+        "force": 85,
+        "intelligence": 72,
+        "politics": 55,
+        "charisma": 70
+      },
+      "rating": "B"
+    },
+    {
+      "id": 69,
+      "name": "徐盛",
+      "faction": "东吴",
+      "stats": {
+        "command": 82,
+        "force": 80,
+        "intelligence": 75,
+        "politics": 58,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 70,
+      "name": "潘璋",
+      "faction": "东吴",
+      "stats": {
+        "command": 72,
+        "force": 82,
+        "intelligence": 55,
+        "politics": 48,
+        "charisma": 60
+      },
+      "rating": "B"
+    },
+    {
+      "id": 71,
+      "name": "诸葛瑾",
+      "faction": "东吴",
+      "stats": {
+        "command": 70,
+        "force": 45,
+        "intelligence": 80,
+        "politics": 82,
+        "charisma": 80
+      },
+      "rating": "B"
+    },
+    {
+      "id": 72,
+      "name": "朱然",
+      "faction": "东吴",
+      "stats": {
+        "command": 78,
+        "force": 80,
+        "intelligence": 70,
+        "politics": 55,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 73,
+      "name": "全琮",
+      "faction": "东吴",
+      "stats": {
+        "command": 75,
+        "force": 78,
+        "intelligence": 72,
+        "politics": 60,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 74,
+      "name": "吕布",
+      "faction": "群雄",
+      "stats": {
+        "command": 98,
+        "force": 100,
+        "intelligence": 45,
+        "politics": 32,
+        "charisma": 68
+      },
+      "derivedOverride": {
+        "discipline": 96
+      },
+      "rating": "S",
+      "talentId": "unmatched"
+    },
+    {
+      "id": 75,
+      "name": "袁绍",
+      "faction": "群雄",
+      "stats": {
+        "command": 96,
+        "force": 70,
+        "intelligence": 75,
+        "politics": 98,
+        "charisma": 104
+      },
+      "rating": "S",
+      "talentId": "sishisan_gong"
+    },
+    {
+      "id": 76,
+      "name": "颜良",
+      "faction": "群雄",
+      "stats": {
+        "command": 82,
+        "force": 96,
+        "intelligence": 55,
+        "politics": 38,
+        "charisma": 68
+      },
+      "rating": "A",
+      "talentId": "hebei_general"
+    },
+    {
+      "id": 77,
+      "name": "文丑",
+      "faction": "群雄",
+      "stats": {
+        "command": 80,
+        "force": 95,
+        "intelligence": 54,
+        "politics": 38,
+        "charisma": 68
+      },
+      "rating": "A",
+      "talentId": "wenchou_roar"
+    },
+    {
+      "id": 78,
+      "name": "高顺",
+      "faction": "群雄",
+      "stats": {
+        "command": 102,
+        "force": 98,
+        "intelligence": 60,
+        "politics": 40,
+        "charisma": 65
+      },
+      "rating": "S",
+      "talentId": "xianzhen_will"
+    },
+    {
+      "id": 79,
+      "name": "陈宫",
+      "faction": "群雄",
+      "stats": {
+        "command": 75,
+        "force": 45,
+        "intelligence": 90,
+        "politics": 70,
+        "charisma": 72
+      },
+      "rating": "A"
+    },
+    {
+      "id": 80,
+      "name": "田丰",
+      "faction": "群雄",
+      "stats": {
+        "command": 70,
+        "force": 30,
+        "intelligence": 92,
+        "politics": 80,
+        "charisma": 65
+      },
+      "rating": "A",
+      "talentId": "gangzhi"
+    },
+    {
+      "id": 81,
+      "name": "沮授",
+      "faction": "群雄",
+      "stats": {
+        "command": 78,
+        "force": 35,
+        "intelligence": 91,
+        "politics": 82,
+        "charisma": 70
+      },
+      "rating": "A",
+      "talentId": "shenmou"
+    },
+    {
+      "id": 82,
+      "name": "张角",
+      "faction": "群雄",
+      "stats": {
+        "command": 104,
+        "force": 70,
+        "intelligence": 104,
+        "politics": 60,
+        "charisma": 100
+      },
+      "rating": "S",
+      "talentId": "tiangong"
+    },
+    {
+      "id": 83,
+      "name": "董卓",
+      "faction": "群雄",
+      "stats": {
+        "command": 80,
+        "force": 85,
+        "intelligence": 50,
+        "politics": 40,
+        "charisma": 30
+      },
+      "rating": "B"
+    },
+    {
+      "id": 84,
+      "name": "袁术",
+      "faction": "群雄",
+      "stats": {
+        "command": 70,
+        "force": 65,
+        "intelligence": 60,
+        "politics": 70,
+        "charisma": 60
+      },
+      "rating": "B"
+    },
+    {
+      "id": 85,
+      "name": "公孙瓒",
+      "faction": "群雄",
+      "stats": {
+        "command": 82,
+        "force": 88,
+        "intelligence": 60,
+        "politics": 50,
+        "charisma": 70
+      },
+      "rating": "B",
+      "talentId": "baima"
+    },
+    {
+      "id": 86,
+      "name": "刘表",
+      "faction": "群雄",
+      "stats": {
+        "command": 70,
+        "force": 50,
+        "intelligence": 75,
+        "politics": 82,
+        "charisma": 80
+      },
+      "rating": "B"
+    },
+    {
+      "id": 87,
+      "name": "刘璋",
+      "faction": "群雄",
+      "stats": {
+        "command": 55,
+        "force": 40,
+        "intelligence": 60,
+        "politics": 70,
+        "charisma": 65
+      },
+      "rating": "B"
+    },
+    {
+      "id": 88,
+      "name": "张鲁",
+      "faction": "群雄",
+      "stats": {
+        "command": 60,
+        "force": 45,
+        "intelligence": 70,
+        "politics": 78,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 89,
+      "name": "华雄",
+      "faction": "群雄",
+      "stats": {
+        "command": 72,
+        "force": 90,
+        "intelligence": 45,
+        "politics": 30,
+        "charisma": 55
+      },
+      "rating": "B"
+    },
+    {
+      "id": 90,
+      "name": "审配",
+      "faction": "群雄",
+      "stats": {
+        "command": 70,
+        "force": 40,
+        "intelligence": 82,
+        "politics": 75,
+        "charisma": 68
+      },
+      "rating": "B",
+      "talentId": "yecheng_hold"
+    },
+    {
+      "id": 91,
+      "name": "许攸",
+      "faction": "群雄",
+      "stats": {
+        "command": 60,
+        "force": 35,
+        "intelligence": 85,
+        "politics": 60,
+        "charisma": 55
+      },
+      "rating": "B"
+    },
+    {
+      "id": 92,
+      "name": "纪灵",
+      "faction": "群雄",
+      "stats": {
+        "command": 75,
+        "force": 85,
+        "intelligence": 55,
+        "politics": 45,
+        "charisma": 60
+      },
+      "rating": "B"
+    },
+    {
+      "id": 93,
+      "name": "孟获",
+      "faction": "群雄",
+      "stats": {
+        "command": 78,
+        "force": 86,
+        "intelligence": 50,
+        "politics": 40,
+        "charisma": 75
+      },
+      "rating": "B"
+    },
+    {
+      "id": 94,
+      "name": "祝融夫人",
+      "faction": "群雄",
+      "stats": {
+        "command": 70,
+        "force": 82,
+        "intelligence": 55,
+        "politics": 35,
+        "charisma": 68
+      },
+      "rating": "B"
+    },
+    {
+      "id": 95,
+      "name": "马腾",
+      "faction": "群雄",
+      "stats": {
+        "command": 80,
+        "force": 85,
+        "intelligence": 65,
+        "politics": 55,
+        "charisma": 78
+      },
+      "rating": "B"
+    },
+    {
+      "id": 96,
+      "name": "陶谦",
+      "faction": "群雄",
+      "stats": {
+        "command": 65,
+        "force": 50,
+        "intelligence": 68,
+        "politics": 75,
+        "charisma": 72
+      },
+      "rating": "B"
+    },
+    {
+      "id": 97,
+      "name": "孔融",
+      "faction": "群雄",
+      "stats": {
+        "command": 55,
+        "force": 35,
+        "intelligence": 75,
+        "politics": 70,
+        "charisma": 78
+      },
+      "rating": "B"
+    },
+    {
+      "id": 98,
+      "name": "貂蝉",
+      "faction": "群雄",
+      "stats": {
+        "command": 20,
+        "force": 20,
+        "intelligence": 75,
+        "politics": 40,
+        "charisma": 95
+      },
+      "rating": "C",
+      "talentId": "chain_scheme"
+    },
+    {
+      "id": 99,
+      "name": "华佗",
+      "faction": "群雄",
+      "stats": {
+        "command": 10,
+        "force": 25,
+        "intelligence": 70,
+        "politics": 30,
+        "charisma": 85
+      },
+      "rating": "C",
+      "talentId": "junyi"
+    },
+    {
+      "id": 100,
+      "name": "左慈",
+      "faction": "群雄",
+      "stats": {
+        "command": 30,
+        "force": 35,
+        "intelligence": 90,
+        "politics": 40,
+        "charisma": 80
+      },
+      "rating": "C"
+    },
+    {
+      "id": 101,
+      "name": "糜竺",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 55,
+        "force": 30,
+        "intelligence": 78,
+        "politics": 88,
+        "charisma": 85
+      },
+      "derivedOverride": {
+        "logistics": 98
+      },
+      "rating": "B"
+    },
+    {
+      "id": 102,
+      "name": "董允",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 60,
+        "force": 35,
+        "intelligence": 82,
+        "politics": 90,
+        "charisma": 80
+      },
+      "derivedOverride": {
+        "logistics": 97
+      },
+      "rating": "B"
+    },
+    {
+      "id": 103,
+      "name": "简雍",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 45,
+        "force": 35,
+        "intelligence": 72,
+        "politics": 74,
+        "charisma": 82
+      },
+      "rating": "C"
+    },
+    {
+      "id": 104,
+      "name": "伊籍",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 50,
+        "force": 30,
+        "intelligence": 75,
+        "politics": 76,
+        "charisma": 78
+      },
+      "rating": "C"
+    },
+    {
+      "id": 105,
+      "name": "曹叡",
+      "faction": "曹魏",
+      "stats": {
+        "command": 75,
+        "force": 45,
+        "intelligence": 82,
+        "politics": 87,
+        "charisma": 78
+      },
+      "rating": "B"
+    },
+    {
+      "id": 106,
+      "name": "王异",
+      "faction": "曹魏",
+      "stats": {
+        "command": 68,
+        "force": 62,
+        "intelligence": 80,
+        "politics": 78,
+        "charisma": 75
+      },
+      "rating": "B"
+    },
+    {
+      "id": 107,
+      "name": "甄宓",
+      "faction": "曹魏",
+      "stats": {
+        "command": 35,
+        "force": 25,
+        "intelligence": 76,
+        "politics": 65,
+        "charisma": 92
+      },
+      "rating": "C"
+    },
+    {
+      "id": 108,
+      "name": "杨修",
+      "faction": "曹魏",
+      "stats": {
+        "command": 45,
+        "force": 30,
+        "intelligence": 88,
+        "politics": 62,
+        "charisma": 70
+      },
+      "rating": "C"
+    },
+    {
+      "id": 109,
+      "name": "顾雍",
+      "faction": "东吴",
+      "stats": {
+        "command": 62,
+        "force": 28,
+        "intelligence": 82,
+        "politics": 92,
+        "charisma": 80
+      },
+      "derivedOverride": {
+        "logistics": 98
+      },
+      "rating": "B"
+    },
+    {
+      "id": 110,
+      "name": "步骘",
+      "faction": "东吴",
+      "stats": {
+        "command": 68,
+        "force": 35,
+        "intelligence": 80,
+        "politics": 86,
+        "charisma": 76
+      },
+      "derivedOverride": {
+        "logistics": 96
+      },
+      "rating": "B"
+    },
+    {
+      "id": 111,
+      "name": "大乔",
+      "faction": "东吴",
+      "stats": {
+        "command": 30,
+        "force": 25,
+        "intelligence": 70,
+        "politics": 68,
+        "charisma": 94
+      },
+      "rating": "C"
+    },
+    {
+      "id": 112,
+      "name": "小乔",
+      "faction": "东吴",
+      "stats": {
+        "command": 30,
+        "force": 25,
+        "intelligence": 74,
+        "politics": 65,
+        "charisma": 93
+      },
+      "rating": "C"
+    },
+    {
+      "id": 113,
+      "name": "蔡文姬",
+      "faction": "群雄",
+      "stats": {
+        "command": 35,
+        "force": 20,
+        "intelligence": 88,
+        "politics": 72,
+        "charisma": 90
+      },
+      "rating": "B"
+    },
+    {
+      "id": 114,
+      "name": "李儒",
+      "faction": "群雄",
+      "stats": {
+        "command": 60,
+        "force": 35,
+        "intelligence": 90,
+        "politics": 75,
+        "charisma": 55
+      },
+      "rating": "B"
+    },
+    {
+      "id": 115,
+      "name": "皇甫嵩",
+      "faction": "群雄",
+      "stats": {
+        "command": 88,
+        "force": 75,
+        "intelligence": 78,
+        "politics": 72,
+        "charisma": 80
+      },
+      "derivedOverride": {
+        "discipline": 97
+      },
+      "rating": "A"
+    },
+    {
+      "id": 116,
+      "name": "王允",
+      "faction": "群雄",
+      "stats": {
+        "command": 45,
+        "force": 30,
+        "intelligence": 82,
+        "politics": 78,
+        "charisma": 72
+      },
+      "rating": "C"
+    },
+    {
+      "id": 117,
+      "name": "张仲景",
+      "faction": "群雄",
+      "stats": {
+        "command": 12,
+        "force": 20,
+        "intelligence": 88,
+        "politics": 45,
+        "charisma": 80
+      },
+      "rating": "B",
+      "talentId": "medicine"
+    },
+    {
+      "id": 201,
+      "name": "武侯诸葛",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 112,
+        "force": 78,
+        "intelligence": 125,
+        "politics": 120,
+        "charisma": 112
+      },
+      "rating": "SSR",
+      "talentId": "marquis_strategy",
+      "bondRoleId": 2
+    },
+    {
+      "id": 202,
+      "name": "武圣关羽",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 115,
+        "force": 125,
+        "intelligence": 94,
+        "politics": 78,
+        "charisma": 112
+      },
+      "rating": "SSR",
+      "talentId": "saintly_might",
+      "bondRoleId": 3
+    },
+    {
+      "id": 203,
+      "name": "魏武曹操",
+      "faction": "曹魏",
+      "stats": {
+        "command": 120,
+        "force": 95,
+        "intelligence": 113,
+        "politics": 113,
+        "charisma": 118
+      },
+      "rating": "SSR",
+      "talentId": "imperial_ambition",
+      "bondRoleId": 26
+    },
+    {
+      "id": 204,
+      "name": "狼顾司马",
+      "faction": "曹魏",
+      "stats": {
+        "command": 114,
+        "force": 72,
+        "intelligence": 123,
+        "politics": 117,
+        "charisma": 105
+      },
+      "rating": "SSR",
+      "talentId": "wolf_glance",
+      "bondRoleId": 27
+    },
+    {
+      "id": 205,
+      "name": "大都督周瑜",
+      "faction": "东吴",
+      "stats": {
+        "command": 115,
+        "force": 92,
+        "intelligence": 122,
+        "politics": 106,
+        "charisma": 112
+      },
+      "rating": "SSR",
+      "talentId": "red_cliff_mastery",
+      "bondRoleId": 55
+    },
+    {
+      "id": 206,
+      "name": "霸王孙策",
+      "faction": "东吴",
+      "stats": {
+        "command": 116,
+        "force": 122,
+        "intelligence": 94,
+        "politics": 88,
+        "charisma": 116
+      },
+      "rating": "SSR",
+      "talentId": "little_conqueror",
+      "bondRoleId": 53
+    },
+    {
+      "id": 207,
+      "name": "昭烈刘备",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 110,
+        "force": 108,
+        "intelligence": 110,
+        "politics": 104,
+        "charisma": 125
+      },
+      "rating": "SSR",
+      "talentId": "benevolent_emperor",
+      "bondRoleId": 1
+    },
+    {
+      "id": 208,
+      "name": "飞将吕布",
+      "faction": "群雄",
+      "stats": {
+        "command": 118,
+        "force": 130,
+        "intelligence": 78,
+        "politics": 55,
+        "charisma": 105
+      },
+      "rating": "SSR",
+      "talentId": "flying_general",
+      "bondRoleId": 74
+    },
+    {
+      "id": 330,
+      "name": "王佐荀彧",
+      "faction": "曹魏",
+      "stats": {
+        "command": 84,
+        "force": 42,
+        "intelligence": 122,
+        "politics": 128,
+        "charisma": 115
+      },
+      "rating": "SSR",
+      "talentId": "wang_zuo_sage",
+      "bondRoleId": 30
+    },
+    {
+      "id": 331,
+      "name": "恶来典韦",
+      "faction": "曹魏",
+      "stats": {
+        "command": 110,
+        "force": 129,
+        "intelligence": 62,
+        "politics": 44,
+        "charisma": 104
+      },
+      "rating": "SSR",
+      "talentId": "ancient_evil_lai",
+      "bondRoleId": 38
+    },
+    {
+      "id": 334,
+      "name": "龙胆赵云",
+      "faction": "蜀汉",
+      "stats": {
+        "command": 116,
+        "force": 127,
+        "intelligence": 101,
+        "politics": 85,
+        "charisma": 113
+      },
+      "rating": "SSR",
+      "talentId": "changshan_dragon",
+      "bondRoleId": 5
+    },
+    {
+      "id": 335,
+      "name": "大帝孙权",
+      "faction": "东吴",
+      "stats": {
+        "command": 114,
+        "force": 74,
+        "intelligence": 102,
+        "politics": 104,
+        "charisma": 130
+      },
+      "rating": "SSR",
+      "talentId": "jiangdong_sovereign",
+      "bondRoleId": 54
+    },
+    {
+      "id": 336,
+      "name": "医圣张仲景",
+      "faction": "群雄",
+      "stats": {
+        "command": 42,
+        "force": 46,
+        "intelligence": 104,
+        "politics": 96,
+        "charisma": 108
+      },
+      "derivedOverride": {
+        "logistics": 122
+      },
+      "rating": "SSR",
+      "talentId": "medicine_sage",
+      "bondRoleId": 117
+    },
+    {
+      "id": 337,
+      "name": "闭月貂蝉",
+      "faction": "群雄",
+      "stats": {
+        "command": 46,
+        "force": 44,
+        "intelligence": 106,
+        "politics": 66,
+        "charisma": 128
+      },
+      "rating": "SSR",
+      "talentId": "closed_moon",
+      "bondRoleId": 98
+    },
+    {
+      "id": 338,
+      "name": "洛神甄宓",
+      "faction": "曹魏",
+      "stats": {
+        "command": 46,
+        "force": 36,
+        "intelligence": 108,
+        "politics": 82,
+        "charisma": 130
+      },
+      "rating": "SSR",
+      "talentId": "luo_goddess",
+      "bondRoleId": 107
+    },
+    {
+      "id": 344,
+      "name": "神射太史慈",
+      "faction": "东吴",
+      "stats": {
+        "command": 112,
+        "force": 128,
+        "intelligence": 88,
+        "politics": 60,
+        "charisma": 105
+      },
+      "rating": "SSR",
+      "talentId": "shenting_wushuang",
+      "bondRoleId": 59
+    },
+    {
+      "id": 345,
+      "name": "白衣吕蒙",
+      "faction": "东吴",
+      "stats": {
+        "command": 118,
+        "force": 106,
+        "intelligence": 120,
+        "politics": 88,
+        "charisma": 95
+      },
+      "rating": "SSR",
+      "talentId": "shibie_sanri",
+      "bondRoleId": 58
+    },
+    {
+      "id": 346,
+      "name": "天公张角",
+      "faction": "群雄",
+      "stats": {
+        "command": 100,
+        "force": 78,
+        "intelligence": 130,
+        "politics": 96,
+        "charisma": 122
+      },
+      "rating": "SSR",
+      "talentId": "huangtian_lidang",
+      "bondRoleId": 82
+    }
+  ],
+  "bondList": [
+    {
+      "id": "sleeping_dragon",
+      "name": "卧龙凤雏",
+      "memberIds": [
+        2,
+        9
+      ],
+      "story": "水镜先生并称诸葛亮与庞统为卧龙、凤雏。",
+      "description": "谋略 +6%，续战 +4%，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "sustain": 0.04
+        },
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "two_qiaos",
+      "name": "江东二乔",
+      "memberIds": [
+        111,
+        112
+      ],
+      "story": "大乔、小乔并称江东二乔。",
+      "description": "续战 +6%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.06
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "tiger_guards",
+      "name": "虎卫双雄",
+      "memberIds": [
+        38,
+        39
+      ],
+      "story": "典韦与许褚先后担任曹操近卫，以勇力闻名。",
+      "description": "猛攻 +7%，守备 +4%，交锋阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.08,
+          "defense": 0.05
+        },
+        "morale": {
+          "clash": 0.02
+        }
+      }
+    },
+    {
+      "id": "three_visits",
+      "name": "三顾茅庐",
+      "memberIds": [
+        1,
+        2
+      ],
+      "story": "刘备三访隆中，请诸葛亮出山辅佐。",
+      "description": "谋略 +4%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.05
+        }
+      }
+    },
+    {
+      "id": "zhaoyun_liushan",
+      "name": "我们两个真强",
+      "memberIds": [
+        5,
+        25
+      ],
+      "story": "赵云长坂坡怀抱幼主刘禅突围，二人一同归阵。",
+      "description": "猛攻 +5%，守备 +5%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.05,
+          "defense": 0.05
+        }
+      }
+    },
+    {
+      "id": "prime_ministers_legacy",
+      "name": "衣钵相传",
+      "memberIds": [
+        2,
+        11
+      ],
+      "story": "诸葛亮北伐时器重姜维，后者继承其北伐志向。",
+      "description": "谋略 +5%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06
+        }
+      }
+    },
+    {
+      "id": "kongming_couple",
+      "name": "孔明伉俪",
+      "memberIds": [
+        2,
+        24
+      ],
+      "story": "诸葛亮与黄月英相传皆长于才学与机巧。",
+      "description": "谋略 +3%，续战 +2%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.03,
+          "sustain": 0.02
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "young_oath",
+      "name": "小关张",
+      "memberIds": [
+        16,
+        17
+      ],
+      "story": "关兴、张苞在演义中结义，并肩继承父辈武名。",
+      "description": "猛攻 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        }
+      }
+    },
+    {
+      "id": "veteran_duel",
+      "name": "老将争雄",
+      "memberIds": [
+        7,
+        22
+      ],
+      "story": "黄忠与严颜是演义中益州战场上的两员老将。",
+      "description": "猛攻 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        }
+      }
+    },
+    {
+      "id": "jieting_lessons",
+      "name": "街亭得失",
+      "memberIds": [
+        19,
+        23
+      ],
+      "story": "马谡失守街亭，王平曾力谏并收拢败军。",
+      "description": "守备 +6%，谋略 +2%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.06,
+          "strategy": 0.02
+        }
+      }
+    },
+    {
+      "id": "xiahou_brothers",
+      "name": "夏侯双雄",
+      "memberIds": [
+        32,
+        33
+      ],
+      "story": "夏侯惇、夏侯渊同为曹魏宗亲宿将。",
+      "description": "猛攻 +4%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "xun_clan",
+      "name": "荀氏叔侄",
+      "memberIds": [
+        30,
+        41
+      ],
+      "story": "荀彧与族侄荀攸同为曹操的重要谋臣。",
+      "description": "谋略 +5%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.05
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "hefei_generals",
+      "name": "合肥威震",
+      "memberIds": [
+        29,
+        44
+      ],
+      "story": "张辽、乐进等将合守合肥，以少击众。",
+      "description": "统兵 +2%，猛攻 +4%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "command": 0.02,
+          "attack": 0.04
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "conquer_shu",
+      "name": "灭蜀双锋",
+      "memberIds": [
+        37,
+        40
+      ],
+      "story": "邓艾与钟会分兵伐蜀，最终攻灭蜀汉。",
+      "description": "统兵 +4%，谋略 +3%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "strategy": 0.03
+        }
+      }
+    },
+    {
+      "id": "wei_regency",
+      "name": "魏宫托孤",
+      "memberIds": [
+        27,
+        105
+      ],
+      "story": "曹叡临终托孤，司马懿成为辅政重臣之一。",
+      "description": "统兵 +3%，谋略 +3%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "strategy": 0.04
+        }
+      }
+    },
+    {
+      "id": "four_friends_tutor",
+      "name": "四友辅嗣",
+      "memberIds": [
+        27,
+        49
+      ],
+      "story": "司马懿任太子中庶子，与陈群等并称四友，佐曹丕定储。",
+      "description": "谋略 +5%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.05
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "weibin_standoff",
+      "name": "渭滨对垒",
+      "memberIds": [
+        27,
+        2
+      ],
+      "story": "蜀魏两军对峙渭南，诸葛亮病逝五丈原，死诸葛走生仲达。",
+      "description": "统兵 +4%，谋略 +5%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "strategy": 0.05
+        }
+      }
+    },
+    {
+      "id": "jieting_encirclement",
+      "name": "街亭合围",
+      "memberIds": [
+        27,
+        35
+      ],
+      "story": "司马懿都督关右，遣张郃于街亭大破马谡。",
+      "description": "统兵 +4%，守备 +4%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "defense": 0.04
+        }
+      }
+    },
+    {
+      "id": "luoshen",
+      "name": "洛神赋影",
+      "memberIds": [
+        50,
+        107
+      ],
+      "story": "曹植《洛神赋》与甄宓在后世文学传说中相连。",
+      "description": "谋略 +2%，续战 +4%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.02,
+          "sustain": 0.04
+        }
+      }
+    },
+    {
+      "id": "shenting_duel",
+      "name": "神亭酣战",
+      "memberIds": [
+        53,
+        59
+      ],
+      "story": "孙策与太史慈在神亭岭激战，后化敌为友。",
+      "description": "猛攻 +6%，守备 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.06,
+          "defense": 0.03
+        }
+      }
+    },
+    {
+      "id": "bitter_meat",
+      "name": "苦肉连环",
+      "memberIds": [
+        55,
+        66
+      ],
+      "story": "演义中周瑜与黄盖以苦肉计促成赤壁火攻。",
+      "description": "谋略 +3%，守备 +3%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.03,
+          "defense": 0.03
+        }
+      }
+    },
+    {
+      "id": "reconciled_tigers",
+      "name": "解怨同袍",
+      "memberIds": [
+        60,
+        65
+      ],
+      "story": "甘宁与凌统虽有旧怨，仍共同效力东吴。",
+      "description": "猛攻 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.05
+        }
+      }
+    },
+    {
+      "id": "xuancheng_rescue",
+      "name": "宣城救主",
+      "memberIds": [
+        54,
+        61
+      ],
+      "story": "周泰在宣城之战中奋力护卫孙权脱险。",
+      "description": "守备 +4%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.05
+        }
+      }
+    },
+    {
+      "id": "lu_family",
+      "name": "陆氏将略",
+      "memberIds": [
+        56,
+        63
+      ],
+      "story": "陆逊、陆抗父子先后成为东吴柱石。",
+      "description": "谋略 +4%，守备 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "defense": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "hebei_twins",
+      "name": "河北双雄",
+      "memberIds": [
+        76,
+        77
+      ],
+      "story": "颜良、文丑并称袁绍麾下骁将。",
+      "description": "猛攻 +5%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.05
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "hebei_advisers",
+      "name": "河北谋臣",
+      "memberIds": [
+        80,
+        81
+      ],
+      "story": "田丰、沮授皆曾为袁绍进献要策。",
+      "description": "谋略 +4%，守备 +2%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "defense": 0.02
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "nanman_couple",
+      "name": "南中伉俪",
+      "memberIds": [
+        93,
+        94
+      ],
+      "story": "孟获与祝融夫人在演义中共同统领南中兵马。",
+      "description": "猛攻 +3%，续战 +2%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.03,
+          "sustain": 0.02
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "wandering_healers",
+      "name": "方外奇士",
+      "memberIds": [
+        99,
+        100
+      ],
+      "story": "华佗精于医术，左慈以方术闻名于汉末传说。",
+      "description": "谋略 +2%，续战 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.02,
+          "sustain": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "yellow_turban_war",
+      "name": "黄巾鏖兵",
+      "memberIds": [
+        82,
+        115
+      ],
+      "story": "皇甫嵩奉命平定张角发动的黄巾起义。",
+      "description": "统兵 +3%，猛攻 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.03,
+          "attack": 0.02
+        }
+      }
+    },
+    {
+      "id": "xuzhou_transfer",
+      "name": "徐州相让",
+      "memberIds": [
+        1,
+        96
+      ],
+      "story": "陶谦病重时将徐州托付刘备。",
+      "description": "续战 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "beihai_rescue",
+      "name": "北海报恩",
+      "memberIds": [
+        59,
+        97
+      ],
+      "story": "太史慈为报孔融照顾母亲之恩，突围求援。",
+      "description": "猛攻 +3%，续战 +1%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04,
+          "sustain": 0.02
+        }
+      }
+    },
+    {
+      "id": "white_horse_memory",
+      "name": "白马旧识",
+      "memberIds": [
+        5,
+        85
+      ],
+      "story": "赵云早年曾在公孙瓒麾下效力。",
+      "description": "猛攻 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        }
+      }
+    },
+    {
+      "id": "warm_wine",
+      "name": "温酒斩将",
+      "memberIds": [
+        3,
+        89
+      ],
+      "story": "演义中关羽温酒未冷便斩华雄归阵。",
+      "description": "猛攻 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        }
+      }
+    },
+    {
+      "id": "yecheng_defense",
+      "name": "邺城死守",
+      "memberIds": [
+        75,
+        90
+      ],
+      "story": "审配长期辅佐袁绍，并在邺城抵抗曹军。",
+      "description": "守备 +5%，续战 +2%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.05,
+          "sustain": 0.02
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "wuchao_night",
+      "name": "乌巢夜谋",
+      "memberIds": [
+        26,
+        91
+      ],
+      "story": "许攸投曹并献乌巢粮仓情报，改变官渡战局。",
+      "description": "谋略 +4%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "wenji_returns",
+      "name": "文姬归汉",
+      "memberIds": [
+        26,
+        113
+      ],
+      "story": "曹操念及蔡邕旧交，赎回流落塞外的蔡文姬。",
+      "description": "续战 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "dong_zhuo_adviser",
+      "name": "相国谋主",
+      "memberIds": [
+        83,
+        114
+      ],
+      "story": "李儒在演义中是董卓最倚重的谋士。",
+      "description": "谋略 +2%，守备 +2%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.02,
+          "defense": 0.02
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "bone_scraping",
+      "name": "刮骨疗毒",
+      "memberIds": [
+        3,
+        99
+      ],
+      "story": "演义中华佗为关羽刮骨疗毒，关羽谈笑自若。",
+      "description": "续战 +3%。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.04
+        }
+      }
+    },
+    {
+      "id": "yizhou_undercurrent",
+      "name": "益州暗流",
+      "memberIds": [
+        10,
+        87
+      ],
+      "story": "法正原为刘璋部属，后转而迎刘备入蜀。",
+      "description": "谋略 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "jingzhou_host",
+      "name": "荆州宾主",
+      "memberIds": [
+        86,
+        104
+      ],
+      "story": "伊籍先事刘表，后归刘备并出使有功。",
+      "description": "续战 +2%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.02
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "longyou_rivals",
+      "name": "陇右争锋",
+      "memberIds": [
+        11,
+        37
+      ],
+      "story": "姜维与邓艾在魏蜀后期多次交锋。",
+      "description": "统兵 +3%，谋略 +3%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "command": 0.03,
+          "strategy": 0.03
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "dingjun_duel",
+      "name": "定军山",
+      "memberIds": [
+        7,
+        33
+      ],
+      "story": "定军山之战中黄忠斩杀夏侯渊。",
+      "description": "猛攻 +4%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "jicheng_resistance",
+      "name": "冀城死战",
+      "memberIds": [
+        6,
+        106
+      ],
+      "story": "王异协助守卫冀城，多次抵抗马超。",
+      "description": "守备 +3%，猛攻 +2%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.03,
+          "attack": 0.02
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "guan_yu_old_guard",
+      "name": "荆襄旧部",
+      "memberIds": [
+        20,
+        21
+      ],
+      "story": "廖化曾追随关羽，周仓则是演义中的关羽旧部。",
+      "description": "猛攻 +1%，续战 +4%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.01,
+          "sustain": 0.04
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "nine_rank_system",
+      "name": "九品定制",
+      "memberIds": [
+        48,
+        49
+      ],
+      "story": "曹丕采纳陈群建议，建立九品中正制。",
+      "description": "谋略 +2%，续战 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.02,
+          "sustain": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "shanyue_governance",
+      "name": "山越经略",
+      "memberIds": [
+        54,
+        73
+      ],
+      "story": "全琮受孙权器重，曾长期参与山越与边地军务。",
+      "description": "统兵 +2%，续战 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.03,
+          "sustain": 0.03
+        }
+      }
+    },
+    {
+      "id": "yuan_brothers",
+      "name": "袁氏兄弟",
+      "memberIds": [
+        75,
+        84
+      ],
+      "story": "袁绍、袁术同出汝南袁氏，后来各据一方。",
+      "description": "续战 +2%。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.03
+        }
+      }
+    },
+    {
+      "id": "hanzhong_submission",
+      "name": "汉中归附",
+      "memberIds": [
+        26,
+        88
+      ],
+      "story": "张鲁失守汉中后归降曹操，并得到礼遇。",
+      "description": "续战 +2%。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.03
+        }
+      }
+    },
+    {
+      "id": "peach_garden",
+      "name": "桃园结义",
+      "memberIds": [
+        1,
+        3,
+        4
+      ],
+      "story": "刘备、关羽、张飞在演义中桃园结义。",
+      "description": "全阶段 +4%，每 3 场胜利 +1 军心（可突破上限，最高 +10），三阶段士气各 +4%。",
+      "effects": {
+        "all": 0.04,
+        "winHeal": 1,
+        "winHealEveryWins": 3,
+        "morale": {
+          "planning": 0.04,
+          "clash": 0.04,
+          "attrition": 0.04
+        }
+      }
+    },
+    {
+      "id": "old_followers",
+      "name": "元从旧部",
+      "memberIds": [
+        1,
+        101,
+        103
+      ],
+      "story": "糜竺、简雍在刘备创业早期长期追随左右。",
+      "description": "续战 +5%，每轮 +2 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.05
+        },
+        "bonusGold": 2
+      }
+    },
+    {
+      "id": "jingzhou_friends",
+      "name": "荆州故交",
+      "memberIds": [
+        1,
+        14,
+        104
+      ],
+      "story": "刘备驻荆州期间得到徐庶、伊籍等人相助。",
+      "description": "谋略 +4%，续战 +3%，每轮 +2 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "sustain": 0.03
+        },
+        "bonusGold": 2
+      }
+    },
+    {
+      "id": "guan_retinue",
+      "name": "关氏部曲",
+      "memberIds": [
+        3,
+        15,
+        21
+      ],
+      "story": "关平、周仓在演义中长期追随关羽征战。",
+      "description": "猛攻 +5%，守备 +4%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.06,
+          "defense": 0.05
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "northern_expedition",
+      "name": "北伐中坚",
+      "memberIds": [
+        8,
+        11,
+        19
+      ],
+      "story": "魏延、姜维、王平皆是蜀汉北伐的重要将领。",
+      "description": "统兵 +5%，猛攻 +4%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "command": 0.05,
+          "attack": 0.04
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "ma_clan",
+      "name": "西凉马氏",
+      "memberIds": [
+        6,
+        18,
+        95
+      ],
+      "story": "马腾、马超、马岱同出西凉马氏。",
+      "description": "猛攻 +7%，统兵 +3%，交锋阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.08,
+          "command": 0.04
+        },
+        "morale": {
+          "clash": 0.04
+        }
+      }
+    },
+    {
+      "id": "baidicheng_regency",
+      "name": "白帝托孤",
+      "memberIds": [
+        1,
+        2,
+        25
+      ],
+      "story": "刘备在白帝城托孤诸葛亮，辅佐刘禅。",
+      "description": "谋略 +2%，续战 +7%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.02,
+          "sustain": 0.07
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "wei_three_reigns",
+      "name": "魏室三代",
+      "memberIds": [
+        26,
+        49,
+        105
+      ],
+      "story": "曹操、曹丕、曹叡代表曹魏政权的三代更替。",
+      "description": "统兵 +7%，续战 +4%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "command": 0.07,
+          "sustain": 0.04
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "bronze_bird_literati",
+      "name": "铜雀文华",
+      "memberIds": [
+        49,
+        50,
+        108
+      ],
+      "story": "曹丕、曹植与杨修皆活跃于建安文坛与曹魏宫廷。",
+      "description": "谋略 +4%，续战 +3%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "sustain": 0.03
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "jiangdong_three_reigns",
+      "name": "江东三世",
+      "memberIds": [
+        52,
+        53,
+        54
+      ],
+      "story": "孙坚、孙策、孙权三代奠定并守成江东基业。",
+      "description": "全阶段 +7%，三阶段士气各 +4%。",
+      "effects": {
+        "all": 0.07,
+        "morale": {
+          "planning": 0.04,
+          "clash": 0.04,
+          "attrition": 0.04
+        }
+      }
+    },
+    {
+      "id": "jiangdong_veterans",
+      "name": "江东宿将",
+      "memberIds": [
+        62,
+        66,
+        67
+      ],
+      "story": "程普、黄盖、韩当皆为孙氏早期宿将。",
+      "description": "守备 +7%，战胜额外 +1 金。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.07
+        },
+        "winIncome": 1
+      }
+    },
+    {
+      "id": "jiangbiao_reserves",
+      "name": "江表后劲",
+      "memberIds": [
+        68,
+        69,
+        72
+      ],
+      "story": "丁奉、徐盛、朱然是东吴中后期的重要战将。",
+      "description": "守备 +5%，猛攻 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.05,
+          "attack": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "xiapi_last_stand",
+      "name": "下邳孤城",
+      "memberIds": [
+        74,
+        78,
+        79
+      ],
+      "story": "吕布、陈宫、高顺最终一同困守下邳。",
+      "description": "猛攻 +7%，守备 +5%，交锋阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.08,
+          "defense": 0.06
+        },
+        "morale": {
+          "clash": 0.04
+        }
+      }
+    },
+    {
+      "id": "halberd_at_gate",
+      "name": "辕门射戟",
+      "memberIds": [
+        1,
+        74,
+        92
+      ],
+      "story": "吕布辕门射戟，为刘备化解纪灵进兵之危。",
+      "description": "统兵 +4%，续战 +3%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.05,
+          "sustain": 0.04
+        }
+      }
+    },
+    {
+      "id": "wancheng_old_debt",
+      "name": "宛城旧恨",
+      "memberIds": [
+        26,
+        31,
+        38
+      ],
+      "story": "贾诩献策击败曹操，典韦在宛城力战身亡。",
+      "description": "谋略 +5%，守备 +4%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "defense": 0.05
+        }
+      }
+    },
+    {
+      "id": "flooded_seven_armies",
+      "name": "水淹七军",
+      "memberIds": [
+        3,
+        43,
+        45
+      ],
+      "story": "关羽围樊城，击败于禁七军并与庞德死战。",
+      "description": "猛攻 +5%，谋略 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.06,
+          "strategy": 0.05
+        }
+      }
+    },
+    {
+      "id": "yiling_rivals",
+      "name": "夷陵争锋",
+      "memberIds": [
+        1,
+        56,
+        72
+      ],
+      "story": "陆逊、朱然等吴将于夷陵击败刘备大军。",
+      "description": "谋略 +5%，守备 +4%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "defense": 0.05
+        }
+      }
+    },
+    {
+      "id": "four_directors",
+      "name": "东吴四英杰",
+      "memberIds": [
+        55,
+        56,
+        57,
+        58
+      ],
+      "story": "周瑜、鲁肃、吕蒙、陆逊先后主持东吴军政。",
+      "description": "谋略 +18%，续战 +11%，每轮 +3 金，谋划阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.18,
+          "sustain": 0.11
+        },
+        "bonusGold": 3,
+        "morale": {
+          "planning": 0.06
+        }
+      }
+    },
+    {
+      "id": "four_shu_ministers",
+      "name": "蜀汉四相",
+      "memberIds": [
+        2,
+        12,
+        13,
+        102
+      ],
+      "story": "诸葛亮、蒋琬、费祎、董允并称蜀汉四相。",
+      "description": "谋略 +13%，续战 +9%，每轮 +1 免费招募，谋划阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.13,
+          "sustain": 0.09
+        },
+        "bonusFreeDrafts": 1,
+        "morale": {
+          "planning": 0.06
+        }
+      }
+    },
+    {
+      "id": "wei_shields",
+      "name": "曹魏屏藩",
+      "memberIds": [
+        36,
+        46,
+        47,
+        51
+      ],
+      "story": "曹仁、文聘、满宠、曹洪皆曾镇守曹魏要地。",
+      "description": "守备 +11%，续战 +5%，消耗阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.11,
+          "sustain": 0.05
+        },
+        "morale": {
+          "attrition": 0.06
+        }
+      }
+    },
+    {
+      "id": "wu_ministers",
+      "name": "江东股肱",
+      "memberIds": [
+        64,
+        71,
+        109,
+        110
+      ],
+      "story": "张昭、诸葛瑾、顾雍、步骘共同支撑东吴政务。",
+      "description": "谋略 +10%，续战 +8%，谋划阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.1,
+          "sustain": 0.08
+        },
+        "morale": {
+          "planning": 0.06
+        }
+      }
+    },
+    {
+      "id": "white_robed_crossing",
+      "name": "白衣渡江",
+      "memberIds": [
+        56,
+        58,
+        70,
+        72
+      ],
+      "story": "吕蒙袭取荆州，陆逊、潘璋、朱然等人协同进军。",
+      "description": "谋略 +13%，猛攻 +7%，谋划阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.13,
+          "attack": 0.07
+        },
+        "morale": {
+          "planning": 0.06
+        }
+      }
+    },
+    {
+      "id": "beauty_scheme",
+      "name": "连环计",
+      "memberIds": [
+        74,
+        83,
+        98,
+        116
+      ],
+      "story": "演义中王允借貂蝉离间董卓、吕布。",
+      "description": "谋略 +15%，战胜额外 +2 金，谋划阶段士气 +6%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.15
+        },
+        "winIncome": 2,
+        "morale": {
+          "planning": 0.06
+        }
+      }
+    },
+    {
+      "id": "five_tigers",
+      "name": "五虎上将",
+      "memberIds": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "story": "关羽、张飞、赵云、马超、黄忠并称蜀汉五虎上将。",
+      "description": "猛攻 +24%，统兵 +12%，战胜额外 +2 金，交锋阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.24,
+          "command": 0.12
+        },
+        "winIncome": 2,
+        "morale": {
+          "clash": 0.08
+        }
+      }
+    },
+    {
+      "id": "five_elites",
+      "name": "五子良将",
+      "memberIds": [
+        29,
+        34,
+        35,
+        43,
+        44
+      ],
+      "story": "张辽、乐进、于禁、张郃、徐晃并称曹魏五子良将。",
+      "description": "统兵 +20%，守备 +14%，每轮 +5 金，消耗阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.2,
+          "defense": 0.14
+        },
+        "bonusGold": 5,
+        "morale": {
+          "attrition": 0.08
+        }
+      }
+    },
+    {
+      "id": "wei_advisers",
+      "name": "魏武谋臣",
+      "memberIds": [
+        28,
+        30,
+        31,
+        41,
+        42
+      ],
+      "story": "郭嘉、荀彧、贾诩、荀攸、程昱是曹操谋臣群体的代表。",
+      "description": "谋略 +22%，每轮 +2 免费招募，谋划阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.22
+        },
+        "bonusFreeDrafts": 2,
+        "morale": {
+          "planning": 0.08
+        }
+      }
+    },
+    {
+      "id": "red_cliffs",
+      "name": "赤壁风云",
+      "memberIds": [
+        2,
+        26,
+        55,
+        57,
+        66
+      ],
+      "story": "曹操、诸葛亮、周瑜、鲁肃、黄盖共同构成赤壁叙事的核心。",
+      "description": "谋略 +20%，续战 +8%，每轮 +4 金，战胜额外 +3 金，谋划阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.2,
+          "sustain": 0.08
+        },
+        "bonusGold": 4,
+        "winIncome": 3,
+        "morale": {
+          "planning": 0.08
+        }
+      }
+    },
+    {
+      "id": "guandu_decision",
+      "name": "官渡决胜",
+      "memberIds": [
+        26,
+        28,
+        75,
+        80,
+        81
+      ],
+      "story": "曹操、袁绍及双方谋臣共同推动官渡战局。",
+      "description": "谋略 +16%，统兵 +8%，每轮 +4 金，谋划阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.16,
+          "command": 0.08
+        },
+        "bonusGold": 4,
+        "morale": {
+          "planning": 0.08
+        }
+      }
+    },
+    {
+      "id": "eagle_wolf_glance",
+      "name": "鹰视狼顾",
+      "memberIds": [
+        26,
+        27
+      ],
+      "story": "曹操察觉司马懿鹰视狼顾之相，仍委以重任。",
+      "description": "统兵 +5%，谋略 +5%，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.05,
+          "strategy": 0.05
+        },
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "liaodong_legacy_plan",
+      "name": "遗计定辽东",
+      "memberIds": [
+        26,
+        28
+      ],
+      "story": "郭嘉临终遗计，助曹操千里奔袭平定辽东。",
+      "description": "谋略 +6%，每轮 +1 金，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06
+        },
+        "bonusGold": 1,
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "hosting_emperor",
+      "name": "奉天子以令不臣",
+      "memberIds": [
+        26,
+        30
+      ],
+      "story": "荀彧劝曹操迎汉献帝都许，奠定曹魏政治根基。",
+      "description": "统兵 +3%，谋略 +4%，每轮 +1 金，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.03,
+          "strategy": 0.04
+        },
+        "bonusGold": 1,
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "longyou_supervision",
+      "name": "督军陇右",
+      "memberIds": [
+        27,
+        37
+      ],
+      "story": "司马懿慧眼识邓艾，自掾吏擢而用之。",
+      "description": "统兵 +4%，谋略 +4%，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "strategy": 0.04
+        },
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "yunchang_friendship",
+      "name": "云长之交",
+      "memberIds": [
+        29,
+        3
+      ],
+      "story": "张辽土山说降关羽，二人惺惺相惜，各为其主而义不相负。",
+      "description": "猛攻 +4%，守备 +3%，交锋阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04,
+          "defense": 0.03
+        },
+        "morale": {
+          "clash": 0.02
+        }
+      }
+    },
+    {
+      "id": "tiger_cavalry",
+      "name": "虎豹骁骑",
+      "memberIds": [
+        26,
+        29,
+        36,
+        39,
+        38
+      ],
+      "story": "虎豹骑为曹操精锐亲军，皆统以宿将，天下骁锐。",
+      "description": "猛攻 +20%，守备 +12%，战胜额外 +2 金，交锋阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.2,
+          "defense": 0.12
+        },
+        "winIncome": 2,
+        "morale": {
+          "clash": 0.08
+        }
+      }
+    },
+    {
+      "id": "qiaopei_kinsmen",
+      "name": "谯沛宗英",
+      "memberIds": [
+        32,
+        33,
+        36
+      ],
+      "story": "夏侯惇、夏侯渊、曹仁皆曹操谯沛宗亲宿将，从征四方。",
+      "description": "统兵 +6%，守备 +4%，消耗阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.06,
+          "defense": 0.04
+        },
+        "morale": {
+          "attrition": 0.04
+        }
+      }
+    },
+    {
+      "id": "flesh_grace",
+      "name": "骨肉之恩",
+      "memberIds": [
+        54,
+        55
+      ],
+      "story": "孙权追念周瑜：外托君臣之义，内结骨肉之恩。",
+      "description": "统兵 +4%，谋略 +5%，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.04,
+          "strategy": 0.05
+        },
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "shiting_battle",
+      "name": "石亭拜将",
+      "memberIds": [
+        54,
+        56
+      ],
+      "story": "夷陵危局孙权拜陆逊大都督，石亭之战大破魏军。",
+      "description": "谋略 +4%，续战 +4%，每轮 +1 金，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "sustain": 0.04
+        },
+        "bonusGold": 1,
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "childhood_sworn",
+      "name": "总角之好",
+      "memberIds": [
+        53,
+        55
+      ],
+      "story": "孙策与周瑜总角之好，升堂拜母，后分娶二乔。",
+      "description": "猛攻 +4%，谋略 +5%，谋划阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.04,
+          "strategy": 0.05
+        },
+        "morale": {
+          "planning": 0.02
+        }
+      }
+    },
+    {
+      "id": "jiangbiao_tigers",
+      "name": "江表虎臣",
+      "memberIds": [
+        61,
+        60,
+        65
+      ],
+      "story": "周泰、甘宁、凌统皆以骁勇著称，为孙吴江表虎臣。",
+      "description": "猛攻 +6%，守备 +4%，交锋阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.06,
+          "defense": 0.04
+        },
+        "morale": {
+          "clash": 0.04
+        }
+      }
+    },
+    {
+      "id": "hebei_hegemony",
+      "name": "河北霸业",
+      "memberIds": [
+        75,
+        76,
+        77,
+        80,
+        81
+      ],
+      "story": "袁绍坐拥四州，颜良文丑统兵，田丰沮授运筹。",
+      "description": "统兵 +14%，守备 +10%，每轮 +3 金，消耗阶段士气 +8%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.14,
+          "defense": 0.1
+        },
+        "bonusGold": 3,
+        "morale": {
+          "attrition": 0.08
+        }
+      }
+    },
+    {
+      "id": "fengyi_pavilion",
+      "name": "凤仪亭",
+      "memberIds": [
+        74,
+        98
+      ],
+      "story": "凤仪亭相会，貂蝉周旋于董卓吕布父子之间。",
+      "description": "猛攻 +5%，续战 +3%，交锋阶段士气 +2%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.05,
+          "sustain": 0.03
+        },
+        "morale": {
+          "clash": 0.02
+        }
+      }
+    },
+    {
+      "id": "xiliang_tyranny",
+      "name": "西凉乱政",
+      "memberIds": [
+        83,
+        114,
+        89
+      ],
+      "story": "董卓入京专权，李儒献策，华雄为先锋，祸乱汉室。",
+      "description": "谋略 +4%，猛攻 +4%，战胜额外 +1 金，谋划阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.04,
+          "attack": 0.04
+        },
+        "winIncome": 1,
+        "morale": {
+          "planning": 0.04
+        }
+      }
+    },
+    {
+      "id": "white_gate_tower",
+      "name": "白门楼",
+      "memberIds": [
+        74,
+        26,
+        1
+      ],
+      "story": "吕布兵败下邳，被擒于白门楼，曹操刘备同座促其殒命。",
+      "description": "全阶段 +6%，战胜额外 +1 金，三阶段士气各 +4%。",
+      "effects": {
+        "all": 0.06,
+        "winIncome": 1,
+        "morale": {
+          "planning": 0.04,
+          "clash": 0.04,
+          "attrition": 0.04
+        }
+      }
+    },
+    {
+      "id": "xuanhu_jishi",
+      "name": "悬壶济世",
+      "memberIds": [
+        99,
+        117
+      ],
+      "story": "华佗外科麻沸散青囊、张仲景医圣《伤寒杂病论》，汉末医学双圣悬壶济世。",
+      "description": "每 2 场胜利军心 +1（可突破上限，最高 +10），消耗阶段士气 +2%。",
+      "effects": {
+        "winHeal": 1,
+        "winHealEveryWins": 2,
+        "morale": {
+          "attrition": 0.02
+        }
+      }
+    },
+    {
+      "id": "wangmei_zhike",
+      "name": "望梅止渴",
+      "memberIds": [
+        26,
+        33
+      ],
+      "story": "曹操行军将士渴极，激励「前有梅林」，士兵口生津液坚持到水源。",
+      "description": "每 4 场胜利军心 +1（可突破上限，最高 +10），猛攻 +5%，交锋阶段士气 +2%。",
+      "effects": {
+        "winHeal": 1,
+        "winHealEveryWins": 4,
+        "dimensions": {
+          "attack": 0.05
+        },
+        "morale": {
+          "clash": 0.02
+        }
+      }
+    },
+    {
+      "id": "nanjun_defense",
+      "name": "南郡固守",
+      "memberIds": [
+        61,
+        69
+      ],
+      "story": "周泰、徐盛共守南郡，吴军倚为屏障。",
+      "description": "守备 +6%，续战 +3%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.06,
+          "sustain": 0.03
+        }
+      }
+    },
+    {
+      "id": "jiangling_hold",
+      "name": "江陵据守",
+      "memberIds": [
+        58,
+        70,
+        72
+      ],
+      "story": "吕蒙、潘璋、朱然协力据守江陵，汉水一战大破关羽。",
+      "description": "守备 +7%，续战 +4%，消耗阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.07,
+          "sustain": 0.04
+        },
+        "morale": {
+          "attrition": 0.04
+        }
+      }
+    },
+    {
+      "id": "weinan_ramparts",
+      "name": "渭南坚壁",
+      "memberIds": [
+        36,
+        47
+      ],
+      "story": "曹仁守樊城、满宠守合肥，皆以坚壁挫强敌。",
+      "description": "守备 +6%，统兵 +3%。",
+      "effects": {
+        "dimensions": {
+          "defense": 0.06,
+          "command": 0.03
+        }
+      }
+    },
+    {
+      "id": "tuntian_army",
+      "name": "屯田兴军",
+      "memberIds": [
+        48,
+        37
+      ],
+      "story": "陈群制九品、邓艾兴屯田，魏国军政相济。",
+      "description": "续战 +6%，统兵 +3%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.06,
+          "command": 0.03
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "white_robe_scheme",
+      "name": "白衣奇谋",
+      "memberIds": [
+        58,
+        3
+      ],
+      "story": "吕蒙白衣渡江，奇袭关羽坐镇的荆州。",
+      "description": "谋略 +6%，续战 +3%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "sustain": 0.03
+        }
+      }
+    },
+    {
+      "id": "feint_raid",
+      "name": "诈降夜袭",
+      "memberIds": [
+        66,
+        60
+      ],
+      "story": "黄盖诈降，火烧曹军水寨；甘宁百骑，夜袭曹操大营。",
+      "description": "谋略 +6%，猛攻 +3%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "attack": 0.03
+        }
+      }
+    },
+    {
+      "id": "monarch_ministers",
+      "name": "君臣相得",
+      "memberIds": [
+        54,
+        57
+      ],
+      "story": "孙权与鲁肃榻上定策，君臣相得。",
+      "description": "续战 +5%，每轮 +1 金。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.05
+        },
+        "bonusGold": 1
+      }
+    },
+    {
+      "id": "jiangbiao_warriors",
+      "name": "江表猛士",
+      "memberIds": [
+        52,
+        62,
+        67
+      ],
+      "story": "孙坚起兵之初，程普、韩当随从征战，皆江表猛士。",
+      "description": "猛攻 +7%，统兵 +5%，交锋阶段士气 +3%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.07,
+          "command": 0.05
+        },
+        "morale": {
+          "clash": 0.03
+        }
+      }
+    },
+    {
+      "id": "bingzhou_cavalry",
+      "name": "并州狼骑",
+      "memberIds": [
+        74,
+        78
+      ],
+      "story": "吕布麾下并州铁骑，高顺陷阵营冲锋陷阵。",
+      "description": "猛攻 +9%，统兵 +3%，守备 +6%，交锋阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.09,
+          "command": 0.03,
+          "defense": 0.06
+        },
+        "morale": {
+          "clash": 0.04
+        }
+      }
+    },
+    {
+      "id": "huangtian_uprising",
+      "name": "道门双宗",
+      "memberIds": [
+        82,
+        88
+      ],
+      "story": "张角创太平道倡黄天当立，张鲁承五斗米道割据汉中，并称汉末两大道教宗派。",
+      "description": "谋略 +6%，续战 +5%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.06,
+          "sustain": 0.05
+        }
+      }
+    },
+    {
+      "id": "coalition_dong",
+      "name": "诸侯讨董",
+      "memberIds": [
+        75,
+        26,
+        52
+      ],
+      "story": "十八路诸侯讨董，袁绍为盟主，曹操、孙坚为先锋。",
+      "description": "统兵 +6%，猛攻 +4%，全阶段 +2%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.06,
+          "attack": 0.04
+        },
+        "all": 0.02
+      }
+    },
+    {
+      "id": "white_horse_riders",
+      "name": "白马骁骑",
+      "memberIds": [
+        85,
+        95
+      ],
+      "story": "公孙瓒白马义从、马腾西凉铁骑，皆边地精骑。",
+      "description": "统兵 +5%，猛攻 +4%。",
+      "effects": {
+        "dimensions": {
+          "command": 0.05,
+          "attack": 0.04
+        }
+      }
+    },
+    {
+      "id": "jiangdong_tiger_generals",
+      "name": "江东虎臣",
+      "memberIds": [
+        59,
+        60
+      ],
+      "story": "太史慈、甘宁皆江东虎臣，勇冠三军。",
+      "description": "猛攻 +10%，统兵 +7%，交锋阶段士气 +5%。",
+      "effects": {
+        "dimensions": {
+          "attack": 0.1,
+          "command": 0.07
+        },
+        "morale": {
+          "clash": 0.05
+        }
+      }
+    },
+    {
+      "id": "wuxia_ameng",
+      "name": "吴下阿蒙",
+      "memberIds": [
+        54,
+        58
+      ],
+      "story": "孙权劝学，吕蒙笃志就学，鲁肃叹非复吴下阿蒙。",
+      "description": "谋略 +10%，续战 +6%，谋划阶段士气 +5%。",
+      "effects": {
+        "dimensions": {
+          "strategy": 0.1,
+          "sustain": 0.06
+        },
+        "morale": {
+          "planning": 0.05
+        }
+      }
+    },
+    {
+      "id": "tianshi_heal",
+      "name": "天师济世",
+      "memberIds": [
+        82,
+        117
+      ],
+      "story": "张角以符水济世，张仲景著书活人，皆有济世之心。",
+      "description": "续战 +9%，谋略 +6%，消耗阶段士气 +4%。",
+      "effects": {
+        "dimensions": {
+          "sustain": 0.09,
+          "strategy": 0.06
+        },
+        "morale": {
+          "attrition": 0.04
+        }
+      }
+    }
+  ]
+}

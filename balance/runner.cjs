@@ -52,8 +52,8 @@ function replay(record,core=C){
   return {match:hash(game)===record.outcome.finalHash,steps:record.journal.length,battles:record.battles.length};
 }
 function validate(record){
-  const browser=replay(record,loadBrowserCore()),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
-  const cloudCore=require('../activity/cloudfunctions/activity_api/game/game-core.js'),shadow=clone(record.initialGame);
+  const browser=replay(record,loadBrowserCore()),replaySystem=require('./replay-verifier.cjs'),target=replaySystem.forRules(record.initialGame.run.balanceRulesVersion||1),V=target.verifier;
+  const cloudCore=target.core,shadow=clone(record.initialGame);
   let state=clone(record.initialGame.run),operations=[],steps=0,battles=0;
   for(const row of record.journal){
     execute(cloudCore,shadow,{name:row.name,args:row.args},record.config);
@@ -82,7 +82,7 @@ function validate(record){
   }
   // 将最终尚未进入下一战的操作通过独立核心回放核对，避免强行增加一场战斗。
   if(operations.length){const g={run:clone(state),profile:cloudCore.createGame().profile};for(const op of operations)execute(cloudCore,g,{name:op.action,args:op.args},record.config);if(JSON.stringify(g.run)!==JSON.stringify(record.finalGame.run))throw Error('Cloud tail mismatch')}
-  return {browserGlobal:browser,cloud:{match:true,steps,battles}};
+  return {browserGlobal:browser,cloud:{match:true,steps,battles,pendingDeployment:target.pendingDeployment,mode:target.pendingDeployment?'local simulation with rules 12':'unchanged backend'}};
 }
 function stateAfter(record,index){
   // 私有完整状态单独保存，逐步一致性无需重新构造或猜测字段。

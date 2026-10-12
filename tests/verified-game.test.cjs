@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const C=require('../h5/game-core.js'),V=require('../balance/replay-verifier.cjs');
 function draft(seed=911,version=C.BALANCE_RULES_VERSION){
   const run=C.createRun('reserve_fund',seed,{},version),operations=[];
   for(let i=0;i<6;i++){

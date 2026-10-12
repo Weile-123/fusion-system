@@ -8,14 +8,14 @@ async function query(text,args=[]){return (await db.query(text,args)).rows;}
 async function one(text,args=[]){return (await query(text,args))[0];}
 async function rpc(name,args){const row=await one(`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) as result`,args);return row.result;}
 async function clock(value){await db.query('update test_clock set value=$1',[value]);}
-async function run(user='player',proof=3){const id=uuid();await db.query('insert into leaderboard_runs(id,puid,talent,seed,display_name,proof_version) values($1,$2,$3,911,$4,$5)',[id,user,'reserve_fund','Name '+user,proof]);return id;}
+async function run(user='player',proof=3,rules=6){const id=uuid();await db.query('insert into leaderboard_runs(id,puid,talent,seed,display_name,proof_version,state) values($1,$2,$3,911,$4,$5,$6)',[id,user,'reserve_fund','Name '+user,proof,{balanceRulesVersion:rules}]);return id;}
 async function battle(id,rating,stage=1,won=true){const r=await one('select * from leaderboard_runs where id=$1',[id]);return rpc('record_game_leaderboard_battle',[r.puid,id,911,r.battle_count+1,stage,r.wins,r.losses,won,rating]);}
-async function reset(){await db.exec(`set timezone='UTC';
+async function reset(){await databaseReady;await db.exec(`set timezone='UTC';
   create or replace function public.weekly_ovr_now() returns timestamptz language sql volatile set search_path=public as $$ select value from test_clock $$;
   truncate weekly_ovr_snapshots,weekly_ovr_entries,weekly_ovr_periods,leaderboard_battles,leaderboard_runs,leaderboard_entries cascade; update weekly_ovr_settings set enabled_at=null`);await clock('2026-10-11T15:59:59Z');}
 async function enable(){await db.exec("update weekly_ovr_settings set enabled_at='2026-01-01T00:00:00Z'");}
 
-test.before(async()=>{
+const databaseReady=(async()=>{
   db=new PGlite();
   await db.exec(`create role anon;create role authenticated;create role service_role;
     create table public.demo_items(id uuid primary key default gen_random_uuid(),puid text not null);`);
@@ -25,12 +25,50 @@ test.before(async()=>{
   assert.equal(sql,fs.readFileSync('activity/migrations/'+migration,'utf8'));
   const eventMigration='20261011210000_event_talent_unlock.sql',eventSql=fs.readFileSync('cloudbase/migrations/'+eventMigration,'utf8');
   assert.equal(eventSql,fs.readFileSync('activity/migrations/'+eventMigration,'utf8'));await db.exec(eventSql);await db.exec(eventSql);
+  const minimumMigration='20261012103000_weekly_ovr_min_rules.sql';
+  const minimumSql=fs.readFileSync('cloudbase/migrations/'+minimumMigration,'utf8');
+  assert.equal(minimumSql,fs.readFileSync('activity/migrations/'+minimumMigration,'utf8'));
+  await db.exec(minimumSql);await db.exec(minimumSql);
   // Deterministic boundary clock in this disposable local DB only. Nothing is uploaded.
-  await db.exec(`create table test_clock(value timestamptz not null);insert into test_clock values('2026-10-11T15:59:59Z');
-    create or replace function public.weekly_ovr_now() returns timestamptz language sql volatile set search_path=public as $$ select value from test_clock $$;`);
-});
+  await db.exec(`create table public.test_clock(value timestamptz not null);insert into public.test_clock values('2026-10-11T15:59:59Z');`);
+  await db.exec(`create or replace function public.weekly_ovr_now() returns timestamptz language sql volatile set search_path=public as $$ select value from public.test_clock $$;`);
+})();
+test.before(async()=>{await databaseReady});
 test.beforeEach(reset);
 test.after(async()=>{if(db)await db.close()});
+
+test('weekly eligibility uses the saved rules version; legacy battles still save cumulative scores',async()=>{
+  await enable();
+  for(const rules of [1,2,3,4,5,6,7,8,9,null,'invalid']){
+    const id=await run('version-'+rules,3,rules);await battle(id,1000);
+    const weekly=await one('select count(*)::int n from weekly_ovr_entries where run_id=$1',[id]);
+    assert.equal(weekly.n,[6,7,8,9].includes(rules)?1:0);
+    assert.equal((await one('select count(*)::int n from leaderboard_battles where run_id=$1',[id])).n,1);
+  }
+  const old=await run('upgrade',3,3);await battle(old,13030);
+  assert.equal((await one("select score from leaderboard_entries where puid='upgrade' and board='ovr'")).score,13030);
+  const upgraded=await run('upgrade',3,6);await battle(upgraded,500);
+  await battle(old,14000,2);
+  assert.equal((await one("select score from weekly_ovr_entries where puid='upgrade'")).score,500);
+});
+
+test('minimum-rules migration removes only ineligible current-week scores and is idempotent',async()=>{
+  await enable();await db.exec(sql); // Seed scores written by the former deployed trigger.
+  const history=await run('history-old',3,3);await battle(history,900);
+  await clock('2026-10-11T16:00:00Z');
+  const previous=await rpc('get_weekly_ovr_page',['previous',50]);
+  const low=await run('current-old',3,3),valid=await run('current-valid',3,6),missing=await run('current-missing',3,null);
+  await battle(low,13030);await battle(valid,600);await battle(missing,700);
+  const cumulative=await query('select puid,board,score from leaderboard_entries order by puid,board');
+  const minimumSql=fs.readFileSync('cloudbase/migrations/20261012103000_weekly_ovr_min_rules.sql','utf8');
+  await db.exec(minimumSql);await db.exec(minimumSql);
+  assert.deepEqual((await rpc('get_weekly_ovr_page',['current',50])).entries.map(e=>e.score),[600]);
+  assert.deepEqual((await rpc('get_weekly_ovr_page',['previous',50])).entries,previous.entries);
+  assert.deepEqual(await query('select puid,board,score from leaderboard_entries order by puid,board'),cumulative);
+  assert.equal((await one('select count(*)::int n from leaderboard_battles')).n,4);
+  await battle(low,14000,2);
+  assert.deepEqual((await rpc('get_weekly_ovr_page',['current',50])).entries.map(e=>e.score),[600]);
+});
 
 test('verified career aggregates distinct event discoveries only from finished verified runs of the current player',async()=>{
  const a=await run('events'),b=await run('events'),pending=await run('events'),unverified=await run('events',0),other=await run('other');
@@ -129,7 +167,7 @@ test('new week starts empty; old runs continue saving but cannot change either w
 
 test('authoritative transition commits the weekly entry once and preserves terminal legend rewards',async()=>{
   await enable();const id=await run();
-  await db.query('update leaderboard_runs set state=$2 where id=$1',[id,{wins:0,losses:0}]);
+  await db.query('update leaderboard_runs set state=$2 where id=$1',[id,{wins:0,losses:0,balanceRulesVersion:6}]);
   const args=['player',id,0,'battle-proof','battle',{wins:1,losses:0},{stage:1,won:true,rating:400}];
   await rpc('commit_verified_game_transition',args);await rpc('commit_verified_game_transition',args);
   assert.equal((await one('select count(*)::int n from weekly_ovr_entries')).n,1);

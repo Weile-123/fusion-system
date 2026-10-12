@@ -1,0 +1,1249 @@
+{
+  "revision": 9,
+  "status": "Frontend implemented; economic audit simulation, backend rules 11 unchanged",
+  "checks": 64,
+  "policy": {
+    "status": "Implemented in frontend only; backend unchanged",
+    "referenceWinRate": 0.6666666666666666,
+    "scope": "每项经济仅主槽生效，或双槽完全相同；同身份每场共用额度。",
+    "rules": [
+      "韦斯特S为纯经济例外：强化、装备首次刷新分别免费；双槽共用两类各一次额度。按首刷常规价4/3参考价值7，后续实际价格更高时不设固定省钱上界。",
+      "其他免费刷新优先，且不消耗球员额度；每项优惠仅取最大者，不叠加。",
+      "首次使用冻结该身份本场全部券类型与额度；换槽、换SSR、卖出重买、复活、读档不补发；仅下一场真实备战重置。",
+      "加内特S过关奖金+1按获胜时防守主槽快照结算，仅继续过关时发放；失败、重复领取、结束对局不发。",
+      "免费基础强化仅手感火热、禁区强攻、防守专家，受购买上限与售罄约束，全队每场最多一次。",
+      "球员商店不享受优惠；单抽优惠不覆盖十连；付费优惠最低1，免费刷新和基础免费强化可为0。",
+      "魔术师S战后+2双槽一致，招募-1仅主槽；SSR魔术师战后+3和招募-1仅主槽；奥拉朱旺S战后+2移至防守主槽。",
+      "LOGO按最终技能，双槽相同战斗与三类免费额度；免费训练价值按实际训练价格，参考首训1。"
+    ]
+  },
+  "rows": [
+    {
+      "id": "wade",
+      "name": "德维恩·韦德",
+      "tier": "S",
+      "slot": "drive",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 18,
+          "creation": 6
+        }
+      },
+      "economicEffect": "胜利奖金+2",
+      "postBattleCash": 0,
+      "winCash": 2,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 1,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 1.3333333333333333,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 1.6,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 2,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "hakeem",
+      "name": "哈基姆·奥拉朱旺",
+      "tier": "S",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "perimeterStop": 5,
+          "rimStop": 5
+        }
+      },
+      "economicEffect": "战后奖金+2",
+      "postBattleCash": 2,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 2,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 2,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 2,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 2,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "hakeem",
+      "name": "哈基姆·奥拉朱旺",
+      "tier": "S",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 5
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "garnett",
+      "name": "凯文·加内特",
+      "tier": "S",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 10,
+          "perimeterStop": 8
+        }
+      },
+      "economicEffect": "过关奖金+1（获胜并继续过关）",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 1,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0.5,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0.6666666666666666,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0.8,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 1,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "garnett",
+      "name": "凯文·加内特",
+      "tier": "S",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 8,
+          "rimStop": 6
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "west",
+      "name": "杰里·韦斯特",
+      "tier": "S",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {}
+      },
+      "economicEffect": "每场强化商店首次刷新免费；每场装备商店首次刷新免费",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 7,
+      "freeRefreshActualSavingsUnboundedByReference": true,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "west",
+      "name": "杰里·韦斯特",
+      "tier": "S",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {}
+      },
+      "economicEffect": "每场强化商店首次刷新免费；每场装备商店首次刷新免费",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 7,
+      "freeRefreshActualSavingsUnboundedByReference": true,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "showtime_magic",
+      "name": "魔术师·约翰逊",
+      "tier": "SSR",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "creation": 22
+        }
+      },
+      "economicEffect": "战后奖金+3；付费招募-1",
+      "postBattleCash": 3,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 3,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 3,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 3,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 3,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "showtime_magic",
+      "name": "魔术师·约翰逊",
+      "tier": "SSR",
+      "slot": "drive",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "creation": 8,
+          "finishing": 12
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "wembanyama",
+      "name": "维克托·文班亚马",
+      "tier": "S",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 12,
+          "perimeterStop": 6
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "wembanyama",
+      "name": "维克托·文班亚马",
+      "tier": "S",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 8,
+          "rimStop": 4
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "skyhook_kareem",
+      "name": "天勾·贾巴尔",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "finishing": 30,
+          "rimStop": 5
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "skyhook_kareem",
+      "name": "天勾·贾巴尔",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 27,
+          "perimeterStop": 25,
+          "finishing": 24
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "alien_wembanyama",
+      "name": "外星人·文班亚马",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 20,
+          "perimeterStop": 15
+        }
+      },
+      "economicEffect": "每场前2次强化商店刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 4,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "alien_wembanyama",
+      "name": "外星人·文班亚马",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 20,
+          "rimStop": 10,
+          "shooting": 6
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "dream_hakeem",
+      "name": "大梦·奥拉朱旺",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "rimStop": 20,
+          "perimeterStop": 15
+        }
+      },
+      "economicEffect": "每场一次免费基础强化（手感火热／禁区强攻／防守专家）",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 5,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "dream_hakeem",
+      "name": "大梦·奥拉朱旺",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "finishing": 24,
+          "rimStop": 8
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "big_bird",
+      "name": "大鸟·伯德",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 12,
+        "dimensions": {
+          "shooting": 20,
+          "creation": 8
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "big_bird",
+      "name": "大鸟·伯德",
+      "tier": "SSR",
+      "slot": "three",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "shooting": 28,
+          "creation": 6
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "beard_harden",
+      "name": "大胡子·哈登",
+      "tier": "SSR",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "creation": 22,
+          "shooting": 10
+        }
+      },
+      "economicEffect": "每场前2次招募刷新各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 4,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "beard_harden",
+      "name": "大胡子·哈登",
+      "tier": "SSR",
+      "slot": "three",
+      "combat": {
+        "allDimensions": 8,
+        "dimensions": {
+          "shooting": 28,
+          "creation": 6
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "wolf_garnett",
+      "name": "狼王·加内特",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "perimeterStop": 17,
+          "rimStop": 18
+        }
+      },
+      "economicEffect": "每场前2次球员训练各减2",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 4,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "wolf_garnett",
+      "name": "狼王·加内特",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "finishing": 30,
+          "rimStop": 24,
+          "perimeterStop": 16
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "flash_wade",
+      "name": "闪电侠·韦德",
+      "tier": "SSR",
+      "slot": "drive",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "finishing": 24,
+          "creation": 10
+        }
+      },
+      "economicEffect": "胜利奖金+6",
+      "postBattleCash": 0,
+      "winCash": 6,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 3,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 4,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 4.800000000000001,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 6,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "flash_wade",
+      "name": "闪电侠·韦德",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "shooting": 33,
+          "creation": 21,
+          "finishing": 12
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "marshal_wilt",
+      "name": "大帅·张伯伦",
+      "tier": "SSR",
+      "slot": "inside",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "finishing": 30,
+          "rimStop": 5
+        }
+      },
+      "economicEffect": "战后奖金+4",
+      "postBattleCash": 4,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 4,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 4,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 4,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 4,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "marshal_wilt",
+      "name": "大帅·张伯伦",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 27,
+          "perimeterStop": 25,
+          "finishing": 24
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "ring_russell",
+      "name": "指环王·拉塞尔",
+      "tier": "SSR",
+      "slot": "def",
+      "combat": {
+        "allDimensions": 0,
+        "dimensions": {
+          "rimStop": 35,
+          "perimeterStop": 35
+        }
+      },
+      "economicEffect": "无经济附加",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 0,
+      "freeRefreshActualSavingsUnboundedByReference": false,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "logo_west",
+      "name": "LOGO·韦斯特",
+      "tier": "SSR",
+      "slot": "mid",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "shooting": 24,
+          "creation": 8
+        }
+      },
+      "economicEffect": "每场强化商店首次刷新免费；每场装备商店首次刷新免费；每场首次训练免费",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 8,
+      "freeRefreshActualSavingsUnboundedByReference": true,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    },
+    {
+      "id": "logo_west",
+      "name": "LOGO·韦斯特",
+      "tier": "SSR",
+      "slot": "handle",
+      "combat": {
+        "allDimensions": 10,
+        "dimensions": {
+          "shooting": 24,
+          "creation": 8
+        }
+      },
+      "economicEffect": "每场强化商店首次刷新免费；每场装备商店首次刷新免费；每场首次训练免费",
+      "postBattleCash": 0,
+      "winCash": 0,
+      "stageCash": 0,
+      "discountReferenceValue": 8,
+      "freeRefreshActualSavingsUnboundedByReference": true,
+      "expectedCash": [
+        {
+          "winRate": 0.5,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.6666666666666666,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 0.8,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        },
+        {
+          "winRate": 1,
+          "cash": 0,
+          "assumesContinueAfterWin": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
-const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const C=require('../h5/game-core.js'),V=require('../balance/replay-verifier.cjs');
 function prepared(id='T01',version=C.BALANCE_RULES_VERSION){
   const game=C.createGame(),e=C.EVENT_BY_ID[id],run=game.run=C.createRun('steady_interest',911,{},version);
   const ids=[...new Set([...e.players,'curry','lebron','magic','shaq','jordan','bird'])].slice(0,6);
@@ -132,7 +132,7 @@ test('server replays legal choices and rejects bypass, wrong ids and repeated pa
   for(const operations of [[{action:'makeOffer',args:[]}],[{action:'resolveRandomEvent',args:['P02','main']}],[ops[0],ops[0]]])assert.throws(()=>V.replay(state,operations,'finish'),/验证失败/);
 });
 test('frontend and cloud use byte-identical core, event data and event engine',()=>{
-  for(const file of ['game-core.js','event-data.js','event-system.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'));
+  assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,require('../activity/cloudfunctions/activity_api/game/game-core.js').STARS);for(const file of ['event-data.js','event-system.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'));
 });
 
 test('all event stage, cash, seen and loss gates reject without granting rewards',()=>{

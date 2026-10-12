@@ -1,0 +1,317 @@
+{
+  "revision": 9,
+  "status": "Frontend rule 12 implemented; backend rule 11 unchanged",
+  "definition": "天赋预算＝5×全五维%＋专项%之和，不计原卡额外战术收益；并校验六维基础属性总和/单项上限、各槽加权基础分不超过原SSR上限。预算约束不等于每项分布相同，也不证明所有阵容中都弱于原卡。 LOGO控球预算82超过此前参考80，按用户最终双槽效果保留；不能继续声称所有新SSR每槽都不超过参考。 LOGO控球预算82超过此前参考80，按用户最终双槽效果保留；不能继续声称所有新SSR每槽都不超过参考。",
+  "rows": [
+    {
+      "id": "skyhook_kareem",
+      "name": "天勾·贾巴尔",
+      "attributeSum": 619,
+      "referenceAttributeSum": 619,
+      "attributeReference": "大鲨鱼·奥尼尔",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "inside",
+          "label": "篮下",
+          "budget": 85,
+          "reference": "大鲨鱼·奥尼尔",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 119.8,
+          "originalSSRSlotScoreMax": 120.64999999999999,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 76,
+          "reference": "大鲨鱼·奥尼尔",
+          "referenceBudget": 76,
+          "allDimensions": 0,
+          "baseSlotScore": 120.5,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "alien_wembanyama",
+      "name": "外星人·文班亚马",
+      "attributeSum": 629,
+      "referenceAttributeSum": 629,
+      "attributeReference": "石佛·邓肯",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 85,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 120.05,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "inside",
+          "label": "篮下",
+          "budget": 76,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 80,
+          "allDimensions": 8,
+          "baseSlotScore": 116.4,
+          "originalSSRSlotScoreMax": 120.64999999999999,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "dream_hakeem",
+      "name": "大梦·奥拉朱旺",
+      "attributeSum": 628,
+      "referenceAttributeSum": 629,
+      "attributeReference": "石佛·邓肯",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 85,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 120.95,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "inside",
+          "label": "篮下",
+          "budget": 72,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 80,
+          "allDimensions": 8,
+          "baseSlotScore": 119.2,
+          "originalSSRSlotScoreMax": 120.64999999999999,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "big_bird",
+      "name": "大鸟·伯德",
+      "attributeSum": 676,
+      "referenceAttributeSum": 679,
+      "attributeReference": "GOAT·乔丹",
+      "maxAttribute": 123,
+      "slots": [
+        {
+          "slot": "mid",
+          "label": "中投",
+          "budget": 88,
+          "reference": "死神·杜兰特",
+          "referenceBudget": 88,
+          "allDimensions": 12,
+          "baseSlotScore": 117.05000000000001,
+          "originalSSRSlotScoreMax": 119.05000000000001,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "three",
+          "label": "三分",
+          "budget": 84,
+          "reference": "死神·杜兰特",
+          "referenceBudget": 86,
+          "allDimensions": 10,
+          "baseSlotScore": 121.30000000000001,
+          "originalSSRSlotScoreMax": 122.55,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "beard_harden",
+      "name": "大胡子·哈登",
+      "attributeSum": 644,
+      "referenceAttributeSum": 644,
+      "attributeReference": "魔术师·约翰逊",
+      "maxAttribute": 125,
+      "slots": [
+        {
+          "slot": "handle",
+          "label": "控球",
+          "budget": 72,
+          "reference": "三分王·库里",
+          "referenceBudget": 80,
+          "allDimensions": 8,
+          "baseSlotScore": 117.05,
+          "originalSSRSlotScoreMax": 117.05,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "three",
+          "label": "三分",
+          "budget": 74,
+          "reference": "三分王·库里",
+          "referenceBudget": 85,
+          "allDimensions": 8,
+          "baseSlotScore": 115.6,
+          "originalSSRSlotScoreMax": 122.55,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "wolf_garnett",
+      "name": "狼王·加内特",
+      "attributeSum": 629,
+      "referenceAttributeSum": 629,
+      "attributeReference": "石佛·邓肯",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 85,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 120.95,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "inside",
+          "label": "篮下",
+          "budget": 70,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 80,
+          "allDimensions": 0,
+          "baseSlotScore": 116.4,
+          "originalSSRSlotScoreMax": 120.64999999999999,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "flash_wade",
+      "name": "闪电侠·韦德",
+      "attributeSum": 674,
+      "referenceAttributeSum": 675,
+      "attributeReference": "天选·詹姆斯",
+      "maxAttribute": 125,
+      "slots": [
+        {
+          "slot": "drive",
+          "label": "突破",
+          "budget": 84,
+          "reference": "天选·詹姆斯",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 120.45,
+          "originalSSRSlotScoreMax": 120.45,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "mid",
+          "label": "中投",
+          "budget": 66,
+          "reference": "GOAT·乔丹",
+          "referenceBudget": 90,
+          "allDimensions": 0,
+          "baseSlotScore": 110.95,
+          "originalSSRSlotScoreMax": 119.05000000000001,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "marshal_wilt",
+      "name": "大帅·张伯伦",
+      "attributeSum": 619,
+      "referenceAttributeSum": 619,
+      "attributeReference": "大鲨鱼·奥尼尔",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "inside",
+          "label": "篮下",
+          "budget": 85,
+          "reference": "大鲨鱼·奥尼尔",
+          "referenceBudget": 85,
+          "allDimensions": 10,
+          "baseSlotScore": 119.8,
+          "originalSSRSlotScoreMax": 120.64999999999999,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 76,
+          "reference": "大鲨鱼·奥尼尔",
+          "referenceBudget": 76,
+          "allDimensions": 0,
+          "baseSlotScore": 120.5,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "ring_russell",
+      "name": "指环王·拉塞尔",
+      "attributeSum": 615,
+      "referenceAttributeSum": 629,
+      "attributeReference": "石佛·邓肯",
+      "maxAttribute": 128,
+      "slots": [
+        {
+          "slot": "def",
+          "label": "防守",
+          "budget": 70,
+          "reference": "石佛·邓肯",
+          "referenceBudget": 85,
+          "allDimensions": 0,
+          "baseSlotScore": 120.14999999999999,
+          "originalSSRSlotScoreMax": 120.95,
+          "withinReferenceBudget": true
+        }
+      ]
+    },
+    {
+      "id": "logo_west",
+      "name": "LOGO·韦斯特",
+      "attributeSum": 659,
+      "referenceAttributeSum": 679,
+      "attributeReference": "死神·杜兰特",
+      "maxAttribute": 120,
+      "slots": [
+        {
+          "slot": "mid",
+          "label": "中投",
+          "budget": 82,
+          "reference": "死神·杜兰特",
+          "referenceBudget": 88,
+          "allDimensions": 10,
+          "baseSlotScore": 115,
+          "originalSSRSlotScoreMax": 119.05000000000001,
+          "withinReferenceBudget": true
+        },
+        {
+          "slot": "handle",
+          "label": "控球",
+          "budget": 82,
+          "reference": "三分王·库里",
+          "referenceBudget": 80,
+          "allDimensions": 10,
+          "baseSlotScore": 117,
+          "originalSSRSlotScoreMax": 117.05,
+          "withinReferenceBudget": false,
+          "approvedException": "User final document gives both slots the same +10 all/+24 shooting/+8 creation, budget 82; previous handle reference is 80."
+        }
+      ]
+    }
+  ]
+}

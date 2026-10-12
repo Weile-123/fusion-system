@@ -1,7 +1,7 @@
 'use strict';
 const C=require('./game/game-core.js');
 const crypto=require('crypto');
-const actions=new Set(['makeOffer','ensureShop','buyRecruitPack','grantRewardedSOffer','refreshRandomSkill','enterSkillAdPick','confirmSkillAdPick','cancelSkillAdPick','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent']);
+const actions=new Set(['makeOffer','ensureShop','ensurePlayerShop','refreshPlayerShop','buyShopPlayer','buyRecruitPack','grantRewardedSOffer','refreshRandomSkill','enterSkillAdPick','confirmSkillAdPick','cancelSkillAdPick','recruit','confirmRecruitBatch','advanceRecruitBatch','resolvePending','swapPositions','sellBench','equipGear','expandBench','train','buyBoost','buyGear','replaceGear','sellGear','refreshShop','refreshOffer','continueRun','resolveRandomEvent','acknowledgeRandomEvent']);
 function invalid(message='养成记录验证失败，请重新开局。'){throw Object.assign(new Error(message),{statusCode:409})}
 function replay(state,operations,terminal,strategy){
   if(!state||!Array.isArray(operations)||operations.length>1500)invalid();

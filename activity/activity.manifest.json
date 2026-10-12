@@ -43,7 +43,7 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 6,
+    "rulesVersion": 11,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
@@ -51,7 +51,9 @@
       "20261009100000",
       "20261009110000",
       "20261009120000",
-      "20261010190000"
+      "20261010190000",
+      "20261011210000",
+      "20261012103000"
     ],
     "authenticatedBattleFinishChecked": true,
     "authenticatedPersonalRankChecked": true,
@@ -63,22 +65,31 @@
     "weeklyWriteReadChecked": true,
     "legacyRules1To6Checked": true,
     "concurrentDuplicateBattleChecked": true,
-    "firstWeekBackfillChecked": true
+    "firstWeekBackfillChecked": true,
+    "legacyRules1To8Checked": true,
+    "weeklyMinimumRulesVersion": 6,
+    "legacyRules1To9Checked": true,
+    "legacyRules1To10Checked": true
   },
   "activity": {
     "status": "verified"
   },
   "lastFunctionUpdate": {
     "functionName": "activity_api",
-    "verifiedAt": "2026-10-10T14:43:42.291Z",
-    "rulesVersion": 6,
+    "verifiedAt": "2026-10-12T03:48:16.735Z",
+    "rulesVersion": 11,
     "supportedRulesVersions": [
       1,
       2,
       3,
       4,
       5,
-      6
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
     ],
     "randomEvents": 36,
     "synergies": 100,
@@ -90,15 +101,25 @@
     "frontendPublished": false,
     "databaseMigrationApplied": true,
     "configurationPreserved": true,
-    "backup": ".local-tools/weekly-ovr-live-20261010/function-before.zip",
-    "deployedZipSha256": "f54c66af2cbe92b5350232c756ab6db436c40e1b5a77250287258b8db07175c3",
+    "backup": ".local-tools/player-shop-deployed-20261012.zip",
+    "deployedZipSha256": "1b8ed419444517a3012d29bc6081f2b69abc8128de53f1a3459db2a7102adacd",
     "legacyComparison": {
-      "runs": 15,
-      "battles": 72,
-      "settlements": 15,
+      "runs": 300,
+      "battles": 900,
+      "settlements": 300,
       "match": true
     },
-    "localTests": 328
+    "compatibilityTests": 71,
+    "fullTests": {
+      "passed": 389,
+      "failed": 1,
+      "failure": "Historical reference file checksum mismatch in opponent-tuning.test.cjs; no runtime failure"
+    },
+    "evidence": ".local-tools/player-shop-v11-deployment-evidence-20261012.json",
+    "playerShopChecked": true,
+    "playerShopUnlockStage": 5,
+    "playerShopDiscounts": false,
+    "soldBonusSkillsReset": true
   },
   "deployment": {
     "date": "2026-10-08",
@@ -124,5 +145,19 @@
     "firstWeekBackfillScoreMismatches": 0,
     "firstWeekBackfillStageMismatches": 0,
     "recurringHistoricalImport": false
+  },
+  "lastWeeklyRulesUpdate": {
+    "verifiedAt": "2026-10-12 10:24:42.573498+08",
+    "minimumRulesVersion": 6,
+    "removedCurrentWeekEntries": 71,
+    "ineligibleCurrentWeekEntries": 0,
+    "top50RulesCounts": {
+      "6": 50
+    },
+    "previousSnapshotsPreserved": true,
+    "liveRules3And6Checked": true,
+    "testDataRemoved": true,
+    "migrationTaskId": "task-bbcf9f6f",
+    "evidence": ".local-tools/weekly-min-evidence-20261012.json"
   }
 }

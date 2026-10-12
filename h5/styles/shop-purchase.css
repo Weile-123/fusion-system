@@ -1,0 +1,34 @@
+/* Shared shop purchase dimensions and soft-gold surface. */
+#shop button:is([data-act="buy-boost"],[data-act="buy-gear"],[data-act="buy-shop-player"])[data-act]{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  height:34px;
+  min-height:34px;
+  padding:5px;
+  font-size:13px;
+  line-height:1.2;
+}
+#shop button:is([data-act="buy-boost"],[data-act="buy-gear"],[data-act="buy-shop-player"])[data-act] .cash-price{gap:2px;font-size:inherit;font-weight:inherit}
+#shop button:is([data-act="buy-boost"],[data-act="buy-gear"],[data-act="buy-shop-player"])[data-act] .cash-price img{width:29px;height:22px;object-fit:contain}
+#shop .player-shop-actions .player-shop-detail{box-sizing:border-box;height:34px;min-height:34px}
+#shop .player-shop-actions .player-shop-buy{min-width:68px}
+#shop :is(.shopitem,.player-shop-entry).shop-sold{isolation:isolate}
+#shop :is(.shopitem,.player-shop-entry).shop-sold:after{content:'';position:absolute;inset:0;z-index:4;background:#7779;backdrop-filter:grayscale(1);pointer-events:none}
+#shop button:is([data-act="buy-boost"],[data-act="buy-gear"],[data-act="buy-shop-player"],[data-act="replace-gear"])[data-act],
+#pointshop button:is([data-act="meta-upgrade"],[data-act="meta-unlock"],[data-act="jersey-unlock"],[data-act="legendary-gear-unlock"],[data-act="legendary-player-unlock"])[data-act]{
+  background:var(--primary-button-background);
+  border-color:var(--primary-button-border);
+  color:#190f04;
+  box-shadow:inset 0 1px 0 #fff5;
+  font-weight:900;
+}
+#shop button:is([data-act="buy-boost"],[data-act="buy-gear"],[data-act="buy-shop-player"],[data-act="replace-gear"])[data-act]:disabled,
+#pointshop button:is([data-act="meta-upgrade"],[data-act="meta-unlock"],[data-act="jersey-unlock"],[data-act="legendary-gear-unlock"],[data-act="legendary-player-unlock"])[data-act]:disabled{
+  background:var(--primary-button-background);
+  border-color:var(--primary-button-border);
+  color:#190f04;
+  opacity:.45;
+  box-shadow:none;
+}

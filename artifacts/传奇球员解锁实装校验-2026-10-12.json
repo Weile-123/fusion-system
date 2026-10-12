@@ -1,0 +1,35 @@
+{
+  "frontendRules": 12,
+  "backendUpdated": false,
+  "backendDeployed": false,
+  "backendRule11FilesUnchanged": true,
+  "newUnlockableSSR": 10,
+  "existingSSRAlwaysAvailable": 8,
+  "price": 400,
+  "randomWithoutReplacement": true,
+  "poolEffective": "next new run only",
+  "codex": "existing recruitment collection and settlement only; unlock does not discover",
+  "build": "passed",
+  "image": "h5/assets/legacy-player-showcase-v2.png",
+  "imageBundled": true,
+  "tests": {
+    "total": 427,
+    "passed": 426,
+    "failed": 1,
+    "knownPriorFailure": "opponent-tuning historical snapshot checksums",
+    "log": ".local-tools/legendary-player-full-suite-final.log"
+  },
+  "hashes": {
+    "h5/game-core.js": "dbd0bd130ce7cbd45ef0bea8145adb9d7dd0119eea8eac31f11fde9a6be249ad",
+    "h5/game-ui.js": "a848136e3cb3a91aa444e522dc4fd35d683c24d6ecd8778aa3cfbe8d3705fe4a",
+    "h5/assets/legacy-player-showcase-v2.png": "1f3164a93aafc2172c4f3bc67c66abfef6b7b9a16f98ba3a3f904f916a14e3ea"
+  },
+  "deploymentPrerequisite": "Backend rule 12 needs playerUnlocks whitelist, cumulative point costs, consistency validation and run snapshot before publishing frontend for weekly uploads.",
+  "unlockModalSkillDescription": false,
+  "priceAndModalValidation": {
+    "tests": "passed",
+    "log": ".local-tools/player-unlock-400-tests.log",
+    "build": "passed",
+    "buildLog": ".local-tools/player-unlock-400-build.log"
+  }
+}

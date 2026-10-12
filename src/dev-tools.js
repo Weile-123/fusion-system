@@ -55,7 +55,7 @@ export function inspectEvent(C,run,event){
 export function forceEvent(C,game,id){
   const event=C.EVENT_BY_ID[id];if(!event)return false;
   let run=game.run;
-  if(!run||run.ended||!(run.balanceRulesVersion>=C.BALANCE_RULES_VERSION)){run=game.run=C.createRun('steady_interest',Date.now()>>>0,{...game.profile.upgrades,jerseyUnlocks:game.profile.jerseyUnlocks,gearUnlocks:game.profile.gearUnlocks})}
+  if(!run||run.ended||!(run.balanceRulesVersion>=C.BALANCE_RULES_VERSION)){run=game.run=C.createRun('steady_interest',Date.now()>>>0,{...game.profile.upgrades,jerseyUnlocks:game.profile.jerseyUnlocks,gearUnlocks:game.profile.gearUnlocks,playerUnlocks:game.profile.playerUnlocks})}
   const standalone=!run.lastBattle||run.randomEvent?.devStandalone===true;
   // 只在测试存档中补齐结算必要资源；人物、关卡、冷却等筛选条件直接绕过。
   run.cash=Math.max(run.cash,event.cost);run.morale=Math.max(1,run.morale);

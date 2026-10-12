@@ -1,6 +1,6 @@
 // node scripts/audit-endless-balance.cjs
 // 使用正式核心计算压力场景；不是从第一关开始的资金可达性模拟。
-const fs=require('node:fs'),path=require('node:path'),C=require('../h5/game-core.js');
+const fs=require('node:fs'),path=require('node:path'),core=require('../h5/game-core.js'),C={...core,...core.catalogForRun({balanceRulesVersion:6})};
 const routes=require('./data/diverse-rosters.json');
 const candidates=[...routes,...routes.map(r=>({name:r.name+'（SSR替换）',ids:r.ids.map(id=>C.STARS.find(s=>s.variantOf===id)?.id||id)}))];
 const jerseys=C.GEAR.filter(x=>x.slot==='球衣').map(x=>x.id);

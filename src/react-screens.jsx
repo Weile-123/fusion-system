@@ -138,10 +138,10 @@ function HomeScreen({ active, stage, announcementUnread }) {
         <div className="home-introduction">
           <p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p>
         </div>
-          <button type="button" className={`home-announcement${announcementUnread ? ' has-update' : ''}`} data-act="announcement-open" aria-label="更新公告" title="更新公告">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
-            <span>更新公告</span>
-          </button>
+        <button type="button" className={`home-announcement${announcementUnread ? ' has-update' : ''}`} data-act="announcement-open" aria-label="更新公告" title="更新公告">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
+          <span>更新公告</span>
+        </button>
         <div className="home-scores">
           <div><b>06</b><small>能力槽位</small></div>
           <div><b>10</b><small>主线关卡</small></div>
@@ -162,9 +162,21 @@ function HomeScreen({ active, stage, announcementUnread }) {
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新更新 · 2026.10.12</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新版本 · 1.2.1 · 2026.10.12</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
-      <h3 className="announcement-version">2026.10.12 · 徽章与天赋更新</h3>
+      <h3 className="announcement-version">1.2.1 · 2026.10.12 · 球员商店与问题修复</h3>
+      <h3>球员商店开放</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 进入第5关解锁球员商店，战后返回融合面板时会收到解锁提示。每轮提供3名不重复球员，前两名为A级，第三名有30%概率为S级；满星球员不上架。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> A级球员14奖金、S级球员24奖金，刷新4奖金，球员商店不享受商店折扣。购买已有球员可升星，阵容与备战席满时可选择替换或出售；进入下一轮整备自动更新商品。</p>
+      <h3>满星徽章修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 修复出售或替换球员后，再次招募仍带着满星额外徽章的问题。重新招募从1星开始，保留本局初始徽章及其重随记录，满星额外徽章需再次达到上限后获得。进入无尽后已获得的徽章继续保留。</p>
+      <h3>界面与操作优化</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 招牌动作改为标题旁的小标签，点击可查看组成、效果和玩法说明。优化详情框关闭图标、十连招募徽章、首页间距和反馈输入框样式。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 修复十连满席拿卡后旧选卡页面与确认按钮残留的问题；替换和出售按钮绑定当前待处理球员，防止重复触发旧操作时误处理下一张卡。</p>
+      <h3>成绩记录修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 优化开局与成绩的后台同步，暂未同步成功的成绩保留并重试。旧版本的成绩不上传排行版</p>
+      <p className="announcement-note">球员商店新规则与满星徽章修复适用于新开局；已有对局继续使用原规则。生涯记录、传奇点、已解锁内容保留。</p>
+      <h3 className="announcement-version">1.2.0 · 2026.10.12 · 徽章与天赋更新</h3>
       <h3>每位球星，都有新打法</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 为每名球星新增112条随机徽章，分为1—5星。首次招募出现时随机分配，普通满星后再获得一条3—5星徽章（可在招募卡片和球员详情中查看）。徽章拥有多种加成效果，但需上阵融合面板才能生效。</p>
       <h3>开局天赋调整</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次对13条天赋进行调整，删除：<strong>赢球奖金</strong>、<strong>连胜分红</strong>；新增：<strong>巨星传承</strong>、<strong>场外协助</strong>。</p>
@@ -175,7 +187,7 @@ function AnnouncementScreen() {
       <h3>招募与详情焕新</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 调整招募卡片字体、等级渐变色、SSR钻石配色及技能徽章展示；升星和羁绊提示居中显示，羁绊最多显示三条。备战席已满时，直接出售新招募的SSR球员需再次确认。</p>
       <h3>页面样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 首页焕新为暗色黑金风格，加入篮球与球场背景，优化标题、玩法指标和按钮布局，保留所有原有功能入口；招募卡片优化字体、等级渐变色与SSR钻石配色，调整技能、徽章展示及升星、羁绊提示布局；5星徽章自选页面采用黑金徽章列表，优化选中状态与效果展示。</p>
       <h3>关卡难度微调</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 配合新徽章与天赋调整对手数值，保持成长与闯关节奏。新数值仅对新开局生效，已有对局继续使用原规则；生涯记录、传奇点和已解锁内容保留。</p>
-      <h3 className="announcement-version">2026.10.10 · 数值调整</h3>
+      <h3 className="announcement-version">1.1.0 · 2026.10.10 · 数值调整</h3>
       <section className="announcement-intro">
         <h3><span className="announcement-priority">重要</span>关于数值调整与排行榜更新</h3>
         <p>上一版本新增羁绊后，由于前期数值测试不够充分，后期战力成长超出了预期，玩家与关卡对手的实力差距过大，影响了游戏的挑战性。经过进一步测试，本次更新重新调整了关卡对手的成长曲线，游戏难度较此前版本将明显提升。</p>
@@ -194,7 +206,7 @@ function AnnouncementScreen() {
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 统一主要按钮的柔金渐变样式，优化点数商店入口及装备收藏文字；球衣展示不再附带所属球员姓名。<br />
         <span className="announcement-bullet" aria-hidden="true">·</span> 修复传奇商店解锁球衣后，尚未在对局中获得就点亮图鉴的问题。玩家已经解锁的球衣仍会保留，不会丢失。修复旧对局规则兼容问题。</p>
       <p className="announcement-note">本次新规则与解锁内容适用于新开局；已有对局继续使用原规则。传奇点、已解锁装备与球衣、图鉴及生涯记录保留。</p>
-      <h3 className="announcement-version">2026.10.09 · 阵容多样性更新</h3>
+      <h3 className="announcement-version">1.0.0 · 2026.10.09 · 阵容多样性更新</h3>
       <h3>更多羁绊，更多搭配</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。</p>
       <h3>数值调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 重新分配羁绊的战力与奖金收益，对部分现有羁绊效果数值、战力成长进行调整。</p>
       <h3>样式调整</h3><p><span className="announcement-bullet" aria-hidden="true">·</span> 羁绊图鉴样式调整，页面内模块间距统一调整，修复现有操作问题。</p>
@@ -325,16 +337,11 @@ function SignaturePanel({ moves, embedded = false }) {
   if (!moves.length) return null;
   return (
     <section className={`signature-panel${embedded ? ' embedded' : ' panel'}`}>
-      <div className="signature-title"><b>招牌动作</b><small>自动触发 · 每项每场最多 2 次</small></div>
-      <div className="signature-list">
+      <div className="signature-title"><div className="signature-heading"><b>招牌动作</b>
         {moves.map((move) => (
-          <div className="signature-item" key={move.id}>
-            <b>{move.name}<span>·{move.slotLabels.join('+')}</span></b>
-            <small>{move.description}</small>
-            {move.trained > 0 && <em>受训成员 {move.trained}/2 · 每人额外强化 2 个百分点</em>}
-          </div>
+          <button className="signature-tag" key={move.id} data-act="signature-detail-open" data-id={move.id} aria-haspopup="dialog">{move.name}</button>
         ))}
-      </div>
+      </div><small>点击查看详情</small></div>
     </section>
   );
 }

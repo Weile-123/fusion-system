@@ -41,7 +41,7 @@ test('guide lineup reaches the certified upper bound and satisfies recovery memb
 });
 
 test('authoritative battle replay reproduces recovery counters and overflow health',()=>{
-  const V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+  const V=require('../balance/replay-verifier.cjs');
   const run=C.createRun('steady_interest',911),starters=['chef_curry','reaper_durant','king_lebron','showtime_magic','diesel_shaq','stone_duncan'];
   run.slots=Object.fromEntries(C.SLOTS.map((slot,i)=>[slot.id,starters[i]]));run.bench=['jordan','lebron','shaq'];
   run.owned=Object.fromEntries([...starters,...run.bench].map(id=>[id,{stars:3,train:3,trainedAt:0}]));

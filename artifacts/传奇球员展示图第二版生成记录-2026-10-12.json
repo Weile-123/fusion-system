@@ -1,0 +1,7 @@
+{
+  "tool": "built-in image_gen",
+  "asset": "h5/assets/legacy-player-showcase-v2.png",
+  "prompt": "Edit the reference into a clean isolated game shop item with TRUE TRANSPARENT ALPHA BACKGROUND. Keep only one upright black-and-gold legendary basketball trading card with a dribbling basketball player silhouette inside. Simplify ornate frame to tasteful narrow metallic gold edging and a small crown emblem, restrained gold highlights, dark satin black card surface, similar elegance to a black jersey with gold trim and a black gold gift box. Remove EVERYTHING outside card: no background rectangle, no floor, no reflection, no scenery, no floating particles, no surrounding glow. Whole card visible, centered, straight upright, occupy 85% canvas height, tightly framed with small transparent margins. No text, logos or letters. Less bright neon than original, clear recognizable basketball player silhouette.",
+  "transparencyVerified": true,
+  "notes": "Exterior alpha samples are zero. Shared 135px shop image layout is retained. Shop and result modal now use v2."
+}

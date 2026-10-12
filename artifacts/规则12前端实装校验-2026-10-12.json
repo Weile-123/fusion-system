@@ -1,0 +1,22 @@
+{
+  "frontendRules": 12,
+  "backendRules": 11,
+  "backendSourceUnchanged": true,
+  "backendDeployed": false,
+  "frontendBuilt": true,
+  "cards": 135,
+  "bonds": 108,
+  "proposalMatchesProductionCatalog": true,
+  "guideCoreHash": "3c1bf385c7ab9ebcbcce167a7b02bbbed5596c7290f7b0e948e20b38f29b8c32",
+  "guideDesignHash": "187ef0b4c18b24ead4c5bb8023a9b26330518689fdb459dd02680b8f7287d5a0",
+  "guideReferenceChecks": 134,
+  "testSummary": {
+    "tests": 422,
+    "passed": 421,
+    "failed": 1,
+    "knownUnrelatedFailure": "tuning uses 300 fresh natural runs and preserves both prior reference directories",
+    "reason": "Old snapshot checksum evidence differs from existing historical files (including line-ending differences); historical snapshots were not changed."
+  },
+  "newRulesReplay": "Local simulation only; unchanged backend verified for rules 1–11",
+  "deploymentPrerequisite": "Backend rule 12 support required before publishing this frontend for weekly leaderboard uploads"
+}

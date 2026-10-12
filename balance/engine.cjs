@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..');
-const files=['game-data.js','gear-catalog.js','event-data.js','event-system.js','game-core.js'];
+const files=['game-data.js','gear-catalog.js','event-data.js','event-system.js','player-economy.js','game-core.js'];
 const clone=value=>JSON.parse(JSON.stringify(value));
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 function manifest(){

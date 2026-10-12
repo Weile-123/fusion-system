@@ -1,0 +1,7399 @@
+{
+  "date": "2026-10-12",
+  "revision": 4,
+  "status": "Design only; no production changes",
+  "scope": "同阵容3星3训，正式fused公式，无开局/徽章/装备/战术；按顺序拆解评级、删组合、换成员、新连接；保留组合强度均未下降。候选不是全局最优证明。originalMembershipScenario仅用于观察六组成员调整影响，并未写回方案。",
+  "previousRevisionAudit": "proposal-ovr-drop-audit-20261012-revision3.json",
+  "previousOverall": {
+    "oldNormalBest": 196.53393499999999,
+    "newNormalBest": 175.47207,
+    "oldSSRBest": 360.786473,
+    "newSSRBest": 331.64326874999995
+  },
+  "overall": {
+    "oldNormalBest": 196.53393499999999,
+    "newNormalBest": 195.88754500000002,
+    "oldSSRBest": 360.786473,
+    "newSSRBest": 364.330399
+  },
+  "checks": {
+    "target": {
+      "cards": 135,
+      "identities": 117,
+      "tiers": {
+        "SSR": 18,
+        "S": 18,
+        "A": 31,
+        "B": 58,
+        "C": 10
+      },
+      "bonds": 108,
+      "sizes": {
+        "2": 71,
+        "3": 24,
+        "4": 6,
+        "5": 7
+      }
+    },
+    "retainedEffectsExactlyUnchanged": 87,
+    "oldPairsRetained": 52,
+    "minHighTierBondCount": 3,
+    "newPlayerIntegration": [
+      {
+        "id": "wembanyama",
+        "name": "维克托·文班亚马",
+        "bonds": [
+          "圣城防守链",
+          "圣城护框传承",
+          "圣城长人传承"
+        ],
+        "oldPlayerConnections": [
+          "蒂姆·邓肯",
+          "科怀·伦纳德",
+          "大卫·罗宾逊"
+        ]
+      },
+      {
+        "id": "havlicek",
+        "name": "约翰·哈夫利切克",
+        "bonds": [
+          "绿军锋线王朝",
+          "绿军攻防双核",
+          "绿军前场接力",
+          "绿军跨代王朝"
+        ],
+        "oldPlayerConnections": [
+          "拉里·伯德",
+          "凯文·麦克海尔",
+          "比尔·拉塞尔",
+          "罗伯特·帕里什",
+          "凯文·加内特",
+          "雷·阿伦"
+        ]
+      },
+      {
+        "id": "jaylen_brown",
+        "name": "杰伦·布朗",
+        "bonds": [
+          "锋线冲击接力",
+          "双探花",
+          "波士顿锋线接力",
+          "绿军跨代王朝"
+        ],
+        "oldPlayerConnections": [
+          "多米尼克·威尔金斯",
+          "文斯·卡特",
+          "杰森·塔图姆",
+          "保罗·皮尔斯",
+          "拉里·伯德",
+          "凯文·加内特",
+          "雷·阿伦"
+        ]
+      },
+      {
+        "id": "chet",
+        "name": "切特·霍姆格伦",
+        "bonds": [
+          "护框策应传承",
+          "雷霆内外轴",
+          "长人技术传承"
+        ],
+        "oldPlayerConnections": [
+          "哈基姆·奥拉朱旺",
+          "姚明",
+          "谢伊·吉尔杰斯-亚历山大"
+        ]
+      },
+      {
+        "id": "middleton",
+        "name": "克里斯·米德尔顿",
+        "bonds": [
+          "密城内外线",
+          "密城射手传承"
+        ],
+        "oldPlayerConnections": [
+          "扬尼斯·阿德托昆博",
+          "雷·阿伦"
+        ]
+      },
+      {
+        "id": "adebayo",
+        "name": "巴姆·阿德巴约",
+        "bonds": [
+          "蓝领护框链",
+          "热火攻防传承",
+          "南海岸内线接力"
+        ],
+        "oldPlayerConnections": [
+          "本·华莱士",
+          "拉希德·华莱士",
+          "德维恩·韦德",
+          "克里斯·波什"
+        ]
+      },
+      {
+        "id": "terry",
+        "name": "贾森·特里",
+        "bonds": [
+          "后场组织与火力",
+          "德州喷气机",
+          "达拉斯冠军五人组"
+        ],
+        "oldPlayerConnections": [
+          "克里斯·保罗",
+          "贾森·基德",
+          "德克·诺维茨基",
+          "肖恩·马里昂",
+          "泰森·钱德勒"
+        ]
+      }
+    ],
+    "coreFormulaChecks": 133
+  },
+  "oldComparisons": [
+    {
+      "name": "常规路线 1",
+      "ids": [
+        "durant",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "duncan",
+        "iguodala",
+        "green",
+        "kobe",
+        "harper",
+        "pippen",
+        "curry",
+        "caruso",
+        "rodman",
+        "longley",
+        "klay"
+      ],
+      "stages": {
+        "old": {
+          "raw": 194.50411250000002,
+          "ovr": 195,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "芝城侧翼网"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 216.48880000000005,
+            "finishing": 177.4945,
+            "perimeterStop": 208.33525000000003,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 98,
+            "perimeterStop": 98,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 194.50411250000002,
+          "ovr": 195,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "芝城侧翼网"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 216.48880000000005,
+            "finishing": 177.4945,
+            "perimeterStop": 208.33525000000003,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 98,
+            "perimeterStop": 98,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 192.31840250000005,
+          "ovr": 192,
+          "bondCount": 19,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 212.18362500000006,
+            "finishing": 177.4945,
+            "perimeterStop": 201.71187500000002,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 91,
+            "perimeterStop": 87,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 192.31840250000005,
+          "ovr": 192,
+          "bondCount": 19,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 212.18362500000006,
+            "finishing": 177.4945,
+            "perimeterStop": 201.71187500000002,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 91,
+            "perimeterStop": 87,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 192.31840250000005,
+          "ovr": 192,
+          "bondCount": 19,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 212.18362500000006,
+            "finishing": 177.4945,
+            "perimeterStop": 201.71187500000002,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 91,
+            "perimeterStop": 87,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 192.31840250000005,
+          "ovr": 192,
+          "bondCount": 19,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "湖人火花",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 203.7008625,
+            "creation": 212.18362500000006,
+            "finishing": 177.4945,
+            "perimeterStop": 201.71187500000002,
+            "rimStop": 166.50115000000002
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 91,
+            "perimeterStop": 87,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -2.185709999999972,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -2.185709999999972
+      }
+    },
+    {
+      "name": "常规进阶：五小＋魔鸟",
+      "ids": [
+        "durant",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "kareem",
+        "klay",
+        "pippen",
+        "iguodala",
+        "curry",
+        "rodman",
+        "kobe",
+        "bird",
+        "duncan",
+        "worthy",
+        "green"
+      ],
+      "stages": {
+        "old": {
+          "raw": 196.53393499999999,
+          "ovr": 197,
+          "bondCount": 21,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 223.25407500000003,
+            "finishing": 194.63189999999997,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 57,
+            "shooting": 82,
+            "creation": 109,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 196.53393499999999,
+          "ovr": 197,
+          "bondCount": 21,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 223.25407500000003,
+            "finishing": 194.63189999999997,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 57,
+            "shooting": 82,
+            "creation": 109,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 192.85092500000002,
+          "ovr": 193,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 212.18362500000006,
+            "finishing": 187.2873,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 45,
+            "shooting": 82,
+            "creation": 91,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 192.85092500000002,
+          "ovr": 193,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 212.18362500000006,
+            "finishing": 187.2873,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 45,
+            "shooting": 82,
+            "creation": 91,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 192.85092500000002,
+          "ovr": 193,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 212.18362500000006,
+            "finishing": 187.2873,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 45,
+            "shooting": 82,
+            "creation": 91,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 192.85092500000002,
+          "ovr": 193,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 204.30175,
+            "creation": 212.18362500000006,
+            "finishing": 187.2873,
+            "perimeterStop": 191.638125,
+            "rimStop": 168.843825
+          },
+          "rawBondBonuses": {
+            "finishing": 45,
+            "shooting": 82,
+            "creation": 91,
+            "perimeterStop": 66,
+            "rimStop": 30
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -3.6830099999999675,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -3.6830099999999675
+      }
+    },
+    {
+      "name": "常规路线 2",
+      "ids": [
+        "bird",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "russell",
+        "pippen",
+        "kareem",
+        "wilt",
+        "korver",
+        "moses",
+        "rodman",
+        "erving",
+        "worthy",
+        "duncan",
+        "kobe"
+      ],
+      "stages": {
+        "old": {
+          "raw": 186.3390325,
+          "ovr": 186,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "禁区统治者",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 207.87845000000004,
+            "finishing": 208.70905,
+            "perimeterStop": 176.615125,
+            "rimStop": 159.27635
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 39,
+            "creation": 88,
+            "perimeterStop": 42,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 186.3390325,
+          "ovr": 186,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "禁区统治者",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 207.87845000000004,
+            "finishing": 208.70905,
+            "perimeterStop": 176.615125,
+            "rimStop": 159.27635
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 39,
+            "creation": 88,
+            "perimeterStop": 42,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 178.4966725,
+          "ovr": 178,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 196.80800000000005,
+            "finishing": 189.12345,
+            "perimeterStop": 168.059375,
+            "rimStop": 159.27635
+          },
+          "rawBondBonuses": {
+            "finishing": 52,
+            "shooting": 39,
+            "creation": 70,
+            "perimeterStop": 28,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 178.4966725,
+          "ovr": 178,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 196.80800000000005,
+            "finishing": 189.12345,
+            "perimeterStop": 168.059375,
+            "rimStop": 159.27635
+          },
+          "rawBondBonuses": {
+            "finishing": 52,
+            "shooting": 39,
+            "creation": 70,
+            "perimeterStop": 28,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 181.4262625,
+          "ovr": 181,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾",
+            "上古禁区双雄",
+            "湖人中锋传承"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 196.80800000000005,
+            "finishing": 197.69215,
+            "perimeterStop": 168.059375,
+            "rimStop": 165.35559999999998
+          },
+          "rawBondBonuses": {
+            "finishing": 66,
+            "shooting": 39,
+            "creation": 70,
+            "perimeterStop": 28,
+            "rimStop": 25
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 181.4262625,
+          "ovr": 181,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "克城火力网",
+            "费城冠军双核",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾",
+            "上古禁区双雄",
+            "湖人中锋传承"
+          ],
+          "dimensions": {
+            "shooting": 179.21618750000002,
+            "creation": 196.80800000000005,
+            "finishing": 197.69215,
+            "perimeterStop": 168.059375,
+            "rimStop": 165.35559999999998
+          },
+          "rawBondBonuses": {
+            "finishing": 66,
+            "shooting": 39,
+            "creation": 70,
+            "perimeterStop": 28,
+            "rimStop": 25
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -7.8423600000000135,
+        "bondRewiring": 0,
+        "newBonds": 2.929590000000019,
+        "total": -4.912769999999995
+      }
+    },
+    {
+      "name": "常规路线 3",
+      "ids": [
+        "durant",
+        "bird",
+        "lebron",
+        "magic",
+        "shaq",
+        "hakeem",
+        "klay",
+        "ac_green",
+        "curry",
+        "irving",
+        "byron_scott",
+        "kareem",
+        "iguodala",
+        "worthy",
+        "love",
+        "green"
+      ],
+      "stages": {
+        "old": {
+          "raw": 191.0084125,
+          "ovr": 191,
+          "bondCount": 16,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 227.26532500000002,
+            "finishing": 197.0986375,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 119,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 61,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 191.0084125,
+          "ovr": 191,
+          "bondCount": 16,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 227.26532500000002,
+            "finishing": 197.0986375,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 119,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 61,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 187.3386325,
+          "ovr": 187,
+          "bondCount": 15,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 216.23897500000004,
+            "finishing": 189.77608750000002,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 101,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 187.3386325,
+          "ovr": 187,
+          "bondCount": 15,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 216.23897500000004,
+            "finishing": 189.77608750000002,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 101,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 187.3386325,
+          "ovr": 187,
+          "bondCount": 15,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 216.23897500000004,
+            "finishing": 189.77608750000002,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 101,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 187.3386325,
+          "ovr": 187,
+          "bondCount": 15,
+          "bondNames": [
+            "紫金薪火",
+            "水花兄弟",
+            "勇士轴心",
+            "表演时刻",
+            "魔鸟争霸",
+            "骑士三巨头",
+            "死亡五小",
+            "Showtime",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 192.70180000000002,
+            "creation": 216.23897500000004,
+            "finishing": 189.77608750000002,
+            "perimeterStop": 176.43449999999999,
+            "rimStop": 161.5418
+          },
+          "rawBondBonuses": {
+            "creation": 101,
+            "shooting": 67,
+            "perimeterStop": 38,
+            "finishing": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -3.669780000000003,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -3.669780000000003
+      }
+    },
+    {
+      "name": "常规路线 4",
+      "ids": [
+        "durant",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "hakeem",
+        "ewing",
+        "robinson",
+        "oscar",
+        "kareem",
+        "west",
+        "bird",
+        "kobe",
+        "baylor",
+        "battier",
+        "duncan"
+      ],
+      "stages": {
+        "old": {
+          "raw": 183.82788,
+          "ovr": 184,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "湖人四代核心",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 210.95357500000003,
+            "finishing": 213.60545000000002,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 88,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 89
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 183.82788,
+          "ovr": 184,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "湖人四代核心",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 210.95357500000003,
+            "finishing": 213.60545000000002,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 88,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 89
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 180.390285,
+          "ovr": 180,
+          "bondCount": 12,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 200.49815000000004,
+            "finishing": 206.8729,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 77,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 72
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 180.390285,
+          "ovr": 180,
+          "bondCount": 12,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 200.49815000000004,
+            "finishing": 206.8729,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 77,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 72
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 180.390285,
+          "ovr": 180,
+          "bondCount": 12,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 200.49815000000004,
+            "finishing": 206.8729,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 77,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 72
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 180.390285,
+          "ovr": 180,
+          "bondCount": 12,
+          "bondNames": [
+            "王者续航",
+            "紫金OK",
+            "热火侧翼屏障",
+            "雄鹿冠军起点",
+            "湖人远古双翼",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "九四中锋决战",
+            "四大中锋",
+            "最终答案",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 174.257375,
+            "creation": 200.49815000000004,
+            "finishing": 206.8729,
+            "perimeterStop": 168.498,
+            "rimStop": 151.825
+          },
+          "rawBondBonuses": {
+            "finishing": 77,
+            "shooting": 28,
+            "perimeterStop": 26,
+            "rimStop": 5,
+            "creation": 72
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -3.4375949999999875,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -3.4375949999999875
+      }
+    },
+    {
+      "name": "常规路线 5",
+      "ids": [
+        "durant",
+        "bird",
+        "lebron",
+        "magic",
+        "duncan",
+        "russell",
+        "rayallen",
+        "bowen",
+        "reggie",
+        "green",
+        "kawhi",
+        "klay",
+        "iguodala",
+        "curry",
+        "peja",
+        "battier"
+      ],
+      "stages": {
+        "old": {
+          "raw": 182.84956749999998,
+          "ovr": 183,
+          "bondCount": 15,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "四大神射",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "圣城防守链"
+          ],
+          "dimensions": {
+            "shooting": 209.4066,
+            "creation": 191.73597500000002,
+            "finishing": 153.438225,
+            "perimeterStop": 188.83762499999997,
+            "rimStop": 170.8294125
+          },
+          "rawBondBonuses": {
+            "shooting": 95,
+            "creation": 61,
+            "perimeterStop": 57,
+            "rimStop": 31
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 182.84956749999998,
+          "ovr": 183,
+          "bondCount": 15,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "四大神射",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "圣城防守链"
+          ],
+          "dimensions": {
+            "shooting": 209.4066,
+            "creation": 191.73597500000002,
+            "finishing": 153.438225,
+            "perimeterStop": 188.83762499999997,
+            "rimStop": 170.8294125
+          },
+          "rawBondBonuses": {
+            "shooting": 95,
+            "creation": 61,
+            "perimeterStop": 57,
+            "rimStop": 31
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 178.7479575,
+          "ovr": 179,
+          "bondCount": 14,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "圣城防守链"
+          ],
+          "dimensions": {
+            "shooting": 197.4746,
+            "creation": 183.15992500000004,
+            "finishing": 153.438225,
+            "perimeterStop": 188.83762499999997,
+            "rimStop": 170.8294125
+          },
+          "rawBondBonuses": {
+            "shooting": 75,
+            "creation": 47,
+            "perimeterStop": 57,
+            "rimStop": 31
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 176.56438,
+          "ovr": 177,
+          "bondCount": 13,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 197.4746,
+            "creation": 183.15992500000004,
+            "finishing": 153.438225,
+            "perimeterStop": 184.55974999999998,
+            "rimStop": 164.18939999999998
+          },
+          "rawBondBonuses": {
+            "shooting": 75,
+            "creation": 47,
+            "perimeterStop": 50,
+            "rimStop": 20
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 176.56438,
+          "ovr": 177,
+          "bondCount": 13,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 197.4746,
+            "creation": 183.15992500000004,
+            "finishing": 153.438225,
+            "perimeterStop": 184.55974999999998,
+            "rimStop": 164.18939999999998
+          },
+          "rawBondBonuses": {
+            "shooting": 75,
+            "creation": 47,
+            "perimeterStop": 50,
+            "rimStop": 20
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 178.7479575,
+          "ovr": 179,
+          "bondCount": 14,
+          "bondNames": [
+            "水花兄弟",
+            "勇士轴心",
+            "圣城锋线传承",
+            "热火侧翼屏障",
+            "魔鸟争霸",
+            "划时代射手",
+            "死亡五小",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "金州连接器",
+            "圣城防守链"
+          ],
+          "dimensions": {
+            "shooting": 197.4746,
+            "creation": 183.15992500000004,
+            "finishing": 153.438225,
+            "perimeterStop": 188.83762499999997,
+            "rimStop": 170.8294125
+          },
+          "rawBondBonuses": {
+            "shooting": 75,
+            "creation": 47,
+            "perimeterStop": 57,
+            "rimStop": 31
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -4.101609999999965,
+        "bondRewiring": -2.1835775000000126,
+        "newBonds": 0,
+        "total": -6.285187499999978
+      }
+    },
+    {
+      "name": "常规路线 6",
+      "ids": [
+        "durant",
+        "jordan",
+        "lebron",
+        "magic",
+        "kareem",
+        "hakeem",
+        "wilkins",
+        "harper",
+        "bird",
+        "pippen",
+        "drexler",
+        "rodman",
+        "yao",
+        "booker",
+        "longley",
+        "erving"
+      ],
+      "stages": {
+        "old": {
+          "raw": 183.6380175,
+          "ovr": 184,
+          "bondCount": 13,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "锋卫得分王",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "芝城侧翼网",
+            "休城内外策应",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.66536250000001,
+            "creation": 197.42302500000002,
+            "finishing": 185.37682499999997,
+            "perimeterStop": 189.255,
+            "rimStop": 166.469875
+          },
+          "rawBondBonuses": {
+            "shooting": 37,
+            "creation": 67,
+            "finishing": 52,
+            "perimeterStop": 60,
+            "rimStop": 28
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 183.6380175,
+          "ovr": 184,
+          "bondCount": 13,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "锋卫得分王",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "芝城侧翼网",
+            "休城内外策应",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 179.66536250000001,
+            "creation": 197.42302500000002,
+            "finishing": 185.37682499999997,
+            "perimeterStop": 189.255,
+            "rimStop": 166.469875
+          },
+          "rawBondBonuses": {
+            "shooting": 37,
+            "creation": 67,
+            "finishing": 52,
+            "perimeterStop": 60,
+            "rimStop": 28
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 177.3516975,
+          "ovr": 177,
+          "bondCount": 11,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "休城内外策应",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 171.25293750000003,
+            "creation": 193.11785,
+            "finishing": 173.378325,
+            "perimeterStop": 182.5395,
+            "rimStop": 166.469875
+          },
+          "rawBondBonuses": {
+            "shooting": 23,
+            "creation": 60,
+            "finishing": 32,
+            "perimeterStop": 49,
+            "rimStop": 28
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 174.71491999999998,
+          "ovr": 175,
+          "bondCount": 10,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 171.25293750000003,
+            "creation": 193.11785,
+            "finishing": 167.97899999999996,
+            "perimeterStop": 182.5395,
+            "rimStop": 158.68531249999998
+          },
+          "rawBondBonuses": {
+            "shooting": 23,
+            "creation": 60,
+            "finishing": 23,
+            "perimeterStop": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 174.71491999999998,
+          "ovr": 175,
+          "bondCount": 10,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 171.25293750000003,
+            "creation": 193.11785,
+            "finishing": 167.97899999999996,
+            "perimeterStop": 182.5395,
+            "rimStop": 158.68531249999998
+          },
+          "rawBondBonuses": {
+            "shooting": 23,
+            "creation": 60,
+            "finishing": 23,
+            "perimeterStop": 49,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 177.3516975,
+          "ovr": 177,
+          "bondCount": 11,
+          "bondNames": [
+            "太阳双刃",
+            "休城老友",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "公牛王朝",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "休城内外策应",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 171.25293750000003,
+            "creation": 193.11785,
+            "finishing": 173.378325,
+            "perimeterStop": 182.5395,
+            "rimStop": 166.469875
+          },
+          "rawBondBonuses": {
+            "shooting": 23,
+            "creation": 60,
+            "finishing": 32,
+            "perimeterStop": 49,
+            "rimStop": 28
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -6.286319999999989,
+        "bondRewiring": -2.636777500000022,
+        "newBonds": 0,
+        "total": -8.923097500000011
+      }
+    },
+    {
+      "name": "常规路线 7：Showtime＋公牛",
+      "ids": [
+        "bird",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "kareem",
+        "kobe",
+        "rodman",
+        "duncan",
+        "ac_green",
+        "pippen",
+        "harper",
+        "worthy",
+        "longley",
+        "byron_scott",
+        "oscar"
+      ],
+      "stages": {
+        "old": {
+          "raw": 194.64465750000002,
+          "ovr": 195,
+          "bondCount": 17,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "芝城侧翼网",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 249.08512500000003,
+            "finishing": 208.70905,
+            "perimeterStop": 182.51250000000002,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 37,
+            "creation": 155,
+            "perimeterStop": 55,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 194.64465750000002,
+          "ovr": 195,
+          "bondCount": 17,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "芝城侧翼网",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 249.08512500000003,
+            "finishing": 208.70905,
+            "perimeterStop": 182.51250000000002,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 37,
+            "creation": 155,
+            "perimeterStop": 55,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 188.76218750000004,
+          "ovr": 189,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 233.70950000000005,
+            "finishing": 201.36445,
+            "perimeterStop": 175.820375,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 37,
+            "creation": 130,
+            "perimeterStop": 44,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 188.76218750000004,
+          "ovr": 189,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 233.70950000000005,
+            "finishing": 201.36445,
+            "perimeterStop": 175.820375,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 37,
+            "creation": 130,
+            "perimeterStop": 44,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 188.76218750000004,
+          "ovr": 189,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 233.70950000000005,
+            "finishing": 201.36445,
+            "perimeterStop": 175.820375,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 37,
+            "creation": 130,
+            "perimeterStop": 44,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 188.76218750000004,
+          "ovr": 189,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "公牛王朝",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 175.57111250000003,
+            "creation": 233.70950000000005,
+            "finishing": 201.36445,
+            "perimeterStop": 175.820375,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 37,
+            "creation": 130,
+            "perimeterStop": 44,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -5.882469999999984,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -5.882469999999984
+      }
+    },
+    {
+      "name": "常规路线 8：Showtime备战变体",
+      "ids": [
+        "bird",
+        "jordan",
+        "lebron",
+        "magic",
+        "shaq",
+        "kareem",
+        "rodman",
+        "byron_scott",
+        "pippen",
+        "ac_green",
+        "kobe",
+        "worthy",
+        "duncan",
+        "artest",
+        "oscar",
+        "korver"
+      ],
+      "stages": {
+        "old": {
+          "raw": 190.47071250000002,
+          "ovr": 190,
+          "bondCount": 17,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 233.09447500000005,
+            "finishing": 208.70905,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 51,
+            "creation": 129,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 190.47071250000002,
+          "ovr": 190,
+          "bondCount": 17,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 233.09447500000005,
+            "finishing": 208.70905,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 84,
+            "shooting": 51,
+            "creation": 129,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 186.78770250000005,
+          "ovr": 187,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 222.02402500000005,
+            "finishing": 201.36445,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 51,
+            "creation": 111,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 186.78770250000005,
+          "ovr": 187,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 222.02402500000005,
+            "finishing": 201.36445,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 51,
+            "creation": 111,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 186.78770250000005,
+          "ovr": 187,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 222.02402500000005,
+            "finishing": 201.36445,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 51,
+            "creation": 111,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 186.78770250000005,
+          "ovr": 187,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "紫金OK",
+            "克城火力网",
+            "洛城硬仗",
+            "雄鹿冠军起点",
+            "表演时刻",
+            "魔鸟争霸",
+            "飞人传承",
+            "公牛铁三角",
+            "Showtime",
+            "最终答案",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 184.07628750000003,
+            "creation": 222.02402500000005,
+            "finishing": 201.36445,
+            "perimeterStop": 169.12825000000004,
+            "rimStop": 157.3455
+          },
+          "rawBondBonuses": {
+            "finishing": 72,
+            "shooting": 51,
+            "creation": 111,
+            "perimeterStop": 33,
+            "rimStop": 15
+          },
+          "postBattleCash": 2,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -3.6830099999999675,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -3.6830099999999675
+      }
+    },
+    {
+      "name": "含SSR路线 1",
+      "ids": [
+        "chef_curry",
+        "reaper_durant",
+        "king_lebron",
+        "showtime_magic",
+        "diesel_shaq",
+        "stone_duncan",
+        "pippen",
+        "air_jordan",
+        "melo",
+        "rodman",
+        "iguodala",
+        "green",
+        "harper",
+        "kobe",
+        "klay",
+        "longley"
+      ],
+      "stages": {
+        "old": {
+          "raw": 360.786473,
+          "ovr": 361,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "万花筒",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "芝城侧翼网"
+          ],
+          "dimensions": {
+            "shooting": 399.4835425,
+            "creation": 389.11676,
+            "finishing": 338.1618625,
+            "perimeterStop": 366.15425000000005,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 90,
+            "creation": 100,
+            "perimeterStop": 93,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 360.786473,
+          "ovr": 361,
+          "bondCount": 20,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "万花筒",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器",
+            "芝城侧翼网"
+          ],
+          "dimensions": {
+            "shooting": 399.4835425,
+            "creation": 389.11676,
+            "finishing": 338.1618625,
+            "perimeterStop": 366.15425000000005,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 90,
+            "creation": 100,
+            "perimeterStop": 93,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 353.52648550000004,
+          "ovr": 354,
+          "bondCount": 18,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 387.588705,
+            "creation": 374.71836,
+            "finishing": 338.1618625,
+            "perimeterStop": 356.14755,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 84,
+            "perimeterStop": 82,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 353.52648550000004,
+          "ovr": 354,
+          "bondCount": 18,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 387.588705,
+            "creation": 374.71836,
+            "finishing": 338.1618625,
+            "perimeterStop": 356.14755,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 84,
+            "perimeterStop": 82,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 353.52648550000004,
+          "ovr": 354,
+          "bondCount": 18,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 387.588705,
+            "creation": 374.71836,
+            "finishing": 338.1618625,
+            "perimeterStop": 356.14755,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 84,
+            "perimeterStop": 82,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 353.52648550000004,
+          "ovr": 354,
+          "bondCount": 18,
+          "bondNames": [
+            "王者续航",
+            "水花兄弟",
+            "勇士轴心",
+            "紫金OK",
+            "飞人传承",
+            "公牛铁三角",
+            "死亡五小",
+            "公牛王朝",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "侧翼接力",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "金州连接器"
+          ],
+          "dimensions": {
+            "shooting": 387.588705,
+            "creation": 374.71836,
+            "finishing": 338.1618625,
+            "perimeterStop": 356.14755,
+            "rimStop": 311.01595
+          },
+          "rawBondBonuses": {
+            "finishing": 29,
+            "shooting": 77,
+            "creation": 84,
+            "perimeterStop": 82,
+            "rimStop": 30
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -7.259987499999966,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -7.259987499999966
+      }
+    },
+    {
+      "name": "含SSR路线 2",
+      "ids": [
+        "reaper_durant",
+        "air_jordan",
+        "king_lebron",
+        "chef_curry",
+        "diesel_shaq",
+        "stone_duncan",
+        "bird",
+        "magic",
+        "byron_scott",
+        "ac_green",
+        "iguodala",
+        "battier",
+        "green",
+        "worthy",
+        "caruso",
+        "kareem"
+      ],
+      "stages": {
+        "old": {
+          "raw": 353.21628,
+          "ovr": 353,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 414.35027499999995,
+            "finishing": 379.5898875,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 73,
+            "shooting": 28,
+            "creation": 130,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 353.21628,
+          "ovr": 353,
+          "bondCount": 16,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 414.35027499999995,
+            "finishing": 379.5898875,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 73,
+            "shooting": 28,
+            "creation": 130,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 347.80985999999996,
+          "ovr": 348,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 398.241625,
+            "finishing": 368.6664375,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 61,
+            "shooting": 28,
+            "creation": 112,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 347.80985999999996,
+          "ovr": 348,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 398.241625,
+            "finishing": 368.6664375,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 61,
+            "shooting": 28,
+            "creation": 112,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 347.80985999999996,
+          "ovr": 348,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 398.241625,
+            "finishing": 368.6664375,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 61,
+            "shooting": 28,
+            "creation": 112,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 347.80985999999996,
+          "ovr": 348,
+          "bondCount": 15,
+          "bondNames": [
+            "王者续航",
+            "紫金薪火",
+            "勇士轴心",
+            "湖人火花",
+            "热火侧翼屏障",
+            "表演时刻",
+            "魔鸟争霸",
+            "Showtime",
+            "最终答案",
+            "金州双核",
+            "格林公式",
+            "金州防守枢纽",
+            "一哥掩护",
+            "金州连接器",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 344.86794999999995,
+            "creation": 398.241625,
+            "finishing": 368.6664375,
+            "perimeterStop": 323.5861375,
+            "rimStop": 303.68715
+          },
+          "rawBondBonuses": {
+            "finishing": 61,
+            "shooting": 28,
+            "creation": 112,
+            "perimeterStop": 45,
+            "rimStop": 20
+          },
+          "postBattleCash": 0,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -5.4064200000000255,
+        "bondRewiring": 0,
+        "newBonds": 0,
+        "total": -5.4064200000000255
+      }
+    },
+    {
+      "name": "含SSR路线 3",
+      "ids": [
+        "chef_curry",
+        "reaper_durant",
+        "king_lebron",
+        "showtime_magic",
+        "diesel_shaq",
+        "stone_duncan",
+        "booker",
+        "russell",
+        "worthy",
+        "bird",
+        "pippen",
+        "rodman",
+        "wilt",
+        "jordan",
+        "moses",
+        "kareem"
+      ],
+      "stages": {
+        "old": {
+          "raw": 342.92822800000005,
+          "ovr": 343,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "禁区统治者",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 372.91856000000007,
+            "finishing": 376.44433749999996,
+            "perimeterStop": 319.75955,
+            "rimStop": 297.27445
+          },
+          "rawBondBonuses": {
+            "finishing": 71,
+            "shooting": 34,
+            "creation": 82,
+            "perimeterStop": 42,
+            "rimStop": 15
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "playersOnly": {
+          "raw": 342.92822800000005,
+          "ovr": 343,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "禁区统治者",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "洛城快攻链",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 372.91856000000007,
+            "finishing": 376.44433749999996,
+            "perimeterStop": 319.75955,
+            "rimStop": 297.27445
+          },
+          "rawBondBonuses": {
+            "finishing": 71,
+            "shooting": 34,
+            "creation": 82,
+            "perimeterStop": 42,
+            "rimStop": 15
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "removeOnly": {
+          "raw": 331.30790800000005,
+          "ovr": 331,
+          "bondCount": 11,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 356.72036,
+            "finishing": 347.27673749999997,
+            "perimeterStop": 307.02375,
+            "rimStop": 297.27445
+          },
+          "rawBondBonuses": {
+            "finishing": 39,
+            "shooting": 34,
+            "creation": 64,
+            "perimeterStop": 28,
+            "rimStop": 15
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "rewire": {
+          "raw": 331.30790800000005,
+          "ovr": 331,
+          "bondCount": 11,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 356.72036,
+            "finishing": 347.27673749999997,
+            "perimeterStop": 307.02375,
+            "rimStop": 297.27445
+          },
+          "rawBondBonuses": {
+            "finishing": 39,
+            "shooting": 34,
+            "creation": 64,
+            "perimeterStop": 28,
+            "rimStop": 15
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "full": {
+          "raw": 335.692273,
+          "ovr": 336,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾",
+            "上古禁区双雄",
+            "湖人中锋传承"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 356.72036,
+            "finishing": 360.0375625,
+            "perimeterStop": 307.02375,
+            "rimStop": 306.43545
+          },
+          "rawBondBonuses": {
+            "finishing": 53,
+            "shooting": 34,
+            "creation": 64,
+            "perimeterStop": 28,
+            "rimStop": 25
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        },
+        "originalMembershipScenario": {
+          "raw": 335.692273,
+          "ovr": 336,
+          "bondCount": 13,
+          "bondNames": [
+            "王者续航",
+            "太阳双刃",
+            "表演时刻",
+            "魔鸟争霸",
+            "公牛铁三角",
+            "最终答案",
+            "金州双核",
+            "芝城双翼",
+            "篮板与锁链",
+            "飞人与篮板王",
+            "魔鸟与天勾",
+            "上古禁区双雄",
+            "湖人中锋传承"
+          ],
+          "dimensions": {
+            "shooting": 348.2442425,
+            "creation": 356.72036,
+            "finishing": 360.0375625,
+            "perimeterStop": 307.02375,
+            "rimStop": 306.43545
+          },
+          "rawBondBonuses": {
+            "finishing": 53,
+            "shooting": 34,
+            "creation": 64,
+            "perimeterStop": 28,
+            "rimStop": 25
+          },
+          "postBattleCash": 3,
+          "winCash": 0
+        }
+      },
+      "attribution": {
+        "playerChanges": 0,
+        "bondRemoval": -11.620319999999992,
+        "bondRewiring": 0,
+        "newBonds": 4.384364999999946,
+        "total": -7.235955000000047
+      }
+    }
+  ],
+  "newComparisons": [
+    {
+      "name": "常规高分候选 1",
+      "full": {
+        "raw": 195.88754500000002,
+        "ovr": 196,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 209.10885000000002,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 191.30949999999999,
+          "rimStop": 176.4882
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 195.88754500000002,
+        "ovr": 196,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 209.10885000000002,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 191.30949999999999,
+          "rimStop": 176.4882
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "常规高分候选 2",
+      "full": {
+        "raw": 194.58325000000002,
+        "ovr": 195,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "内线攻防大师"
+        ],
+        "dimensions": {
+          "shooting": 206.70530000000002,
+          "creation": 212.18362500000006,
+          "finishing": 185.41305,
+          "perimeterStop": 193.593125,
+          "rimStop": 175.02115
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 194.58325000000002,
+        "ovr": 195,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "内线攻防大师"
+        ],
+        "dimensions": {
+          "shooting": 206.70530000000002,
+          "creation": 212.18362500000006,
+          "finishing": 185.41305,
+          "perimeterStop": 193.593125,
+          "rimStop": 175.02115
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "常规高分候选 3",
+      "full": {
+        "raw": 192.7367725,
+        "ovr": 193,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "克城火力网",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾"
+        ],
+        "dimensions": {
+          "shooting": 212.8454625,
+          "creation": 212.79865000000004,
+          "finishing": 184.8391,
+          "perimeterStop": 187.987875,
+          "rimStop": 165.212775
+        },
+        "rawBondBonuses": {
+          "finishing": 45,
+          "shooting": 89,
+          "creation": 96,
+          "perimeterStop": 66,
+          "rimStop": 30
+        },
+        "postBattleCash": 2,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 192.7367725,
+        "ovr": 193,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "克城火力网",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾"
+        ],
+        "dimensions": {
+          "shooting": 212.8454625,
+          "creation": 212.79865000000004,
+          "finishing": 184.8391,
+          "perimeterStop": 187.987875,
+          "rimStop": 165.212775
+        },
+        "rawBondBonuses": {
+          "finishing": 45,
+          "shooting": 89,
+          "creation": 96,
+          "perimeterStop": 66,
+          "rimStop": 30
+        },
+        "postBattleCash": 2,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "SSR高分候选 1",
+      "full": {
+        "raw": 364.330399,
+        "ovr": 364,
+        "bondCount": 21,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "公牛铁三角",
+          "篮网三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 406.4699925,
+          "creation": 381.57804,
+          "finishing": 348.3432875,
+          "perimeterStop": 341.737,
+          "rimStop": 343.52367499999997
+        },
+        "rawBondBonuses": {
+          "shooting": 91,
+          "creation": 78,
+          "perimeterStop": 66,
+          "finishing": 35,
+          "rimStop": 40
+        },
+        "postBattleCash": 3,
+        "winCash": 2
+      },
+      "originalMembershipScenario": {
+        "raw": 364.330399,
+        "ovr": 364,
+        "bondCount": 21,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "公牛铁三角",
+          "篮网三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 406.4699925,
+          "creation": 381.57804,
+          "finishing": 348.3432875,
+          "perimeterStop": 341.737,
+          "rimStop": 343.52367499999997
+        },
+        "rawBondBonuses": {
+          "shooting": 91,
+          "creation": 78,
+          "perimeterStop": 66,
+          "finishing": 35,
+          "rimStop": 40
+        },
+        "postBattleCash": 3,
+        "winCash": 2
+      }
+    },
+    {
+      "name": "SSR高分候选 2",
+      "full": {
+        "raw": 363.00484650000004,
+        "ovr": 363,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "雷霆三少",
+          "篮网三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 400.9845675,
+          "creation": 396.5296650000001,
+          "finishing": 359.0761749999999,
+          "perimeterStop": 328.30612500000007,
+          "rimStop": 330.1277
+        },
+        "rawBondBonuses": {
+          "shooting": 87,
+          "creation": 89,
+          "perimeterStop": 43,
+          "finishing": 35,
+          "rimStop": 32
+        },
+        "postBattleCash": 2,
+        "winCash": 4
+      },
+      "originalMembershipScenario": {
+        "raw": 363.00484650000004,
+        "ovr": 363,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "雷霆三少",
+          "篮网三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 400.9845675,
+          "creation": 396.5296650000001,
+          "finishing": 359.0761749999999,
+          "perimeterStop": 328.30612500000007,
+          "rimStop": 330.1277
+        },
+        "rawBondBonuses": {
+          "shooting": 87,
+          "creation": 89,
+          "perimeterStop": 43,
+          "finishing": 35,
+          "rimStop": 32
+        },
+        "postBattleCash": 2,
+        "winCash": 4
+      }
+    },
+    {
+      "name": "SSR高分候选 3",
+      "full": {
+        "raw": 362.917608,
+        "ovr": 363,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "雷霆三少",
+          "篮网三巨头",
+          "骑士三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 409.21270499999997,
+          "creation": 394.35066,
+          "finishing": 360.54598749999997,
+          "perimeterStop": 318.79410000000007,
+          "rimStop": 331.68458749999996
+        },
+        "rawBondBonuses": {
+          "shooting": 94,
+          "creation": 89,
+          "perimeterStop": 38,
+          "finishing": 46,
+          "rimStop": 25
+        },
+        "postBattleCash": 3,
+        "winCash": 2
+      },
+      "originalMembershipScenario": {
+        "raw": 362.917608,
+        "ovr": 363,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "雷霆三少",
+          "篮网三巨头",
+          "骑士三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "双能卫传承",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 409.21270499999997,
+          "creation": 394.35066,
+          "finishing": 360.54598749999997,
+          "perimeterStop": 318.79410000000007,
+          "rimStop": 331.68458749999996
+        },
+        "rawBondBonuses": {
+          "shooting": 94,
+          "creation": 89,
+          "perimeterStop": 38,
+          "finishing": 46,
+          "rimStop": 25
+        },
+        "postBattleCash": 3,
+        "winCash": 2
+      }
+    },
+    {
+      "name": "常规经营候选",
+      "full": {
+        "raw": 195.0784075,
+        "ovr": 195,
+        "bondCount": 19,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "公牛铁三角",
+          "死亡五小",
+          "公牛王朝",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾"
+        ],
+        "dimensions": {
+          "shooting": 197.6919875,
+          "creation": 223.86910000000003,
+          "finishing": 183.615,
+          "perimeterStop": 201.372125,
+          "rimStop": 168.843825
+        },
+        "rawBondBonuses": {
+          "finishing": 39,
+          "shooting": 71,
+          "creation": 110,
+          "perimeterStop": 82,
+          "rimStop": 30
+        },
+        "postBattleCash": 2,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 195.0784075,
+        "ovr": 195,
+        "bondCount": 19,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "公牛铁三角",
+          "死亡五小",
+          "公牛王朝",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾"
+        ],
+        "dimensions": {
+          "shooting": 197.6919875,
+          "creation": 223.86910000000003,
+          "finishing": 183.615,
+          "perimeterStop": 201.372125,
+          "rimStop": 168.843825
+        },
+        "rawBondBonuses": {
+          "finishing": 39,
+          "shooting": 71,
+          "creation": 110,
+          "perimeterStop": 82,
+          "rimStop": 30
+        },
+        "postBattleCash": 2,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "SSR经营候选",
+      "full": {
+        "raw": 354.892175,
+        "ovr": 355,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "南海岸三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "湖人中锋传承",
+          "热火攻防传承",
+          "南海岸内线接力"
+        ],
+        "dimensions": {
+          "shooting": 355.382625,
+          "creation": 387.31174999999996,
+          "finishing": 371.9992249999999,
+          "perimeterStop": 320.54,
+          "rimStop": 339.22727499999996
+        },
+        "rawBondBonuses": {
+          "shooting": 62,
+          "creation": 74,
+          "perimeterStop": 48,
+          "finishing": 53,
+          "rimStop": 39
+        },
+        "postBattleCash": 6,
+        "winCash": 4
+      },
+      "originalMembershipScenario": {
+        "raw": 354.892175,
+        "ovr": 355,
+        "bondCount": 19,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "南海岸三巨头",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "湖人中锋传承",
+          "热火攻防传承",
+          "南海岸内线接力"
+        ],
+        "dimensions": {
+          "shooting": 355.382625,
+          "creation": 387.31174999999996,
+          "finishing": 371.9992249999999,
+          "perimeterStop": 320.54,
+          "rimStop": 339.22727499999996
+        },
+        "rawBondBonuses": {
+          "shooting": 62,
+          "creation": 74,
+          "perimeterStop": 48,
+          "finishing": 53,
+          "rimStop": 39
+        },
+        "postBattleCash": 6,
+        "winCash": 4
+      }
+    },
+    {
+      "name": "韦德＋LOGO经营候选",
+      "full": {
+        "raw": 351.256495,
+        "ovr": 351,
+        "bondCount": 18,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 359.027575,
+          "creation": 376.5030499999999,
+          "finishing": 365.5377,
+          "perimeterStop": 315.986875,
+          "rimStop": 339.22727499999996
+        },
+        "rawBondBonuses": {
+          "shooting": 66,
+          "creation": 62,
+          "perimeterStop": 43,
+          "finishing": 46,
+          "rimStop": 39
+        },
+        "postBattleCash": 6,
+        "winCash": 4
+      },
+      "originalMembershipScenario": {
+        "raw": 351.256495,
+        "ovr": 351,
+        "bondCount": 18,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 359.027575,
+          "creation": 376.5030499999999,
+          "finishing": 365.5377,
+          "perimeterStop": 315.986875,
+          "rimStop": 339.22727499999996
+        },
+        "rawBondBonuses": {
+          "shooting": 66,
+          "creation": 62,
+          "perimeterStop": 43,
+          "finishing": 46,
+          "rimStop": 39
+        },
+        "postBattleCash": 6,
+        "winCash": 4
+      }
+    },
+    {
+      "name": "绿军新老融合候选",
+      "full": {
+        "raw": 187.752485,
+        "ovr": 188,
+        "bondCount": 16,
+        "bondNames": [
+          "王者续航",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "绿军三巨头",
+          "绿军锋线王朝",
+          "最终答案",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承",
+          "绿军攻防双核",
+          "波士顿锋线接力",
+          "绿军跨代王朝"
+        ],
+        "dimensions": {
+          "shooting": 199.26410000000004,
+          "creation": 190.65775000000005,
+          "finishing": 204.42469999999997,
+          "perimeterStop": 175.386875,
+          "rimStop": 169.02899999999997
+        },
+        "rawBondBonuses": {
+          "finishing": 77,
+          "shooting": 72,
+          "creation": 60,
+          "perimeterStop": 40,
+          "rimStop": 29
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 185.0676325,
+        "ovr": 185,
+        "bondCount": 15,
+        "bondNames": [
+          "王者续航",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "绿军三巨头",
+          "最终答案",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承",
+          "绿军攻防双核",
+          "波士顿锋线接力",
+          "绿军跨代王朝"
+        ],
+        "dimensions": {
+          "shooting": 193.7964875,
+          "creation": 190.65775000000005,
+          "finishing": 196.46805,
+          "perimeterStop": 175.386875,
+          "rimStop": 169.02899999999997
+        },
+        "rawBondBonuses": {
+          "finishing": 64,
+          "shooting": 63,
+          "creation": 60,
+          "perimeterStop": 40,
+          "rimStop": 29
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "圣城护框融合候选",
+      "full": {
+        "raw": 191.5506525,
+        "ovr": 192,
+        "bondCount": 18,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "圣城防守链",
+          "魔鸟与天勾",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 202.49908750000003,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 178.63599999999997,
+          "rimStop": 174.087
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 71,
+          "creation": 91,
+          "perimeterStop": 45,
+          "rimStop": 33
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 189.3850925,
+        "ovr": 189,
+        "bondCount": 17,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 202.49908750000003,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 174.4115,
+          "rimStop": 167.4837
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 71,
+          "creation": 91,
+          "perimeterStop": 38,
+          "rimStop": 22
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "SSR绿军新老融合候选",
+      "full": {
+        "raw": 363.061684,
+        "ovr": 363,
+        "bondCount": 18,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "湖人中锋传承",
+          "绿军攻防双核",
+          "绿军跨代王朝"
+        ],
+        "dimensions": {
+          "shooting": 400.07032999999996,
+          "creation": 371.94009000000005,
+          "finishing": 359.0761749999999,
+          "perimeterStop": 349.4575,
+          "rimStop": 334.76432500000004
+        },
+        "rawBondBonuses": {
+          "shooting": 86,
+          "creation": 62,
+          "perimeterStop": 66,
+          "finishing": 35,
+          "rimStop": 37
+        },
+        "postBattleCash": 2,
+        "winCash": 4
+      },
+      "originalMembershipScenario": {
+        "raw": 363.061684,
+        "ovr": 363,
+        "bondCount": 18,
+        "bondNames": [
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "湖人中锋传承",
+          "绿军攻防双核",
+          "绿军跨代王朝"
+        ],
+        "dimensions": {
+          "shooting": 400.07032999999996,
+          "creation": 371.94009000000005,
+          "finishing": 359.0761749999999,
+          "perimeterStop": 349.4575,
+          "rimStop": 334.76432500000004
+        },
+        "rawBondBonuses": {
+          "shooting": 86,
+          "creation": 62,
+          "perimeterStop": 66,
+          "finishing": 35,
+          "rimStop": 37
+        },
+        "postBattleCash": 2,
+        "winCash": 4
+      }
+    },
+    {
+      "name": "SSR圣城护框融合候选",
+      "full": {
+        "raw": 355.6797675000001,
+        "ovr": 356,
+        "bondCount": 17,
+        "bondNames": [
+          "王者续航",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "最终答案",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 359.10637499999996,
+          "creation": 367.8615,
+          "finishing": 385.86233749999997,
+          "perimeterStop": 320.7571750000001,
+          "rimStop": 344.81145000000004
+        },
+        "rawBondBonuses": {
+          "finishing": 74,
+          "shooting": 39,
+          "creation": 60,
+          "perimeterStop": 33,
+          "rimStop": 46
+        },
+        "postBattleCash": 2,
+        "winCash": 2
+      },
+      "originalMembershipScenario": {
+        "raw": 355.6797675000001,
+        "ovr": 356,
+        "bondCount": 17,
+        "bondNames": [
+          "王者续航",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "最终答案",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承",
+          "圣城护框传承"
+        ],
+        "dimensions": {
+          "shooting": 359.10637499999996,
+          "creation": 367.8615,
+          "finishing": 385.86233749999997,
+          "perimeterStop": 320.7571750000001,
+          "rimStop": 344.81145000000004
+        },
+        "rawBondBonuses": {
+          "finishing": 74,
+          "shooting": 39,
+          "creation": 60,
+          "perimeterStop": 33,
+          "rimStop": 46
+        },
+        "postBattleCash": 2,
+        "winCash": 2
+      }
+    },
+    {
+      "name": "排除新增基础身份：常规参考",
+      "full": {
+        "raw": 195.82054000000002,
+        "ovr": 196,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "内线攻防大师"
+        ],
+        "dimensions": {
+          "shooting": 206.70530000000002,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 193.593125,
+          "rimStop": 176.27309999999997
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      },
+      "originalMembershipScenario": {
+        "raw": 195.82054000000002,
+        "ovr": 196,
+        "bondCount": 21,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "紫金OK",
+          "表演时刻",
+          "魔鸟争霸",
+          "飞人传承",
+          "公牛铁三角",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "芝城双翼",
+          "篮板与锁链",
+          "飞人与篮板王",
+          "金州连接器",
+          "魔鸟与天勾",
+          "内线攻防大师"
+        ],
+        "dimensions": {
+          "shooting": 206.70530000000002,
+          "creation": 212.18362500000006,
+          "finishing": 190.34755,
+          "perimeterStop": 193.593125,
+          "rimStop": 176.27309999999997
+        },
+        "rawBondBonuses": {
+          "finishing": 50,
+          "shooting": 82,
+          "creation": 91,
+          "perimeterStop": 66,
+          "rimStop": 37
+        },
+        "postBattleCash": 3,
+        "winCash": 0
+      }
+    },
+    {
+      "name": "排除新增基础身份：SSR参考",
+      "full": {
+        "raw": 363.54809250000005,
+        "ovr": 364,
+        "bondCount": 19,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 397.495175,
+          "creation": 381.65400000000005,
+          "finishing": 374.01227500000005,
+          "perimeterStop": 328.10977500000007,
+          "rimStop": 336.4692375
+        },
+        "rawBondBonuses": {
+          "finishing": 63,
+          "shooting": 67,
+          "creation": 86,
+          "perimeterStop": 43,
+          "rimStop": 39
+        },
+        "postBattleCash": 2,
+        "winCash": 2
+      },
+      "originalMembershipScenario": {
+        "raw": 363.54809250000005,
+        "ovr": 364,
+        "bondCount": 19,
+        "bondNames": [
+          "王者续航",
+          "水花兄弟",
+          "勇士轴心",
+          "表演时刻",
+          "魔鸟争霸",
+          "死亡五小",
+          "最终答案",
+          "金州双核",
+          "格林公式",
+          "金州防守枢纽",
+          "一哥掩护",
+          "侧翼接力",
+          "金州连接器",
+          "魔鸟与天勾",
+          "上古禁区双雄",
+          "湖人远古双核",
+          "防守精神传承",
+          "内线攻防大师",
+          "湖人中锋传承"
+        ],
+        "dimensions": {
+          "shooting": 397.495175,
+          "creation": 381.65400000000005,
+          "finishing": 374.01227500000005,
+          "perimeterStop": 328.10977500000007,
+          "rimStop": 336.4692375
+        },
+        "rawBondBonuses": {
+          "finishing": 63,
+          "shooting": 67,
+          "creation": 86,
+          "perimeterStop": 43,
+          "rimStop": 39
+        },
+        "postBattleCash": 2,
+        "winCash": 2
+      }
+    }
+  ],
+  "bondChanges": [
+    {
+      "id": "royal_recovery",
+      "name": "王者续航",
+      "members": 3,
+      "beforeMembers": [
+        "jordan",
+        "lebron",
+        "shaq"
+      ],
+      "afterMembers": [
+        "jordan",
+        "lebron",
+        "shaq"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 2
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 2
+      }
+    },
+    {
+      "id": "purple_gold_recovery",
+      "name": "紫金薪火",
+      "members": 3,
+      "beforeMembers": [
+        "magic",
+        "worthy",
+        "byron_scott"
+      ],
+      "afterMembers": [
+        "magic",
+        "worthy",
+        "byron_scott"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 3
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 3
+      }
+    },
+    {
+      "id": "champion_recovery",
+      "name": "冠军拼图",
+      "members": 3,
+      "beforeMembers": [
+        "horry",
+        "fisher",
+        "battier"
+      ],
+      "afterMembers": [
+        "horry",
+        "fisher",
+        "battier"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 4
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0,
+        "winHeal": 1,
+        "healEveryWins": 4
+      }
+    },
+    {
+      "id": "splash",
+      "name": "水花兄弟",
+      "members": 2,
+      "beforeMembers": [
+        "curry",
+        "klay"
+      ],
+      "afterMembers": [
+        "curry",
+        "klay"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "warrior_brain",
+      "name": "勇士轴心",
+      "members": 2,
+      "beforeMembers": [
+        "curry",
+        "green"
+      ],
+      "afterMembers": [
+        "curry",
+        "green"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "ok_combo",
+      "name": "紫金OK",
+      "members": 2,
+      "beforeMembers": [
+        "kobe",
+        "shaq"
+      ],
+      "afterMembers": [
+        "kobe",
+        "shaq"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "mamba_pau",
+      "name": "冠军内外线",
+      "members": 2,
+      "beforeMembers": [
+        "kobe",
+        "pau"
+      ],
+      "afterMembers": [
+        "kobe",
+        "pau"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "laker_twin",
+      "name": "湖人双核",
+      "members": 2,
+      "beforeMembers": [
+        "lebron",
+        "davis"
+      ],
+      "afterMembers": [
+        "lebron",
+        "davis"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "buck_champs",
+      "name": "雄鹿冠军组",
+      "members": 2,
+      "beforeMembers": [
+        "giannis",
+        "holiday"
+      ],
+      "afterMembers": [
+        "giannis",
+        "holiday"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "celtic_guards",
+      "name": "绿军双闸",
+      "members": 2,
+      "beforeMembers": [
+        "holiday",
+        "white"
+      ],
+      "afterMembers": [
+        "holiday",
+        "white"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "buck_stars",
+      "name": "雄鹿双星",
+      "members": 2,
+      "beforeMembers": [
+        "lillard",
+        "giannis"
+      ],
+      "afterMembers": [
+        "lillard",
+        "giannis"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "phoenix_blades",
+      "name": "太阳双刃",
+      "members": 2,
+      "beforeMembers": [
+        "durant",
+        "booker"
+      ],
+      "afterMembers": [
+        "durant",
+        "booker"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "process_battle",
+      "name": "费城硬仗",
+      "members": 2,
+      "beforeMembers": [
+        "embiid",
+        "butler"
+      ],
+      "afterMembers": [
+        "embiid",
+        "butler"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "wolves_core",
+      "name": "狼群内外",
+      "members": 2,
+      "beforeMembers": [
+        "edwards",
+        "gobert"
+      ],
+      "afterMembers": [
+        "edwards",
+        "gobert"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "knicks_core",
+      "name": "纽约双核",
+      "members": 2,
+      "beforeMembers": [
+        "anunoby",
+        "brunson"
+      ],
+      "afterMembers": [
+        "anunoby",
+        "brunson"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "lake_show",
+      "name": "湖人火花",
+      "members": 2,
+      "beforeMembers": [
+        "lebron",
+        "caruso"
+      ],
+      "afterMembers": [
+        "lebron",
+        "caruso"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "buck_towers",
+      "name": "密城双塔",
+      "members": 2,
+      "beforeMembers": [
+        "giannis",
+        "lopez"
+      ],
+      "afterMembers": [
+        "giannis",
+        "lopez"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "pick_roll",
+      "name": "挡拆教科书",
+      "members": 2,
+      "beforeMembers": [
+        "stockton",
+        "malone"
+      ],
+      "afterMembers": [
+        "stockton",
+        "malone"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "spurs_heritage",
+      "name": "圣城锋线传承",
+      "members": 2,
+      "beforeMembers": [
+        "bowen",
+        "kawhi"
+      ],
+      "afterMembers": [
+        "bowen",
+        "kawhi"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "heat_shield",
+      "name": "热火侧翼屏障",
+      "members": 2,
+      "beforeMembers": [
+        "lebron",
+        "battier"
+      ],
+      "afterMembers": [
+        "lebron",
+        "battier"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "mavs_wall",
+      "name": "达拉斯冠军内线",
+      "members": 2,
+      "beforeMembers": [
+        "dirk",
+        "chandler"
+      ],
+      "afterMembers": [
+        "dirk",
+        "chandler"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "cavs_arc",
+      "name": "克城火力网",
+      "members": 2,
+      "beforeMembers": [
+        "lebron",
+        "korver"
+      ],
+      "afterMembers": [
+        "lebron",
+        "korver"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "laker_tough",
+      "name": "洛城硬仗",
+      "members": 2,
+      "beforeMembers": [
+        "kobe",
+        "artest"
+      ],
+      "afterMembers": [
+        "kobe",
+        "artest"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "wallace_brothers",
+      "name": "华莱士双塔",
+      "members": 2,
+      "beforeMembers": [
+        "benwallace",
+        "rasheed"
+      ],
+      "afterMembers": [
+        "benwallace",
+        "rasheed"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "sixers_final",
+      "name": "费城总决赛双核",
+      "members": 2,
+      "beforeMembers": [
+        "iverson",
+        "mutombo"
+      ],
+      "afterMembers": [
+        "iverson",
+        "mutombo"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "magic_heritage",
+      "name": "魔术一号传承",
+      "members": 2,
+      "beforeMembers": [
+        "penny",
+        "howard"
+      ],
+      "afterMembers": [
+        "penny",
+        "howard"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "buck_origin",
+      "name": "雄鹿冠军起点",
+      "members": 2,
+      "beforeMembers": [
+        "oscar",
+        "kareem"
+      ],
+      "afterMembers": [
+        "oscar",
+        "kareem"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "finishing": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "lake_pioneers",
+      "name": "湖人远古双翼",
+      "members": 2,
+      "beforeMembers": [
+        "west",
+        "baylor"
+      ],
+      "afterMembers": [
+        "west",
+        "baylor"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "philly_mentors",
+      "name": "费城内线传承",
+      "members": 2,
+      "beforeMembers": [
+        "barkley",
+        "moses"
+      ],
+      "afterMembers": [
+        "barkley",
+        "moses"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "rocket_reunion",
+      "name": "休城老友",
+      "members": 2,
+      "beforeMembers": [
+        "drexler",
+        "hakeem"
+      ],
+      "afterMembers": [
+        "drexler",
+        "hakeem"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "warrior_old_days",
+      "name": "勇士旧梦",
+      "members": 2,
+      "beforeMembers": [
+        "mullin",
+        "webber"
+      ],
+      "afterMembers": [
+        "mullin",
+        "webber"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "sonics_duo",
+      "name": "手套与雨人",
+      "members": 2,
+      "beforeMembers": [
+        "payton",
+        "kemp"
+      ],
+      "afterMembers": [
+        "payton",
+        "kemp"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "duke_wings",
+      "name": "全能锋线传承",
+      "members": 2,
+      "beforeMembers": [
+        "grant_hill",
+        "tmac"
+      ],
+      "afterMembers": [
+        "grant_hill",
+        "tmac"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "yao_tmac",
+      "name": "姚麦组合",
+      "members": 2,
+      "beforeMembers": [
+        "yao",
+        "tmac"
+      ],
+      "afterMembers": [
+        "yao",
+        "tmac"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "pistons_backcourt",
+      "name": "活塞后场双核",
+      "members": 2,
+      "beforeMembers": [
+        "billups",
+        "rip"
+      ],
+      "afterMembers": [
+        "billups",
+        "rip"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "kings_duo",
+      "name": "国王双核",
+      "members": 2,
+      "beforeMembers": [
+        "webber",
+        "peja"
+      ],
+      "afterMembers": [
+        "webber",
+        "peja"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "rondo_truth",
+      "name": "波士顿新旧指挥",
+      "members": 2,
+      "beforeMembers": [
+        "rondo",
+        "pierce"
+      ],
+      "afterMembers": [
+        "rondo",
+        "pierce"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "fo_fo_fo",
+      "name": "费城冠军双核",
+      "members": 2,
+      "beforeMembers": [
+        "erving",
+        "moses"
+      ],
+      "afterMembers": [
+        "erving",
+        "moses"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "thunder_mentor",
+      "name": "雷霆师徒",
+      "members": 2,
+      "beforeMembers": [
+        "shai",
+        "paul"
+      ],
+      "afterMembers": [
+        "shai",
+        "paul"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "showtime_pair",
+      "name": "表演时刻",
+      "members": 2,
+      "beforeMembers": [
+        "magic",
+        "kareem"
+      ],
+      "afterMembers": [
+        "magic",
+        "kareem"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "mavs_origin",
+      "name": "达拉斯双星",
+      "members": 2,
+      "beforeMembers": [
+        "dirk",
+        "nash"
+      ],
+      "afterMembers": [
+        "dirk",
+        "nash"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "magic_bird",
+      "name": "魔鸟争霸",
+      "members": 2,
+      "beforeMembers": [
+        "magic",
+        "bird"
+      ],
+      "afterMembers": [
+        "magic",
+        "bird"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 7,
+          "shooting": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "jordan_kobe",
+      "name": "飞人传承",
+      "members": 2,
+      "beforeMembers": [
+        "jordan",
+        "kobe"
+      ],
+      "afterMembers": [
+        "jordan",
+        "kobe"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "creation": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "bad_boys_backcourt",
+      "name": "坏孩子双枪",
+      "members": 2,
+      "beforeMembers": [
+        "isiah",
+        "dumars"
+      ],
+      "afterMembers": [
+        "isiah",
+        "dumars"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "perimeterStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "finals_94",
+      "name": "九四中锋决战",
+      "members": 2,
+      "beforeMembers": [
+        "hakeem",
+        "ewing"
+      ],
+      "afterMembers": [
+        "hakeem",
+        "ewing"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "mavs_new_core",
+      "name": "独行侠双核",
+      "members": 2,
+      "beforeMembers": [
+        "doncic",
+        "irving"
+      ],
+      "afterMembers": [
+        "doncic",
+        "irving"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "shooting": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "nets_flight",
+      "name": "篮网飞翼",
+      "members": 2,
+      "beforeMembers": [
+        "kidd",
+        "carter"
+      ],
+      "afterMembers": [
+        "kidd",
+        "carter"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 6,
+          "finishing": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "thunder_three",
+      "name": "雷霆三少",
+      "members": 3,
+      "beforeMembers": [
+        "durant",
+        "westbrook",
+        "harden"
+      ],
+      "afterMembers": [
+        "durant",
+        "westbrook",
+        "harden"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "heat_big_three",
+      "name": "南海岸三巨头",
+      "members": 3,
+      "beforeMembers": [
+        "lebron",
+        "wade",
+        "bosh"
+      ],
+      "afterMembers": [
+        "lebron",
+        "wade",
+        "bosh"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "celtic_big_three",
+      "name": "绿军三巨头",
+      "members": 3,
+      "beforeMembers": [
+        "pierce",
+        "garnett",
+        "rayallen"
+      ],
+      "afterMembers": [
+        "pierce",
+        "garnett",
+        "rayallen"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "bull_triangle",
+      "name": "公牛铁三角",
+      "members": 3,
+      "beforeMembers": [
+        "jordan",
+        "pippen",
+        "rodman"
+      ],
+      "afterMembers": [
+        "jordan",
+        "pippen",
+        "rodman"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "gdp",
+      "name": "GDP",
+      "members": 3,
+      "beforeMembers": [
+        "duncan",
+        "parker",
+        "ginobili"
+      ],
+      "afterMembers": [
+        "duncan",
+        "parker",
+        "ginobili"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "nets_big_three",
+      "name": "篮网三巨头",
+      "members": 3,
+      "beforeMembers": [
+        "durant",
+        "harden",
+        "irving"
+      ],
+      "afterMembers": [
+        "durant",
+        "harden",
+        "irving"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "lob_city",
+      "name": "空接之城",
+      "members": 3,
+      "beforeMembers": [
+        "paul",
+        "griffin",
+        "deandre"
+      ],
+      "afterMembers": [
+        "paul",
+        "griffin",
+        "deandre"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "celtic_dynasty",
+      "name": "绿军锋线王朝",
+      "members": 3,
+      "beforeMembers": [
+        "bird",
+        "mchale",
+        "parish"
+      ],
+      "afterMembers": [
+        "bird",
+        "mchale",
+        "havlicek"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "ok3",
+      "name": "OK3",
+      "members": 3,
+      "beforeMembers": [
+        "westbrook",
+        "george",
+        "melo"
+      ],
+      "afterMembers": [
+        "westbrook",
+        "george",
+        "melo"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "mamba_students",
+      "name": "曼巴门徒",
+      "members": 3,
+      "beforeMembers": [
+        "kobe",
+        "irving",
+        "tatum"
+      ],
+      "afterMembers": [
+        "kobe",
+        "irving",
+        "tatum"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "cavs_big_three",
+      "name": "骑士三巨头",
+      "members": 3,
+      "beforeMembers": [
+        "lebron",
+        "irving",
+        "love"
+      ],
+      "afterMembers": [
+        "lebron",
+        "irving",
+        "love"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 11,
+          "shooting": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "era_shooters",
+      "name": "划时代射手",
+      "members": 3,
+      "beforeMembers": [
+        "reggie",
+        "rayallen",
+        "curry"
+      ],
+      "afterMembers": [
+        "reggie",
+        "rayallen",
+        "curry"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "seven_seconds",
+      "name": "7秒进攻",
+      "members": 3,
+      "beforeMembers": [
+        "nash",
+        "amare",
+        "marion"
+      ],
+      "afterMembers": [
+        "nash",
+        "amare",
+        "marion"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 11,
+          "finishing": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 11,
+          "finishing": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "nuggets_core",
+      "name": "掘金三核",
+      "members": 3,
+      "beforeMembers": [
+        "jokic",
+        "murray",
+        "aaron_gordon"
+      ],
+      "afterMembers": [
+        "jokic",
+        "murray",
+        "aaron_gordon"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 11,
+          "creation": 7
+        },
+        "winCash": 0,
+        "stageCash": 1,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "floor_generals",
+      "name": "后场组织与火力",
+      "members": 3,
+      "beforeMembers": [
+        "paul",
+        "kidd",
+        "nash"
+      ],
+      "afterMembers": [
+        "paul",
+        "kidd",
+        "terry"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 13,
+          "shooting": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "violent_dunkers",
+      "name": "锋线冲击接力",
+      "members": 3,
+      "beforeMembers": [
+        "wilkins",
+        "carter",
+        "griffin"
+      ],
+      "afterMembers": [
+        "wilkins",
+        "carter",
+        "jaylen_brown"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 13,
+          "creation": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "four_shooting_guards",
+      "name": "四大分位",
+      "members": 4,
+      "beforeMembers": [
+        "kobe",
+        "tmac",
+        "carter",
+        "iverson"
+      ],
+      "afterMembers": [
+        "kobe",
+        "tmac",
+        "carter",
+        "iverson"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "banana_boat",
+      "name": "香蕉船兄弟",
+      "members": 4,
+      "beforeMembers": [
+        "lebron",
+        "wade",
+        "paul",
+        "melo"
+      ],
+      "afterMembers": [
+        "lebron",
+        "wade",
+        "paul",
+        "melo"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 17,
+          "finishing": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 17,
+          "finishing": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "draft_96",
+      "name": "96黄金一代",
+      "members": 4,
+      "beforeMembers": [
+        "kobe",
+        "iverson",
+        "nash",
+        "rayallen"
+      ],
+      "afterMembers": [
+        "kobe",
+        "iverson",
+        "nash",
+        "rayallen"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      }
+    },
+    {
+      "id": "european_kings",
+      "name": "欧洲天王",
+      "members": 4,
+      "beforeMembers": [
+        "dirk",
+        "pau",
+        "jokic",
+        "doncic"
+      ],
+      "afterMembers": [
+        "dirk",
+        "pau",
+        "jokic",
+        "doncic"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 17,
+          "creation": 11
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      }
+    },
+    {
+      "id": "bad_boys",
+      "name": "坏孩子军团",
+      "members": 4,
+      "beforeMembers": [
+        "isiah",
+        "dumars",
+        "laimbeer",
+        "rodman"
+      ],
+      "afterMembers": [
+        "isiah",
+        "dumars",
+        "laimbeer",
+        "rodman"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 17,
+          "perimeterStop": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 17,
+          "perimeterStop": 11
+        },
+        "winCash": 2,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "four_centers",
+      "name": "四大中锋",
+      "members": 4,
+      "beforeMembers": [
+        "hakeem",
+        "shaq",
+        "robinson",
+        "ewing"
+      ],
+      "afterMembers": [
+        "hakeem",
+        "shaq",
+        "robinson",
+        "ewing"
+      ],
+      "before": {
+        "dimensions": {
+          "finishing": 20,
+          "perimeterStop": 14
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "finishing": 20,
+          "perimeterStop": 14
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "death_lineup",
+      "name": "死亡五小",
+      "members": 5,
+      "beforeMembers": [
+        "curry",
+        "klay",
+        "iguodala",
+        "durant",
+        "green"
+      ],
+      "afterMembers": [
+        "curry",
+        "klay",
+        "iguodala",
+        "durant",
+        "green"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 24,
+          "creation": 16
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 24,
+          "creation": 16
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 1
+      }
+    },
+    {
+      "id": "bulls_dynasty",
+      "name": "公牛王朝",
+      "members": 5,
+      "beforeMembers": [
+        "harper",
+        "jordan",
+        "pippen",
+        "rodman",
+        "longley"
+      ],
+      "afterMembers": [
+        "harper",
+        "jordan",
+        "pippen",
+        "rodman",
+        "longley"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 24,
+          "perimeterStop": 16
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 24,
+          "perimeterStop": 16
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "ok_dynasty",
+      "name": "OK王朝",
+      "members": 5,
+      "beforeMembers": [
+        "fisher",
+        "kobe",
+        "fox",
+        "horry",
+        "shaq"
+      ],
+      "afterMembers": [
+        "fisher",
+        "kobe",
+        "fox",
+        "horry",
+        "shaq"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "showtime_five",
+      "name": "Showtime",
+      "members": 5,
+      "beforeMembers": [
+        "magic",
+        "byron_scott",
+        "worthy",
+        "ac_green",
+        "kareem"
+      ],
+      "afterMembers": [
+        "magic",
+        "byron_scott",
+        "worthy",
+        "ac_green",
+        "kareem"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 32,
+          "finishing": 22
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 32,
+          "finishing": 22
+        },
+        "winCash": 0,
+        "stageCash": 3,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "final_answer",
+      "name": "最终答案",
+      "members": 5,
+      "beforeMembers": [
+        "magic",
+        "jordan",
+        "lebron",
+        "duncan",
+        "shaq"
+      ],
+      "afterMembers": [
+        "magic",
+        "jordan",
+        "lebron",
+        "duncan",
+        "shaq"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 24,
+          "finishing": 16
+        },
+        "winCash": 3,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_1",
+      "name": "金州双核",
+      "members": 2,
+      "beforeMembers": [
+        "curry",
+        "durant"
+      ],
+      "afterMembers": [
+        "curry",
+        "durant"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 6,
+          "creation": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_2",
+      "name": "格林公式",
+      "members": 2,
+      "beforeMembers": [
+        "durant",
+        "green"
+      ],
+      "afterMembers": [
+        "durant",
+        "green"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_3",
+      "name": "金州防守枢纽",
+      "members": 2,
+      "beforeMembers": [
+        "green",
+        "iguodala"
+      ],
+      "afterMembers": [
+        "green",
+        "iguodala"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 6,
+          "rimStop": 4
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_4",
+      "name": "一哥掩护",
+      "members": 2,
+      "beforeMembers": [
+        "curry",
+        "iguodala"
+      ],
+      "afterMembers": [
+        "curry",
+        "iguodala"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_5",
+      "name": "侧翼接力",
+      "members": 2,
+      "beforeMembers": [
+        "klay",
+        "iguodala"
+      ],
+      "afterMembers": [
+        "klay",
+        "iguodala"
+      ],
+      "before": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "shooting": 7,
+          "perimeterStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_6",
+      "name": "芝城双翼",
+      "members": 2,
+      "beforeMembers": [
+        "jordan",
+        "pippen"
+      ],
+      "afterMembers": [
+        "jordan",
+        "pippen"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_7",
+      "name": "篮板与锁链",
+      "members": 2,
+      "beforeMembers": [
+        "pippen",
+        "rodman"
+      ],
+      "afterMembers": [
+        "pippen",
+        "rodman"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "diversity_pair_8",
+      "name": "飞人与篮板王",
+      "members": 2,
+      "beforeMembers": [
+        "jordan",
+        "rodman"
+      ],
+      "afterMembers": [
+        "jordan",
+        "rodman"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 7,
+          "rimStop": 5
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "warriors_connect",
+      "name": "金州连接器",
+      "members": 3,
+      "beforeMembers": [
+        "curry",
+        "green",
+        "iguodala"
+      ],
+      "afterMembers": [
+        "curry",
+        "green",
+        "iguodala"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "spurs_lock",
+      "name": "圣城防守链",
+      "members": 3,
+      "beforeMembers": [
+        "duncan",
+        "kawhi",
+        "bowen"
+      ],
+      "afterMembers": [
+        "duncan",
+        "kawhi",
+        "wembanyama"
+      ],
+      "before": {
+        "dimensions": {
+          "rimStop": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "rimStop": 11,
+          "perimeterStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "detroit_champs",
+      "name": "蓝领护框链",
+      "members": 3,
+      "beforeMembers": [
+        "billups",
+        "benwallace",
+        "rasheed"
+      ],
+      "afterMembers": [
+        "benwallace",
+        "rasheed",
+        "adebayo"
+      ],
+      "before": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "perimeterStop": 11,
+          "rimStop": 7
+        },
+        "winCash": 1,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "rocket_axes",
+      "name": "护框策应传承",
+      "members": 3,
+      "beforeMembers": [
+        "hakeem",
+        "drexler",
+        "yao"
+      ],
+      "afterMembers": [
+        "hakeem",
+        "yao",
+        "chet"
+      ],
+      "before": {
+        "dimensions": {
+          "rimStop": 13,
+          "finishing": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "rimStop": 13,
+          "finishing": 9
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    },
+    {
+      "id": "bird_circle",
+      "name": "魔鸟与天勾",
+      "members": 3,
+      "beforeMembers": [
+        "bird",
+        "magic",
+        "kareem"
+      ],
+      "afterMembers": [
+        "bird",
+        "magic",
+        "kareem"
+      ],
+      "before": {
+        "dimensions": {
+          "creation": 18,
+          "finishing": 12
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      },
+      "after": {
+        "dimensions": {
+          "creation": 18,
+          "finishing": 12
+        },
+        "winCash": 0,
+        "stageCash": 0,
+        "freeRecruit": 0
+      }
+    }
+  ]
+}

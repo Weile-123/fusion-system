@@ -36,6 +36,37 @@
   #roster .signature-panel{flex:0 0 auto}
   .signature-title{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#ffd277;font-size:11px}
   .signature-title small{color:#aaa39a;font-size:9px;font-weight:400;text-align:right}
+  .signature-heading{display:flex;align-items:center;gap:6px;min-width:0}
+  .signature-heading>b,.signature-title>small{white-space:nowrap;flex-shrink:0}
+  .signature-tag{border:1px solid #80602e;border-radius:5px;background:#30291f;color:#ffe2a1;padding:3px 6px;font:inherit;font-size:10px;line-height:1.3;white-space:nowrap;cursor:pointer}
+  .signature-tag:active{background:#554021}
+  .signature-tag:focus-visible{outline:2px solid #ffd277;outline-offset:2px}
+  .signature-detail .detail-section p{margin:8px 0;line-height:1.65;color:#ddd2bf}
+  .signature-detail .signature-trigger-note{color:#ffd277;font-weight:700}
+  .signature-detail{padding-top:10px}
+  .signature-detail-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+  .signature-detail-head h2{margin:0;font-size:18px;line-height:1.3;color:#ffd277}
+  .signature-detail-close{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;padding:6px;border:0;border-radius:6px;background:transparent;color:#d7c29d;cursor:pointer}
+  .signature-detail-close svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+  .signature-detail-close:active{background:#ffd27715}
+  .signature-detail-close:focus-visible{outline:2px solid #ffd277;outline-offset:2px}
+  .bench-card.player-shop-entry{position:relative;box-sizing:border-box;min-width:0;display:flex;flex-direction:row;align-items:center;gap:8px;padding:8px 9px;overflow:hidden;min-height:64px;background:var(--player-material);box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0009}
+  .player-shop-info{position:relative;z-index:1;min-width:0;flex:1}
+  .player-shop-info>strong{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12px;margin:0 0 5px;text-shadow:0 1px 3px #000b}
+  .player-shop-upgrade{padding:2px 3px;border:1px solid #7fbda178;border-radius:4px;background:#16392dcc;color:#c4f2d6;font-size:8px;line-height:1.25;white-space:nowrap}
+  .player-shop-badges{display:flex;flex-wrap:wrap;gap:4px}
+  .player-shop-badges .draft-skill-badge{display:inline-flex;align-items:center;gap:3px;font-size:8px;padding:2px 4px;line-height:1.2}
+  .player-shop-badges .draft-skill-badge :is(span,b){font-size:8px;line-height:1}
+  .player-shop-actions{position:relative;z-index:1;display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .player-shop-detail,.player-shop-buy{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:30px;border:1px solid #dbc28f66;border-radius:6px;color:#f2deb7;box-shadow:inset 0 1px 0 #ffffff12;font:inherit;font-size:10px;font-weight:700;line-height:1.2;padding:7px 6px;white-space:nowrap;cursor:pointer}
+  .player-shop-detail{background:#171a1dcc}
+  .player-shop-buy{background:#5b452bcc}
+  .player-shop-actions button:active:not(:disabled){filter:brightness(1.15)}
+  .player-shop-actions button:disabled{opacity:.5;cursor:default}
+  .player-shop-buy{min-width:56px}
+  .player-shop-entry .slot-tier-watermark{position:absolute;z-index:0;left:6px;right:auto;top:50%;transform:translateY(-50%) skewX(-7deg);font-family:DraftSport,'Arial Narrow',sans-serif;font-size:60px;font-weight:800;font-style:italic;line-height:.85;letter-spacing:-.035em;color:#fff3db;opacity:.18;pointer-events:none}
+  @media(max-width:360px){.bench-card.player-shop-entry{padding:7px 8px;gap:6px}.player-shop-info>strong{font-size:11px}.player-shop-actions{gap:4px}.player-shop-detail,.player-shop-buy{padding:7px 4px}.player-shop-buy{min-width:48px}}
+  .player-shop-locked{grid-column:1/-1;padding:24px 8px;text-align:center;color:#c5b18b}
   .signature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
   .signature-item{min-width:0;padding:7px 8px;border:1px solid #5f4827;border-radius:7px;background:#30291f}
   .signature-item span{display:block;color:#bcae95;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

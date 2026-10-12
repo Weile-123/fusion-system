@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
-const C=require('../h5/game-core.js'),V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const C=require('../h5/game-core.js'),V=require('../balance/replay-verifier.cjs');
 function panel(seed=911){const g=C.createGame(),r=g.run=C.createRun('steady_interest',seed);for(const [i,id]of ['curry','lebron','magic','shaq','jordan','bird'].entries()){r.owned[id]={stars:1,train:0,trainedAt:0};r.slots[C.SLOTS[i].id]=id;r.roleSkillMap[id]=['sk_cmd_1'];}return g;}
 function skill(r,id,...skills){r.roleSkillMap[id]=skills;}
 test('112 unique basketball skills match every documented name, star and description',()=>{

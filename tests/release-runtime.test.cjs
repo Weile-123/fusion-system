@@ -19,6 +19,27 @@ const shippedComponents=(()=>{
   new Function('require','module','exports',code)(()=>shippedRenderer,module,module.exports);
   return module.exports;
 })();
+test('legendary player shop orders panels, persists unlocks and restores the run pool snapshot',async()=>{
+ const app=runtime(),game=C.createGame();game.profile.legend=400;
+ game.run=C.createRun('steady_interest',77);app.audit.setGame(game);app.audit.go('pointshop');
+ await app.click('pointshop-tab','legendary');
+ const markup=app.screens.pointshop.output;
+ assert.ok(markup.indexOf('data-act="jersey-unlock"')<markup.indexOf('data-act="legendary-player-unlock"'));
+ assert.ok(markup.indexOf('data-act="legendary-player-unlock"')<markup.indexOf('data-act="legendary-gear-unlock"'));
+ assert.match(markup,/解锁球员 · 400 点/);
+ await app.click('legendary-player-unlock');
+ assert.equal(game.profile.legend,0);assert.equal(game.profile.playerUnlocks.length,1);assert.deepEqual(game.profile.discovered,[]);
+ assert.match(app.screens['game-modal'].output,/获得传奇球员/);
+ assert.ok(!app.screens['game-modal'].output.includes(C.LEGENDARY_PLAYERS.find(star=>star.id===game.profile.playerUnlocks[0]).talentEffect.description));
+ await app.click('legendary-player-unlock');assert.equal(game.profile.playerUnlocks.length,1);
+ const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+ assert.deepEqual([...restored.profile.playerUnlocks],game.profile.playerUnlocks);
+ assert.deepEqual([...restored.run.unlockedPlayers],[]);
+ game.run=C.createRun('steady_interest',78,{playerUnlocks:game.profile.playerUnlocks});
+ const next=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+ assert.deepEqual([...next.run.unlockedPlayers],game.profile.playerUnlocks);
+ await app.click('legendary-player-unlock-confirm');assert.doesNotMatch(app.screens['game-modal'].output,/获得传奇球员/);
+});
 function runtime(sdk={},timers={}){
   const screens={},listeners={},saved=[],rendered=[],backups=[];
   function element(id=''){
@@ -49,6 +70,168 @@ function runtime(sdk={},timers={}){
   return {audit:window.audit,window,screens,saved,rendered,backups,document,fire:(name,event)=>listeners[name](event),input:value=>listeners.input({target:{id:'feedback-content',value}}),click:(act,id='')=>window.audit.handle(act,{dataset:{id}})};
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const pendingButton=(run,mode,extra={})=>({dataset:{mode,pendingKey:`${run.pending}:${run.batchQueue.length}`,...extra}});
+
+test('repeated old overflow clicks cannot sell or replace the next ten-pull player',async()=>{
+  for(const mode of ['sell','replace','replace-slot'])for(const samePlayer of mode==='sell'?[false,true]:[false]){
+    const id=C.STARS.filter(s=>s.tier==='A').at(-1).id,game=fullRosterRecruit(id),r=game.run,app=runtime();
+    const next=samePlayer?id:C.STARS.find(s=>s.tier!=='SSR'&&s.id!==id&&!r.owned[s.id]).id;r.batchQueue=[next];
+    app.audit.setGame(game);app.audit.go('roster');
+    const button=pendingButton(r,mode,{index:'0',slot:'three'});
+    const oldDialog=app.screens['game-modal'].nativeOutput.childNodes[0];
+    await app.audit.handle('resolve',button);assert.equal(r.pending,next);
+    assert.notEqual(app.screens['game-modal'].nativeOutput.childNodes[0],oldDialog);assert.equal(oldDialog.parentNode,null);
+    const afterFirst=JSON.stringify(r);await app.audit.handle('resolve',button);assert.equal(JSON.stringify(r),afterFirst);
+    await app.audit.handle('resolve',pendingButton(r,mode,{index:'0',slot:'three'}));assert.equal(r.pending,null);
+  }
+});
+
+test('ten-pull full-seat replacements survive reload and replay for rules six through eleven',async()=>{
+  const V=require('../balance/replay-verifier.cjs');
+  for(const version of [6,7,8,9,10,11])for(const mode of ['sell','replace','replace-slot']){
+    let app=runtime();const game=C.createGame(),r=game.run=C.createRun('reserve_fund',915,{},version);
+    const occupied=C.STARS.filter(s=>s.tier!=='SSR').slice(0,12);
+    for(const [i,s]of occupied.entries()){r.owned[s.id]={stars:1,train:0,trainedAt:0};if(i<6)r.slots[C.SLOTS[i].id]=s.id;else r.bench.push(s.id);}
+    r.cash=1000;const initial=structuredClone(r);r.cloudProofVersion=3;r.cloudOperations=[];
+    app.audit.setGame(game);app.audit.go('roster');await app.click('recruit-ten');
+    assert.equal(r.offer.length,10);await app.click('confirm-recruit-batch');
+    let active=app.audit.getGame().run,steps=0;
+    while(active.pending){
+      assert.match(app.screens['game-modal'].output,/备战席已满/);
+      const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(app.audit.getGame())));
+      assert.equal(restored.run.pending,active.pending);assert.deepEqual([...restored.run.batchQueue],active.batchQueue);assert.equal(restored.run.rng,active.rng);
+      app=runtime();app.audit.setGame(restored);app.audit.go('roster');active=restored.run;
+      await app.audit.handle('resolve',pendingButton(active,mode,{index:'0',slot:'three'}));
+      if(C.BY_ID[active.pending]?.tier==='SSR'&&mode==='sell')await app.click('pending-sell-confirm');
+      assert.ok(++steps<=10);
+    }
+    assert.equal(active.batchQueue.length,0);assert.equal(active.stats.recruits,10);
+    const replay=V.replay(initial,JSON.parse(JSON.stringify(active.cloudOperations)),'battle','outside');
+    const local=C.createGame();local.run=structuredClone(active);C.battle(local,'outside');
+    assert.deepEqual(replay.state.owned,JSON.parse(JSON.stringify(local.run.owned)));assert.equal(replay.state.cash,local.run.cash);assert.equal(replay.state.rng,local.run.rng);
+  }
+});
+
+test('ten-pull selected duplicate cards upgrade correctly and repeated confirmation grants nothing twice',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('reserve_fund',914);
+  r.offer=Array(10).fill('curry');r.offerMode='ten-batch';r.batchSelected=Array(10).fill(true);
+  app.audit.setGame(game);app.audit.go('recruit');
+  for(const index of [2,3,4,5,6,7,8,9])await app.audit.handle('select-offer',{dataset:{id:'curry',index:String(index)}});
+  assert.match(app.screens['batch-action-root'].output,/拿走 2 张 · 出售 8 张/);
+  const cash=r.cash;await app.click('confirm-recruit-batch');assert.equal(r.owned.curry.stars,2);assert.equal(r.cash,cash+8*C.saleValue('curry',1,r));
+  const before=JSON.stringify(r);await app.click('confirm-recruit-batch');assert.equal(JSON.stringify(r),before);
+});
+
+test('confirming a full-seat ten-pull removes the completed selection bar before resolving overflow',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('reserve_fund',917);
+  const occupied=C.STARS.slice(0,12);
+  for(const [i,s]of occupied.entries()){r.owned[s.id]={stars:1,train:0,trainedAt:0};if(i<6)r.slots[C.SLOTS[i].id]=s.id;else r.bench.push(s.id);}
+  r.offer=C.STARS.filter(s=>!r.owned[s.id]).slice(0,10).map(s=>s.id);r.offerMode='ten-batch';r.batchSelected=Array(10).fill(true);
+  app.audit.setGame(game);app.audit.go('recruit');assert.equal(app.screens['batch-action-root'].hidden,false);
+  await app.click('confirm-recruit-batch');assert.ok(r.pending);assert.equal(r.batchQueue.length,9);
+  assert.equal(app.screens['batch-action-root'].hidden,true);assert.equal(app.audit.state().screen,'roster');
+  assert.match(app.screens['game-modal'].output,/十连还需处理 10 张/);
+});
+
+test('player shop locks until stage five, buys through UI, retains depleted stock and restores without free rerolls',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('reserve_fund',911);
+  app.audit.setGame(game);app.audit.go('shop');await app.click('shop-tab','players');assert.match(app.screens.shop.output,/进入第5关解锁/);
+  assert.doesNotMatch(app.screens.shop.output,/data-act="buy-shop-player"/);
+  r.stage=5;r.cash=100;C.makeShopOffers(r);app.audit.go('shop');const offers=[...r.playerShopOffers];assert.equal(offers.length,3);
+  assert.match(app.screens.shop.output,/球员商店|buy-shop-player/);
+  assert.match(app.screens.shop.output,/bench-card player-shop-entry tier-a/);
+  assert.match(app.screens.shop.output,/draft-skill-badge.*aria-label="[1-5]星"/);
+  assert.match(app.screens.shop.output,/player-shop-detail.*查看详情.*player-shop-buy/);
+  assert.doesNotMatch(app.screens.shop.output,/购买后加入阵容|shopitem/);
+  const free=r.free;await app.click('buy-shop-player',offers[0]);assert.ok(r.owned[offers[0]]);assert.equal(r.free,free);
+  assert.match(app.screens.shop.output,/shop-sold-stamp/);assert.deepEqual(r.playerShopOffers,offers);
+  const restored=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.deepEqual([...restored.run.playerShopOffers],r.playerShopOffers);assert.equal(restored.run.rng,r.rng);
+  assert.deepEqual([...restored.run.playerShopSoldOffers],[offers[0]]);
+  app.audit.setGame(restored);app.audit.go('shop');for(const id of [...restored.run.playerShopOffers])await app.click('buy-shop-player',id);
+  assert.equal((app.screens.shop.output.match(/class="shop-sold-stamp"/g)||[]).length,3);const depleted=app.audit.restoreGame(JSON.parse(JSON.stringify(restored)));app.audit.setGame(depleted);app.audit.go('shop');
+  assert.equal(depleted.run.playerShopOffers.length,3);assert.equal(depleted.run.playerShopSoldOffers.length,3);assert.equal((app.screens.shop.output.match(/class="shop-sold-stamp"/g)||[]).length,3);
+  const cash=depleted.run.cash;await app.click('shop-refresh');assert.equal(depleted.run.cash,cash-4);assert.equal(depleted.run.playerShopOffers.length,3);
+  assert.equal(depleted.run.playerShopSoldOffers.length,0);
+  const oldGame=C.createGame();oldGame.run=C.createRun('reserve_fund',911,{},9);app.audit.setGame(oldGame);app.audit.go('shop');assert.doesNotMatch(app.screens.shop.output,/data-id="players"/);
+});
+
+test('entering stage five after battle shows a dismissible player-shop unlock dialog on roster',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('reserve_fund',911);
+  r.stage=4;r.lastBattle={won:true};r.eventState.lastBattle=4;
+  app.audit.setGame(game);await app.click('next');
+  assert.equal(r.stage,5);assert.match(app.screens['game-modal'].output,/球员商店已解锁/);
+  await app.click('player-shop-unlock-open');assert.match(app.screens.shop.output,/buy-shop-player/);
+  assert.doesNotMatch(app.screens['game-modal'].output,/球员商店已解锁/);
+  app.audit.go('roster');assert.doesNotMatch(app.screens['game-modal'].output,/球员商店已解锁/);
+});
+
+test('signature tags open individual composition, effects and automatic-play details on roster and duel',async()=>{
+  const app=runtime(),game=C.createGame(),run=game.run=C.createRun('reserve_fund',911);
+  for(let i=0;i<6;i++){C.recruit(run,run.offer[0]);if(i<5)C.makeOffer(run)}
+  app.audit.setGame(game);const moves=C.signatureMoves(run).filter(Boolean);assert.equal(moves.length,2);
+  for(const screen of ['roster','duel']){
+    app.audit.go(screen);
+    assert.match(app.screens[screen].output,/signature-heading/);assert.match(app.screens[screen].output,/点击查看详情/);
+    assert.doesNotMatch(app.screens[screen].output,/signature-list|自动触发 · 每项每场最多 2 次/);
+    const before=JSON.stringify(game);
+    for(const move of moves){
+      await app.click('signature-detail-open',move.id);
+      const detail=app.screens['game-modal'].output;
+      assert.match(detail,new RegExp(move.name));assert.match(detail,new RegExp(move.description.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+      for(const slot of move.slots){assert.ok(detail.includes(C.SLOTS.find(item=>item.id===slot).label));assert.ok(detail.includes(C.BY_ID[run.slots[slot]].name))}
+      assert.match(detail,/玩法说明|无需手动释放/);assert.match(detail,/每项每场最多 2 次/);
+      await app.click('signature-detail-close');assert.equal(app.screens['game-modal'].output,'');
+    }
+    assert.equal(JSON.stringify(game),before);
+  }
+  await app.click('signature-detail-open','invalid');assert.equal(app.screens['game-modal'].output,'');
+});
+
+test('legend archive displays saved peak OVR independently from the GOAT score after reload',()=>{
+  const app=runtime(),game=C.createGame();game.profile.bestGoat=13030;game.profile.bestOvr=692;
+  app.audit.setGame(app.audit.restoreGame(JSON.parse(JSON.stringify(game))));app.audit.go('profile');
+  assert.match(app.screens.profile.output,/692<\/strong><small>最高OVR/);
+  assert.doesNotMatch(app.screens.profile.output,/最高GOAT分|13030/);
+});
+
+test('current weekly personal rank uses the pinned current week rather than cumulative rank',async()=>{
+  const reads=[];const app=runtime(rankedSdk(async ({url,data})=>{
+    reads.push({url,data});
+    if(url.endsWith('/me'))return {statusCode:200,code:0,data:data.scope==='weekly'?{enabled:true,scope:'weekly',weekId:'2026-10-12',entry:{rank:73,score:427}}:{rank:1,score:9999}};
+    if(data.board==='legend')return {statusCode:200,code:0,data:[]};
+    return {statusCode:200,code:0,data:{scope:'weekly',period:'current',weekId:'2026-10-12',startsAt:'2026-10-11T16:00:00Z',endsAt:'2026-10-18T16:00:00Z',serverTime:'2026-10-12T00:00:00Z',entries:[]}};
+  }));
+  await app.click('leaderboard');await app.audit.loadLeaderboard();await app.click('leaderboard-tab','ovr');
+  assert.match(app.screens.leaderboard.output,/#73/);assert.doesNotMatch(app.screens.leaderboard.output,/9999/);
+  assert.ok(reads.some(({url,data})=>url.endsWith('/me')&&data.board==='ovr'&&data.scope==='weekly'&&data.period==='current'&&data.weekId==='2026-10-12'));
+});
+
+test('a run begun before cloud SDK availability retains its queue and uploads after SDK recovery',async()=>{
+  const app=runtime({});app.audit.go('talent');app.audit.setTalent('reserve_fund');await app.click('begin');
+  const game=app.audit.getGame(),run=game.run;
+  assert.equal(run.balanceRulesVersion,C.BALANCE_RULES_VERSION);assert.equal(run.cloudProofVersion,3);
+  assert.ok(run.cloudStartPending);
+  await tick();
+  const calls=[];app.window.ColorboxAI=rankedSdk(async args=>{calls.push(args.url.split('/').at(-1));return {statusCode:200,code:0,data:args.url.endsWith('/start')?{runId:args.data.requestId,seed:args.data.seed,proofVersion:3}:{sequence:(args.data.sequence||0)+1}}});
+  for(let i=0;i<6;i++){await app.click('select-offer',run.offer[0]);await app.click('pick')}
+  app.audit.go('duel');await app.click('battle');await app.click('strategy','outside');
+  C.finishRun(game);await app.audit.finishCloudRun(run);
+  assert.deepEqual(calls,['start','battle','finish']);assert.equal(run.cloudOutbox.length,0);
+});
+
+test('background registration does not delay recruitment while the start request is unresolved',async()=>{
+  const calls=[];let release;const app=runtime(rankedSdk(async args=>{
+    calls.push(args.url.split('/').at(-1));
+    return new Promise(resolve=>{release=()=>resolve({statusCode:200,code:0,data:{runId:args.data.requestId,seed:args.data.seed,proofVersion:3}})});
+  }));
+  app.audit.go('talent');app.audit.setTalent('reserve_fund');await app.click('begin');
+  const run=app.audit.getGame().run;assert.ok(run.cloudStartPending);assert.equal(run.cloudRunId,undefined);
+  await tick();assert.deepEqual(calls,['start']);assert.equal(app.audit.state().screen,'recruit');
+  await app.click('select-offer',run.offer[0]);await app.click('pick');assert.equal(C.starterCount(run),1);
+  release();await tick();
+  await app.audit.syncPendingRuns(true);
+  assert.deepEqual(calls,['start']);assert.ok(run.cloudRunId);assert.equal(run.ended,false);
+});
 test('local ad-free SDK drives talent, S recruitment, skill selection and revival through the real controller',async()=>{
   const app=runtime(),local={exports:{}};
   const code=transformSync(fs.readFileSync('src/dev-tools.js','utf8').replace("import '../h5/styles/dev-tools.css';",''),{format:'cjs'}).code;
@@ -92,18 +275,18 @@ function fullRosterRecruit(id){
 test('full roster SSR sale requires confirmation, cancellation preserves the run, and repeated confirmation cannot sell twice',async()=>{
   const id=C.STARS.find(s=>s.tier==='SSR').id,game=fullRosterRecruit(id),r=game.run,app=runtime();app.audit.setGame(game);app.audit.go('recruit');
   const before=JSON.stringify(r),cash=r.cash,value=C.saleValue(id,1,r);
-  await app.audit.handle('resolve',{dataset:{mode:'sell'}});assert.match(app.screens['game-modal'].output,/pending-sell-confirm-title/);assert.equal(JSON.stringify(r),before);
+  await app.audit.handle('resolve',pendingButton(app.audit.getGame().run,'sell'));assert.match(app.screens['game-modal'].output,/pending-sell-confirm-title/);assert.equal(JSON.stringify(r),before);
   await app.click('pending-sell-cancel');assert.match(app.screens['game-modal'].output,/pending-sell-new/);assert.equal(JSON.stringify(r),before);
-  await app.audit.handle('resolve',{dataset:{mode:'sell'}});await app.click('pending-sell-confirm');assert.equal(r.pending,null);assert.equal(r.cash,cash+value);assert.equal(r.owned[id],undefined);
+  await app.audit.handle('resolve',pendingButton(app.audit.getGame().run,'sell'));await app.click('pending-sell-confirm');assert.equal(r.pending,null);assert.equal(r.cash,cash+value);assert.equal(r.owned[id],undefined);
   const sold=JSON.stringify(r);await app.click('pending-sell-confirm');assert.equal(JSON.stringify(r),sold);
 });
 test('full roster non-SSR sale is immediate; successive SSR batch recruits each require their own confirmation',async()=>{
   const ordinary=C.STARS.find(s=>s.tier==='S').id,game=fullRosterRecruit(ordinary),app=runtime();app.audit.setGame(game);app.audit.go('recruit');
-  await app.audit.handle('resolve',{dataset:{mode:'sell'}});assert.equal(game.run.pending,null);assert.doesNotMatch(app.screens['game-modal'].output,/pending-sell-confirm-title/);
+  await app.audit.handle('resolve',pendingButton(app.audit.getGame().run,'sell'));assert.equal(game.run.pending,null);assert.doesNotMatch(app.screens['game-modal'].output,/pending-sell-confirm-title/);
   const ids=C.STARS.filter(s=>s.tier==='SSR').slice(0,2).map(s=>s.id),batchGame=fullRosterRecruit(ids[0]),r=batchGame.run;r.batchQueue=[ids[1]];app.audit.setGame(batchGame);app.audit.go('recruit');
-  await app.audit.handle('resolve',{dataset:{mode:'sell'}});await app.click('pending-sell-confirm');assert.equal(r.pending,ids[1]);assert.match(app.screens['game-modal'].output,/pending-sell-new/);
+  await app.audit.handle('resolve',pendingButton(app.audit.getGame().run,'sell'));await app.click('pending-sell-confirm');assert.equal(r.pending,ids[1]);assert.match(app.screens['game-modal'].output,/pending-sell-new/);
   const before=JSON.stringify(r);await app.click('pending-sell-confirm');assert.equal(JSON.stringify(r),before);
-  await app.audit.handle('resolve',{dataset:{mode:'sell'}});assert.match(app.screens['game-modal'].output,/pending-sell-confirm-title/);await app.click('pending-sell-confirm');assert.equal(r.pending,null);assert.equal(r.batchQueue.length,0);
+  await app.audit.handle('resolve',pendingButton(app.audit.getGame().run,'sell'));assert.match(app.screens['game-modal'].output,/pending-sell-confirm-title/);await app.click('pending-sell-confirm');assert.equal(r.pending,null);assert.equal(r.batchQueue.length,0);
 });
 test('draft caps bond hints at three and renders noninteractive talent and skill names in its footer',()=>{
   const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',414);r.offer=['jordan'];r.owned={pippen:{stars:1,train:0},rodman:{stars:1,train:0},lebron:{stars:1,train:0}};r.draftSkillPreview.jordan='sk_cmd_1';app.audit.setGame(game);app.audit.go('recruit');
@@ -210,7 +393,7 @@ test('new recovery counters and overflow health survive save restoration',()=>{
   const legacy=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
   assert.equal(legacy.run.balanceRulesVersion,undefined);assert.equal(C.recruitPackCost(legacy.run,10),76);
 });
-const V=require('../activity/cloudfunctions/activity_api/verified-game.js');
+const V=require('../balance/replay-verifier.cjs');
 function rankedSdk(onRequest){return {cloud:{request:async args=>{
   const response=onRequest?await onRequest(args):{statusCode:200,code:0,data:args.url.endsWith('/start')?{runId:args.data.requestId,seed:args.data.seed,proofVersion:3}:{}};
   if(args.url.endsWith('/start')&&response?.data)response.data.balanceRulesVersion=args.data.balanceRulesVersion||1;
@@ -421,7 +604,7 @@ test('two unsent battles and a settlement survive starting another run and reloa
 });
 
 
-test('gameplay saves stay on the device and only final settlement uploads validation events',async()=>{
+test('background registration precedes play while battle validation events wait for settlement',async()=>{
   const requests=[];
   const app=runtime(rankedSdk(async ({url,data})=>{
     requests.push(url.split('/').at(-1));
@@ -432,8 +615,8 @@ test('gameplay saves stay on the device and only final settlement uploads valida
   for(let i=0;i<6;i++){await app.click('select-offer',run.offer[0]);await app.click('pick')}
   app.audit.go('duel');await app.click('battle');await app.click('strategy','outside');await tick();
   assert.ok(run.lastBattle);
-  assert.equal(run.ended,false);assert.deepEqual(requests,[]);assert.equal(app.backups.length,0);assert.ok(app.saved.length);
-  await app.click('home');await app.click('continue');await tick();assert.deepEqual(requests,[]);
+  assert.equal(run.ended,false);assert.deepEqual(requests,['start']);assert.equal(app.backups.length,0);assert.ok(app.saved.length);
+  await app.click('home');await app.click('continue');await tick();assert.deepEqual(requests,['start']);
   C.finishRun(game);await app.audit.finishCloudRun(run);
   assert.deepEqual(requests,['start','battle','finish']);assert.equal(app.backups.length,1);
   assert.equal(run.cloudOutbox.length,0);
@@ -629,7 +812,7 @@ test('home announcement opens, closes and preserves current save',async()=>{
   await app.click('announcement-open');assert.match(app.screens['game-modal'].output,/更多羁绊，更多搭配/);assert.match(app.screens['game-modal'].output,/数值调整/);assert.match(app.screens['game-modal'].output,/样式调整/);
   assert.match(app.screens['game-modal'].output,/羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。/);
   assert.match(app.screens['game-modal'].output,/class="announcement-note"/);
-  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='2026-10-12';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
+  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='1.2.1';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
   const restored=app.audit.restoreGame(JSON.parse(before));assert.equal(restored.run.balanceRulesVersion,2);assert.equal(C.synergiesForRun(restored.run).length,84);
 });
 
@@ -726,7 +909,7 @@ test('equipment storage upgrades and over-capacity saves survive reload',async()
 test('announcement update dot clears on first open and stays cleared after restore',async()=>{
   const app=runtime(),game=C.createGame();game.profile.announcementReadVersion='2026-10-10';app.audit.setGame(game);app.audit.go('home');
   assert.match(app.screens.home.output,/home-announcement has-update/);
-  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'2026-10-12');
+  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'1.2.1');
   assert.match(app.screens['game-modal'].output,/2026.10.12/);
   for(const content of ['112条随机徽章','开局天赋调整','招募与详情焕新','关卡难度微调','已有对局继续使用原规则'])assert.ok(app.screens['game-modal'].output.includes(content),content);
   const announcement=app.screens['game-modal'].output;
@@ -736,7 +919,7 @@ test('announcement update dot clears on first open and stays cleared after resto
   assert.doesNotMatch(app.screens.home.output,/home-announcement has-update/);
   await app.click('announcement-close');const saved=JSON.parse(JSON.stringify(game));
   const next=runtime(),restored=next.audit.restoreGame(saved);next.audit.setGame(restored);next.audit.go('home');
-  assert.equal(restored.profile.announcementReadVersion,'2026-10-12');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
+  assert.equal(restored.profile.announcementReadVersion,'1.2.1');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
 });
 
 test('all 36 event dialogs restore before and after payout without duplicate awards',async()=>{
@@ -813,7 +996,8 @@ test('first migration, three new achievements, settlement and re-entry preserve 
   const players=targetIds.flatMap(id=>C.SYNERGIES.find(b=>b.id===id).ids);
   for(const id of players){run.offer=[id];run.offerMode='normal';app.audit.go('recruit');await app.click('pick');}
   const earned=added.filter(b=>app.audit.getGame().profile.achievedBonds.includes(b.id)).map(b=>b.id).sort();
-  assert.deepEqual(earned,[...targetIds].sort());
+  const earnedExpected=added.filter(b=>b.ids.every(id=>players.includes(id))).map(b=>b.id).sort();
+  assert.deepEqual(earned,earnedExpected);assert.ok(targetIds.every(id=>earned.includes(id)));
   for(let attempts=0;!run.ended&&attempts<100;attempts++){
     app.audit.go('duel');await app.click('battle');await app.click('strategy','outside');
     if(!run.ended)await app.click(run.lastBattle.won?(run.stage===10?'finish':'next'):'retry');
@@ -823,13 +1007,31 @@ test('first migration, three new achievements, settlement and re-entry preserve 
   const persisted=JSON.parse(JSON.stringify(app.saved.at(-1)));assert.equal(persisted.profile.bondArchiveVersion,1);
   const nextApp=runtime(),restored=nextApp.audit.restoreGame(persisted);nextApp.audit.setGame(restored);
   for(const id of legacyIds)assert.ok(restored.profile.achievedBonds.includes(id));
-  assert.deepEqual(added.filter(b=>restored.profile.achievedBonds.includes(b.id)).map(b=>b.id).sort(),[...targetIds].sort());
+  assert.deepEqual(added.filter(b=>restored.profile.achievedBonds.includes(b.id)).map(b=>b.id).sort(),earnedExpected);
   const before=JSON.stringify(restored.profile.achievedBonds);
   nextApp.audit.go('profile');await nextApp.click('profile-tab','bonds');
   for(const id of targetIds)assert.ok(nextApp.screens.profile.output.includes(C.SYNERGIES.find(b=>b.id===id).name));
   await nextApp.click('new');nextApp.audit.setTalent('steady_interest');await nextApp.click('begin');
   assert.equal(JSON.stringify(nextApp.audit.getGame().profile.achievedBonds),before);
   assert.equal(nextApp.audit.getGame().run.balanceRulesVersion,C.BALANCE_RULES_VERSION);
+});
+
+test('rules twelve economic quotas survive actual UI restore, same-player upgrade and catalog rendering',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',911);
+  r.offer=[];r.slots.mid='logo_west';r.owned.logo_west={stars:1,train:0,trainedAt:0};r.cash=0;
+  app.audit.setGame(game);app.audit.go('shop');assert.match(app.screens.shop.output,/免费刷新/);
+  assert.equal(C.refreshShop(r,'boost'),true);assert.equal(C.refreshShop(r,'gear'),true);assert.equal(C.train(r,'logo_west'),true);
+  const before=JSON.parse(JSON.stringify(r.playerEconomy)),copy=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));
+  assert.deepEqual(JSON.parse(JSON.stringify(copy.run.playerEconomy)),before);assert.ok(copy.run.owned.logo_west);assert.equal(copy.run.cash,0);
+  app.audit.setGame(copy);app.audit.go('roster');assert.ok(app.screens.roster.output.includes('LOGO'));assert.ok(C.shopRefreshCost(copy.run,'boost')>0);assert.ok(C.trainingCost(copy.run,'logo_west')>0);
+});
+
+test('rules twelve player stage payout survives actual UI restore and cannot be claimed twice',async()=>{
+  const app=runtime(),game=C.createGame(),r=game.run=C.createRun('steady_interest',911);
+  r.eventState.lastBattle=100;r.lastBattle={stage:1,won:true,us:11,them:0,strategy:'outside',foe:'caruso',foeStars:1,foeStrategy:'collapse',rating:100,foeRating:60,goat:500,goatPhases:{planning:200,clash:200,endurance:100},reward:0,log:[],playerStageCash:1};
+  const copy=app.audit.restoreGame(JSON.parse(JSON.stringify(game)));assert.equal(copy.run.lastBattle.playerStageCash,1);const before=copy.run.cash;
+  const openingCash=C.openingEffect(copy.run).stageCash||0;
+  app.audit.setGame(copy);await app.click('next');assert.equal(copy.run.cash,before+1+openingCash);const paid=copy.run.cash;await app.click('next');assert.equal(copy.run.cash,paid);
 });
 
 test('pending replacement takes priority over reopening the recruit sheet',async()=>{

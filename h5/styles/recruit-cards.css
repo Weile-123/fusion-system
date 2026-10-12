@@ -86,3 +86,29 @@
 @media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card.tier-legend .draft-center-hints{left:58px;right:44px}}
 @media(max-width:360px){:is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .draft-bond-hints i{font-size:6.5px;padding:0 2px;line-height:1.15}}
 :is(#recruit,.recruit-card-preview).draft-style-material .card.recruitment-card .card-visual:has(.draft-bond-hints) strong{bottom:6px}
+
+/* Ten-pull cards keep the compact layout, with badges beside the detail button. */
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card{height:98px;border-radius:8px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card :is(.card-select,.card-visual){height:68px;min-height:0}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card :is(.card-top,.card-grade){height:26px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .card-top{top:8px;left:8px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .card-top .rarity{font-size:24px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card.tier-legend .card-top .rarity{font-size:20px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .visual-number{top:5px;right:9px;height:34px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .visual-number b{font-size:34px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .visual-number small{display:none}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .draft-center-hints{top:9px;left:31px;right:55px;align-items:flex-start;text-align:left;gap:1px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card.tier-legend .draft-center-hints{left:48px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .draft-bond-hints{align-items:flex-start;gap:1px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .draft-bond-hints i{font-size:7px;line-height:1.15;padding:0 2px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .card-visual strong{bottom:3px;font-size:11px;left:9px;right:7px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .card-meta{height:28px;min-height:0;padding:1px 6px 4px;align-items:center}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card .card-detail{font-size:8px;padding:3px 5px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card-meta .draft-skill-badges{flex:1;justify-items:start;gap:2px;min-width:0}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card-meta .draft-skill-badge{gap:3px;padding:2px 5px;line-height:1.2;align-items:center}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card-meta .draft-skill-badge :is(span,b){font-size:8px;line-height:1.2}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card-meta .draft-skill-badge b{font-size:9px;line-height:1;letter-spacing:0}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card:has(.draft-skill-badge:nth-child(2)){height:110px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card:has(.draft-skill-badge:nth-child(2)) .card-meta{height:40px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card:has(.draft-skill-badge:nth-child(3)){height:128px}
+:is(#recruit,.recruit-card-preview).draft-style-material.draft-ten-mode .card.recruitment-card:has(.draft-skill-badge:nth-child(3)) .card-meta{height:58px}
