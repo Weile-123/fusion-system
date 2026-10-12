@@ -190,6 +190,8 @@ test('scheduled activation excludes pre-activation runs and does not backfill hi
 test('archive preserves exactly fifty identities, names, scores and stages; absent players stay absent',async()=>{
   await enable();
   for(let i=0;i<60;i++)await battle(await run('p'+String(i).padStart(2,'0')),500-i,1);
+  const current=await rpc('get_weekly_ovr_rank',['p50','current',null]);
+  assert.equal(current.entry.rank,51);assert.equal(current.entry.score,450);
   await clock('2026-10-11T16:00:00Z');
   const page=await rpc('get_weekly_ovr_page',['previous',999]);assert.equal(page.entries.length,50);
   assert.equal(page.entries[49].score,451);assert.equal(page.entries[0].displayName,'Name p00');

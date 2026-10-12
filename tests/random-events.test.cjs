@@ -132,7 +132,7 @@ test('server replays legal choices and rejects bypass, wrong ids and repeated pa
   for(const operations of [[{action:'makeOffer',args:[]}],[{action:'resolveRandomEvent',args:['P02','main']}],[ops[0],ops[0]]])assert.throws(()=>V.replay(state,operations,'finish'),/验证失败/);
 });
 test('frontend and cloud use byte-identical core, event data and event engine',()=>{
-  assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,require('../activity/cloudfunctions/activity_api/game/game-core.js').STARS);for(const file of ['event-data.js','event-system.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'));
+  for(const file of ['game-core.js','game-data.js','gear-catalog.js','event-data.js','event-system.js','player-economy.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'),file);
 });
 
 test('all event stage, cash, seen and loss gates reject without granting rewards',()=>{

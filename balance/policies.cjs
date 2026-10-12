@@ -1,6 +1,7 @@
 'use strict';
 const {routeIds,routeSlots}=require('./objectives.cjs');
 const names=['novice','ordinary','expert'];
+function badgeValue(skill){const e=skill?.effects||{};return (e.winHeal||0)/(e.healEveryWins||1)*90+(e.winCash||0)*5+(e.battleCash||0)*5+(e.allDimensions||0)*2+Object.values(e.dimensions||{}).reduce((s,n)=>s+n,0)}
 function createPolicy(name,seed){
   if(!names.includes(name))throw Error('Unknown policy '+name);
   const memory=new Map();let previousBattle=null,paid=0,refreshes=0,key='';
@@ -29,7 +30,7 @@ function createPolicy(name,seed){
     const first=o.actions[0];
     if(first.name==='reviveRun')return first;
     if(first.name==='confirmSkillAdPick')return [...o.actions].sort((a,b)=>{
-      const value=x=>{const e=x.skill.effects;return quality(x,o)+(e.winHeal||0)/(e.healEveryWins||1)*90+(e.winCash||0)*5+(e.battleCash||0)*5+(e.allDimensions||0)*2+Object.values(e.dimensions||{}).reduce((s,n)=>s+n,0)};
+      const value=x=>badgeValue(x.skill);
       return value(b)-value(a);
     })[0];
     if(['acknowledgeRandomEvent','continueRun','advanceRecruitBatch'].includes(first.name))return first;
@@ -66,6 +67,8 @@ function createPolicy(name,seed){
     }
     const refresh=o.actions.find(a=>a.name==='refreshShop'&&a.args[0]==='gear');
     if(refresh&&o.cash>(name==='expert'?pressure?20:40:60)&&refreshes<(name==='expert'?3:1)){refreshes++;return refresh}
+    const playerRefresh=o.actions.find(a=>a.name==='refreshPlayerShop');
+    if(playerRefresh&&o.cash>(name==='expert'?30:60)&&refreshes<(name==='expert'?4:2)){refreshes++;return playerRefresh}
     const battles=o.actions.filter(a=>a.name==='battle');if(!battles.length)return first;
     let strategy;
     const known=memory.get(o.opponent.id);if(name==='expert'&&known)strategy=({collapse:'outside',outside:'drive',drive:'collapse'})[known];
@@ -79,4 +82,4 @@ function createPolicy(name,seed){
   }
   return {choose,learn};
 }
-module.exports={names,createPolicy};
+module.exports={names,createPolicy,badgeValue};

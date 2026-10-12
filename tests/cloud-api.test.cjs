@@ -149,3 +149,12 @@ test('background start binds a committed seed and retries do not create another 
   const retry=api([{id:requestId,seed:911,talent:body.talent,proof_version:3}]);await retry.handle(request('/runs/start',body));assert.equal(retry.calls.length,0);
   await assert.rejects(retry.handle(request('/runs/start',{...body,seed:912})),/不一致/);
 });
+
+test('old starts and old jersey purchases preserve newly unlocked legendary players',async()=>{
+ const id=C.LEGENDARY_PLAYERS[0].id,previous={playerUnlocks:[id]},body={requestId:'00000000-0000-4000-8000-000000000009',seed:911,talent:'reserve_fund',progress:{},balanceRulesVersion:11};
+ const server=api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress:previous,earned:2000,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3,progress:args.p_progress,item:args.p_item});
+ await server.handle(request('/runs/start',body));assert.equal(server.calls[1].args.p_cost,400);assert.equal(JSON.stringify(server.calls[1].args.p_progress),JSON.stringify(previous));
+ assert.equal(server.calls[1].args.p_state.balanceRulesVersion,11);assert.equal(server.calls[1].args.p_state.unlockedPlayers,undefined);
+ const jersey=await server.handle(request('/profile/jersey',{requestId:body.requestId,progress:{}}));assert.equal(JSON.stringify(jersey.data.progress.playerUnlocks),JSON.stringify([id]));
+ await assert.rejects(server.handle(request('/runs/start',{...body,balanceRulesVersion:14,progress:{playerUnlocks:[]}})),/传奇球员解锁记录与云端不一致/);
+});

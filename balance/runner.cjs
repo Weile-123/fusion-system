@@ -82,7 +82,7 @@ function validate(record){
   }
   // 将最终尚未进入下一战的操作通过独立核心回放核对，避免强行增加一场战斗。
   if(operations.length){const g={run:clone(state),profile:cloudCore.createGame().profile};for(const op of operations)execute(cloudCore,g,{name:op.action,args:op.args},record.config);if(JSON.stringify(g.run)!==JSON.stringify(record.finalGame.run))throw Error('Cloud tail mismatch')}
-  return {browserGlobal:browser,cloud:{match:true,steps,battles,pendingDeployment:target.pendingDeployment,mode:target.pendingDeployment?'local simulation with rules 12':'unchanged backend'}};
+  return {browserGlobal:browser,cloud:{match:true,steps,battles,pendingDeployment:target.pendingDeployment,mode:target.pendingDeployment?'local simulation with rules '+record.rulesVersion:'unchanged backend'}};
 }
 function stateAfter(record,index){
   // 私有完整状态单独保存，逐步一致性无需重新构造或猜测字段。

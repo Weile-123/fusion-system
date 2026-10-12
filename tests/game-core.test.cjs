@@ -237,7 +237,7 @@ test('SSR cards include eight distinct legends with a defense specialist', () =>
 });
 
 test('SSR talents activate their slot, strategy, and economy branches', () => {
-  const curry = C.createRun('outside', 20260922);
+  const curry = C.createRun('outside', 20260922, {}, 14);
   curry.offer = [];
   curry.owned.chef_curry = { stars: 1, train: 0, trainedAt: 0 };
   curry.slots.three = 'chef_curry';
@@ -399,7 +399,7 @@ test('draft rarity uses lower opening weights and keeps SSR group-based', () => 
 });
 
 test('SSR is rolled once per four-player group and never appears twice', () => {
-  const run = C.createRun('outside', 20260922);
+  const run = C.createRun('outside', 20260922, {}, 14);
   run.offer = [];
   run.recruitGroups = 6;
   let ssrGroups = 0;
@@ -474,7 +474,7 @@ test('home artwork is full bleed while scores and actions retain safe spacing', 
   assert.match(css, /#home \.home-primary,#home \.home-entry-row\{margin-top:10px\}/);
   assert.doesNotMatch(screens, /home-game-logo/);
   assert.doesNotMatch(ui, /home-game-logo/);
-  assert.match(ui, /home-pointshop" data-act="pointshop">点数商店<\/button><button class="home-secondary home-profile" data-act="profile">传奇档案<\/button>/);
+  assert.match(ui, /home-pointshop[^\n]*data-act="pointshop">点数商店<\/button><button class="home-secondary home-profile" data-act="profile">传奇档案<\/button>/);
 });
 
 test('GOAT peak, reference merit, settlement unlocks, and permanent upgrades share one progression model', () => {

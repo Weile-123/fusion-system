@@ -1,0 +1,83 @@
+{
+  "version": "1.3.0",
+  "rulesVersion": 15,
+  "supportedRulesVersions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "frontendZip": "artifacts/前端上线准备/2026-10-12-规则15/前端发布包.zip",
+  "frontendZipSha256": "5bdd3d6a388b89b3f716c85635563805b7e3e7a9cbab72756a16d60b26f18635",
+  "actualBackendZipSha256": "9af9a3a55898511588798f7e2b393b556794a8f98b9f6f2eb86920c4181f4921",
+  "configurationPreserved": true,
+  "fullTests": {
+    "total": 455,
+    "passed": 454,
+    "failed": 1,
+    "knownFailure": "Protected historical UI snapshot checksum mismatch"
+  },
+  "legacyComparison": {
+    "runs": 210,
+    "rules": "1-14",
+    "match": true
+  },
+  "online": {
+    "pass": true,
+    "runs": 3,
+    "statesMatch": true,
+    "tenDrawChecked": 3,
+    "testDataRemoved": true,
+    "counts": [
+      {
+        "kind": "leaderboard_runs",
+        "n": "0"
+      },
+      {
+        "kind": "weekly_ovr_entries",
+        "n": "0"
+      },
+      {
+        "kind": "verified_game_progress",
+        "n": "0"
+      },
+      {
+        "kind": "leaderboard_entries",
+        "n": "0"
+      },
+      {
+        "kind": "verified_jersey_purchases",
+        "n": "0"
+      },
+      {
+        "kind": "weekly_ovr_snapshots",
+        "n": "0"
+      },
+      {
+        "kind": "leaderboard_legacy_credit",
+        "n": "0"
+      }
+    ]
+  },
+  "normalFlow": {
+    "runs": 9,
+    "battles": 251,
+    "actions": 3619,
+    "death": 4,
+    "censored": 5,
+    "stageBoundary": 30
+  },
+  "nbaDomainMatches": 0,
+  "frontendPublished": false
+}

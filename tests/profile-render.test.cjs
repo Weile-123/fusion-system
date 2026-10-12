@@ -43,10 +43,10 @@ test('weekly OVR layout keeps the cumulative legend board and gates archive on b
   assert.match(weekly,/本周最高 OVR/);assert.match(weekly,/距离下一周/);assert.match(weekly,/2天 08:35:16/);
   const archive=render({tab:'ovr',weeklySupported:true,period:'previous'});
   assert.match(archive,/上周最高 OVR/);assert.match(archive,/返回本周排行榜/);
-  assert.ok(archive.includes('我的排名'));assert.ok(archive.includes('未上榜'));assert.ok(!archive.includes('data-week-countdown'));
+  assert.ok(!archive.includes('我的排名'));assert.ok(!archive.includes('未上榜'));assert.ok(!archive.includes('data-week-countdown'));
   assert.ok(!archive.includes('上一周排名已封榜'));assert.ok(!archive.includes('已封榜'));
   const rankedArchive=render({tab:'ovr',weeklySupported:true,period:'previous',boards:{legend:[],ovr:[{rank:12,name:'旧昵称',score:391,stage:58,isCurrent:true}]}});
-  assert.match(rankedArchive,/391 <small class="leaderboard-inline-rank" aria-label="第12名">#12/);
+  assert.ok(!rankedArchive.includes('leaderboard-inline-rank'));assert.ok(rankedArchive.includes('391'));
   assert.ok(rankedArchive.includes('旧昵称'));assert.ok(weekly.indexOf('leaderboard-switch')<weekly.indexOf('leaderboard-my-rank'));
   const legend=render({tab:'legend',weeklySupported:true});
   assert.match(legend,/300/);assert.ok(!legend.includes('leaderboard-week-card'));assert.ok(!legend.includes('距离下一周'));

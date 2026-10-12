@@ -166,7 +166,7 @@ async function handle(req, res) {
     const prior=rowsOf(await rdb.from('leaderboard_runs').select('id, seed, talent, proof_version, state').eq('id',runId).eq('puid',puid).limit(1));
     if(prior.length){if(Number(prior[0].seed)!==body.seed||prior[0].talent!==body.talent||prior[0].proof_version!==3||(prior[0].state?.balanceRulesVersion||1)!==balanceRulesVersion)fail('开局记录不一致',409);return {code:0,message:'success',data:{runId,seed:body.seed,proofVersion:3,balanceRulesVersion}}}
     const context=await rpc('get_verified_game_profile',{p_puid:puid});
-    const progress=body.progress||{};
+    const progress=V.compatibleProgress(context.progress||{},body.progress||{});
     const cost=V.reconcileProgress(context.progress||{},progress,Number(context.earned)||0);
     const profile={...C.createGame().profile,...context.profile};
     const selectedTalent=C.talentForRun({talent:body.talent,balanceRulesVersion})||C.KNOWN_TALENTS.find(item=>item.id===body.talent);
@@ -189,7 +189,7 @@ async function handle(req, res) {
     const prior=rowsOf(await rdb.from('verified_jersey_purchases').select('result').eq('puid',puid).eq('request_id',body.requestId).limit(1));
     if(prior.length)return {code:0,message:'success',data:prior[0].result};
     const context=await rpc('get_verified_game_profile',{p_puid:puid});
-    const progress=body.progress||{},cost=V.reconcileProgress(context.progress||{},progress,Number(context.earned)||0);
+    const progress=V.compatibleProgress(context.progress||{},body.progress||{}),cost=V.reconcileProgress(context.progress||{},progress,Number(context.earned)||0);
     // Compatibility endpoint for older clients: this endpoint still draws on the server.
     if((progress.jerseyUnlocks||[]).length!==(context.progress?.jerseyUnlocks||[]).length)fail('球衣需要通过云端随机解锁后才能使用旧解锁接口。',409);
     const profile={...C.createGame().profile,legend:Number(context.earned)-cost,jerseyUnlocks:[...(progress.jerseyUnlocks||[])]};

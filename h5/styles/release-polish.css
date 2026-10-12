@@ -41,6 +41,12 @@
 .announcement-content h3.announcement-version{font-size:16px;color:#ffe6b0;margin:24px 0 14px;padding:12px 0 8px;border-bottom:1px solid #665339}
 .announcement-content h3.announcement-version:first-child{margin-top:0;padding-top:0}
 .announcement-content p{font-size:13px;line-height:1.7;color:#cdc8be;margin:0}
+.announcement-content .announcement-new-players{color:#ead49a}
+.announcement-content .announcement-new-bonds{color:#acd9b4}
+.announcement-content .announcement-removed-bonds{color:#e6abab}
+.home-pointshop.has-store-update,.pointshop-tabs button.has-store-update{position:relative}
+#pointshop .pointshop-tabs{overflow:visible}
+.home-pointshop.has-store-update::after,.pointshop-tabs button.has-store-update::after{content:"";position:absolute;z-index:3;top:0;right:0;width:7px;height:7px;transform:translate(50%,-50%);border-radius:50%;background:#f34b4b;box-shadow:0 0 0 2px #241d18;pointer-events:none}
 .announcement-content .announcement-bullet{display:inline-block;font-size:22px;font-weight:900;line-height:0;vertical-align:-1px}
 .announcement-intro p+p{margin-top:10px}
 .announcement-priority{display:inline-block;margin-right:6px;padding:2px 5px;border:1px solid #ffdb87;border-radius:4px;background:#ffcf60;color:#352008;font-size:10px;font-weight:900;line-height:1.3;vertical-align:2px;white-space:nowrap}

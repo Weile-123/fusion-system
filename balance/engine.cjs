@@ -40,7 +40,7 @@ function initialize(core,config){
   const chosen=config.talent||preferred||talentOffer[0].id;
   if(!config.scenario&&!talentOffer.some(t=>t.id===chosen))throw Error('Talent is not in visible opening offer');
   if(!core.TALENTS.some(t=>t.id===chosen))throw Error('Unknown talent');
-  const progress={...game.profile.upgrades,jerseyUnlocks:game.profile.jerseyUnlocks,gearUnlocks:game.profile.gearUnlocks};
+  const progress={...game.profile.upgrades,jerseyUnlocks:game.profile.jerseyUnlocks,gearUnlocks:game.profile.gearUnlocks,playerUnlocks:game.profile.playerUnlocks};
   game.run=core.createRun(chosen,config.seed,progress,config.rulesVersion??core.BALANCE_RULES_VERSION);
   if(config.scenario){
     const s=config.scenario,r=game.run;

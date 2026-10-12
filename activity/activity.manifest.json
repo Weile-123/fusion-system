@@ -43,7 +43,7 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 11,
+    "rulesVersion": 16,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
@@ -69,15 +69,18 @@
     "legacyRules1To8Checked": true,
     "weeklyMinimumRulesVersion": 6,
     "legacyRules1To9Checked": true,
-    "legacyRules1To10Checked": true
+    "legacyRules1To10Checked": true,
+    "legacyRules1To14Checked": true,
+    "legacyRules1To15Checked": true,
+    "legacyRules1To16Checked": true
   },
   "activity": {
     "status": "verified"
   },
   "lastFunctionUpdate": {
-    "functionName": "activity_api",
-    "verifiedAt": "2026-10-12T03:48:16.735Z",
-    "rulesVersion": 11,
+    "date": "2026-10-13",
+    "verifiedAt": "2026-10-12T16:23:31.368Z",
+    "rulesVersion": 16,
     "supportedRulesVersions": [
       1,
       2,
@@ -89,37 +92,41 @@
       8,
       9,
       10,
-      11
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
     ],
-    "randomEvents": 36,
-    "synergies": 100,
-    "healthChecked": true,
-    "legendReadChecked": true,
-    "ovrReadChecked": true,
-    "unauthorizedWriteRejected": true,
-    "authenticatedGameplayChecked": true,
-    "frontendPublished": false,
-    "databaseMigrationApplied": true,
+    "reason": "S rewarded recruitment counts toward SSR guarantee",
     "configurationPreserved": true,
-    "backup": ".local-tools/player-shop-deployed-20261012.zip",
-    "deployedZipSha256": "1b8ed419444517a3012d29bc6081f2b69abc8128de53f1a3459db2a7102adacd",
+    "backup": ".local-tools/rule16/production-before.zip",
+    "deployedZipSha256": "172dc10719a86cc791022a6ab6704f40fde4a88a22b2bb96d7a2a039e7ec16cf",
     "legacyComparison": {
-      "runs": 300,
-      "battles": 900,
-      "settlements": 300,
+      "runs": 225,
+      "rules": "1-15",
       "match": true
     },
-    "compatibilityTests": 71,
     "fullTests": {
-      "passed": 389,
+      "total": 460,
+      "passed": 459,
       "failed": 1,
-      "failure": "Historical reference file checksum mismatch in opponent-tuning.test.cjs; no runtime failure"
+      "knownFailure": "Protected historical UI snapshot checksum mismatch"
     },
-    "evidence": ".local-tools/player-shop-v11-deployment-evidence-20261012.json",
-    "playerShopChecked": true,
-    "playerShopUnlockStage": 5,
-    "playerShopDiscounts": false,
-    "soldBonusSkillsReset": true
+    "normalFlow": {
+      "runs": 9,
+      "battles": 251,
+      "actions": 3597,
+      "death": 4,
+      "censored": 5,
+      "stageBoundary": 30
+    },
+    "authoritativeStatesChecked": 3,
+    "testDataRemoved": true,
+    "evidence": ".local-tools/rule16/live-verification.json",
+    "databaseMigrationApplied": false,
+    "frontendPublished": false
   },
   "deployment": {
     "date": "2026-10-08",
@@ -159,5 +166,161 @@
     "testDataRemoved": true,
     "migrationTaskId": "task-bbcf9f6f",
     "evidence": ".local-tools/weekly-min-evidence-20261012.json"
-  }
+  },
+  "previousFunctionUpdate": {
+    "date": "2026-10-12",
+    "verifiedAt": "2026-10-12T15:53:15.094Z",
+    "rulesVersion": 15,
+    "supportedRulesVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "reason": "SSR recruitment probability and 100-draw guarantee",
+    "configurationPreserved": true,
+    "backup": ".local-tools/rule15/production-before.zip",
+    "deployedZipSha256": "9af9a3a55898511588798f7e2b393b556794a8f98b9f6f2eb86920c4181f4921",
+    "legacyComparison": {
+      "runs": 210,
+      "rules": "1-14",
+      "match": true
+    },
+    "fullTests": {
+      "total": 455,
+      "passed": 454,
+      "failed": 1,
+      "knownFailure": "Protected historical UI snapshot checksum mismatch"
+    },
+    "normalFlow": {
+      "runs": 9,
+      "battles": 251,
+      "actions": 3619,
+      "death": 4,
+      "censored": 5,
+      "stageBoundary": 30
+    },
+    "authoritativeStatesChecked": 3,
+    "testDataRemoved": true,
+    "evidence": ".local-tools/rule15/live-verification.json",
+    "databaseMigrationApplied": false,
+    "frontendPublished": false
+  },
+  "functionUpdateHistory": [
+    {
+      "functionName": "activity_api",
+      "verifiedAt": "2026-10-12T14:51:28.073Z",
+      "rulesVersion": 14,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "randomEvents": 36,
+      "synergies": 108,
+      "healthChecked": true,
+      "legendReadChecked": true,
+      "ovrReadChecked": true,
+      "unauthorizedWriteRejected": true,
+      "authenticatedGameplayChecked": true,
+      "frontendPublished": false,
+      "databaseMigrationApplied": false,
+      "configurationPreserved": true,
+      "backup": ".local-tools/130-release/production-before.zip",
+      "deployedZipSha256": "28d06114128292998e3aace0f1ca505d240a03cdacfad6d345884b3f3957085b",
+      "legacyComparison": {
+        "runs": 550,
+        "battles": 550,
+        "settlements": 550,
+        "match": true
+      },
+      "compatibilityTests": 179,
+      "fullTests": {
+        "passed": 444,
+        "failed": 1,
+        "total": 445,
+        "failure": "Existing historical game-ui snapshot checksum mismatch in opponent-tuning.test.cjs; current runtime checks passed"
+      },
+      "evidence": ".local-tools/130-release/live-verification-summary.json",
+      "playerShopChecked": true,
+      "playerShopUnlockStage": 5,
+      "playerShopDiscounts": false,
+      "soldBonusSkillsReset": true,
+      "authoritativeStatesChecked": 16,
+      "testDataRemoved": true,
+      "legacyPlayerUnlockProgressPreserved": true
+    },
+    {
+      "date": "2026-10-12",
+      "verifiedAt": "2026-10-12T15:53:15.094Z",
+      "rulesVersion": 15,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "reason": "SSR recruitment probability and 100-draw guarantee",
+      "configurationPreserved": true,
+      "backup": ".local-tools/rule15/production-before.zip",
+      "deployedZipSha256": "9af9a3a55898511588798f7e2b393b556794a8f98b9f6f2eb86920c4181f4921",
+      "legacyComparison": {
+        "runs": 210,
+        "rules": "1-14",
+        "match": true
+      },
+      "fullTests": {
+        "total": 455,
+        "passed": 454,
+        "failed": 1,
+        "knownFailure": "Protected historical UI snapshot checksum mismatch"
+      },
+      "normalFlow": {
+        "runs": 9,
+        "battles": 251,
+        "actions": 3619,
+        "death": 4,
+        "censored": 5,
+        "stageBoundary": 30
+      },
+      "authoritativeStatesChecked": 3,
+      "testDataRemoved": true,
+      "evidence": ".local-tools/rule15/live-verification.json",
+      "databaseMigrationApplied": false,
+      "frontendPublished": false
+    }
+  ]
 }

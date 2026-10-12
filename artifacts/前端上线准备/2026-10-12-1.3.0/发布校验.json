@@ -1,0 +1,63 @@
+{
+    "version":  "1.3.0",
+    "backendRulesVersion":  14,
+    "backendSupports":  [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14
+                        ],
+    "frontendZipSha256":  "3fdfd735eed52af78ddafa9c8f419854ab9fb519a5dbadbc01d194ca08955afb",
+    "actualDeployedBackendZipSha256":  "28d06114128292998e3aace0f1ca505d240a03cdacfad6d345884b3f3957085b",
+    "configurationPreserved":  true,
+    "legacyCompatibility":  {
+                                "runs":  550,
+                                "rules":  "1-11",
+                                "match":  true
+                            },
+    "onlineAcceptance":  {
+                             "runs":  16,
+                             "rules":  "1-14",
+                             "match":  true,
+                             "testDataRemoved":  true
+                         },
+    "fullTests":  {
+                      "total":  445,
+                      "pass":  444,
+                      "fail":  1,
+                      "knownFailure":  "Protected historical UI snapshot checksum; not a current runtime failure"
+                  },
+    "flowSmoke":  {
+                      "runs":  9,
+                      "battles":  253,
+                      "actions":  3654,
+                      "death":  4,
+                      "censored":  5,
+                      "boundary":  "stage30"
+                  },
+    "frontendPublished":  false,
+    "frontendZip":  "前端发布包-概率显示修复.zip",
+    "domainReview":  {
+                         "removedHistoryCitationUrls":  23,
+                         "nbaDomainMatchesInZip":  0,
+                         "packagedFiles":  67,
+                         "regressionTestsPassed":  81,
+                         "gameplayDataUnchanged":  true,
+                         "backendRedeployed":  false
+                     },
+    "ssrDisplayRegression":  {
+                                 "testsPassed":  194,
+                                 "invalidCacheRejected":  true,
+                                 "drawAlgorithmChanged":  false
+                             }
+}

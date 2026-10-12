@@ -10,6 +10,22 @@ const assetTypes = {
   '.svg': 'image/svg+xml'
 };
 
+function frontendResearchMetadata() {
+  return {
+    name: 'frontend-research-metadata',
+    enforce: 'pre',
+    transform(code, id) {
+      if (id.split('?')[0].replaceAll('\\', '/') !== resolve('h5/game-data.js').replaceAll('\\', '/')) return null;
+      // History citations are authoring evidence, not browser resources.
+      // Keep them in the shared source; omit unused URLs from the frontend bundle.
+      return {
+        code: code.replace(/("history"\s*:\s*\{\s*"basis"\s*:\s*"(?:[^"\\]|\\.)*")\s*,\s*"source"\s*:\s*"https?:\/\/(?:[^"\\]|\\.)*"/g, '$1'),
+        map: null
+      };
+    }
+  };
+}
+
 function legacyStaticAssets() {
   return {
     name: 'legacy-static-assets',
@@ -32,7 +48,7 @@ export default defineConfig({
   define: { __FEEDBACK_APPLICATION_ID__: JSON.stringify(feedbackApplicationId) },
   base: './',
   publicDir: false,
-  plugins: [legacyStaticAssets()],
+  plugins: [frontendResearchMetadata(), legacyStaticAssets()],
   resolve: {
     alias: {
       '@fusion/dom/jsx-runtime': resolve('src/dom-runtime.mjs'),

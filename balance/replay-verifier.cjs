@@ -1,5 +1,5 @@
 'use strict';
-// Local replay simulation only. Rule 12 is NOT supported by the unchanged deployed backend.
+// Local replay uses the deployment modules; production acceptance is recorded separately.
 const fs=require('node:fs'),C=require('../h5/game-core.js');
 const deployed=require('../activity/cloudfunctions/activity_api/verified-game.js');
 const deployedCore=require('../activity/cloudfunctions/activity_api/game/game-core.js');

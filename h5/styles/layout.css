@@ -14,6 +14,25 @@
   #roster .roster-dock .action-cash img{width:22px;height:18px;object-fit:contain}
   #roster .roster-dock .action-cash span{display:flex;flex-direction:column;white-space:nowrap}
   #roster .roster-dock .action-cash b{font-size:17px;line-height:1.1}
+  #roster .roster-dock button.action-cash{padding:3px 0;border:0;background:transparent;text-align:left;cursor:pointer}
+  #roster .roster-dock .action-cash i{margin-left:auto;margin-right:8px;font-style:normal;font-size:23px;color:#ffd16c}
+  .game-modal.income-overlay{align-items:flex-end;padding:0;background:#000a;backdrop-filter:blur(3px)}
+  .game-modal.income-overlay .modal-card.income-sheet{display:flex;flex-direction:column;width:min(100%,480px);max-height:94vh;max-height:94dvh;min-height:0;overflow:hidden;margin:0 auto;padding:10px 16px calc(16px + env(safe-area-inset-bottom));border-width:1px 1px 0;border-radius:22px 22px 0 0;background:linear-gradient(180deg,#26231f 0%,#171719 100%);box-shadow:0 -18px 45px #0009;animation:recruit-sheet-rise .22s ease-out}
+  .income-sheet::before{content:"";display:block;flex-shrink:0;width:42px;height:4px;margin:0 auto 12px;border-radius:999px;background:#6f685e}
+  .income-header{flex-shrink:0}.income-header .recruit-sheet-head{align-items:center;margin-bottom:12px}.income-header h2{margin:0;font-size:20px;line-height:1.2}
+  .income-scroll-frame{position:relative;height:50vh;height:50dvh;flex:0 1 auto;min-height:0;overflow:hidden}
+  .income-details-scroll{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-right:20px}
+  .income-details-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+  .income-scrollbar{position:absolute;right:2px;top:0;bottom:0;width:6px;pointer-events:none}
+  .income-scrollbar::before,.income-scrollbar::after{content:"";position:absolute;left:0;width:0;height:0;border-left:3px solid transparent;border-right:3px solid transparent}
+  .income-scrollbar::before{top:1px;border-bottom:5px solid #806137}
+  .income-scrollbar::after{bottom:1px;border-top:5px solid #806137}
+  .income-scrollbar-track{position:absolute;top:9px;bottom:9px;left:0;right:0;border-radius:3px;background:#292929}
+  .income-scrollbar-thumb{position:absolute;top:0;left:0;width:100%;height:var(--income-thumb-height,35%);border-radius:3px;background:#806137;transform:translateY(var(--income-thumb-top,0px))}
+  .income-scroll-frame:not(.is-scrollable) .income-scrollbar{visibility:hidden}
+  .income-sheet .income-note{flex-shrink:0;margin:12px 0 0;padding-top:10px;border-top:1px solid #6e5734}
+  .income-balance{padding:12px;border:1px solid #6e5734;border-radius:8px;color:#d4c9af}.income-balance b{float:right;color:#ffcf65}
+  .income-group{margin-top:16px}.income-group h3{font-size:13px;color:#e4c27e;margin:0 0 5px}.income-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #ffffff0b;font-size:11px;color:#d2c9b7}.income-row b{color:#ffce64}.income-note,.storage-message{font-size:11px;color:#e4c27e;line-height:1.6}.storage-message{padding:10px;border:1px solid #9b7041;border-radius:8px;background:#3b2b1d}
   #roster .roster-dock .quick-actions{min-width:0;margin:0;gap:6px}
   #roster .roster-dock .quick-actions .btn{min-height:39px;padding:4px 5px;font-size:11px}
   #roster .roster-dock .roster-fight{min-height:42px;margin-top:6px}

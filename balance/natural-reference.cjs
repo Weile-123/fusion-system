@@ -17,10 +17,13 @@ async function main(){
   if(!Number.isInteger(concurrency)||concurrency<1||concurrency>8)throw Error('Invalid --concurrency');
   if(!Number.isInteger(count)||count<1)throw Error('Invalid --count');
   const specs=[{id:'low',policy:'novice',growthLevel:'none'},{id:'mid',policy:'ordinary',growthLevel:'half'},{id:'high',policy:'expert',growthLevel:'full'}];
+  const highCount=args.includes('--high-count')?Number(args[args.indexOf('--high-count')+1]):count;
+  if(!Number.isInteger(highCount)||highCount<1||highCount>count)throw Error('Invalid --high-count');
   const groups=await Promise.all(specs.map(async spec=>{
+    const tierCount=spec.id==='high'?highCount:count;
     const runs=[],byStage=new Map();let checked=null;
     let next=0;
-    await Promise.all(Array.from({length:concurrency},async()=>{while(next<count){
+    await Promise.all(Array.from({length:concurrency},async()=>{while(next<tierCount){
       const i=next++,config={policy:spec.policy,growthLevel:spec.growthLevel,rulesVersion,seed:81101+i,maxStage:1000,maxActions,maxMs,maxBattles:2000,maxActionsPerBattle:500,ads:spec.id==='high'?'rewarded-success':'none'};
       const log=path.join('完整记录',spec.id+'-'+config.seed+'.json.gz'),file=path.join(path.dirname(out),log);
       const record=fs.existsSync(file)?JSON.parse(zlib.gunzipSync(fs.readFileSync(file))):await isolated(config);
@@ -42,11 +45,11 @@ async function main(){
     }}));
     runs.sort((a,b)=>a.seed-b.seed);
     const sorted=runs.map(x=>x.highestCleared).sort((a,b)=>a-b),q=p=>p===.5?median(sorted):sorted[Math.ceil(sorted.length*p)-1];
-    const points=[...byStage].sort((a,b)=>a[0]-b[0]).map(([stage,rows])=>({stage,player:median(rows.map(x=>x.player)),enemy:rows[0].enemy,n:rows.length,reachRate:rows.length/count,playerMin:Math.min(...rows.map(x=>x.player)),playerMax:Math.max(...rows.map(x=>x.player))}));
-    return {...spec,ads:spec.id==='high'?'rewarded-success':'none',label:{low:'低阶：新手／无局外成长',mid:'中阶：普通策略／半局外成长',high:'高阶：高手策略／满局外成长／广告'}[spec.id],n:runs.length,points,validation:checked,summary:{clears:runs.filter(x=>x.highestCleared>=10).length,p10:q(.1),p50:q(.5),p90:q(.9),max:sorted.at(-1),errors:runs.filter(x=>x.status==='error').length,censored:runs.filter(x=>x.status==='censored').length},runs};
+    const points=[...byStage].sort((a,b)=>a[0]-b[0]).map(([stage,rows])=>({stage,player:median(rows.map(x=>x.player)),enemy:rows[0].enemy,n:rows.length,reachRate:rows.length/tierCount,playerMin:Math.min(...rows.map(x=>x.player)),playerMax:Math.max(...rows.map(x=>x.player))}));
+    return {...spec,seeds:Array.from({length:tierCount},(_,i)=>81101+i),ads:spec.id==='high'?'rewarded-success':'none',label:{low:'低阶：新手／无局外成长',mid:'中阶：普通策略／半局外成长',high:'高阶：高手策略／满局外成长／广告'}[spec.id],n:runs.length,points,validation:checked,summary:{clears:runs.filter(x=>x.highestCleared>=10).length,p10:q(.1),p50:q(.5),p90:q(.9),max:sorted.at(-1),errors:runs.filter(x=>x.status==='error').length,censored:runs.filter(x=>x.status==='censored').length},runs};
   }));
   fs.mkdirSync(path.dirname(out),{recursive:true});
-  const data={kind:'natural',date:'2026-10-11',rulesVersion,seeds:Array.from({length:count},(_,i)=>81101+i),description:count+' fresh runs per tier; low/mid no ads, high rewarded ads succeed with real limits. Legal recruitment/training/economy and events. High uses full account growth but acquires roster naturally. Limits are censored, not defeats.',limits:{maxStage:1000,maxActions,maxMs,maxBattles:2000,maxActionsPerBattle:500},sourceHashes:manifest(),groups};
+  const data={kind:'natural',date:args.includes('--date')?args[args.indexOf('--date')+1]:new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'}),rulesVersion,seeds:Array.from({length:count},(_,i)=>81101+i),description:count+' low/mid and '+highCount+' high fresh runs; low/mid no ads, high rewarded ads succeed with real limits. Legal recruitment/training/economy and events. High uses full account growth but acquires roster naturally. Limits are censored, not defeats.',limits:{maxStage:1000,maxActions,maxMs,maxBattles:2000,maxActionsPerBattle:500},sourceHashes:manifest(),groups};
   fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');
   fs.writeFileSync(path.join(path.dirname(out),'index.html'),require('./natural-page.cjs').page(data));
   fs.writeFileSync(path.join(path.dirname(out),'natural-curves.csv'),'\uFEFFtier,stage,playerMedian,enemy,reached,total,reachRate,playerMin,playerMax\n'+groups.flatMap(g=>g.points.map(p=>[g.id,p.stage,p.player,p.enemy,p.n,g.n,p.reachRate,p.playerMin,p.playerMax].join(','))).join('\n')+'\n');

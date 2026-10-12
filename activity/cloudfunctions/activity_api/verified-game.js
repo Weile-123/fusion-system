@@ -44,7 +44,7 @@ function replay(state,operations,terminal,strategy){
 function digest(sequence,operations,terminal,strategy){return crypto.createHash('sha256').update(JSON.stringify({sequence,operations,terminal,strategy:strategy||''})).digest('hex')}
 function progressCost(progress){
   if(!progress||typeof progress!=='object'||Array.isArray(progress))invalid('局外加成无效。');
-  const keys=new Set([...C.META_UPGRADES.map(item=>item.id),'jerseyUnlocks','gearUnlocks']);
+  const keys=new Set([...C.META_UPGRADES.map(item=>item.id),'jerseyUnlocks','gearUnlocks','playerUnlocks']);
   if(Object.keys(progress).some(key=>!keys.has(key)))invalid('局外加成字段无效。');
   let cost=0;
   for(const item of C.META_UPGRADES){const level=progress[item.id]??0;if(!Number.isInteger(level)||level<0||level>item.prices.length)invalid('局外加成无效。');cost+=item.prices.slice(0,level).reduce((a,b)=>a+b,0)}
@@ -52,14 +52,24 @@ function progressCost(progress){
   if(!Array.isArray(jerseys)||new Set(jerseys).size!==jerseys.length||jerseys.some(id=>!C.GEAR.some(item=>item.id===id&&item.unlockable&&item.slot==='球衣')))invalid('球衣解锁记录无效。');
   const gear=progress.gearUnlocks??[];
   if(!Array.isArray(gear)||new Set(gear).size!==gear.length||gear.some(id=>!C.GEAR.some(item=>item.id===id&&item.legendary)))invalid('传奇装备解锁记录无效。');
-  return cost+jerseys.length*C.JERSEY_UNLOCK_PRICE+gear.length*C.LEGENDARY_GEAR_UNLOCK_PRICE;
+  const players=progress.playerUnlocks??[];
+  if(!Array.isArray(players)||new Set(players).size!==players.length||players.some(id=>!C.LEGENDARY_PLAYERS.some(star=>star.id===id)))invalid('传奇球员解锁记录无效。');
+  return cost+jerseys.length*C.JERSEY_UNLOCK_PRICE+gear.length*C.LEGENDARY_GEAR_UNLOCK_PRICE+players.length*C.LEGENDARY_PLAYER_UNLOCK_PRICE;
+}
+function compatibleProgress(previous,requested){
+  progressCost(requested);
+  // Older clients have no player-unlock field. Keep the server-owned history.
+  return !Object.hasOwn(requested,'playerUnlocks')&&(previous.playerUnlocks||[]).length
+    ?{...requested,playerUnlocks:[...previous.playerUnlocks]}:requested;
 }
 function reconcileProgress(previous,requested,earned){
+  requested=compatibleProgress(previous,requested);
   const cost=progressCost(requested);progressCost(previous);
   for(const item of C.META_UPGRADES)if((requested[item.id]||0)<(previous[item.id]||0))invalid('局外加成与云端记录不一致。');
   if((previous.jerseyUnlocks||[]).some(id=>!(requested.jerseyUnlocks||[]).includes(id)))invalid('球衣解锁记录与云端不一致。');
   if((previous.gearUnlocks||[]).some(id=>!(requested.gearUnlocks||[]).includes(id)))invalid('传奇装备解锁记录与云端不一致。');
+  if((previous.playerUnlocks||[]).some(id=>!(requested.playerUnlocks||[]).includes(id)))invalid('传奇球员解锁记录与云端不一致。');
   if(cost>earned)invalid('局外加成尚无已验证的传奇点记录；本局保留本地进度。');
   return cost;
 }
-module.exports={replay,digest,progressCost,reconcileProgress};
+module.exports={replay,digest,progressCost,reconcileProgress,compatibleProgress};

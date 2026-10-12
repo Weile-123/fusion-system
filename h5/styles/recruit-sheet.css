@@ -8,6 +8,10 @@
 .recruit-sheet-balance{margin:14px 0 10px!important;padding:10px 12px;border:1px solid #4e402d;border-radius:10px;background:#211d18;color:#d7c8ae!important;font-size:12px!important;font-weight:800}
 .recruit-sheet-balance b{margin-left:3px;color:#ffd065;font-size:20px;font-weight:950;line-height:1}
 .recruit-sheet-balance{color:#ffd065!important}
+.recruit-sheet-balance{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.recruit-sheet-cash{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.recruit-sheet-pity{margin-left:auto;display:inline-flex;align-items:center;gap:5px;color:#d7c8ae;font-size:11px;white-space:nowrap}
+.recruit-sheet-pity strong{color:#ffd065;font-size:14px;font-variant-numeric:tabular-nums}
 .recruit-sheet-actions{display:grid;gap:9px}
 .recruit-sheet-actions>button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:66px;padding:12px 14px;border:1px solid #665031;border-radius:12px;background:#302b24;color:#fff3dd;text-align:left}
 .recruit-sheet-actions>button:is([data-act="recruit-normal"],[data-act="recruit-ten"]):not(:disabled){border-color:#d59a2b}

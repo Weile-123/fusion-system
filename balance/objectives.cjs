@@ -11,6 +11,7 @@ function profileFor(C,level,seed){
   p.jerseyUnlocks=select(C.GEAR.filter(x=>x.slot==='球衣'&&x.unlockable));
   p.gearUnlocks=select(C.GEAR.filter(x=>x.legendary));
   p.metaUnlocks.talents=select(C.TALENTS.filter(x=>x.unlock));
+  p.playerUnlocks=select(C.LEGENDARY_PLAYERS||[]);
   // 这里只建立用户指定的历史账号进度，不增加对局奖金、不赠送实物。
   return p;
 }

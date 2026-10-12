@@ -115,3 +115,21 @@ test('device failure cannot silently turn ordinary saves into cloud writes',asyn
   const calls=[],store=storageFor({indexedDB:{open(){throw Error('blocked')}},ColorboxAI:{storage:{getValue:async()=>null,setValue:async()=>{calls.push('set')}}}});
   await assert.rejects(store.save({version:1}),/Device storage/);assert.deepEqual(calls,[]);
 });
+
+test('valid serialized SDK saves survive a failed device import',async()=>{
+  const snapshot={version:1,profile:{legend:123,jerseyUnlocks:['lakers_jersey']},run:{stage:7}};
+  let writes=0;
+  const store=storageFor({indexedDB:{open(){throw Error('blocked')}},ColorboxAI:{storage:{getValue:async()=>({code:200,data:{mySupFusionGameV1:JSON.stringify(snapshot)}}),setValue:async()=>{writes++}}}});
+  assert.equal(JSON.stringify(await store.load()),JSON.stringify(snapshot));assert.equal(store.loadError,'');assert.equal(writes,0);
+});
+
+test('failed SDK reads and corrupt local saves are distinguished from an empty save',async()=>{
+  const failed=storageFor({ColorboxAI:{storage:{getValue:async()=>({code:403}),setValue:async()=>({ok:true})}}});
+  assert.equal(await failed.load(),null);assert.ok(failed.loadError);
+  const corrupt=storageFor({localStorage:{getItem:()=>'{broken',setItem(){}}});
+  assert.equal(await corrupt.load(),null);assert.ok(corrupt.loadError);
+  for(const data of [null,{}, {mySupFusionGameV1:null}]){
+    const empty=storageFor({ColorboxAI:{storage:{getValue:async()=>({code:200,data}),setValue:async()=>({ok:true})}}});
+    assert.equal(await empty.load(),null);assert.equal(empty.loadError,'');
+  }
+});

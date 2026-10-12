@@ -41,7 +41,7 @@ test('no-death route matches the reference strength without any death member',()
 test('all guide candidates and all supported rule versions replay identically on server',()=>{
   for(const route of routes){const run=roster(route),fused=C.fused(run);assert.ok(Number.isFinite(fused.rating));assert.equal(new Set(route.ids).size,16);}
   for(const version of [1,2,3]){const initial=roster(routes[0],version),game=C.createGame();game.run=structuredClone(initial);const report=C.battle(game,'outside'),replay=V.replay(initial,[],'battle','outside');assert.deepEqual(replay.state,game.run);assert.deepEqual(replay.report,report);}
-  assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,require('../activity/cloudfunctions/activity_api/game/game-core.js').STARS);
+  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');for(let version=1;version<=C.BALANCE_RULES_VERSION;version++)assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).STARS,backend.catalogForRun({balanceRulesVersion:version}).STARS);
 });
 
 test('legacy recruit credits authorize new offers without permitting unpaid rerolls',()=>{

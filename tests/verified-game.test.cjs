@@ -1,5 +1,14 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const C=require('../h5/game-core.js'),V=require('../balance/replay-verifier.cjs');
+test('legendary player unlock progress validates costs, IDs, uniqueness and irreversible ownership',()=>{
+ const id=C.LEGENDARY_PLAYERS[0].id,previous={playerUnlocks:[id]};
+ assert.equal(V.progressCost(previous),400);assert.equal(V.reconcileProgress({},previous,400),400);
+ assert.throws(()=>V.reconcileProgress({},previous,399));
+ for(const playerUnlocks of [[id,id],['curry'],['unknown'],'bad'])assert.throws(()=>V.progressCost({playerUnlocks}));
+ assert.throws(()=>V.reconcileProgress(previous,{playerUnlocks:[]},400));
+ assert.deepEqual(V.compatibleProgress(previous,{}),previous);assert.equal(V.reconcileProgress(previous,{},400),400);
+ assert.deepEqual(V.compatibleProgress({},{}),{});assert.throws(()=>V.compatibleProgress(previous,[]));
+});
 function draft(seed=911,version=C.BALANCE_RULES_VERSION){
   const run=C.createRun('reserve_fund',seed,{},version),operations=[];
   for(let i=0;i<6;i++){

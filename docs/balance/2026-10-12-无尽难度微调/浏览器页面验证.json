@@ -1,0 +1,286 @@
+{
+  "checks": 40,
+  "errors": [],
+  "results": [
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "10",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "10",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "50",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "50",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "100",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "100",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "200",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "200",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "1000",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 390,
+      "range": "1000",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "10",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "10",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "50",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "50",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "100",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "100",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "200",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "200",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "1000",
+      "scale": "linear",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/index.html",
+      "width": 1280,
+      "range": "1000",
+      "scale": "log",
+      "paths": 12
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "10",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "10",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "50",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "50",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "100",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "100",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "200",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "200",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "1000",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 390,
+      "range": "1000",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "10",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "10",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "50",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "50",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "100",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "100",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "200",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "200",
+      "scale": "log",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "1000",
+      "scale": "linear",
+      "paths": 6
+    },
+    {
+      "file": "docs/balance/2026-10-12-无尽难度微调/新版/index.html",
+      "width": 1280,
+      "range": "1000",
+      "scale": "log",
+      "paths": 6
+    }
+  ]
+}

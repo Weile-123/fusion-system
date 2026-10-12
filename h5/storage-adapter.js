@@ -41,28 +41,42 @@
     }
   };
   const saveKey = 'mySupFusionGameV1';
+  function decodeSave(value) {
+    if (typeof value === 'string') { try { value = JSON.parse(value); } catch (_) { return null; } }
+    return value && typeof value === 'object' && value.version === 1 ? value : null;
+  }
   window.FusionStorage = {
     platformAvailable() { return !!(window.ColorboxAI?.storage?.getValue && window.ColorboxAI?.storage?.setValue); },
-    localAvailable() { return !!(window.indexedDB || window.localStorage); },
+    localAvailable() { try { return !!(window.indexedDB || window.localStorage); } catch (_) { return false; } },
     available() { return this.localAvailable() || this.platformAvailable(); },
     async readLocal() {
+      this.localReadError = '';
       await (this.localQueue || Promise.resolve()).catch(() => {});
-      if (window.indexedDB) { try { const value = await withStorageTimeout(fusionLocalStore.get(saveKey)); if (value) return value; } catch (_) {} }
-      try { return JSON.parse(window.localStorage?.getItem(saveKey) || 'null'); } catch (_) { return null; }
+      if (window.indexedDB) { try { const raw = await withStorageTimeout(fusionLocalStore.get(saveKey)), value = decodeSave(raw); if (value) return value; if (raw != null) this.localReadError = '设备存档格式无法识别'; } catch (_) {} }
+      try { const raw = window.localStorage?.getItem(saveKey), value = decodeSave(raw); if (value) { this.localReadError = ''; return value; } if (raw != null) this.localReadError = '设备存档格式无法识别'; return null; } catch (_) { return null; }
     },
     async load() {
+      this.loadError = '';
       const local = await this.readLocal();
       if (local) return local;
       // One-time import of legacy SDK saves when this device has no local save.
-      if (!this.platformAvailable()) return null;
+      if (!this.platformAvailable()) { this.loadError = this.localReadError; return null; }
       try {
         const result = await withStorageTimeout(window.ColorboxAI.storage.getValue(saveKey));
-        if (result?.code != null && result.code !== 0 && result.code !== 200) return null;
-        const candidate = result?.data?.[saveKey] ?? result?.[saveKey] ?? result?.data ?? result;
-        if (candidate?.version !== 1) return null;
-        await this.save(candidate);
+        if (result?.code != null && result.code !== 0 && result.code !== 200) throw new Error('云端存档读取失败');
+        const raw = result?.data && Object.hasOwn(result.data, saveKey) ? result.data[saveKey]
+          : result && Object.hasOwn(result, saveKey) ? result[saveKey]
+          : result && Object.hasOwn(result, 'data') ? result.data : result;
+        const candidate = decodeSave(raw);
+        if (!candidate) {
+          this.loadError = this.localReadError;
+          if (raw != null && raw !== '' && raw !== 'null' && !(typeof raw === 'object' && !Object.keys(raw).length)) this.loadError = '存档格式无法识别';
+          return null;
+        }
+        // A failed device import must not discard the only valid cloud backup.
+        try { await this.save(candidate); } catch (_) {}
         return candidate;
-      } catch (_) { return null; }
+      } catch (_) { this.loadError = '存档读取失败，请稍后重试'; return null; }
     },
     async save(value) {
       const snapshot = JSON.parse(JSON.stringify(value));

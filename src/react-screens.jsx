@@ -129,7 +129,7 @@ function MarkupScreen({ html }) {
   return createElement(Fragment, null, ...parseGeneratedMarkup(html).map(markupNodeToReact));
 }
 
-function HomeScreen({ active, stage, announcementUnread }) {
+function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread }) {
   return (
     <>
       <section className="home-hero">
@@ -152,7 +152,7 @@ function HomeScreen({ active, stage, announcementUnread }) {
       <button className={`btn wide home-primary home-new${active ? '' : ' home-start'}`} data-act="new">{active ? '开启另一段旅程' : '开启新旅程'} <span>→</span></button>
       <button className="home-leaderboard-entry button-7" data-act="leaderboard">排行榜 <span>→</span></button>
       <div className="home-entry-row grid grid-cols-2">
-        <button className="home-secondary home-pointshop" data-act="pointshop">点数商店</button>
+        <button className={`home-secondary home-pointshop${legendaryStoreUnread ? ' has-store-update' : ''}`} data-act="pointshop">点数商店</button>
         <button className="home-secondary home-profile" data-act="profile">传奇档案</button>
       </div>
       <button type="button" className="home-feedback button-7" data-act="feedback-open">反馈入口</button>
@@ -162,8 +162,26 @@ function HomeScreen({ active, stage, announcementUnread }) {
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新版本 · 1.2.1 · 2026.10.12</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新版本 · 1.3.1 · 2026.10.13</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">1.3.1 · 2026.10.13 · SSR招募概率与保底调整</h3>
+      <h3>SSR概率提升</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> SSR招募概率最高值由2%提升至<strong>3%</strong>；选择开局天赋<strong>「球探网络」</strong>后提升至<strong>4%</strong>。第1—20关概率保持原有计算方式。</p>
+      <h3>SSR保底机制</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 普通招募、S级球员专属招募计<strong>1抽</strong>，十连招募计<strong>10抽</strong>，连续99抽未出现SSR时，第<strong>100抽必出SSR</strong>；提前出现SSR后重新累计。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 保底次数按本局保存，退出、读档不重置。以上调整仅对<strong>新开局</strong>生效，已有对局继续使用原规则。</p>
+      <h3 className="announcement-version">1.3.0 · 2026.10.12 · 球星羁绊扩充与体验优化</h3>
+      <h3>球星与羁绊扩充</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 调整并扩充球员属性、技能和羁绊，新增至135张球员卡、108组羁绊。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 点数商店新增传奇球员解锁，每次花费400传奇点随机解锁一名全星SSR球员，解锁后从下次新开局进入招募池。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次新增球员：<span className="announcement-new-players">维克托·文班亚马、约翰·哈夫利切克、杰伦·布朗、邓肯·罗宾逊、JJ·雷迪克、巴姆·阿德巴约、贾森·特里 + <span style={{"text-decoration": "underline"}}>10名隐藏SSR球员</span>。</span></p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次新增羁绊：<span className="announcement-new-bonds">六十年代宿敌、洛城首冠、冠军致敬、波士顿复兴、灯泡组合、西决巨人战、绿军连冠骨干、六九总决赛、法国引路人、上将点拨、绿军双探花、绿军FMVP、热火黑八、迈城谢幕季、空接之城后场、快船空间走廊、迈城更衣室、迈城总决赛、2011夺冠搭档、1969抢七大战、达拉斯冠军五人组。</span></p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 删除羁绊：<span className="announcement-removed-bonds">万花筒、四大神射、圣城四柱、全能大前锋、湖人四代核心、绿军四代基石、锋卫得分王、节奏掌控者、禁区统治者、芝城侧翼网、洛城快攻链、达拉斯空间链、纳什转换链。</span></p>
+      <h3>奖金明细与招募确认</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 点击融合面板下方的当前奖金，可从底部展开明细，查看利息、利息上限来源及各项奖金加成。</p>
+      <h3>操作修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 十连招募出售未选球员、满席出售或替换均增加确认弹窗。</p>
+      <p className="announcement-note">新球员、羁绊和难度规则适用于新开局；已有对局继续使用原规则。生涯记录、传奇点和已解锁内容保留。</p>
       <h3 className="announcement-version">1.2.1 · 2026.10.12 · 球员商店与问题修复</h3>
       <h3>球员商店开放</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 进入第5关解锁球员商店，战后返回融合面板时会收到解锁提示。每轮提供3名不重复球员，前两名为A级，第三名有30%概率为S级；满星球员不上架。</p>
@@ -250,12 +268,12 @@ function LeaderboardScreen({ boards, tab, status, mine, playerName, busy, period
     <div key="leaderboard-switch" className={`leaderboard-switch ${tab === 'ovr' ? 'ovr' : ''}`} role="tablist" aria-label="排行榜类别"><button className="button-9" role="tab" aria-selected={tab === 'legend'} data-act="leaderboard-tab" data-id="legend">总传奇点</button><button className="button-9" role="tab" aria-selected={tab === 'ovr'} data-act="leaderboard-tab" data-id="ovr">{ovrTitle}</button><i aria-hidden="true" /></div>
     {tab === 'legend' && <div key="leaderboard-summary" className="leaderboard-my-rank"><span>我的排名<small>总传奇点</small></span><strong>{current?.rank ? `第 ${current.rank} 名` : status[tab] === '正在加载榜单…' ? '读取中' : status[tab] === '' || status[tab] === '暂无成绩' ? '未上榜' : '暂不可用'}</strong><b>{current?.score?.toLocaleString() ?? '—'}</b></div>}
     {tab === 'ovr' && <div key="leaderboard-summary" className={`leaderboard-my-rank leaderboard-ovr-summary${previous ? ' archived' : ''}`} aria-label="OVR排名与周榜">
-      <div className="leaderboard-ovr-score"><span>我的排名</span><small>{ovrTitle}</small>{previous && !current ? <b>{status.ovr === '正在加载榜单…' ? '读取中' : status.ovr.includes('暂不可用') ? '暂不可用' : '未上榜'}</b> : <b>{current?.score?.toLocaleString() ?? '—'} <small className="leaderboard-inline-rank" aria-label={current?.rank ? `第${current.rank}名` : rankText}>{rankText}</small></b>}</div>
+      {!previous && <div className="leaderboard-ovr-score"><span>我的排名</span><small>{ovrTitle}</small><b>{current?.score?.toLocaleString() ?? '—'} <small className="leaderboard-inline-rank" aria-label={current?.rank ? `第${current.rank}名` : rankText}>{rankText}</small></b></div>}
       <div className="leaderboard-ovr-actions">
         {!previous && <div className="leaderboard-countdown"><span>{weeklySupported ? '距离下一周' : '距离下次周一'}</span><strong data-week-countdown="true">{week.countdown || '—'}</strong></div>}
         <button className="leaderboard-history-entry button-7" data-act="leaderboard-period" data-id={previous ? 'current' : 'previous'} disabled={busy || !weeklySupported}><span>{previous ? '← 返回本周排行榜' : '查看上周前50名'}</span><span>{!weeklySupported ? '尚未开放' : previous ? '本周' : '→'}</span></button>
       </div>
-      <p className="leaderboard-week-rule">仅本周新开的对局参与本周排名。每周一零点后，上周对局的后续成绩不再计入周榜，传奇点奖励不受影响。</p>
+      {!previous && <p className="leaderboard-week-rule">仅本周新开的对局参与本周排名。每周一零点后，上周对局的后续成绩不再计入周榜，传奇点奖励不受影响。</p>}
     </div>}
     <div key="leaderboard-window" className="leaderboard-window"><div className={`leaderboard-track ${tab === 'ovr' ? 'ovr' : ''}`}><LeaderboardPage entries={boards.legend} title="总传奇点" unit="" status={status.legend} playerName={playerName} /><LeaderboardPage entries={boards.ovr} title={ovrTitle} unit="OVR" status={status.ovr} playerName={playerName} preserveNames={previous} /></div></div>
   </>;

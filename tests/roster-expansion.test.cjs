@@ -3,7 +3,7 @@ const C=require('../h5/game-core.js'),D=require('../h5/game-data.js');
 function lineup(ids,version=12){const r=C.createRun('__neutral__',911,{},version);r.offer=[];r.cash=100;for(const [slot,id]of Object.entries(ids)){r.slots[slot]=id;r.owned[id]={stars:1,train:0,trainedAt:0};}return r;}
 const plain=v=>JSON.parse(JSON.stringify(v));
 test('expansion keeps exact tier/bond counts and at least three bonds for every high-tier identity',()=>{
- assert.equal(C.BALANCE_RULES_VERSION,12);assert.equal(C.STARS.length,135);assert.equal(new Set(C.STARS.map(p=>p.id)).size,135);
+ assert.ok(C.BALANCE_RULES_VERSION>=12);assert.equal(C.STARS.length,135);assert.equal(new Set(C.STARS.map(p=>p.id)).size,135);
  assert.deepEqual(Object.fromEntries(['SSR','S','A','B','C'].map(t=>[t,C.STARS.filter(p=>p.tier===t).length])),{SSR:18,S:18,A:31,B:58,C:10});
  assert.deepEqual(Object.fromEntries([2,3,4,5].map(n=>[n,C.SYNERGIES.filter(b=>b.ids.length===n).length])),{2:71,3:24,4:6,5:7});
  for(const p of C.STARS.filter(p=>['S','SSR'].includes(p.tier)))assert.ok(C.starSynergies(p.id).length>=3,p.name);
@@ -61,7 +61,7 @@ test('bonus cash uses victory slot snapshot, pays only on next, and windows rese
 });
 test('new core preserves old backend states and battle replay for rules 1–11',()=>{
  const V=require('../activity/cloudfunctions/activity_api/verified-game.js');
- const old=require('../activity/cloudfunctions/activity_api/game/game-core.js');
+ const old=require('../docs/balance/2026-10-12-球员羁绊更新/源码快照/activity/cloudfunctions/activity_api/game/game-core.js');
  for(let version=1;version<=11;version++)for(const seed of [911,81101,22]){
   const a=C.createRun('steady_interest',seed,{},version),b=old.createRun('steady_interest',seed,{},version);assert.deepEqual(plain(a),plain(b),'opening '+version);
   const ops=[];for(let i=0;i<6;i++){const id=a.offer[0];assert.deepEqual(C.recruit(a,id),old.recruit(b,id));ops.push({action:'recruit',args:[id]});if(i<5){C.makeOffer(a);old.makeOffer(b);ops.push({action:'makeOffer',args:[]});}}

@@ -8,7 +8,7 @@ const data=JSON.parse(fs.readFileSync(snapshot,'utf8'));
 test('natural curves exactly aggregate real first-battle trajectories without post-death extrapolation',()=>{
   assert.equal(data.kind,'natural');assert.equal(data.groups.length,3);
   for(const g of data.groups){
-    assert.equal(g.n,data.seeds?.length||30);assert.equal(g.runs.length,g.n);assert.equal(g.summary.errors,0);
+    assert.equal(g.n,g.seeds?.length||data.seeds?.length||30);assert.equal(g.runs.length,g.n);assert.equal(g.summary.errors,0);
     assert.equal(g.validation.browserGlobal.match,true);assert.equal(g.validation.cloud.match,true);
     for(const r of g.runs){assert.equal(new Set(r.trajectory.map(p=>p.stage)).size,r.trajectory.length);assert.ok(r.trajectory.every(p=>p.stage<=r.highestAttempted));assert.ok(r.trajectory.every(p=>p.player>0&&Number.isFinite(p.player)));}
     for(const p of g.points){
@@ -21,7 +21,7 @@ test('every natural seed starts empty with only the actual core opening resource
   for(const group of data.groups)for(const run of group.runs){
     const config=normalize({policy:group.policy,growthLevel:group.growthLevel,seed:run.seed,rulesVersion:data.rulesVersion??6,ads:group.ads||'none'}),{game}=initialize(C,config),p=game.profile;
     if(run.talent)assert.equal(game.run.talent,run.talent);
-    const expected=C.createRun(game.run.talent,run.seed,{...p.upgrades,jerseyUnlocks:p.jerseyUnlocks,gearUnlocks:p.gearUnlocks},data.rulesVersion??6);
+    const expected=C.createRun(game.run.talent,run.seed,{...p.upgrades,jerseyUnlocks:p.jerseyUnlocks,gearUnlocks:p.gearUnlocks,playerUnlocks:p.playerUnlocks},data.rulesVersion??6);
     assert.deepEqual(game.run,expected);assert.equal(Object.keys(game.run.owned).length,0);assert.equal(game.run.stage,1);assert.equal(game.run.gearReserve.length,0);assert.equal(game.run.boosts.length,0);assert.deepEqual(game.run.eventState.bonuses,{});
   }
 });

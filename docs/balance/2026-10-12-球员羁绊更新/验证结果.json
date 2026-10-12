@@ -1,0 +1,354 @@
+{
+  "date": "2026-10-12",
+  "rulesVersion": 12,
+  "newRuns": 300,
+  "historicalBaseline": {
+    "rulesVersion": 9,
+    "reused": true,
+    "rerun": false
+  },
+  "errors": 0,
+  "censored": 0,
+  "checks": {
+    "specialized": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0
+    },
+    "coreRegression": {
+      "total": 157,
+      "passed": 156,
+      "failed": 1,
+      "existingFailure": "旧源码快照game-ui.js的历史校验哈希不符；本轮未修改，内容与Git HEAD一致"
+    },
+    "naturalReference": {
+      "total": 22,
+      "passed": 22,
+      "failed": 0
+    },
+    "comparison": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "browser": {
+      "checks": 40,
+      "errors": [],
+      "results": [
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "10",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "10",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "50",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "50",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "100",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "100",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "200",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "200",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "1000",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 390,
+          "range": "1000",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "10",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "10",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "50",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "50",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "100",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "100",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "200",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "200",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "1000",
+          "scale": "linear",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/index.html",
+          "width": 1280,
+          "range": "1000",
+          "scale": "log",
+          "paths": 12
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "10",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "10",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "50",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "50",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "100",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "100",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "200",
+          "scale": "linear",
+          "paths": 0
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "200",
+          "scale": "log",
+          "paths": 0
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "1000",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 390,
+          "range": "1000",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "10",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "10",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "50",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "50",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "100",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "100",
+          "scale": "log",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "200",
+          "scale": "linear",
+          "paths": 0
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "200",
+          "scale": "log",
+          "paths": 0
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "1000",
+          "scale": "linear",
+          "paths": 6
+        },
+        {
+          "file": "docs/balance/2026-10-12-球员羁绊更新/新版/index.html",
+          "width": 1280,
+          "range": "1000",
+          "scale": "log",
+          "paths": 6
+        }
+      ]
+    },
+    "historicalIntegrity": {
+      "matched": 79
+    },
+    "productionBuild": {
+      "exitCode": 0
+    }
+  },
+  "outlier": {
+    "seed": 81192,
+    "highestCleared": 138,
+    "highestAttempted": 139,
+    "actions": 9994,
+    "battles": 279,
+    "other99Maximum": 73,
+    "replay": {
+      "browserGlobal": {
+        "match": true,
+        "steps": 9994,
+        "battles": 279
+      },
+      "cloud": {
+        "match": true,
+        "steps": 9994,
+        "battles": 279,
+        "pendingDeployment": true,
+        "mode": "local simulation with rules 12"
+      }
+    }
+  },
+  "backend": {
+    "deployedRulesVersion": 11,
+    "rules12Validation": "local simulation only",
+    "productionValidated": false
+  }
+}

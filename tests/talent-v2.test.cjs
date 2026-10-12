@@ -45,6 +45,6 @@ test('phase specializations affect combat dimensions and have equal summed bonus
     for(const [key,n] of Object.entries(effects))assert.equal(result.dimensions[key]>base.dimensions[key],n>0,`${id}: ${key}`);
   }
 });
-test('client preserves the unchanged rule eleven backend catalog while rule twelve awaits deployment',()=>{
-  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');assert.equal(backend.BALANCE_RULES_VERSION,11);assert.equal(C.BALANCE_RULES_VERSION,12);assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).STARS,backend.STARS);assert.deepEqual(C.catalogForRun({balanceRulesVersion:11}).SYNERGIES,backend.SYNERGIES);
+test('client and deployment backend preserve matching catalogs for every supported rule version',()=>{
+  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');assert.equal(backend.BALANCE_RULES_VERSION,16);assert.equal(C.BALANCE_RULES_VERSION,16);for(let version=1;version<=16;version++){assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).STARS,backend.catalogForRun({balanceRulesVersion:version}).STARS);assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).SYNERGIES,backend.catalogForRun({balanceRulesVersion:version}).SYNERGIES);}
 });
