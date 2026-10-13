@@ -81,7 +81,7 @@ test('ordinary saves and loads use only the device even when SDK cloud storage i
   const window={indexedDB,ColorboxAI:{storage:{getValue:async()=>{calls.push('get');return {version:1,savedAt:999,run:{stage:9}}},setValue:async()=>{calls.push('set');return {ok:true}}}}};
   const store=storageFor(window),snapshot={version:1,savedAt:1,run:{stage:2}};
   await store.save(snapshot);assert.deepEqual(await store.load(),snapshot);assert.deepEqual(calls,[]);
-  await store.syncToCloud(snapshot);assert.deepEqual(calls,['set']);
+  await store.syncToCloud(snapshot);assert.deepEqual(calls,['get','set']);
 });
 
 test('legacy platform saves import once and never replace an existing device save',async()=>{
@@ -151,4 +151,54 @@ test('device mirror exists before pending IndexedDB writes and recovers the newe
  const reload=storageFor({indexedDB,localStorage});assert.equal((await reload.load()).run.cash,80);
  // Avoid waiting for the deliberately stalled write in this test.
  void pending;
+});
+
+test('release startup waits for late SDK and restores purchased progress instead of creating an empty save',async()=>{
+ const snapshot={version:1,profile:{legend:0,jerseyUnlocks:['owned']}};
+ const window={indexedDB:fakeIndexedDB()};let writes=0;
+ const actual=storageFor(window);actual.platformRequired=true;
+ delete window.ColorboxAI;
+ setTimeout(()=>{window.ColorboxAI={storage:{getValue:async()=>snapshot,setValue:async()=>{writes++}}}},10);
+ assert.deepEqual(await actual.load(),snapshot);assert.equal(actual.loadError,'');assert.equal(writes,0);
+ assert.deepEqual(await storageFor(window).load(),snapshot);
+});
+
+test('missing SDK in release reports a retryable error and never writes a blank save',async()=>{
+ const values=new Map(),store=storageFor({localStorage:{getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)}},
+  {setTimeout(callback){queueMicrotask(callback);return 1},clearTimeout(){}});
+ store.platformRequired=true;
+ assert.equal(await store.load(),null);assert.match(store.loadError,/读取失败/);assert.equal(values.size,0);
+});
+
+test('existing nonempty device save needs no SDK readiness wait',async()=>{
+ const snapshot={version:1,profile:{legend:1}},window={localStorage:{getItem:()=>JSON.stringify(snapshot)}};
+ const store=storageFor(window);store.platformRequired=true;
+ store.waitForPlatform=()=>{throw Error('must not wait')};assert.equal(JSON.stringify(await store.load()),JSON.stringify(snapshot));
+});
+
+test('release recovers an accidentally created empty device save from the platform backup',async()=>{
+ const snapshot={version:1,profile:{legend:0,playerUnlocks:['jordan']}},values=new Map([['mySupFusionGameV1',JSON.stringify({version:1,profile:{legend:0}})]]);
+ const store=storageFor({localStorage:{getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)},ColorboxAI:{storage:{getValue:async()=>snapshot,setValue:async()=>({ok:true})}}});
+ store.platformRequired=true;assert.deepEqual(await store.load(),snapshot);assert.equal(JSON.parse(values.get('mySupFusionGameV1')).profile.playerUnlocks[0],'jordan');
+});
+
+test('backup refuses lost ownership or training upgrades without replacing the previous backup',async()=>{
+ const old={version:1,profile:{jerseyUnlocks:['owned'],trainingBase:{slots:{creation:2}},upgrades:{scouting:2}}};let writes=0;
+ const store=storageFor({ColorboxAI:{storage:{getValue:async()=>old,setValue:async()=>{writes++;return {ok:true}}}}});
+ for(const profile of [{legend:0},{...old.profile,trainingBase:{slots:{creation:1}}},{...old.profile,upgrades:{scouting:1}}])
+  await assert.rejects(store.syncToCloud({version:1,profile}),/discard purchased/);
+ assert.equal(writes,0);
+ await store.syncToCloud({...old,profile:{...old.profile,legend:1}});assert.equal(writes,1);
+});
+
+test('background backup coalesces requests, retains failure, and retries without blocking device saves',async()=>{
+ const timers=[],writes=[];let fail=true;
+ const store=storageFor({indexedDB:fakeIndexedDB(),ColorboxAI:{storage:{getValue:async()=>null,setValue:async payload=>{if(fail)throw Error('offline');writes.push(payload);return {ok:true}}}}},
+  {setTimeout(callback,ms){const id={callback,ms};timers.push(id);return id},clearTimeout(id){id.cancelled=true}});
+ store.requestBackup({version:1,profile:{legend:1}});store.requestBackup({version:1,profile:{legend:2}});
+ assert.equal(timers.filter(t=>t.ms===300).length,1);
+ await store.flushBackup();assert.match(store.backupError,/offline/);assert.equal(store.pendingBackup.profile.legend,2);
+ await store.save({version:1,profile:{legend:3}});assert.equal((await store.load()).profile.legend,3);
+ fail=false;store.requestBackup({version:1,profile:{legend:3}});await store.flushBackup();
+ assert.equal(writes.length,1);assert.equal(writes[0].mySupFusionGameV1.profile.legend,3);assert.equal(store.pendingBackup,null);
 });

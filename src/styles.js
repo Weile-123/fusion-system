@@ -31,3 +31,4 @@ import '../h5/styles/legendary-player-unlock.css';
 
 import '../h5/styles/training-base.css';
 import '../h5/styles/hundred-recruit.css';
+import '../h5/styles/ssr-rotation.css';

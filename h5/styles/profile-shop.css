@@ -86,9 +86,9 @@
   #roster .fusion-lineup .slot-player{display:flex;flex-direction:column;justify-content:center;padding:6px 5px}
   #roster .fusion-lineup .slot-player .slot-top{min-height:0;padding:0}
   #roster .fusion-lineup .slot-player .slot-body{padding:4px 0 0}
-  #roster .bench-grid{grid-auto-rows:min-content;gap:var(--module-gap)}
-  #roster .bench-grid .bench-card{height:auto;min-height:0}
-  #roster .bench-grid .bench-player{padding:7px 27px 7px 7px}
+  :is(#roster,.bench-operation-demo) .bench-grid{grid-auto-rows:min-content;gap:var(--module-gap)}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-card{height:auto;min-height:0}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-player{padding:7px 27px 7px 7px}
   #shop.active{display:flex;flex-direction:column;gap:var(--module-gap)}
   #shop.active>:is(.shop-tabs,.shop-grid,.roster-combat,.equipped-shelf,.equipment-reserve,.footer-note,.btn.wide){margin-top:0;margin-bottom:0}
   #shop .shop-grid{gap:var(--module-gap)}
@@ -119,9 +119,9 @@
   #shop .jersey-shopitem .shop-card-copy{text-shadow:0 1px 3px #000a}
   #shop .jersey-shopitem .shop-card-copy strong{color:#fffaf0}
   #shop .jersey-shopitem .shop-card-copy small,#shop .jersey-shopitem .shop-card-top{color:#eee6da}
-  #roster .bench-grid .bench-player{padding:7px 7px 7px 31px}
-  #roster .bench-grid .bench-drag-handle{left:2px;right:auto;border-left:0;border-right:1px solid #ffd27755;background:#ffd27716;color:#ffd15d}
-  #roster .bench-grid .bench-drag-handle svg{fill:none}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-player{padding:7px 7px 7px 31px}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle{left:2px;right:auto;border-left:0;border-right:1px solid #ffd27755;background:#ffd27716;color:#ffd15d}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle svg{fill:none}
   #roster .lineup-column{grid-template-rows:repeat(3,auto)}
   #roster .fusion-lineup .slot,#roster .fusion-lineup .slot-player{min-height:0}
   #roster .fusion-lineup .slot-player{height:auto;padding:7px}
@@ -147,7 +147,7 @@
   .bench-card.drag-ghost .bench-drag-handle{position:absolute;left:2px;top:50%;display:grid;place-items:center;width:23px;height:36px;border:0;background:transparent;color:#ffd15d;transform:translateY(-50%)}
   .bench-card.drag-ghost .bench-drag-handle svg{width:15px;height:15px;fill:none}
   .bench-card.drag-ghost .bench-sell{width:max-content;flex:0 0 auto;margin:6px;padding:4px;border:1px solid #dc7771;border-radius:6px;background:#742c30;color:#ffe4de;font-size:8px;font-weight:950}
-  #roster .bench-grid .bench-drag-handle{border:0;background:transparent}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle{border:0;background:transparent}
   /* The locker uses the same material finish as the purchase cards. */
   #shop .equipment-slot-row.is-equipped:not(.jersey-equipment),#shop .equipment-reserve-card:not(.jersey-equipment){border:0;box-shadow:inset 0 1px 0 #ffffff54,inset 0 -1px 0 #0007,0 4px 12px #0008}
   #shop .equipment-slot-row.is-equipped.gear-tier-c,#shop .equipment-reserve-card.gear-tier-c{background:linear-gradient(115deg,#ffffff4a 0%,#ffffff08 28%,#ffffff31 48%,#ffffff00 70%),linear-gradient(135deg,#5b6670,#9da8ae 48%,#38434c)}
@@ -187,7 +187,7 @@
   :is(.card,.fusion-lineup .slot,.bench-card,.player-detail,.profile-star-card).tier-legend{--player-material:linear-gradient(145deg,#ffffff32 0%,#ffffff08 46%,#e8d8b530 100%),linear-gradient(135deg,#b7d9df 0%,#cadfe4 34%,#d4d0df 68%,#dfd2ba 100%)}
   #recruit.draft-style-material .card.tier-c,#recruit.draft-style-material .card.tier-b,#recruit.draft-style-material .card.tier-a,#recruit.draft-style-material .card.tier-s,#recruit.draft-style-material .card.tier-legend,
   #roster .fusion-lineup .slot.tier-c,#roster .fusion-lineup .slot.tier-b,#roster .fusion-lineup .slot.tier-a,#roster .fusion-lineup .slot.tier-s,#roster .fusion-lineup .slot.tier-legend,
-  #roster .bench-card.tier-c,#roster .bench-card.tier-b,#roster .bench-card.tier-a,#roster .bench-card.tier-s,#roster .bench-card.tier-legend,
+  :is(#roster,.bench-operation-demo) .bench-card.tier-c,:is(#roster,.bench-operation-demo) .bench-card.tier-b,:is(#roster,.bench-operation-demo) .bench-card.tier-a,:is(#roster,.bench-operation-demo) .bench-card.tier-s,:is(#roster,.bench-operation-demo) .bench-card.tier-legend,
   .bench-card.drag-ghost.tier-c,.bench-card.drag-ghost.tier-b,.bench-card.drag-ghost.tier-a,.bench-card.drag-ghost.tier-s,.bench-card.drag-ghost.tier-legend{background:var(--player-material);box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0009}
   #profile .catalog .profile-star-card{border-color:color-mix(in srgb,var(--tier) 78%,white);background:var(--player-material);color:#fffaf0;box-shadow:inset 0 1px 0 #ffffff42,0 3px 9px #0007;text-shadow:0 1px 3px #000b}
   #profile .catalog .profile-star-card.tier-legend{border-color:#e4bd55;color:#173e42;text-shadow:0 1px 1px #ffffffd9}
@@ -199,7 +199,7 @@
   #recruit.draft-style-material .card .card-meta{background:#10151ac9;color:#fff7e8;border-color:#ffffff36;text-shadow:0 1px 3px #000}
   #recruit.draft-style-material .card .card-effect{background:#10151ae0;color:#fff7e8;text-shadow:0 1px 3px #000}
   #recruit.draft-style-material .card .card-top .rarity{background:#161c22de;color:#fff6de;border:1px solid #ffffff6b}
-  #roster .fusion-lineup .slot:not(.empty) :is(.slot-top,.slot-body strong,.slot-body small),#roster .bench-card .bench-player{color:#fffaf0;text-shadow:0 1px 3px #000b}
+  #roster .fusion-lineup .slot:not(.empty) :is(.slot-top,.slot-body strong,.slot-body small),:is(#roster,.bench-operation-demo) .bench-card .bench-player{color:#fffaf0;text-shadow:0 1px 3px #000b}
   #roster .fusion-lineup .slot:not(.empty) .slot-value{color:#ffe192}
   /* Team-colored jersey fabric: soft satin streaks over the actual team colors. */
   #shop .equipment-slot-row.is-equipped.jersey-equipment,#shop .equipment-reserve-card.jersey-equipment:is(.gear-tier-c,.gear-tier-b,.gear-tier-a,.gear-tier-s,.gear-tier-sr),.profile-jersey-catalog .equipment-reserve-card.jersey-equipment,.meta-jersey.unlocked.jersey-equipment{border-color:#d9ad54;background:linear-gradient(113deg,#0005 0%,#ffffff12 17%,#ffffff70 29%,#ffffff0b 39%,#0003 58%,#ffffff45 70%,#0005 100%),repeating-linear-gradient(110deg,#ffffff08 0 1px,#0000000a 2px 4px),linear-gradient(135deg,var(--jersey-edge-a),var(--jersey-edge-b));box-shadow:inset 0 1px 0 #ffffff75,inset 0 -1px 0 #0008,0 4px 12px #0007}

@@ -1,4 +1,4 @@
-// 日常存档仅写设备；进入游戏和结束一局时显式通过 SDK 上传备份。
+// 设备保存与平台备份独立，平台失败不能阻塞游戏操作。
   function withStorageTimeout(task, timeoutMs = 2500) {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('storage timeout')), timeoutMs);
@@ -45,10 +45,49 @@
     if (typeof value === 'string') { try { value = JSON.parse(value); } catch (_) { return null; } }
     return value && typeof value === 'object' && value.version === 1 ? value : null;
   }
+  function emptyProgress(value) {
+    const p = value?.profile;
+    if (!p) return false;
+    return !value.run && !(value.pendingCloudRuns?.length) &&
+      !['runs','wins','clears','bestStage','highestStage','bestEndless','bestOvr','legend'].some(key => Number(p[key]) > 0) &&
+      !['jerseyUnlocks','gearUnlocks','playerUnlocks','discovered'].some(key => p[key]?.length) &&
+      !Object.values(p.upgrades || {}).some(level => Number(level) > 0) &&
+      !Object.values(p.metaUnlocks || {}).some(ids => ids?.length) &&
+      !Object.values(p.trainingBase || {}).some(group => Object.values(group || {}).some(level => Number(level) > 0));
+  }
+  function losesPurchases(next, previous) {
+    const a=next?.profile,b=previous?.profile;
+    if(!a||!b)return false;
+    for(const key of ['jerseyUnlocks','gearUnlocks','playerUnlocks'])
+      if((b[key]||[]).some(id=>!(a[key]||[]).includes(id)))return true;
+    for(const key of Object.keys(b.metaUnlocks||{}))
+      if((b.metaUnlocks[key]||[]).some(id=>!(a.metaUnlocks?.[key]||[]).includes(id)))return true;
+    for(const key of Object.keys(b.upgrades||{}))
+      if(Number(a.upgrades?.[key]||0)<Number(b.upgrades[key]||0))return true;
+    for(const group of ['slots','dimensions'])for(const key of Object.keys(b.trainingBase?.[group]||{}))
+      if(Number(a.trainingBase?.[group]?.[key]||0)<Number(b.trainingBase[group][key]||0))return true;
+    return emptyProgress(next)&&!emptyProgress(previous);
+  }
   window.FusionStorage = {
     platformAvailable() { return !!(window.ColorboxAI?.storage?.getValue && window.ColorboxAI?.storage?.setValue); },
     localAvailable() { try { return !!(window.indexedDB || window.localStorage); } catch (_) { return false; } },
-    available() { return this.localAvailable() || this.platformAvailable(); },
+    available() { return this.localAvailable() || this.platformAvailable() || this.platformRequired; },
+    async waitForPlatform() {
+      for(let elapsed=0;!this.platformAvailable()&&elapsed<3000;elapsed+=100)
+        await new Promise(resolve=>setTimeout(resolve,100));
+      if(!this.platformAvailable())throw new Error('Colorbox storage unavailable');
+    },
+    async readPlatform() {
+      const result=await withStorageTimeout(window.ColorboxAI.storage.getValue(saveKey));
+      if(result?.code!=null&&result.code!==0&&result.code!==200)throw new Error('Platform read failed');
+      const raw=result?.data&&Object.hasOwn(result.data,saveKey)?result.data[saveKey]
+        :result&&Object.hasOwn(result,saveKey)?result[saveKey]
+        :result&&Object.hasOwn(result,'data')?result.data:result;
+      const candidate=decodeSave(raw);
+      if(!candidate&&raw!=null&&raw!==''&&raw!=='null'&&!(typeof raw==='object'&&!Object.keys(raw).length))throw new Error('Invalid platform save');
+      this.platformChecked=true;this.platformSnapshot=candidate;
+      return candidate;
+    },
     async readLocal() {
       this.localReadError = '';
       await (this.localQueue || Promise.resolve()).catch(() => {});
@@ -62,20 +101,15 @@
     async load() {
       this.loadError = '';
       const local = await this.readLocal();
-      if (local) return local;
+      if (local && !(this.platformRequired && emptyProgress(local))) return local;
       // One-time import of legacy SDK saves when this device has no local save.
-      if (!this.platformAvailable()) { this.loadError = this.localReadError; return null; }
+      if (!this.platformAvailable()&&!this.platformRequired) { this.loadError = this.localReadError; return local; }
       try {
-        const result = await withStorageTimeout(window.ColorboxAI.storage.getValue(saveKey));
-        if (result?.code != null && result.code !== 0 && result.code !== 200) throw new Error('云端存档读取失败');
-        const raw = result?.data && Object.hasOwn(result.data, saveKey) ? result.data[saveKey]
-          : result && Object.hasOwn(result, saveKey) ? result[saveKey]
-          : result && Object.hasOwn(result, 'data') ? result.data : result;
-        const candidate = decodeSave(raw);
+        await this.waitForPlatform();
+        const candidate = await this.readPlatform();
         if (!candidate) {
           this.loadError = this.localReadError;
-          if (raw != null && raw !== '' && raw !== 'null' && !(typeof raw === 'object' && !Object.keys(raw).length)) this.loadError = '存档格式无法识别';
-          return null;
+          return local;
         }
         // A failed device import must not discard the only valid cloud backup.
         try { await this.save(candidate); } catch (_) {}
@@ -106,9 +140,34 @@
       if (!this.platformAvailable()) return false;
       const snapshot = JSON.parse(JSON.stringify(value));
       this.syncQueue = (this.syncQueue || Promise.resolve()).catch(() => {}).then(async () => {
+        if(!this.platformChecked)await this.readPlatform();
+        if(losesPurchases(snapshot,this.platformSnapshot))throw new Error('Backup would discard purchased progress');
         await this.writePlatform(saveKey, snapshot);
+        this.platformSnapshot=snapshot;
         return true;
       });
       return this.syncQueue;
+    },
+    requestBackup(value) {
+      this.pendingBackup=JSON.parse(JSON.stringify(value));
+      this.backupBlocked=false;
+      if(this.backupTimer==null&&!this.backupRunning)
+        this.backupTimer=setTimeout(()=>{this.backupTimer=null;void this.flushBackup();},300);
+    },
+    async flushBackup() {
+      if(this.backupRunning||!this.pendingBackup)return;
+      if(this.backupTimer!=null){clearTimeout(this.backupTimer);this.backupTimer=null;}
+      this.backupRunning=true;
+      const snapshot=this.pendingBackup;
+      try {
+        if(!await this.syncToCloud(snapshot))throw new Error('Platform unavailable');
+        this.backupError='';this.backupAttempts=0;
+        if(this.pendingBackup===snapshot)this.pendingBackup=null;
+      } catch(error) {this.backupError=error.message;this.backupBlocked=this.pendingBackup===snapshot&&/discard purchased|exceeds 200KB/.test(error.message);}
+      finally {
+        this.backupRunning=false;
+        if(this.pendingBackup&&!this.backupBlocked)this.backupTimer=setTimeout(()=>{this.backupTimer=null;void this.flushBackup();},Math.min(60000,5000*2**Math.min(this.backupAttempts||0,4)));
+        if(this.pendingBackup)this.backupAttempts=(this.backupAttempts||0)+1;
+      }
     }
   };

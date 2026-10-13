@@ -1,4 +1,41 @@
 .slots-heading,.bench-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.roster-operation-toggle{position:relative;overflow:visible;border:1px solid #815e27;border-radius:7px;background:#342b1a;color:#ffd078;padding:8px 7px;font-size:9px;font-weight:900;line-height:1.25;white-space:nowrap}
+.roster-operation-toggle.has-operation-update:after{content:'';position:absolute;right:-3px;top:-3px;width:7px;height:7px;border-radius:50%;background:#ff514c;box-shadow:0 0 0 2px #211e19;pointer-events:none}
+#roster .bench-heading-block{flex-wrap:wrap;gap:6px}
+#roster .bench-heading-copy{flex:1 1 116px}
+#roster .bench-title-actions{flex-wrap:wrap;justify-content:flex-end}
+#roster .bench-panel.panel{position:relative;flex-direction:row;gap:8px;padding:8px}
+#roster .bench-panel .bench-grid{min-width:0;scrollbar-width:none}
+#roster .bench-panel .bench-grid::-webkit-scrollbar{display:none;width:0;height:0}
+#roster .bench-scrollbar{position:relative;flex:0 0 20px;align-self:stretch;width:20px;border-radius:4px;background:#151410;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none}
+#roster .bench-scrollbar[hidden]{display:none!important}
+#roster .bench-scrollbar-thumb{position:absolute;left:3px;right:3px;min-height:36px;border-radius:3px;background:linear-gradient(90deg,#9f783c,#d4a650,#9f783c);box-shadow:inset 0 0 0 1px #e6c67d66;cursor:grab;touch-action:none}
+#roster .bench-scrollbar-thumb[hidden]{display:none!important}
+#roster .bench-scrollbar[aria-disabled="true"]{cursor:default}
+.bench-operation-demo{margin:24px 0 18px;width:100%;pointer-events:none}
+.bench-operation-demo .bench-grid{display:block;overflow:visible;max-height:none}
+.bench-operation-demo .bench-drag-handle{box-shadow:inset 0 0 0 2px #ff5353;border-radius:3px}
+.mode-classic .bench-operation-demo .bench-drag-handle{box-shadow:none}
+.bench-mode-selector{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;margin-top:18px;border:1px solid #685230;border-radius:9px;background:#151411;isolation:isolate}
+.bench-mode-selector>span{position:absolute;z-index:-1;left:4px;top:4px;bottom:4px;width:calc(50% - 4px);border-radius:6px;background:linear-gradient(125deg,#ae8233,#dfb75c);transform:translateX(calc(var(--mode-index)*100%));transition:transform .18s ease}
+.bench-mode-selector>button{padding:10px;border:0;border-radius:6px;background:transparent;color:#b9ac94;font-weight:900;font-size:13px}
+.bench-mode-selector>button[aria-pressed="true"]{color:#211909}
+#roster .bench-panel.bench-handle-mode .bench-player{touch-action:pan-y;cursor:default}
+.bench-operation-guide>p{font-size:14px;line-height:1.7;color:#fff0cf}
+.bench-operation-guide>small{display:block;margin:10px 0 20px;color:#baaf9e;line-height:1.6}
+.bench-operation-guide{border:1px solid #87642d;background:linear-gradient(155deg,#2a2823,#191919);border-radius:16px}
+.bench-scroll-setting{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0;padding:14px 12px;border:1px solid #665331;border-radius:10px;background:#ffffff05}
+.bench-scroll-setting strong{display:block;color:#eedbb3;font-size:12px}
+.bench-scroll-setting small{display:block;margin-top:5px;color:#a99d87;font-size:10px;line-height:1.5}
+.bench-scroll-switch{display:flex;align-items:center;gap:7px;flex-shrink:0;border:0;background:transparent;color:#d5b366;font-size:10px;padding:6px 0}
+.bench-scroll-switch i{display:block;position:relative;width:34px;height:20px;border-radius:10px;background:#645333}
+.bench-scroll-switch i:after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#eee2c5}
+.bench-scroll-switch[aria-checked="true"] i{background:#b68a38}
+.bench-scroll-switch[aria-checked="true"] i:after{left:17px;background:#fff0c9}
+.bench-scroll-switch[aria-checked="false"]{color:#aaa}
+#roster .bench-scrollbar:active .bench-scrollbar-thumb{cursor:grabbing;background:#e5bb66}
+#roster .bench-scrollbar:focus-visible{outline:2px solid #ffcf72;outline-offset:1px}
+@media(max-width:360px){.roster-operation-toggle{padding:7px 6px;font-size:8px}}
   .slots-title-actions{display:flex;align-items:center;gap:9px;min-width:0}
   .slots-title-actions h2{white-space:nowrap}
   .slots-heading>span{color:#c3ae87;font-size:9px;white-space:nowrap}

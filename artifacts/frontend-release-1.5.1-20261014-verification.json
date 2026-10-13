@@ -1,0 +1,380 @@
+{
+  "version": "1.5.1",
+  "date": "2026-10-14",
+  "frontendUploaded": false,
+  "backendDeployed": true,
+  "rulesVersion": 20,
+  "supportedRulesVersions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "migration": "20261013200000",
+  "backendFilesMatched": 12,
+  "configurationPreserved": true,
+  "gatewayRoutesUnchanged": true,
+  "oldRulesComparison": {
+    "versions": [
+      1,
+      18
+    ],
+    "seeds": 4,
+    "scenarios": 72,
+    "passed": true
+  },
+  "backendPredeployTests": {
+    "passed": 73,
+    "failed": 0
+  },
+  "liveScenarios": 22,
+  "liveLegacyRules1To20": true,
+  "liveLateWeeklyExclusion": true,
+  "liveRotationValidation": true,
+  "testTablesRemaining": [
+    {
+      "kind": "leaderboard_runs",
+      "remaining": "0"
+    },
+    {
+      "kind": "leaderboard_entries",
+      "remaining": "0"
+    },
+    {
+      "kind": "verified_game_progress",
+      "remaining": "0"
+    },
+    {
+      "kind": "verified_jersey_purchases",
+      "remaining": "0"
+    },
+    {
+      "kind": "weekly_ovr_entries",
+      "remaining": "0"
+    },
+    {
+      "kind": "weekly_ovr_snapshots",
+      "remaining": "0"
+    },
+    {
+      "kind": "leaderboard_legacy_credit",
+      "remaining": "0"
+    },
+    {
+      "kind": "leaderboard_battles",
+      "remaining": "0"
+    }
+  ],
+  "frontendSpecial": {
+    "passed": 133,
+    "failed": 0
+  },
+  "fullTests": {
+    "tests": 520,
+    "passed": 519,
+    "failed": 1,
+    "knownFailure": "Protected historical game-ui.js snapshot hash mismatch; unchanged by this release"
+  },
+  "browserWidths": [
+    320,
+    390,
+    480
+  ],
+  "browserSDK": "Simulated storage SDK; production build served locally",
+  "hupuAppEndToEndChecked": false,
+  "package": "frontend-release-1.5.1-20261014.zip",
+  "packageSha256": "c39a4f8f4a27e1c47c0f5854e3b4f1830a3eec64d94f708fc9502966a3f504cf",
+  "fileCount": 68,
+  "administratorCredentialsAbsent": true,
+  "nbaDomainAbsent": true,
+  "files": [
+    {
+      "path": "assets/BarlowCondensed-ExtraBoldItalic-BCMzCgyJ.ttf",
+      "sha256": "331783dae9ec0c398f4d32c9fd5a56d4c602caa0c1628c2b9cbfe93f48eb68c9"
+    },
+    {
+      "path": "assets/boosts/clutch.svg",
+      "sha256": "929e3d7a14f3b98249b222177c88f255ccd1a38d822e5c5488e7655a78c57c12"
+    },
+    {
+      "path": "assets/boosts/composure.svg",
+      "sha256": "291f13a10ad13d0e20df3f4ceb0ad37a64d2122f5610fe83a35cf4bcb037b96c"
+    },
+    {
+      "path": "assets/boosts/focus.svg",
+      "sha256": "25b298531f88485d47a9e2c61ebca453f05c987764ff0e2cb849509bfa27034b"
+    },
+    {
+      "path": "assets/boosts/hot.svg",
+      "sha256": "ad799b374fe24f54f0866595dadb4cb26411347e15b52b7bebcdb40cec6a5d55"
+    },
+    {
+      "path": "assets/boosts/paint.svg",
+      "sha256": "f408695311784b6c93b767aaa30d2122b0e4f2631fef3383b29769d4194d46bd"
+    },
+    {
+      "path": "assets/boosts/rhythm.svg",
+      "sha256": "b495c6a3fa0baeeb4c815bc7b72f2fa47ed5892d3aa78a0f3f27bd6674870558"
+    },
+    {
+      "path": "assets/boosts/stopper.svg",
+      "sha256": "850b17560599b0cde2569878fc1aaf655278156e2b8ca8d886771d71a04ae292"
+    },
+    {
+      "path": "assets/boosts/touch.svg",
+      "sha256": "703ffd92c491afb650e6074512a7621eb2d62bd4d297a95953d7475f21b52bcd"
+    },
+    {
+      "path": "assets/cash-stack.png",
+      "sha256": "03b092ff0fcf4aeb94102ab8b0c50c82af98da1a4a9c16588e800f269910155b"
+    },
+    {
+      "path": "assets/event-data-7jsgqZGb.js",
+      "sha256": "fc8d35d66ab7ac76f44a797bc4e31bd185ca3914e101bcc738d19415af77e791"
+    },
+    {
+      "path": "assets/event-system-EMvZf_Cb.js",
+      "sha256": "d1a0c2c58ba2dc67c39574e4d8c87019b6fba69b1f41b22b7afca618f914796a"
+    },
+    {
+      "path": "assets/fonts/BarlowCondensed-BlackItalic.ttf",
+      "sha256": "e1ed5d7e50c6a4498454d40509ce2362384a2c7870df3418fdbd010f81dffad3"
+    },
+    {
+      "path": "assets/fonts/BarlowCondensed-ExtraBoldItalic.ttf",
+      "sha256": "331783dae9ec0c398f4d32c9fd5a56d4c602caa0c1628c2b9cbfe93f48eb68c9"
+    },
+    {
+      "path": "assets/fonts/BarlowCondensed-OFL.txt",
+      "sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f"
+    },
+    {
+      "path": "assets/fusion-ace.png",
+      "sha256": "6c6fcaf0989c31412664c8e6b26cf9b722d90da3953f31cb41984bb9cff8c597"
+    },
+    {
+      "path": "assets/fusion-player-asian.png",
+      "sha256": "7f0108b4b48a28a1fa3c8a8bc091470baa0837231d5b5136d32a7666eb8fe2a7"
+    },
+    {
+      "path": "assets/game-core-DT-lhU7-.js",
+      "sha256": "d8d91cb0d25e360d8752ef8d535a79c2b5f474becff28cf0d78d41e17fc249e6"
+    },
+    {
+      "path": "assets/game-data-JeBirq1b.js",
+      "sha256": "22f62fbe610e892cbdc0dfe4671953e12b0337a8b39788c9d25b67850f61648e"
+    },
+    {
+      "path": "assets/game-logo.png",
+      "sha256": "07856df4c820d247fc10feaedea9e90f07414332da98ca2d27e9a07b74df0ef4"
+    },
+    {
+      "path": "assets/game-ui-BpVZtfqr.js",
+      "sha256": "d0e4d54c0cb2f513d9b7ff8d56ad2d48f5fe140cb3c88b41553358ba823ba4b0"
+    },
+    {
+      "path": "assets/gear-catalog-DI6WHTCZ.js",
+      "sha256": "d4fe5ca29085f73384b201c68f83e1cc5ba6ef9bd8b6ba3ec172117f1e0a6bf0"
+    },
+    {
+      "path": "assets/home-gold-court-8EupCtBR.jpg",
+      "sha256": "e266444fe964f686f41d46b9218ea9270c09b335a70e4da6db19a2bfe40772f4"
+    },
+    {
+      "path": "assets/home-gold-court.jpg",
+      "sha256": "e266444fe964f686f41d46b9218ea9270c09b335a70e4da6db19a2bfe40772f4"
+    },
+    {
+      "path": "assets/hundred-recruit-DuTVnm9A.js",
+      "sha256": "e1e5e6777ded673b8de50635b2d3950cb8cc98cf015f9d2f76179af76e0716f1"
+    },
+    {
+      "path": "assets/index-Dc3lecZJ.css",
+      "sha256": "40b5f0fc24e1ae8374aff0ab106f91bf4992e3f2ad6d65fe9fb2dab6c1fbc7c4"
+    },
+    {
+      "path": "assets/index-I36cxVmK.js",
+      "sha256": "3c39787659d860b214e29c1459e5d67ffe8477f6caf87ecac2e7d27cec6e833f"
+    },
+    {
+      "path": "assets/legacy-gift-box.svg",
+      "sha256": "3eb75270c32379bfe303d38753d650351c2aebfc804723de3d9c163507e29afb"
+    },
+    {
+      "path": "assets/legacy-jersey-showcase.png",
+      "sha256": "2d86e178031dba6e61add24285b8df365a7e20f4074a9c67cb21d75b908643ff"
+    },
+    {
+      "path": "assets/legacy-player-showcase-v2.png",
+      "sha256": "aff10922026df8e7cefc88c871e1b42f9e425de2071732b89f434850a69639e6"
+    },
+    {
+      "path": "assets/legacy-player-showcase.png",
+      "sha256": "854144b9f0c27a8f3783d9590d78f9da16dfe20adaa6ae0187766a9e68faf4b0"
+    },
+    {
+      "path": "assets/logos/atl.png",
+      "sha256": "cee5d101cc2c7544895c008d24ba1e01257a4068985ccc04b605eb11592aa19a"
+    },
+    {
+      "path": "assets/logos/bkn.png",
+      "sha256": "b6cbbe2ec17e3f7693c1361d589cf5ed97bf1ac1a97dafff357906cf619caa55"
+    },
+    {
+      "path": "assets/logos/bos.png",
+      "sha256": "3bb3375ff77bddd3e4c9bc0dfa187d52f692e773cab74bce7b4185d35e4fb6aa"
+    },
+    {
+      "path": "assets/logos/cha.png",
+      "sha256": "a6b4c7738a6c2eb9f60640c2518008ad6a3c9bbd03b9a7e44a7ed3e23753ea18"
+    },
+    {
+      "path": "assets/logos/chi.png",
+      "sha256": "aa3a890dcaaad6a2525ef5b75ecd7f480b01da11597f3096739ceeb8420a0d8e"
+    },
+    {
+      "path": "assets/logos/cle.png",
+      "sha256": "433a4ca92ec898bdc085a0300ab9c94cb13c1b800b8c1789e84f7cf793ed5f7d"
+    },
+    {
+      "path": "assets/logos/dal.png",
+      "sha256": "69dec4685595b4b1af9d8a18e4643e0bc7b08581b02f8b14db85968b1275d5a9"
+    },
+    {
+      "path": "assets/logos/den.png",
+      "sha256": "54509054b66af1c3231764d3fc07c569044f689166dcd912ee2493846f6c4ba0"
+    },
+    {
+      "path": "assets/logos/det.png",
+      "sha256": "be0c39a1aabd4562030558795f19c58e9c25a3668f22339d4e36331773d4e4fb"
+    },
+    {
+      "path": "assets/logos/gsw.png",
+      "sha256": "748b02958a87572c3f2474d3865f7f8fea89868edd053689eb8a50ffa404bab8"
+    },
+    {
+      "path": "assets/logos/hou.png",
+      "sha256": "4e09d73e2303a2f56b38a68332d9047a9657e1d36fbfaf808172dff376953ff5"
+    },
+    {
+      "path": "assets/logos/ind.png",
+      "sha256": "08380cb49b82809259efa9258986bc815a0d5ecf819aa83a9f89b0f54d336f8a"
+    },
+    {
+      "path": "assets/logos/lac.png",
+      "sha256": "56434bd070b55168f412d0d67c373be32c6f2474b31eaa1a19afc2b585f86e0f"
+    },
+    {
+      "path": "assets/logos/lal.png",
+      "sha256": "e482293a837766c34434cd0eadbe14a355ffe12fb20b9ced54842fdf10b3ebe6"
+    },
+    {
+      "path": "assets/logos/mem.png",
+      "sha256": "0d4ed6c3d7e5ec9aee97fd05733e9c2c09bf89c5f9b8104be6572b96304a36cb"
+    },
+    {
+      "path": "assets/logos/mia.png",
+      "sha256": "92bf3f0ab8b756cc894c23358d4f7b9563c63b7927d7e413a7cc2bee00739551"
+    },
+    {
+      "path": "assets/logos/mil.png",
+      "sha256": "47a757c35208711675b984ee45c3ac36b2014517e79766333ee234daa36ea863"
+    },
+    {
+      "path": "assets/logos/min.png",
+      "sha256": "32c3e9a3f429c6e19da341c5c9247c9d8d5887e455fcd46d4d3abaa87f8d2de0"
+    },
+    {
+      "path": "assets/logos/nop.png",
+      "sha256": "69325dc7ad127c8e65b1abe3998d16c38b822ab44636a2f5aa37204469c11443"
+    },
+    {
+      "path": "assets/logos/ny.png",
+      "sha256": "920adc16a98b40fa48d689a97e42f790c74b4a3f04b68667d07c1fe3cfc0c2d3"
+    },
+    {
+      "path": "assets/logos/okc.png",
+      "sha256": "8aca62e61f51f610b916d2d5fc71dbd046cd09bd46fbfd51b01b3c172119f4a2"
+    },
+    {
+      "path": "assets/logos/orl.png",
+      "sha256": "9641da49357edc43bec736678bf2a53b20ff25b41da26b5e3a63888039109bda"
+    },
+    {
+      "path": "assets/logos/phi.png",
+      "sha256": "b5474f545cdeb762c1f2239507cc26d62b2ef8ecfcb7d48b4ccd21577502b0b3"
+    },
+    {
+      "path": "assets/logos/phx.png",
+      "sha256": "c25cbc826b9486a70f53e1cae738e7b68d4f66b4cd3a49475761630cfe571a89"
+    },
+    {
+      "path": "assets/logos/por.png",
+      "sha256": "191fb3919b20a10063e08650a53653bf68c95aca2dd3ea0bcc990ae9ec5db98f"
+    },
+    {
+      "path": "assets/logos/sac.png",
+      "sha256": "a434857fe07ac0d8f4c5dba4200dfffb29a1e7b518a16349376b7c4d816b776c"
+    },
+    {
+      "path": "assets/logos/sas.png",
+      "sha256": "c0a958710a6db13d9d0b9f45d77e133cbab212100c802aa93aeb869463d86063"
+    },
+    {
+      "path": "assets/logos/tor.png",
+      "sha256": "34da902d4e0aa76b6bd8fd6d29fd39d31d1e056ee62faa05a50dcd9e6c087fc1"
+    },
+    {
+      "path": "assets/logos/utah.png",
+      "sha256": "09be2c5d76649cd98a7a8f4e34e5e54c34b510e1b49658a1f6d20c6f0e4a638a"
+    },
+    {
+      "path": "assets/logos/wsh.png",
+      "sha256": "897d044dc30ab4dd1872f9202c3758a0981551f932ac6c24f4554fa871c000df"
+    },
+    {
+      "path": "assets/player-economy-CXvxf0hc.js",
+      "sha256": "54641e4947eb240327f46af38c8ae20f687bfa1dc8ca3e9060b107b1f4633f5a"
+    },
+    {
+      "path": "assets/player-silhouette.svg",
+      "sha256": "de02022eb67dc21e8fc50ce5618f0936891d27dedff6087b1719c6c97a6d604b"
+    },
+    {
+      "path": "assets/reward-video-icon.svg",
+      "sha256": "abc6209bf233d492aa22ff8c46dbc05f30113867faceddbbf9ceb93eaf3f976d"
+    },
+    {
+      "path": "assets/rival-forward.png",
+      "sha256": "b5b21558773898d3db905bc7221edc572eda73b05db73c2ccb6ff128dcd0efe0"
+    },
+    {
+      "path": "assets/storage-adapter-DuUeSqzw.js",
+      "sha256": "84d53c5bd6f58d3b98fd17b9e6ffacca5c05e307e351c455848fbb9013c94397"
+    },
+    {
+      "path": "assets/user-feedback-B5cLp3WI.js",
+      "sha256": "38324fe4dc972b59e771747ce1af19f99aa97c28a16ce07d64029e40874c5a9d"
+    },
+    {
+      "path": "index.html",
+      "sha256": "8bb851fd831384dccb01b3aca7aa8734e10c580718ae194e84857886ba2b652c"
+    }
+  ]
+}

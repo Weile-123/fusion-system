@@ -10,13 +10,13 @@ function fixture(bondIds){
   run.morale=3;return game;
 }
 test('version five caps total victory income at 90 and preserves legacy settlement',()=>{
-  for(const version of [4,5]){
+  for(const version of [4,5,18,19]){
     const game=fixture([]),run=game.run;run.balanceRulesVersion=version;run.stage=100;run.endless=true;run.cash=1000;
     for(const own of Object.values(run.owned)){own.stars=10;own.train=100}
     const state=structuredClone(run),report=C.battle(game,'outside');assert.equal(report.won,true);
     assert.equal(run.cash,1000+report.reward);assert.equal(run.stats.prizeIncome,report.reward);
     assert.deepEqual(V.replay(state,[],'battle','outside').state,run);
-    if(version===5){assert.equal(report.reward,90);assert.ok(report.detail.includes('胜利奖金上限90'))}else assert.ok(report.reward>90);
+    if(version>=5){const cap=version>=19?120:90;assert.equal(report.reward,cap);assert.ok(report.detail.includes(`胜利奖金上限${cap}`))}else assert.ok(report.reward>90);
   }
 });
 function fight(game,won=true){

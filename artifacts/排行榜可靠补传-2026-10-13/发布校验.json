@@ -1,0 +1,27 @@
+{
+  "rulesVersion": 18,
+  "backendDeployed": false,
+  "migrationApplied": false,
+  "frontendPublished": false,
+  "frontendFiles": 68,
+  "frontendSha256": "c154f8e3af263277a3e7786f7df632c4c2ae86d4d066a50d0040cc9422d4fb7d",
+  "backendSha256": "058289bc9d51af1a188cacc52311ae1546280394ba960f3442cc697a7749da88",
+  "fullTests": {
+    "total": 503,
+    "passed": 502,
+    "failed": 1,
+    "failure": "protected historical game-ui.js checksum"
+  },
+  "finalSpecialTests": {
+    "total": 153,
+    "passed": 153
+  },
+  "crossWeekMode": "cumulative-only",
+  "retrySeconds": [
+    5,
+    10,
+    20,
+    40,
+    60
+  ]
+}

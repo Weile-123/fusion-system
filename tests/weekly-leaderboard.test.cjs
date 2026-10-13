@@ -29,11 +29,22 @@ const databaseReady=(async()=>{
   const minimumSql=fs.readFileSync('cloudbase/migrations/'+minimumMigration,'utf8');
   assert.equal(minimumSql,fs.readFileSync('activity/migrations/'+minimumMigration,'utf8'));
   await db.exec(minimumSql);await db.exec(minimumSql);
+  const lateMigration='20261013200000_late_run_weekly_exclusion.sql',lateSql=fs.readFileSync('cloudbase/migrations/'+lateMigration,'utf8');
+  assert.equal(lateSql,fs.readFileSync('activity/migrations/'+lateMigration,'utf8'));await db.exec(lateSql);await db.exec(lateSql);
   // Deterministic boundary clock in this disposable local DB only. Nothing is uploaded.
   await db.exec(`create table public.test_clock(value timestamptz not null);insert into public.test_clock values('2026-10-11T15:59:59Z');`);
   await db.exec(`create or replace function public.weekly_ovr_now() returns timestamptz language sql volatile set search_path=public as $$ select value from public.test_clock $$;`);
 })();
 test.before(async()=>{await databaseReady});
+
+test('late registration is cumulative-only while current starts keep weekly eligibility',async()=>{
+ await enable();const id=uuid();
+ await db.query('insert into leaderboard_runs(id,puid,talent,seed,display_name,proof_version,state) values($1,$2,$3,911,$4,3,$5)',[id,'late-offline','reserve_fund','Late offline',{balanceRulesVersion:18,weeklyLeaderboardExcluded:true}]);
+ assert.equal((await one('select weekly_ovr_start from leaderboard_runs where id=$1',[id])).weekly_ovr_start,null);
+ await battle(id,1234);assert.equal((await one("select score from leaderboard_entries where puid='late-offline' and board='ovr'")).score,1234);
+ assert.equal((await one('select count(*)::int n from weekly_ovr_entries where run_id=$1',[id])).n,0);
+ const current=await run('current-client',3,18);await battle(current,1235);assert.equal((await one('select count(*)::int n from weekly_ovr_entries where run_id=$1',[current])).n,1);
+});
 test.beforeEach(reset);
 test.after(async()=>{if(db)await db.close()});
 

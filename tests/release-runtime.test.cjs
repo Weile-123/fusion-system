@@ -79,13 +79,13 @@ function runtime(sdk={},timers={}){
   };
   const window={SupFusionGameCore:C,ColorboxAI:sdk,ACTIVITY_API_BASE:'https://example.invalid',ACTIVITY_ENV_ID:'test',
     FusionStorage:{available:()=>true,localAvailable:()=>true,platformAvailable:()=>!!sdk.storage,save:async value=>saved.push(structuredClone(value)),syncToCloud:async value=>backups.push(structuredClone(value))},
-    SupFusionReactScreens:{renderMarkup:(el,html)=>render(el,components.MarkupScreen,{html})},addEventListener(){}};
+    SupFusionReactScreens:{renderMarkup:(el,html)=>render(el,components.MarkupScreen,{html})},addEventListener(){},removeEventListener(){}};
   for(const name of ['Home','Talent','TopBar','Duel','Result','CareerReport','Leaderboard','Feedback','Announcement'])window.SupFusionReactScreens['render'+name]=(el,props)=>render(el,components[name+'Screen']||components.TopBar,props);
   const context={window,document,console,WeakMap,URL,Blob,Promise,setTimeout:timers.setTimeout||(()=>0),clearTimeout:timers.clearTimeout||(()=>{}),setInterval:timers.setInterval||(()=>0),clearInterval:timers.clearInterval||(()=>{}),requestAnimationFrame(){}};
   vm.createContext(context);
   vm.runInContext(fs.readFileSync('h5/hundred-recruit.js','utf8'),context);
   let source=fs.readFileSync('h5/game-ui.js','utf8');
-  source=source.replace('  init();',`  window.audit={init,restoreGame,handle,go,syncPendingRuns,syncSaveBackup,flushCloudBattle,finishCloudRun,loadPlayerName,loadLeaderboard,publishCareerPoster,careerReportSummary,getGame:()=>game,setGame:value=>{game=value},state:()=>({screen,talentAdBusy,rewardVideoBusy,reportReviveBusy,playerName}),setTalent:id=>{talentOffer=C.TALENTS.filter(t=>t.id===id);selectedTalent=id},renderPending};`);
+  source=source.replace('  init();',`  window.audit={init,restoreGame,handle,go,syncPendingRuns,syncSaveBackup,flushCloudBattle,finishCloudRun,loadPlayerName,loadLeaderboard,publishCareerPoster,careerReportSummary,createCareerPoster,bindBenchScrollbar,getGame:()=>game,setGame:value=>{game=value},state:()=>({screen,talentAdBusy,rewardVideoBusy,reportReviveBusy,playerName}),setTalent:id=>{talentOffer=C.TALENTS.filter(t=>t.id===id);selectedTalent=id},renderPending};`);
   vm.runInContext(source,context);
   return {audit:window.audit,window,screens,saved,rendered,backups,document,fire:(name,event)=>listeners[name](event),input:value=>listeners.input({target:{id:'feedback-content',value}}),click:(act,id='')=>window.audit.handle(act,{dataset:{id}})};
 }
@@ -612,6 +612,45 @@ function rankedSdk(onRequest){return {cloud:{request:async args=>{
   if(args.url.endsWith('/start')&&response?.data)response.data.balanceRulesVersion=args.data.balanceRulesVersion||1;
   return response;
 }}}}
+
+test('finished offline runs retain timestamped events and automatically retry without blocking navigation',async()=>{
+ const timers=[],calls=[];let offline=true;
+ const app=runtime(rankedSdk(async args=>{calls.push(args.url.split('/').at(-1));if(offline)throw Error('offline');return {statusCode:200,code:0,data:{sequence:1}}}),{setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length}});
+ const game=C.createGame(),run=game.run=C.createRun('reserve_fund',911);run.cloudRunId='00000000-0000-4000-8000-000000000001';run.cloudProofVersion=3;C.finishRun(game);app.audit.setGame(game);
+ assert.equal(await app.audit.finishCloudRun(run),false);assert.equal(run.cloudOutbox[0].type,'finish');assert.ok(run.cloudOutbox[0].queuedAt>0);assert.ok(run.cloudCompletedAt>0);
+ app.audit.go('home');assert.equal(app.audit.state().screen,'home');assert.equal(run.cloudFinished,undefined);
+ const restored=app.audit.restoreGame(structuredClone(app.saved.at(-1)));assert.equal(restored.run.cloudCompletedAt,run.cloudCompletedAt);assert.equal(restored.run.cloudOutbox.length,1);
+ offline=false;timers.find(t=>t.ms===5000).fn();await tick();await app.audit.syncPendingRuns(true);
+ assert.equal(run.cloudOutbox.length,0);assert.equal(run.cloudFinished,true);assert.equal(run.cloudSequence,1);assert.deepEqual(calls,['finish','finish']);assert.equal(app.audit.state().screen,'home');
+});
+
+test('a failed device acknowledgment retains the event for idempotent server retry',async()=>{
+ const requests=[],app=runtime(rankedSdk(async args=>{requests.push(args.data.sequence);return {statusCode:200,code:0,data:{sequence:1,alreadyRecorded:requests.length>1}}}));
+ const game=C.createGame(),run=game.run=C.createRun('reserve_fund',911);run.cloudRunId='00000000-0000-4000-8000-000000000002';run.cloudProofVersion=3;C.finishRun(game);app.audit.setGame(game);
+ let fail=true;app.window.FusionStorage.save=async snapshot=>{if(fail&&snapshot.run.cloudFinished)throw Error('disk full')};
+ assert.equal(await app.audit.finishCloudRun(run),false);assert.equal(run.cloudOutbox.length,1);assert.equal(run.cloudSequence,undefined);assert.equal(run.cloudSyncFailure,'storage');
+ fail=false;assert.equal(await app.audit.finishCloudRun(run),true);assert.equal(run.cloudOutbox.length,0);assert.equal(run.cloudSequence,1);assert.deepEqual(requests,[0,0]);
+});
+
+test('entering the game uploads archived and current finished runs with their original identifiers',async()=>{
+ const game=C.createGame(),requests=[],first=C.createRun('reserve_fund',911),second=C.createRun('reserve_fund',912);
+ for(const [index,run]of [first,second].entries()){
+  run.cloudProofVersion=3;run.cloudRunId=`00000000-0000-4000-8000-00000000000${index+1}`;run.cloudSequence=0;run.ended=true;run.awarded=true;run.cloudFinalizationQueued=true;run.cloudCompletedAt=123+index;run.cloudOutbox=[{type:'finish',queuedAt:123+index,operations:[]}];
+ }
+ game.run=second;game.pendingCloudRuns=[first];
+ const app=runtime(rankedSdk(async args=>{requests.push(args.data.runId);return {statusCode:200,code:0,data:{sequence:1}}}));app.window.FusionStorage.load=async()=>structuredClone(game);
+ await app.audit.init();await tick();await app.audit.syncPendingRuns(true);
+ assert.deepEqual(requests,[first.cloudRunId,second.cloudRunId]);assert.equal(app.audit.getGame().pendingCloudRuns.length,0);assert.equal(app.audit.getGame().run.cloudFinished,true);assert.equal(app.audit.state().screen,'home');
+});
+
+test('account mismatch prevents offline registration and validation errors are not retried in a loop',async()=>{
+ let owner='account-b',calls=0;const sdk=rankedSdk(async()=>{calls++;return {statusCode:409,code:409,message:'invalid history'}});sdk.auth={getUserInfo:async()=>({code:200,data:{islogin:1,puid:owner}})};
+ const app=runtime(sdk),game=C.createGame(),run=game.run=C.createRun('reserve_fund',911);run.cloudOwnerPuid='account-a';run.cloudCreatedAt=Date.now();run.cloudStartPending={requestId:'00000000-0000-4000-8000-000000000003',seed:911,talent:'reserve_fund',progress:{},balanceRulesVersion:18};app.audit.setGame(game);
+ assert.equal(await app.audit.flushCloudBattle(run),false);assert.equal(calls,0);assert.equal(run.cloudSyncFailure,'account');
+ owner='account-a';assert.equal(await app.audit.flushCloudBattle(run),false);assert.equal(calls,1);assert.equal(run.cloudSyncFailure,'validation');
+ await app.audit.syncPendingRuns(true);assert.equal(calls,1);assert.ok(run.cloudStartPending);
+ const restored=app.audit.restoreGame(structuredClone(app.saved.at(-1)));assert.equal(restored.run.cloudOwnerPuid,'account-a');assert.equal(restored.run.cloudCreatedAt,run.cloudCreatedAt);assert.equal(restored.run.cloudSyncFailure,'validation');
+});
 test('all twenty talents traverse actual UI controller drafts, roster, shop, duel and report renderers',async()=>{
   const app=runtime(rankedSdk());
   for(const talent of C.TALENTS){
@@ -882,7 +921,7 @@ test('pending sync diagnostics never render in game screens or leaderboard statu
   for(const screen of ['home','recruit']){app.audit.go(screen);assert.doesNotMatch(app.screens[screen].output,/PRIVATE_SYNC_NOTE/)}
   for(let i=0;i<6;i++){const offer=C.makeOffer(run);C.recruit(run,offer[0])}
   C.battle(game,'outside');app.audit.go('result');assert.doesNotMatch(app.screens.result.output,/PRIVATE_SYNC_NOTE/);
-  C.finishRun(game);app.audit.go('report');assert.doesNotMatch(app.screens.report.output,/PRIVATE_SYNC_NOTE/);
+  C.finishRun(game);app.audit.go('report');assert.doesNotMatch(app.screens.report.output,/PRIVATE_SYNC_NOTE/);assert.match(app.screens.report.output,/成绩暂未同步/);assert.match(app.screens.report.output,/data-act="cloud-sync-retry"/);
   app.audit.go('leaderboard');await app.audit.loadLeaderboard();assert.doesNotMatch(app.screens.leaderboard.output,/PRIVATE_SYNC_NOTE/);
   fail=true;await app.audit.loadLeaderboard();assert.doesNotMatch(app.screens.leaderboard.output,/PRIVATE_SYNC_NOTE/);
   assert.equal(run.cloudRankError,'PRIVATE_SYNC_NOTE');
@@ -906,6 +945,58 @@ test('touch drag starts on bench player text and swaps through a slot border hit
   app.fire('pointerup',{...event,pointerId:2,clientX:70,clientY:50});assert.equal(run.bench[0],ids[6]);
   app.fire('pointerup',{...event,clientX:70,clientY:50});
   assert.equal(run.slots[C.SLOTS[0].id],ids[6]);assert.equal(run.bench[0],ids[0]);assert.ok(app.saved.length);
+});
+
+test('bench operation mode persists and handle-only mode ignores player text drags',async()=>{
+ const app=runtime(),game=C.createGame(),run=game.run=C.createRun('reserve_fund',911),ids=C.STARS.slice(0,7).map(s=>s.id);
+ ids.forEach(id=>run.owned[id]={stars:1,train:0,trainedAt:0});C.SLOTS.forEach((s,i)=>run.slots[s.id]=ids[i]);run.bench=[ids[6]];app.audit.setGame(game);app.audit.go('roster');
+ assert.match(app.screens.roster.output,/has-operation-update/);
+ await app.click('bench-operation-toggle');assert.notEqual(game.profile.benchOperationMode,'new');assert.doesNotMatch(app.screens.roster.output,/has-operation-update/);
+ assert.match(app.screens['game-modal'].output,/按住整个球员卡片拖动/);
+ await app.click('bench-mode-select','new');assert.match(app.screens['game-modal'].output,/红框内的三条杠/);
+ assert.match(app.screens['game-modal'].output,/GOAT·乔丹/);
+ assert.match(app.screens['game-modal'].output,/已关闭/);
+ await app.click('bench-scrollbar-toggle');assert.match(app.screens['game-modal'].output,/已开启/);
+ await app.click('bench-scrollbar-toggle');assert.notEqual(game.profile.benchScrollbarEnabled,false);assert.match(app.screens['game-modal'].output,/已关闭/);
+ await app.click('bench-operation-confirm');assert.equal(game.profile.benchOperationMode,'new');assert.equal(game.profile.benchScrollbarEnabled,false);
+ assert.equal(app.audit.restoreGame(structuredClone(app.saved.at(-1))).profile.benchScrollbarEnabled,false);
+ assert.equal(app.audit.restoreGame(structuredClone(app.saved.at(-1))).profile.benchOperationNoticeSeen,true);
+ const restored=app.audit.restoreGame(structuredClone(app.saved.at(-1)));assert.equal(restored.profile.benchOperationMode,'new');
+ const classes={add(){},remove(){},contains(){return false}},source={classList:classes,getBoundingClientRect:()=>({width:150}),cloneNode:()=>({classList:classes,style:{},remove(){}})};
+ const targetCard={classList:classes,querySelector:()=>targetButton},targetButton={dataset:{act:'place',kind:'slot',key:C.SLOTS[0].id},closest:()=>targetCard},benchButton={dataset:{act:'place',kind:'bench',key:'0'},closest:()=>source};
+ app.document.elementFromPoint=()=>({closest:selector=>selector==='[data-act="place"]'?null:targetCard});
+ const drag=handle=>{const event={target:{closest:selector=>selector==='[data-act="place"]'?benchButton:selector==='.bench-drag-handle'&&handle?{}:null},pointerType:'touch',pointerId:1,isPrimary:true,button:0,isTrusted:false,clientX:30,clientY:150,preventDefault(){}};app.fire('pointerdown',event);app.fire('pointermove',{...event,clientX:70,clientY:50});app.fire('pointerup',{...event,clientX:70,clientY:50})};
+ drag(false);assert.equal(run.bench[0],ids[6]);drag(true);assert.equal(run.slots[C.SLOTS[0].id],ids[6]);
+ await app.click('bench-operation-toggle');await app.click('bench-mode-select','original');await app.click('bench-operation-guide-close');assert.equal(game.profile.benchOperationMode,'new');
+ await app.click('bench-operation-toggle');await app.click('bench-mode-select','original');await app.click('bench-operation-confirm');assert.equal(game.profile.benchOperationMode,'original');
+});
+
+test('bench scrollbar remains visible for overflow and supports dragging, keyboard and cleanup',()=>{
+ const app=runtime(),handlers={},classes=new Set();let scroll;const thumb={style:{},getBoundingClientRect:()=>({top:parseFloat(thumb.style.top)||0})};
+ const bar={clientHeight:200,hidden:true,attributes:{},setAttribute(k,v){this.attributes[k]=v},getBoundingClientRect:()=>({top:0}),querySelector:()=>thumb,addEventListener(k,v){handlers[k]=v},removeEventListener(k){delete handlers[k]},setPointerCapture(){},hasPointerCapture:()=>false};
+ const grid={scrollHeight:1000,clientHeight:200,scrollTop:0,children:[],addEventListener(k,fn){scroll=fn},removeEventListener(){scroll=null}},panel={classList:{toggle(k,v){v?classes.add(k):classes.delete(k)}},querySelector:q=>q==='.bench-grid'?grid:bar};
+ const game=C.createGame();app.audit.setGame(game);const cleanup=app.audit.bindBenchScrollbar({querySelector:()=>panel});assert.equal(bar.hidden,true);
+ game.profile.benchScrollbarEnabled=true;scroll();assert.equal(bar.hidden,false);assert.equal(thumb.style.height,'40px');assert.ok(classes.has('has-bench-scroll'));
+ const event={pointerId:1,isPrimary:true,button:0,clientY:20,target:thumb,preventDefault(){},stopPropagation(){}};handlers.pointerdown(event);handlers.pointermove({...event,clientY:180});assert.equal(grid.scrollTop,800);assert.equal(bar.attributes['aria-valuenow'],'800');handlers.pointerup(event);
+ handlers.keydown({key:'Home',preventDefault(){}});assert.equal(grid.scrollTop,0);
+ grid.scrollHeight=100;scroll();assert.equal(bar.hidden,false);assert.equal(thumb.hidden,true);assert.equal(bar.attributes['aria-disabled'],'true');assert.equal(classes.has('has-bench-scroll'),false);cleanup();assert.equal(scroll,null);assert.equal(Object.keys(handlers).length,0);
+});
+
+test('SSR rotation UI gates the pool, validates minimum, cancels cleanly and preserves the active run through save and reload',async()=>{
+ const app=runtime(),game=C.createGame();game.profile.discovered=C.STARS.map(s=>s.id);app.audit.setGame(game);app.audit.go('home');assert.doesNotMatch(app.screens.home.output,/data-act="ssr-rotation-open"/);
+ game.profile.playerUnlocks=C.LEGENDARY_PLAYERS.slice(0,3).map(s=>s.id);game.run=C.createRun('reserve_fund',911,{playerUnlocks:game.profile.playerUnlocks});const before=structuredClone(game.run);
+ app.audit.go('home');assert.match(app.screens.home.output,/data-act="ssr-rotation-open"/);await app.click('ssr-rotation-open');assert.match(app.screens['game-modal'].output,/已选 <b>11/);
+ const pool=C.availableSSRPlayers(game.profile).map(s=>s.id);await app.click('ssr-rotation-select',pool[0]);await app.click('ssr-rotation-select',pool[1]);assert.match(app.screens['game-modal'].output,/至少选择10名/);await app.click('ssr-rotation-confirm');assert.equal(game.profile.ssrRotation,undefined);
+ await app.click('ssr-rotation-close');assert.deepEqual(game.run,before);await app.click('ssr-rotation-open');await app.click('ssr-rotation-select',pool[0]);await app.click('ssr-rotation-confirm');assert.equal(game.profile.ssrRotation.length,10);assert.deepEqual(game.run,before);
+ const restored=app.audit.restoreGame(structuredClone(app.saved.at(-1)));assert.deepEqual(restored.profile.ssrRotation,game.profile.ssrRotation);assert.deepEqual(restored.run.ssrRotation,before.ssrRotation);
+ await app.click('ssr-rotation-open');await app.click('ssr-rotation-all');await app.click('ssr-rotation-confirm');assert.equal(game.profile.ssrRotation.length,11);
+});
+
+test('top bar, career report and rendered poster use OVR rather than legacy GOAT totals',()=>{
+ const app=runtime(),game=C.createGame(),r=game.run=C.createRun('reserve_fund',911);r.maxOvr=1234;r.maxGoat=9999;app.audit.setGame(game);app.audit.go('roster');assert.match(app.screens['.top'].output,/>OVR</);assert.doesNotMatch(app.screens['.top'].output,/GOAT|9999/);
+ C.finishRun(game);app.audit.go('report');assert.equal(app.audit.careerReportSummary().ovr,1234);assert.match(app.screens.report.output,/1234/);assert.match(app.screens.report.output,/本局最高 OVR/);assert.doesNotMatch(app.screens.report.output,/GOAT 分数|9999/);
+ const text=[],ctx=new Proxy({fillText(value){text.push(String(value))},measureText:value=>({width:String(value).length*10}),createLinearGradient:()=>({addColorStop(){}})},{get:(target,key)=>key in target?target[key]:()=>{}}),canvas={getContext:()=>ctx};
+ app.document.createElement=()=>canvas;assert.equal(app.audit.createCareerPoster(app.audit.careerReportSummary()),canvas);assert.ok(text.includes('1234'));assert.ok(text.includes('本局最高 OVR'));assert.ok(!text.includes('9999'));assert.ok(!text.some(value=>/GOAT 分数/.test(value)));
 });
 
 test('leaderboard reads coalesce and a forced post-settlement refresh wins over an earlier response',async()=>{
@@ -1025,7 +1116,7 @@ test('home announcement opens, closes and preserves current save',async()=>{
   await app.click('announcement-open');assert.match(app.screens['game-modal'].output,/更多羁绊，更多搭配/);assert.match(app.screens['game-modal'].output,/数值调整/);assert.match(app.screens['game-modal'].output,/样式调整/);
   assert.match(app.screens['game-modal'].output,/羁绊从原有81新增至100，包括格林公式、金州连接器、芝城侧翼网、洛城快攻链等，阵容搭配更加丰富。/);
   assert.match(app.screens['game-modal'].output,/class="announcement-note"/);
-  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='1.5.0';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
+  await app.click('announcement-close');assert.equal(app.screens['game-modal'].output,'');const expected=JSON.parse(before);expected.profile.announcementReadVersion='1.5.1';expected.profile.achievedBonds=[];expected.profile.bondArchiveVersion=1;assert.deepEqual(JSON.parse(JSON.stringify(app.audit.getGame())),expected);
   const restored=app.audit.restoreGame(JSON.parse(before));assert.equal(restored.run.balanceRulesVersion,2);assert.equal(C.synergiesForRun(restored.run).length,84);
 });
 
@@ -1122,11 +1213,13 @@ test('equipment storage upgrades and over-capacity saves survive reload',async()
 test('announcement update dot clears on first open and stays cleared after restore',async()=>{
   const app=runtime(),game=C.createGame();game.profile.announcementReadVersion='1.3.0';app.audit.setGame(game);app.audit.go('home');
   assert.match(app.screens.home.output,/home-announcement has-update/);
-  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'1.5.0');
+  await app.click('announcement-open');assert.equal(game.profile.announcementReadVersion,'1.5.1');
   assert.match(app.screens['game-modal'].output,/2026.10.12/);
   for(const content of ['112条随机徽章','开局天赋调整','招募与详情焕新','关卡难度微调','已有对局继续使用原规则'])assert.ok(app.screens['game-modal'].output.includes(content),content);
   const announcement=app.screens['game-modal'].output;
-  assert.match(announcement,/最新版本 · 1\.5\.0/);
+  assert.match(announcement,/最新版本 · 1\.5\.1/);
+  const tonight=announcement.split('1.5.1 · 2026.10.14 · 球员轮换与操作优化')[1].split('1.5.0 · 2026.10.13')[0];
+  for(const text of ['SSR球员自由轮换','11名','至少10名SSR','操作模式','经典','新模式','默认关闭','90提高至120','排行榜优化','后台上传','自动重试'])assert.ok(tonight.includes(text),text);
   const hundred=announcement.split('1.5.0 · 2026.10.13 · 百连招募开放')[1].split('1.4.0 · 2026.10.13')[0];
   for(const text of ['100张','9折','SSR概率','分组揭晓','同名卡合并','选择状态筛选','新开局'])assert.ok(hundred.includes(text),text);
   const training=announcement.split('1.4.0 · 2026.10.13 · 训练基地开放')[1].split('1.3.1 · 2026.10.13')[0];
@@ -1142,7 +1235,7 @@ test('announcement update dot clears on first open and stays cleared after resto
   assert.doesNotMatch(app.screens.home.output,/home-announcement has-update/);
   await app.click('announcement-close');const saved=JSON.parse(JSON.stringify(game));
   const next=runtime(),restored=next.audit.restoreGame(saved);next.audit.setGame(restored);next.audit.go('home');
-  assert.equal(restored.profile.announcementReadVersion,'1.5.0');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
+  assert.equal(restored.profile.announcementReadVersion,'1.5.1');assert.doesNotMatch(next.screens.home.output,/home-announcement has-update/);
 });
 
 test('legendary shop reminder clears only after opening its tab and stays cleared after restore',async()=>{
@@ -1314,7 +1407,7 @@ test('failed jersey persistence refunds points and exposes an error instead of s
  const app=runtime(),game=C.createGame();game.profile.legend=C.JERSEY_UNLOCK_PRICE;app.audit.setGame(game);app.audit.go('pointshop');
  app.window.FusionStorage.save=async()=>{throw Error('disk unavailable')};await app.click('jersey-unlock');
  assert.equal(game.profile.legend,C.JERSEY_UNLOCK_PRICE);assert.equal(game.profile.jerseyUnlocks.length,0);assert.match(app.screens.pointshop.output,/存档写入失败/);assert.doesNotMatch(app.screens['game-modal'].output,/获得传奇球衣/);assert.equal(app.backups.length,0);
- app.window.FusionStorage.save=async()=>{};await app.click('jersey-unlock');assert.equal(game.profile.legend,0);assert.equal(game.profile.jerseyUnlocks.length,1);assert.match(app.screens['game-modal'].output,/下次新开局进入球衣池/);assert.equal(app.backups.length,0);
+ app.window.FusionStorage.save=async()=>{};await app.click('jersey-unlock');assert.equal(game.profile.legend,0);assert.equal(game.profile.jerseyUnlocks.length,1);assert.match(app.screens['game-modal'].output,/下次新开局进入球衣池/);assert.equal(app.backups.length,1);
 });
 
 test('failed loading cannot overwrite the backup and offers a retry',async()=>{

@@ -13,12 +13,12 @@
   .roster-combat-grid b{font-size:13px;color:#ffd16e}
   #roster .slots-heading{margin:6px 0 6px}#roster .bench-title{margin:11px 0 6px}
   #roster .fusion-lineup{gap:5px}#roster .lineup-column{gap:5px}
-  #roster .bench-grid{grid-auto-rows:52px;max-height:140px;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#806137 #292929;padding:1px 2px 3px;align-content:start}
-  #roster .bench-grid .bench-card{min-height:0;height:52px}
-  #roster .bench-grid .bench-player{position:relative;padding-right:27px;touch-action:pan-y}
-  #roster .bench-grid .bench-drag-handle{position:absolute;right:2px;top:50%;display:grid;place-items:center;width:23px;height:36px;border-left:1px solid #ffffff20;border-radius:4px;background:#ffffff0b;color:#ffd277;transform:translateY(-50%);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
-  #roster .bench-grid .bench-drag-handle svg{width:15px;height:15px;fill:currentColor;pointer-events:none}
-  #roster .bench-grid .bench-drag-handle:active{cursor:grabbing}
+  :is(#roster,.bench-operation-demo) .bench-grid{grid-auto-rows:52px;max-height:140px;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#806137 #292929;padding:1px 2px 3px;align-content:start}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-card{min-height:0;height:52px}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-player{position:relative;padding-right:27px;touch-action:pan-y}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle{position:absolute;right:2px;top:50%;display:grid;place-items:center;width:23px;height:36px;border-left:1px solid #ffffff20;border-radius:4px;background:#ffffff0b;color:#ffd277;transform:translateY(-50%);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle svg{width:15px;height:15px;fill:currentColor;pointer-events:none}
+  :is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle:active{cursor:grabbing}
   #roster .bench-gesture-hint{flex:0 0 auto;margin:0 1px 5px;color:#a99473;font-size:9px;line-height:1.3}
   #duel .compact-ace{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;min-height:0;margin-top:8px;padding:10px;border-radius:13px}
   .compact-ace:after{width:65px;height:65px;right:-32px;top:-18px;opacity:.35}

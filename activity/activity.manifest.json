@@ -43,7 +43,7 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 18,
+    "rulesVersion": 20,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
@@ -53,7 +53,8 @@
       "20261009120000",
       "20261010190000",
       "20261011210000",
-      "20261012103000"
+      "20261012103000",
+      "20261013200000"
     ],
     "authenticatedBattleFinishChecked": true,
     "authenticatedPersonalRankChecked": true,
@@ -81,7 +82,11 @@
     "hundredUnfinishedSettlementRejected": true,
     "hundredReplayChecked": true,
     "hundredConcurrentRetryChecked": true,
-    "oldAndNewLeaderboardWritesChecked": true
+    "oldAndNewLeaderboardWritesChecked": true,
+    "legacyRules1To20Checked": true,
+    "ssrRotationChecked": true,
+    "victoryReward120Checked": true,
+    "lateWeeklyExclusionChecked": true
   },
   "activity": {
     "status": "verified"

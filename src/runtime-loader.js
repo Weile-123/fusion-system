@@ -3,6 +3,7 @@ export async function startGameRuntime() {
   window.ACTIVITY_ENV_ID = String(import.meta.env.VITE_ACTIVITY_ENV_ID || '').trim();
   await import('./user-feedback.mjs');
   await import('../h5/storage-adapter.js');
+  window.FusionStorage.platformRequired = !import.meta.env.DEV;
   if (import.meta.env.DEV) {
     const { prepareLocalRuntime } = await import('./dev-tools.js');
     prepareLocalRuntime(window);

@@ -1,6 +1,6 @@
 /* Touch drags may start anywhere on the player, while sell/train remain separate controls. */
-#roster .bench-grid .bench-player,#roster .fusion-lineup .slot-player,#roster .fusion-lineup .slot.empty{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-#roster .bench-grid .bench-drag-handle{width:30px;height:40px}
+:is(#roster,.bench-operation-demo) .bench-grid .bench-player,#roster .fusion-lineup .slot-player,#roster .fusion-lineup .slot.empty{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+:is(#roster,.bench-operation-demo) .bench-grid .bench-drag-handle{width:30px;height:40px}
 .drag-ghost{max-width:240px;pointer-events:none!important;transform:translate(-50%,-50%) rotate(1deg) scale(.88)!important}
 #leaderboard .leaderboard-heading-actions{display:flex;align-items:center;gap:6px}
 #leaderboard .leaderboard-refresh{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px 10px;font-size:10px}

@@ -145,7 +145,7 @@
 
 /* One low-contrast pastel diamond surface for lineup, bench and drag preview SSR cards. */
 #roster .fusion-lineup .slot.tier-legend,
-#roster .bench-card.tier-legend,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend,
 .bench-card.drag-ghost.tier-legend{
   border-color:#e4bd55;
   background:
@@ -154,7 +154,7 @@
   box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 #9e792a66,0 3px 9px #0008;
 }
 #roster .fusion-lineup .slot.tier-legend :is(.slot-top,.slot-body strong,.slot-body small),
-#roster .bench-card.tier-legend .bench-player,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .bench-player,
 .bench-card.drag-ghost.tier-legend .bench-player,
 .bench-card.drag-ghost.tier-legend .bench-player>small{
   color:#173e42;
@@ -170,17 +170,17 @@
   text-shadow:0 1px 0 #fff,0 0 5px #ffffffb8;
 }
 #roster .fusion-lineup .slot.tier-legend :is(.slot-rank,.star-icon),
-#roster .bench-card.tier-legend .star-icon,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .star-icon,
 .bench-card.drag-ghost.tier-legend .star-icon{color:#9a6815;text-shadow:0 1px 0 #fff}
-#roster .bench-card.tier-legend .bench-player>strong,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .bench-player>strong,
 .bench-card.drag-ghost.tier-legend .bench-player>strong{color:#173e42;text-shadow:none}
-#roster .bench-card.tier-legend .bench-player>small,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .bench-player>small,
 .bench-card.drag-ghost.tier-legend .bench-player>small{color:#765b2f;text-shadow:none}
-#roster .bench-card.tier-legend .bench-value,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .bench-value,
 .bench-card.drag-ghost.tier-legend .bench-value{color:#1264b0;font-size:9px;text-shadow:0 1px 0 #fff}
-#roster .bench-card.tier-legend :is(.bench-rank,.bench-attr),
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend :is(.bench-rank,.bench-attr),
 .bench-card.drag-ghost.tier-legend :is(.bench-rank,.bench-attr){color:#8a651f;text-shadow:none}
-#roster .bench-card.tier-legend .bench-drag-handle,
+:is(#roster,.bench-operation-demo) .bench-card.tier-legend .bench-drag-handle,
 .bench-card.drag-ghost.tier-legend .bench-drag-handle{color:#161616}
 
 /* Compact roster headings leave more vertical room for cards on small screens. */

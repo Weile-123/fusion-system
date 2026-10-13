@@ -114,6 +114,16 @@ test('cloud start binds the balance version and keeps legacy starts compatible',
   await assert.rejects(retry.handle(request('/runs/start',body)));
   await assert.rejects(api().handle(request('/runs/start',{...body,balanceRulesVersion:C.BALANCE_RULES_VERSION+1})));
 });
+test('SSR rotation registers an authoritative run snapshot and rejects illegal pool selections',async()=>{
+ const progress={playerUnlocks:C.LEGENDARY_PLAYERS.slice(0,3).map(s=>s.id)},pool=C.availableSSRPlayers(progress).map(s=>s.id);
+ const body={requestId:'00000000-0000-4000-8000-000000000020',seed:911,talent:'reserve_fund',progress,balanceRulesVersion:20,ssrRotation:pool.slice(0,10)};
+ const server=()=>api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress,earned:100000,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3});
+ const valid=server();await valid.handle(request('/runs/start',body));assert.deepEqual(valid.calls[1].args.p_state.ssrRotation,body.ssrRotation);assert.deepEqual(valid.calls[1].args.p_state,C.createRun(body.talent,body.seed,{...progress,ssrRotation:body.ssrRotation},20));
+ for(const ssrRotation of [[],pool.slice(0,9),[...pool.slice(0,10),pool[0]],[...pool.slice(0,9),'jordan'],[...pool.slice(0,9),C.LEGENDARY_PLAYERS.at(-1).id],'all'])await assert.rejects(server().handle(request('/runs/start',{...body,ssrRotation})),/轮换名单无效/);
+ await assert.rejects(server().handle(request('/runs/start',{...body,balanceRulesVersion:19})),/轮换名单无效/);
+ const old=server();await old.handle(request('/runs/start',{...body,balanceRulesVersion:19,ssrRotation:null}));assert.equal(old.calls[1].args.p_state.ssrRotation,undefined);
+});
+
 test('health advertises every supported rule and invalid rule types cannot access run storage',async()=>{
   const health=await api().handle({method:'GET',url:'/api/health',headers:{}});
   assert.equal(health.data.rulesVersion,C.BALANCE_RULES_VERSION);
@@ -148,6 +158,16 @@ test('background start binds a committed seed and retries do not create another 
   const response=await fresh.handle(request('/runs/start',body));assert.equal(response.data.runId,requestId);assert.equal(fresh.calls[1].args.p_state.rng,C.createRun('reserve_fund',911,{},1).rng);
   const retry=api([{id:requestId,seed:911,talent:body.talent,proof_version:3}]);await retry.handle(request('/runs/start',body));assert.equal(retry.calls.length,0);
   await assert.rejects(retry.handle(request('/runs/start',{...body,seed:912})),/不一致/);
+});
+
+test('late offline starts exclude weekly eligibility without rejecting cumulative verification or old clients',async()=>{
+ const body={requestId:'00000000-0000-4000-8000-000000000019',seed:911,talent:'reserve_fund',progress:{},balanceRulesVersion:18};
+ const fresh=()=>api([], (url,args)=>url.endsWith('get_verified_game_profile')?{progress:{},earned:0,profile:{}}:{runId:args.p_run_id,seed:args.p_seed,proofVersion:3});
+ for(const extra of [{startedAt:1},{startedAt:Date.now(),completedAt:1},{excludeWeekly:true}]){
+  const server=fresh(),result=await server.handle(request('/runs/start',{...body,...extra}));assert.equal(result.data.weeklyExcluded,true);assert.equal(server.calls[1].args.p_state.weeklyLeaderboardExcluded,true);
+ }
+ for(const extra of [{},{startedAt:Date.now()}]){const server=fresh();assert.equal((await server.handle(request('/runs/start',{...body,...extra}))).data.weeklyExcluded,false);assert.equal(server.calls[1].args.p_state.weeklyLeaderboardExcluded,undefined);}
+ for(const extra of [{startedAt:'yesterday'},{completedAt:-1},{excludeWeekly:'true'}])await assert.rejects(fresh().handle(request('/runs/start',{...body,...extra})),e=>e.statusCode===400);
 });
 
 test('old starts and old jersey purchases preserve newly unlocked legendary players',async()=>{

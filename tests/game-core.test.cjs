@@ -507,11 +507,11 @@ test('GOAT peak, reference merit, settlement unlocks, and permanent upgrades sha
   assert.equal(game.profile.legend, 270);
 });
 
-test('profile exposes peak OVR, top bar keeps GOAT, and catalogs and point shop remain available', () => {
+test('profile exposes peak OVR, top bar shows OVR, and catalogs and point shop remain available', () => {
   const css = readStyles();
   const app = readRoot('src', 'App.jsx');
   const ui = readH5('game-ui.js');
-  assert.match(ui, /metric\('GOAT',liveGoat,'top-goat'\)/);
+  assert.match(ui, /metric\('OVR',liveOvr,'top-goat'\)/);
   assert.match(ui, /最高OVR/);
   assert.match(ui, /data-id="jerseys">球衣图鉴/);
   assert.match(ui, /const catalogJerseyIds=new Set\(\[\.\.\.\(p\.jerseys\|\|\[\]\),\.\.\.\(game\.run\?\.collectedJerseys\|\|\[\]\)\]\)/);
@@ -1917,7 +1917,7 @@ test('career report builds a preview and shares its PNG through OSS and the post
   assert.match(css, /\.career-report-hero\{[^}]*padding:10px/);
   assert.match(css, /\.career-report-hero h1\{[^}]*font-size:24px/);
   assert.match(css, /\.career-report-overview\{display:grid;grid-template-columns:/);
-  assert.match(screens, /<span>第 \{summary\.stage\} 关<\/span><h1>\{summary\.goat\}<\/h1>/);
+  assert.match(screens, /<span>第 \{summary\.stage\} 关<\/span><h1>\{summary\.ovr\}<\/h1>/);
   assert.match(css, /\.career-report-content\{[^}]*overflow-y:auto/);
   assert.match(css, /\.career-action-row\{display:grid;grid-template-columns:1fr 1fr/);
   assert.match(css, /\.career-lineup\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);

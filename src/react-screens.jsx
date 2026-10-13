@@ -129,7 +129,7 @@ function MarkupScreen({ html }) {
   return createElement(Fragment, null, ...parseGeneratedMarkup(html).map(markupNodeToReact));
 }
 
-function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread }) {
+function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread, rotationAvailable }) {
   return (
     <>
       <section className="home-hero">
@@ -142,11 +142,11 @@ function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread })
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6" /></svg>
           <span>更新公告</span>
         </button>
-        <div className="home-scores">
+        <div className="home-summary-row"><div className="home-scores">
           <div><b>06</b><small>能力槽位</small></div>
           <div><b>10</b><small>主线关卡</small></div>
           <div><b>∞</b><small>无尽挑战</small></div>
-        </div>
+        </div>{rotationAvailable && <button className="home-rotation-entry" data-act="ssr-rotation-open"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="7" y="5" width="13" height="20" rx="2" /><path d="M4 9H2v19h13v-1M24 10h5l-3-3M29 10v6M26 23h-5l3 3M21 23v-6" /></svg><span>轮换球员</span></button>}</div>
       </section>
       {active && <button className="btn wide home-primary home-continue" data-act="continue">继续第 {stage} 关 <span>→</span></button>}
       <button className={`btn wide home-primary home-new${active ? '' : ' home-start'}`} data-act="new">{active ? '开启另一段旅程' : '开启新旅程'} <span>→</span></button>
@@ -162,8 +162,23 @@ function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread })
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新版本 · 1.5.0 · 2026.10.13</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新版本 · 1.5.1 · 2026.10.14</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">1.5.1 · 2026.10.14 · 球员轮换与操作优化</h3>
+      <h3>【新】SSR球员自由轮换</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 首页新增<strong>轮换球员</strong>入口：已解锁传奇球员且可用SSR球员池达到<strong>11名</strong>时显示。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 自由选择<strong>至少10名SSR</strong>进入招募池，上限不限。确认后保存选择，从<strong>下一次新开局</strong>生效；普通、十连、百连SSR保底均使用所选名单。</p>
+      <h3>操作优化</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 扩容按钮左侧新增<strong>操作模式</strong>设置，包含<strong>经典模式</strong>和<strong>新模式</strong>选择。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 新增备战席<strong>右侧常驻滚动条</strong>开关，默认关闭。开启后可拖动滑块浏览球员；卡片宽度自动适配，优化滚动条与间距。</p>
+      <h3>奖金调整</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 新开局<strong>胜利奖金上限由90提高至120</strong>，奖金明细与赛后结算同步调整。</p>
+      <h3>排行榜优化</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 修复排行版数据上传bug：对局成绩在后台上传，网络异常时保留本地待上传记录，重新进入游戏或网络恢复后自动重试；结算页展示同步状态并支持手动重试。</p>
+      <h3>存档与购买修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 修复本地存档缺失时，存储接口尚未就绪可能导致误建空档的问题。读取异常时可重试，避免空档覆盖已有备份。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 购买球衣、装备、传奇球员及局外升级后新增后台备份，失败自动重试；增加已购内容与成长等级回退保护，降低读档后购买内容丢失的风险。</p>
+      <p className="announcement-note">球员轮换和奖金上限调整从新开局生效，当前对局继续使用原规则。已解锁球员、传奇点、成长与生涯记录保留。</p>
       <h3 className="announcement-version">1.5.0 · 2026.10.13 · 百连招募开放</h3>
       <h3>百连招募</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 新增<strong>百连招募</strong>，一次招募100张球员卡，享受<strong>9折</strong>优惠，每抽沿用本局SSR概率与保底计数。</p>
@@ -325,7 +340,7 @@ function TalentScreen({ offer, selectedTalent, unlockedCount, totalCount, talent
   );
 }
 
-function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel, morale, moraleMax = 3 }) {
+function TopBar({ hasRun, hideBack, backAction, backLabel, liveOvr, stageLabel, morale, moraleMax = 3 }) {
   const heartPath = 'M12 21s-9-5.5-9-11.7C3 5.6 5.4 3 8.5 3c1.8 0 3 1 3.5 2.1C12.5 4 13.7 3 15.5 3 18.6 3 21 5.6 21 9.3 21 15.5 12 21 12 21Z';
   const heartFillHeight = 18 * Math.min(1, morale / moraleMax);
   const isTalentAction = hasRun && backAction === 'current-talent-open';
@@ -341,7 +356,7 @@ function TopBar({ hasRun, hideBack, backAction, backLabel, liveGoat, stageLabel,
     <>
       {backButton}
       <div className="top-status">
-        <span className="top-goat"><small>GOAT</small><b>{liveGoat}</b></span>
+        <span className="top-goat"><small>OVR</small><b>{liveOvr}</b></span>
         <span><small>关卡</small><b>{stageLabel}</b></span>
         <span className="top-life">
           <svg className="life-heart" viewBox="0 0 24 24" aria-hidden="true">
@@ -440,13 +455,13 @@ function ResultScreen({ report, won, ended, final, wins, losses, battleKey, beat
   );
 }
 
-function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, reviveMessage }) {
+function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, reviveMessage, syncMessage, syncRetry }) {
   return (
     <>
       <div className="career-report-content">
         <div className="career-report-overview">
           <div className="career-report-hero panel">
-            <span>第 {summary.stage} 关</span><h1>{summary.goat}</h1><small>GOAT 分数</small>
+            <span>第 {summary.stage} 关</span><h1>{summary.ovr}</h1><small>本局最高 OVR</small>
           </div>
           <section className="panel career-advanced">
             <div><span>胜负记录<b>{summary.wins} 胜 {summary.losses} 负</b></span><span>招募球员<b>{summary.recruits} 次</b></span><span>累计奖金收入<b>{summary.prizeIncome} 奖金</b></span><span>购买装备<b>{summary.gearPurchases} 次</b></span></div>
@@ -469,6 +484,7 @@ function CareerReportScreen({ summary, posterBusy, posterMessage, reviveBusy, re
         </section>
       </div>
       <div className="career-report-actions">
+        {syncMessage && <p role="status">{syncMessage}{syncRetry && <button type="button" className="btn dark" data-act="cloud-sync-retry">重试同步</button>}</p>}
         <div className="career-action-row"><button className={`btn wide career-revive${reviveBusy ? ' ad-busy' : ''}`} data-act="report-revive" disabled={!summary.canRevive || reviveBusy}>{reviveBusy && <i className="ad-loading-icon" aria-hidden="true" />}{summary.reviveUsed ? '本局已使用体力恢复' : !summary.canRevive ? '当前无需恢复体力' : '看视频恢复体力'}</button><button className="btn wide dark" data-act="report-new">返回首页</button></div>
         {reviveMessage && <p role="status">{reviveMessage}</p>}
         <button className="btn wide career-poster" data-act="report-poster" disabled={posterBusy}>{!summary.posterRewarded && summary.wins + summary.losses > 0 ? '生成海报·首次分享获得100传奇点' : '生成海报'}</button>

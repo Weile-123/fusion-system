@@ -18,8 +18,12 @@
   let signatureDetailId='',showPlayerShopUnlock=false;
   let showIncomeDetails=false,batchSellConfirm=null,pointShopPurchaseBusy=false,storageMessage='';
   let incomeScrollbarCleanup=null;
+  let benchScrollbarCleanup=null;
+  let showSSRRotation=false,ssrRotationDraft=[],ssrRotationMessage='',ssrRotationBusy=false;
+  let showBenchOperationGuide=false,benchModeDraft='original',benchScrollbarDraft=false;
+  let cloudRetryTimer=null,cloudRetryAttempt=0,playerPuid='';
   let hundredPurchaseConfirm=false,hundredPurchaseBusy=false;
-  const ANNOUNCEMENT_VERSION='1.5.0';
+  const ANNOUNCEMENT_VERSION='1.5.1';
   const LEGENDARY_STORE_NOTICE_VERSION='1.3.0';
   const TRAINING_BASE_NOTICE_VERSION='1.4.0';
   let showAnnouncement=false;
@@ -72,6 +76,7 @@
     playerInfoRequest=Promise.resolve().then(()=>getUserInfo.call(window.ColorboxAI.auth)).then(response=>{
       playerInfoChecked=true;
       if(response?.code===200){
+        playerPuid=response.data?.islogin===1?String(response.data.puid||''):'';
         const nickname=response.data?.islogin===1?response.data.nickname:null;
         playerName=typeof nickname==='string'&&nickname.trim()?nickname.trim().slice(0,30):'玩家';
       }else playerNameNotice=response?.message||'玩家信息暂时无法读取，已显示“玩家”。';
@@ -86,7 +91,7 @@
     const profile=target.profile;profile.achievedBonds||=[];profile.bondArchiveVersion=1;
     if(target.run)profile.achievedBonds=[...new Set([...profile.achievedBonds,...C.activeSynergies(target.run).map(b=>b.id)])];
   }
-  function save(){
+  function save({backup=false}={}){
     recordBondAchievements(game);
     if(!STORAGE.available()){storageMessage='设备无法保存进度，请检查存储权限后重试。';return Promise.resolve(false)}
     const snapshot=JSON.parse(JSON.stringify(game));
@@ -94,7 +99,7 @@
     if(adReturnScreen)snapshot.adReturnScreen=adReturnScreen;
     if(adReturnScreen==='talent'){snapshot.adTalentOffer=talentOffer.map(t=>t.id);snapshot.adSelectedTalent=selectedTalent}
     let write;try{write=STORAGE.save(snapshot)}catch(_){write=Promise.reject(new Error('设备存档写入失败'))}
-    saveQueue=Promise.resolve(write).then(()=>{storageMessage='';return true},()=>{storageMessage='存档写入失败，请检查设备存储后重试。';return false});
+    saveQueue=Promise.resolve(write).then(()=>{storageMessage='';if(backup)queueSaveBackup(snapshot);return true},()=>{storageMessage='存档写入失败，请检查设备存储后重试。';return false});
     return saveQueue;
   }
   let adReturnScreen='';
@@ -127,6 +132,8 @@
     restored.profile={
       announcementReadVersion:typeof profile.announcementReadVersion==='string'?profile.announcementReadVersion.slice(0,40):'',
       trainingBaseSeenVersion:typeof profile.trainingBaseSeenVersion==='string'?profile.trainingBaseSeenVersion.slice(0,40):'',
+      benchOperationMode:profile.benchOperationMode==='new'?'new':'original',
+      benchScrollbarEnabled:profile.benchScrollbarEnabled===true,benchOperationNoticeSeen:profile.benchOperationNoticeSeen===true,
       legendaryStoreSeenVersion:typeof profile.legendaryStoreSeenVersion==='string'?profile.legendaryStoreSeenVersion.slice(0,40):'',
       runs:safeNumber(profile.runs,0,100000,0),
       wins:safeNumber(profile.wins,0,1000000,0),
@@ -149,6 +156,7 @@
       upgrades:Object.fromEntries(C.META_UPGRADES.map(item=>[item.id,safeNumber(profile.upgrades?.[item.id],0,item.prices.length,0)])),
       metaUnlocks:{talents:Array.isArray(profile.metaUnlocks?.talents)?[...new Set(profile.metaUnlocks.talents.filter(id=>C.TALENTS.some(item=>item.id===id)))]:[],gear:Array.isArray(profile.metaUnlocks?.gear)?[...new Set(profile.metaUnlocks.gear.filter(id=>C.GEAR.some(item=>item.id===id)))]:[],players:Array.isArray(profile.metaUnlocks?.players)?[...new Set(profile.metaUnlocks.players.filter(knownPlayer))]:[]}
     };
+    restored.profile.ssrRotation=Array.isArray(profile.ssrRotation)&&C.ssrRotationUnlocked(restored.profile)?C.normalizeSSRRotation(restored.profile,profile.ssrRotation):null;
     // Preserve the old archive's unlocked entries once, without unlocking new bonds.
     if(profile.bondArchiveVersion!==1){
       const identities=new Set(restored.profile.discovered.map(C.identityOf));
@@ -163,7 +171,7 @@
     const source=raw.run;
     if(!source||typeof source!=='object'||!C.KNOWN_TALENTS.some(t=>t.id===source.talent))return restored;
     const seed=safeNumber(source.seed,0,4294967295,1);
-    const run=C.createRun(source.talent,seed,{...restored.profile.upgrades,jerseyUnlocks:source.unlockedJerseys||restored.profile.jerseyUnlocks,gearUnlocks:source.unlockedGear||[],playerUnlocks:source.unlockedPlayers||[],trainingBase:source.trainingBase},source.balanceRulesVersion||1);
+    const run=C.createRun(source.talent,seed,{...restored.profile.upgrades,jerseyUnlocks:source.unlockedJerseys||restored.profile.jerseyUnlocks,gearUnlocks:source.unlockedGear||[],playerUnlocks:source.unlockedPlayers||[],trainingBase:source.trainingBase,ssrRotation:source.ssrRotation},source.balanceRulesVersion||1);
     run.cloudRunId=typeof source.cloudRunId==='string'&&/^[0-9a-f-]{36}$/i.test(source.cloudRunId)?source.cloudRunId:'';
     run.cloudRankError=typeof source.cloudRankError==='string'&&source.cloudRankError!=='本局未连接云端，不计入排行榜。'?source.cloudRankError.slice(0,120):'';
     run.cloudFinished=source.cloudFinished===true;
@@ -171,7 +179,11 @@
     run.cloudSharePending=source.cloudSharePending===true;
     run.cloudProofVersion=source.cloudProofVersion===3?3:0;
     run.cloudSequence=safeNumber(source.cloudSequence,0,1000000,0);
-    run.cloudOperations=Array.isArray(source.cloudOperations)?source.cloudOperations.filter(item=>item&&recordedActions.includes(item.action)&&Array.isArray(item.args)).slice(0,1500):[];
+    run.cloudOwnerPuid=typeof source.cloudOwnerPuid==='string'?source.cloudOwnerPuid:'';
+    run.cloudCreatedAt=safeNumber(source.cloudCreatedAt,0,Number.MAX_SAFE_INTEGER,0);
+    run.cloudCompletedAt=safeNumber(source.cloudCompletedAt,0,Number.MAX_SAFE_INTEGER,0);
+    run.cloudSyncFailure=['network','validation','account','storage'].includes(source.cloudSyncFailure)?source.cloudSyncFailure:'';
+    run.cloudOperations=Array.isArray(source.cloudOperations)?source.cloudOperations.filter(item=>item&&recordedActions.includes(item.action)&&Array.isArray(item.args)):[];
     run.cloudOutbox=Array.isArray(source.cloudOutbox)?source.cloudOutbox.filter(event=>event&&['battle','finish','resume','share'].includes(event.type)&&Array.isArray(event.operations)):[];
     run.cloudStartPending=source.cloudStartPending&&typeof source.cloudStartPending.requestId==='string'?source.cloudStartPending:null;
     run.cloudFinalizationQueued=source.cloudFinalizationQueued===true;
@@ -347,10 +359,10 @@
       screen==='result'?['roster','返回阵容']:['home','返回首页'];
     const forcedOpening=screen==='talent'||screen==='recruit'&&r&&C.starterCount(r)<6;
     const hideBack=forcedOpening||screen==='recruit'||screen==='result'||screen==='report';
-    const liveGoat=r&&!r.ended?Math.max(r.maxGoat||0,C.goatScore(r)):0;
+    const liveOvr=r&&!r.ended?C.fused(r).rating:0;
     const morale=Math.max(0,Math.min(r?.balanceRulesVersion>=2||r?.talent==='captain'?13:3,Number(r?.morale)||0));
     if(window.SupFusionReactScreens?.renderTopBar){
-      window.SupFusionReactScreens.renderTopBar(header,{hasRun:!!(r&&!r.ended),hideBack,backAction:back[0],backLabel:back[1],liveGoat,moraleMax:3,stageLabel:r?.endless?r.stage:`${r?.stage||1}/10`,morale});
+      window.SupFusionReactScreens.renderTopBar(header,{hasRun:!!(r&&!r.ended),hideBack,backAction:back[0],backLabel:back[1],liveOvr,moraleMax:3,stageLabel:r?.endless?r.stage:`${r?.stage||1}/10`,morale});
       return;
     }
     const backButton=(action,label)=>{
@@ -369,7 +381,7 @@
     if(r&&!r.ended){
       if(!hideBack)header.appendChild(backButton(back[0],back[1]));
       const status=document.createElement('div');status.className='top-status';
-      status.append(metric('GOAT',liveGoat,'top-goat'),metric('关卡',r.endless?r.stage:`${r.stage}/10`));
+      status.append(metric('OVR',liveOvr,'top-goat'),metric('关卡',r.endless?r.stage:`${r.stage}/10`));
       const life=document.createElement('span');life.className='top-life';
       const heart=document.createElement('span');heart.className='life-heart-fallback';heart.textContent='♥';life.append(heart);
       const moraleText=document.createElement('b');moraleText.textContent=`${Math.min(3,morale)}/3${morale>3?` +${morale-3}`:''}`;life.appendChild(moraleText);
@@ -377,6 +389,8 @@
     }else if(!hideBack)header.appendChild(backButton('home','返回首页'));
   }
   function go(id){
+    if(id!=='home')showSSRRotation=false;
+    if(id!=='roster'){benchScrollbarCleanup?.();benchScrollbarCleanup=null}
     if(id!=='recruit'){hundredRecruit.leave();els.recruit.classList.remove('hundred-recruit-screen')}
     showIncomeDetails=false;batchSellConfirm=null;
     signatureDetailId='';
@@ -385,7 +399,7 @@
     if(id!=='report'&&showPosterPreview)resetCareerPoster();
     if(id!=='roster')sellConfirm=null;
     if(id!=='roster'){showBonds=false;selectedPlace=null}
-    if(id!=='roster')showExpandConfirm=false;
+    if(id!=='roster'){showExpandConfirm=false;showBenchOperationGuide=false;}
     if(id!=='roster')rosterTraining=false;
     if(id!=='roster'){showRecruitSheet=false;recruitSheetMessage=''}
     if(id!=='duel')showStrategyPicker=false;
@@ -417,17 +431,22 @@
   window.addEventListener('resize',syncScrollViewport);
   function render(){({home:renderHome,leaderboard:renderLeaderboard,talent:renderTalent,recruit:renderRecruit,roster:renderRoster,shop:renderShop,duel:renderDuel,result:renderResult,report:renderCareerReport,profile:renderProfile,pointshop:renderPointShop}[screen]||renderHome)();renderPending()}
   function runOrHome(){if(!game.run||game.run.ended&&!game.run.randomEvent){go('home');return null}return game.run}
+  function ssrRotationButton(){return '<button class="home-rotation-entry" data-act="ssr-rotation-open"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="7" y="5" width="13" height="20" rx="2"/><path d="M4 9H2v19h13v-1M24 10h5l-3-3M29 10v6M26 23h-5l3 3M21 23v-6"/></svg><span>轮换球员</span></button>'}
+  function ssrRotationMarkup(){
+    const pool=C.availableSSRPlayers(game.profile),selected=new Set(ssrRotationDraft);
+    return `<section class="modal-card ssr-rotation-modal" role="dialog" aria-modal="true" aria-labelledby="ssr-rotation-title"><header class="ssr-rotation-head"><div><h2 id="ssr-rotation-title">轮换球员</h2><p>组建你的传奇招募池</p></div><button class="button-8" data-act="ssr-rotation-close" aria-label="关闭" ${ssrRotationBusy?'disabled':''}>×</button></header><div class="ssr-rotation-summary"><div><strong>已选 <b>${selected.size}</b> 名</strong><small>最少10名 · 上限不限</small></div><div><button data-act="ssr-rotation-all" ${ssrRotationBusy?'disabled':''}>全选</button></div></div><div class="ssr-rotation-list" role="group" aria-label="选择进入球员池的SSR球员">${pool.map(star=>`<button class="ssr-rotation-card${selected.has(star.id)?' selected':''}" data-act="ssr-rotation-select" data-id="${star.id}" aria-pressed="${selected.has(star.id)}" ${ssrRotationBusy?'disabled':''}><span class="ssr-rotation-check" aria-hidden="true">${selected.has(star.id)?'✓':''}</span><span class="ssr-rotation-player"><span>${star.role}</span><strong>${escapeText(star.name)}</strong></span></button>`).join('')}</div><div class="ssr-rotation-footer"><p>新开局生效 · 仅调整SSR球员池<br></p><div class="ssr-rotation-message" role="status">${escapeText(ssrRotationMessage||(selected.size<10?'至少选择10名SSR球员后才能确认':''))}</div><button class="btn wide" data-act="ssr-rotation-confirm" ${selected.size<10||ssrRotationBusy?'disabled':''}>${ssrRotationBusy?'保存中…':'确认轮换'}</button></div></section>`;
+  }
   function renderHome(){
     const r=game.run,active=r&&!r.ended;
     if(window.SupFusionReactScreens?.renderHome){
-      window.SupFusionReactScreens.renderHome(els.home,{active,stage:r?.stage||1,legendaryStoreUnread:(game.profile.legendaryStoreSeenVersion!==LEGENDARY_STORE_NOTICE_VERSION||game.profile.trainingBaseSeenVersion!==TRAINING_BASE_NOTICE_VERSION),announcementUnread:game.profile.announcementReadVersion!==ANNOUNCEMENT_VERSION});
+      window.SupFusionReactScreens.renderHome(els.home,{rotationAvailable:C.ssrRotationUnlocked(game.profile),active,stage:r?.stage||1,legendaryStoreUnread:(game.profile.legendaryStoreSeenVersion!==LEGENDARY_STORE_NOTICE_VERSION||game.profile.trainingBaseSeenVersion!==TRAINING_BASE_NOTICE_VERSION),announcementUnread:game.profile.announcementReadVersion!==ANNOUNCEMENT_VERSION});
       return;
     }
     els.home.markup=`
       <section class="home-hero"><div class="home-eyebrow">BUILD YOUR OWN LEGEND</div>
         <h1>我的球星<br><em>融合系统</em></h1>
         <div class="home-introduction"><p>六位球星，一位终极单挑者。招募、融合、闯关，打出独一无二的传奇之路。</p></div><button type="button" class="home-announcement${game.profile.announcementReadVersion!==ANNOUNCEMENT_VERSION?' has-update':''}" data-act="announcement-open" aria-label="更新公告"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10h4l11-5v14L8 14H4zM8 14l2 6H6l-2-6M22 9v6"/></svg><span>更新公告</span></button>
-        <div class="home-scores"><div><b>06</b><small>能力槽位</small></div><div><b>10</b><small>主线关卡</small></div><div><b>∞</b><small>无尽挑战</small></div></div>
+        <div class="home-summary-row"><div class="home-scores"><div><b>06</b><small>能力槽位</small></div><div><b>10</b><small>主线关卡</small></div><div><b>∞</b><small>无尽挑战</small></div></div>${C.ssrRotationUnlocked(game.profile)?ssrRotationButton():''}</div>
       </section>
       ${active?`<button class="btn wide home-primary home-continue" data-act="continue">继续第 ${r.stage} 关 <span>→</span></button>`:''}
       <button class="btn wide home-primary home-new${active?'':' home-start'}" data-act="new">${active?'开启另一段旅程':'开启新旅程'} <span>→</span></button><button class="home-leaderboard-entry button-7" data-act="leaderboard">排行榜 <span>→</span></button>
@@ -464,7 +483,7 @@
   }
   function queueCloud(task){cloudQueue=cloudQueue.catch(()=>{}).then(task);return cloudQueue}
   function queueEvent(run,type,operations=[],strategy){
-    (run.cloudOutbox||=[]).push({type,operations:JSON.parse(JSON.stringify(operations)),...(strategy?{strategy}:{})});
+    (run.cloudOutbox||=[]).push({type,queuedAt:Date.now(),operations:JSON.parse(JSON.stringify(operations)),...(strategy?{strategy}:{})});
   }
   function archiveCloudRun(run){
     if(!run||!run.cloudStartPending&&!run.cloudOutbox?.length)return;
@@ -474,6 +493,7 @@
   function queueFinalization(run){
     if(!run||!run.cloudRunId&&!run.cloudStartPending)return;
     if(run.ended&&!run.randomEvent&&!run.cloudFinalizationQueued&&(!run.cloudFinished||run.cloudResumePending)){
+      run.cloudCompletedAt ||= Date.now();
       queueEvent(run,'finish',run.cloudOperations||[]);run.cloudOperations=[];run.cloudFinalizationQueued=true;
     }
     if(run.cloudSharePending&&!run.cloudOutbox?.some(event=>event.type==='share'))queueEvent(run,'share');
@@ -488,36 +508,68 @@
     const scheduledEvents=[...(run.cloudOutbox||[])];
     const task=queueCloud(async()=>{
       try{
+        // Verify the current account before registering a delayed start. Never move
+        // a known owner's offline history to the account currently using the device.
+        if(typeof window.ColorboxAI?.auth?.getUserInfo==='function'){
+          const identity=await withTimeout(window.ColorboxAI.auth.getUserInfo());
+          const owner=identity?.code===200&&identity.data?.islogin===1?String(identity.data.puid||''):'';
+          if(!owner)throw Object.assign(new Error('请登录原虎扑账号后同步成绩。'),{syncFailure:'account'});
+          if(run.cloudOwnerPuid&&run.cloudOwnerPuid!==owner)throw Object.assign(new Error('该成绩属于其他虎扑账号，请切换回原账号。'),{syncFailure:'account'});
+          run.cloudOwnerPuid ||= owner;
+        }
+        if(!await save())throw Object.assign(new Error('设备存档未保存，成绩队列仍保留。'),{syncFailure:'storage'});
         if(run.cloudStartPending){
-          const result=await cloudApi('/runs/start','POST',run.cloudStartPending);
+          const request={...run.cloudStartPending,...(run.cloudCreatedAt?{startedAt:run.cloudCreatedAt}:{}),...(run.cloudCompletedAt?{completedAt:run.cloudCompletedAt}:{}),...(run.cloudCompletedAt&&!run.cloudCreatedAt?{excludeWeekly:true}:{})};
+          const result=await cloudApi('/runs/start','POST',request);
           if(result?.proofVersion!==3||result.seed!==run.seed||result.runId!==run.cloudStartPending.requestId)throw new Error('云端开局验证未完成，成绩已保留待同步。');
           if(run.balanceRulesVersion>=2&&result.balanceRulesVersion!==run.balanceRulesVersion)throw new Error('成绩已保留，稍后重试。');
-          run.cloudRunId=result.runId;run.cloudStartPending=null;save();
+          const pending=run.cloudStartPending,priorId=run.cloudRunId;
+          run.cloudRunId=result.runId;run.cloudStartPending=null;
+          if(!await save()){run.cloudStartPending=pending;run.cloudRunId=priorId;throw Object.assign(new Error('云端开局已接收，设备确认未保存，将安全重试。'),{syncFailure:'storage'})}
         }
         // Acknowledgments only remove the first immutable event; gameplay may keep appending.
         for(const event of scheduledEvents){
           if(run.cloudOutbox?.[0]!==event)throw new Error("Pending event order changed");
           const data={runId:run.cloudRunId,...(event.type==='share'?{}:{sequence:run.cloudSequence||0,operations:event.operations}),...(event.strategy?{strategy:event.strategy}:{})};
           const result=await cloudApi(`/runs/${event.type}`,'POST',data);
+          const previous={sequence:run.cloudSequence,finished:run.cloudFinished,resume:run.cloudResumePending,share:run.cloudSharePending};
+          if(event.type!=='share'&&result?.sequence!=null&&result.sequence!==(run.cloudSequence||0)+1)throw Object.assign(new Error('云端同步序号异常，记录已保留。'),{syncFailure:'validation'});
           if(event.type!=='share')run.cloudSequence=result?.sequence??(run.cloudSequence||0)+1;
           if(event.type==='finish')run.cloudFinished=true;
           if(event.type==='resume'){run.cloudFinished=false;run.cloudResumePending=false}
           if(event.type==='share')run.cloudSharePending=false;
-          run.cloudOutbox.shift();save();
+          run.cloudOutbox.shift();
+          if(!await save()){
+            run.cloudOutbox.unshift(event);run.cloudSequence=previous.sequence;run.cloudFinished=previous.finished;run.cloudResumePending=previous.resume;run.cloudSharePending=previous.share;
+            throw Object.assign(new Error('云端已接收，设备确认未保存，将安全重试。'),{syncFailure:'storage'});
+          }
         }
         run.cloudRankError='';
+        run.cloudSyncFailure='';run.cloudSyncStatus=null;
         game.pendingCloudRuns=(game.pendingCloudRuns||[]).filter(item=>item!==run||item.cloudStartPending||item.cloudOutbox?.length);
         save();return true;
-      }catch(error){run.cloudSyncStatus=error?.status;run.cloudRankError=`${error?.message||'成绩同步失败'} 成绩已保留，下次进入游戏会重试同步。`;save();return false}
-    }).finally(()=>{cloudBattleRequests.delete(run);if(game.run===run){if(screen==='result')renderResult();if(screen==='home')renderHome()}if(screen==='leaderboard')void loadLeaderboard(true)});
+      }catch(error){run.cloudSyncStatus=error?.status;run.cloudSyncFailure=error.syncFailure||([400,409,422].includes(error?.status)?'validation':[401,403].includes(error?.status)?'account':'network');run.cloudRankError=`${error?.message||'成绩同步失败'} 成绩已保留${run.cloudSyncFailure==='validation'?'，验证异常需要检查记录。':'，将在后台重试。'}`;save();return false}
+    }).finally(()=>{cloudBattleRequests.delete(run);scheduleCloudRetry();if(game.run===run){if(screen==='result')renderResult();if(screen==='report')renderCareerReport();if(screen==='home')renderHome()}if(screen==='leaderboard')void loadLeaderboard(true)});
     cloudBattleRequests.set(run,task);return task;
   }
+  function queueSaveBackup(snapshot){
+    try{if(STORAGE.requestBackup)STORAGE.requestBackup(snapshot);
+    else if(STORAGE.syncToCloud)void STORAGE.syncToCloud(snapshot).catch(()=>{});}catch(_){}
+  }
   function syncSaveBackup(){
-    if(STORAGE.syncToCloud)void STORAGE.syncToCloud(JSON.parse(JSON.stringify({...game,savedAt:Date.now()}))).catch(()=>{});
+    queueSaveBackup(JSON.parse(JSON.stringify({...game,savedAt:Date.now()})));
   }
   async function syncPendingRuns(includeActive=false){
     const runs=[...(game.pendingCloudRuns||[]),game.run].filter(Boolean);
-    for(const run of [...new Set(runs)]){if(!includeActive&&!run.ended)continue;queueFinalization(run);const ok=await syncCloudRun(run);if(!ok&&[408,429,503].includes(run.cloudSyncStatus))break}
+    for(const run of [...new Set(runs)]){if(!includeActive&&!run.ended||run.cloudSyncFailure==='validation')continue;queueFinalization(run);const ok=await syncCloudRun(run);if(!ok&&run.cloudSyncFailure==='network')break}
+    scheduleCloudRetry();
+  }
+  function scheduleCloudRetry(){
+    if(cloudRetryTimer!==null)return;
+    const retryable=[...(game.pendingCloudRuns||[]),game.run].filter(run=>run&&(run.cloudStartPending||run.cloudOutbox?.length)&&!['validation','account'].includes(run.cloudSyncFailure));
+    if(!retryable.length){cloudRetryAttempt=0;return}
+    const delay=Math.min(60000,5000*2**Math.min(cloudRetryAttempt++,4));
+    cloudRetryTimer=setTimeout(()=>{cloudRetryTimer=null;void syncPendingRuns(true)},delay);
   }
   function sendCloudBattle(before,strategy,run){
     if(!run.cloudRunId&&!run.cloudStartPending)return Promise.resolve(true);
@@ -719,11 +771,11 @@
     if(!moves.length)return '';
     return `<section class="signature-panel${embedded?' embedded':' panel'}"><div class="signature-title"><div class="signature-heading"><b>招牌动作</b>${moves.map(move=>`<button class="signature-tag" data-act="signature-detail-open" data-id="${move.id}" aria-haspopup="dialog">${escapeText(move.name)}</button>`).join('')}</div><small>点击查看详情</small></div></section>`;
   }
-  function benchCard(id,index,r){
+  function benchCard(id,index,r,demo=false){
     const s=C.BY_ID[id],effective=C.playerEffectiveStats(r,id),value=effective.stats[s.best];
     return `<div class="bench-card ${tierClass[s.tier]} ${selectedPlace?.kind==='bench'&&selectedPlace.key===index?'selected':''}">
-      <button class="bench-player" data-act="place" data-kind="bench" data-key="${index}"><strong>${s.name}</strong><small><span class="bench-rank">${effective.stars} <span class="star-icon">★</span></span>${rosterTraining?` · 训练${effective.train}`:''} · <span class="bench-attr">${C.LABELS[s.best]}</span> <b class="bench-value">${value}</b></small><span class="bench-drag-handle" title="按住此处拖动换位" aria-label="拖动换位"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4h12M3 9h12M3 14h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
-      ${rosterTraining?trainingAction(r,id,'bench-train'):`<button class="bench-sell button-5" data-act="sell-bench" data-id="${id}" data-index="${index}" ${r.lastBattle?'disabled title="请先进入下一关整备"':''} aria-label="出售 ${s.name}，获得 ${C.saleValue(id,effective.stars,r)} 奖金"><span>出售</span><b>${C.saleValue(id,effective.stars,r)}</b></button>`}
+      <button class="bench-player" data-act="place" data-kind="bench" data-key="${index}"><strong>${s.name}</strong><small><span class="bench-rank">${effective.stars} <span class="star-icon">★</span></span>${(rosterTraining&&!demo)?` · 训练${effective.train}`:''} · <span class="bench-attr">${C.LABELS[s.best]}</span> <b class="bench-value">${value}</b></small><span class="bench-drag-handle" title="按住此处拖动换位" aria-label="拖动换位"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4h12M3 9h12M3 14h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
+      ${(rosterTraining&&!demo)?trainingAction(r,id,'bench-train'):`<button class="bench-sell button-5" data-act="sell-bench" data-id="${id}" data-index="${index}" ${r.lastBattle?'disabled title="请先进入下一关整备"':''} aria-label="出售 ${s.name}，获得 ${C.saleValue(id,effective.stars,r)} 奖金"><span>出售</span><b>${C.saleValue(id,effective.stars,r)}</b></button>`}
     </div>`;
   }
   function trainingAction(run,id,className){
@@ -733,6 +785,7 @@
     return `<button class="${className} training-action" data-act="train" data-id="${id}" ${full||used||poor||run.lastBattle?'disabled':''} aria-label="训练 ${C.BY_ID[id].name}，花费 ${cost} 奖金">${label}</button>`;
   }
   function renderRoster({preserveScroll=false}={}){
+    benchScrollbarCleanup?.();benchScrollbarCleanup=null;
     const r=runOrHome();if(!r)return;
     const rosterScroll=preserveScroll?els.roster.scrollTop:0,benchScroll=preserveScroll?document.getElementById('benchGrid')?.scrollTop||0:0;
     const fusion=C.fused(r);
@@ -743,13 +796,43 @@
       ${combatPanel(r)}
       <div class="sectionhead slots-heading"><div class="slots-title-actions"><h2>融合面板</h2><button class="roster-bonds-action" data-act="bonds">查看羁绊(${fusion.bonds.length})</button></div><span>点击查看详情，拖动更换位置</span></div>
       <div class="fusion-lineup"><div class="lineup-column">${C.SLOTS.slice(0,3).map(s=>rosterSlot(s,r)).join('')}</div><div class="lineup-center"><img src="assets/fusion-player-asian.png" alt="持球的融合球员"></div><div class="lineup-column">${C.SLOTS.slice(3).map(s=>rosterSlot(s,r)).join('')}</div></div>
-      <div class="bench-heading-block"><div class="bench-heading-copy"><div class="sectionhead bench-title"><h2>备战席 <span class="bench-count">${r.bench.length} / ${r.benchLimit}</span></h2></div><p class="bench-gesture-hint">滑动列表浏览 · 按住球员左侧把手拖动换位</p></div><div class="bench-title-actions"><button class="roster-expand" data-act="expand-open" ${r.cash<10||r.benchLimit>=C.benchExpansionLimit(r)||r.lastBattle?'disabled':''}>扩容</button><button class="roster-training-toggle" data-act="toggle-training">${rosterTraining?'返回':'切换训练'}</button></div></div>
-      <div class="bench-panel panel"><div class="bench-grid" id="benchGrid">${sortedBench.length?sortedBench.map(({id,index})=>benchCard(id,index,r)).join(''):'<div class="bench-empty" role="status">暂无备战球员，招募后可加入备战席</div>'}</div></div>
+      <div class="bench-heading-block"><div class="bench-heading-copy"><div class="sectionhead bench-title"><h2>备战席 <span class="bench-count">${r.bench.length} / ${r.benchLimit}</span></h2></div><p class="bench-gesture-hint">滑动列表浏览 · ${game.profile.benchOperationMode==='new'?'仅左侧把手可拖动换位':'按住球员拖动换位'}</p></div><div class="bench-title-actions"><button class="roster-operation-toggle${game.profile.benchOperationNoticeSeen?'':' has-operation-update'}" data-act="bench-operation-toggle" aria-label="打开操作模式设置">操作模式</button><button class="roster-expand" data-act="expand-open" ${r.cash<10||r.benchLimit>=C.benchExpansionLimit(r)||r.lastBattle?'disabled':''}>扩容</button><button class="roster-training-toggle" data-act="toggle-training">${rosterTraining?'返回':'切换训练'}</button></div></div>
+      <div class="bench-panel panel${game.profile.benchOperationMode==='new'?' bench-handle-mode':''}"><div class="bench-grid" id="benchGrid">${sortedBench.length?sortedBench.map(({id,index})=>benchCard(id,index,r)).join(''):'<div class="bench-empty" role="status">暂无备战球员，招募后可加入备战席</div>'}</div><div class="bench-scrollbar" role="scrollbar" aria-label="滚动备战席" aria-controls="benchGrid" aria-orientation="vertical" aria-valuemin="0" tabindex="0" hidden><div class="bench-scrollbar-thumb"></div></div></div>
       <div class="roster-dock"><div class="roster-dock-main"><button type="button" class="action-cash" data-act="income-open" aria-label="查看利息和奖金明细"><span>当前奖金 <b>${r.cash}</b></span><i aria-hidden="true">›</i></button>
         <div class="quick-actions"><button class="btn wide recruit-action ${r.free>0||r.offerMode==='ten-batch'?'has-free':''}" data-act="recruit" ${r.lastBattle||r.ended?'disabled':''}><span>招募球员</span><small>${r.offerMode==='ten-batch'?'十连待确认':r.free>0?`免费 · 仅本轮（${r.free} 次）`:`${C.recruitCost(r)} 奖金`}</small>${r.free>0||r.offerMode==='ten-batch'?'<i aria-label="有可用招募内容"></i>':''}</button><button class="btn wide" data-act="shop">商店/装备</button></div></div>
         <button class="btn wide roster-fight" data-act="duel" ${C.starterCount(r)<6?'disabled':''}>${r.lastBattle?'查看本场结算':'前往备战'}</button></div>`;
     syncScrollViewport();
     if(preserveScroll){els.roster.scrollTop=rosterScroll;document.getElementById('benchGrid').scrollTop=benchScroll}
+    benchScrollbarCleanup=bindBenchScrollbar(els.roster);
+  }
+  function bindBenchScrollbar(host){
+    const panel=host.querySelector?.('.bench-panel'),grid=panel?.querySelector('.bench-grid'),bar=panel?.querySelector('.bench-scrollbar'),thumb=bar?.querySelector('.bench-scrollbar-thumb');
+    if(!grid||!bar||!thumb)return null;
+    let pointer=null,offset=0,thumbHeight=0,range=0,max=0;
+    const sync=()=>{
+      max=Math.max(0,grid.scrollHeight-grid.clientHeight);const overflow=max>1;
+      bar.hidden=game.profile.benchScrollbarEnabled!==true;thumb.hidden=!overflow;bar.setAttribute('aria-disabled',String(!overflow));bar.tabIndex=overflow?0:-1;panel.classList.toggle('has-bench-scroll',overflow);
+      const height=bar.clientHeight;thumbHeight=Math.min(height,Math.max(36,height*grid.clientHeight/Math.max(1,grid.scrollHeight)));range=Math.max(0,height-thumbHeight);
+      thumb.style.height=thumbHeight+'px';thumb.style.top=(max?range*Math.max(0,Math.min(max,grid.scrollTop))/max:0)+'px';
+      bar.setAttribute('aria-valuemax',String(Math.round(max)));bar.setAttribute('aria-valuenow',String(Math.round(Math.max(0,Math.min(max,grid.scrollTop)))));
+    };
+    const seek=y=>{if(range>0)grid.scrollTop=Math.max(0,Math.min(1,(y-bar.getBoundingClientRect().top-offset)/range))*max;sync()};
+    const down=event=>{
+      if(bar.hidden||max<=1||event.isPrimary===false||event.button>0)return;
+      event.preventDefault();event.stopPropagation();sync();pointer=event.pointerId;
+      offset=event.target===thumb?event.clientY-thumb.getBoundingClientRect().top:thumbHeight/2;
+      bar.setPointerCapture?.(pointer);seek(event.clientY);
+    };
+    const move=event=>{if(pointer!==event.pointerId)return;event.preventDefault();seek(event.clientY)};
+    const up=event=>{if(pointer!==event.pointerId)return;if(bar.hasPointerCapture?.(pointer))bar.releasePointerCapture(pointer);pointer=null};
+    const key=event=>{
+      const delta={ArrowDown:40,ArrowUp:-40,PageDown:grid.clientHeight,PageUp:-grid.clientHeight};
+      if(event.key==='Home')grid.scrollTop=0;else if(event.key==='End')grid.scrollTop=max;else if(Object.hasOwn(delta,event.key))grid.scrollTop+=delta[event.key];else return;
+      event.preventDefault();sync();
+    };
+    grid.addEventListener('scroll',sync,{passive:true});bar.addEventListener('pointerdown',down);bar.addEventListener('pointermove',move);bar.addEventListener('pointerup',up);bar.addEventListener('pointercancel',up);bar.addEventListener('lostpointercapture',up);bar.addEventListener('keydown',key);window.addEventListener('resize',sync);
+    const observer=window.ResizeObserver?new window.ResizeObserver(sync):null;observer?.observe(grid);observer?.observe(bar);for(const child of grid.children)observer?.observe(child);sync();
+    return ()=>{observer?.disconnect();grid.removeEventListener('scroll',sync);for(const [name,fn]of [['pointerdown',down],['pointermove',move],['pointerup',up],['pointercancel',up],['lostpointercapture',up],['keydown',key]])bar.removeEventListener(name,fn);window.removeEventListener('resize',sync);if(pointer!==null&&bar.hasPointerCapture?.(pointer))bar.releasePointerCapture(pointer)};
   }
   function shopItem(title,desc,price,action,id,disabled,rarity=null,meta='',teamCode='',sold=false,boostId='',replace=false,replaceDisabled=false){
     const edges=TEAM_LOGO_EDGES[teamCode];
@@ -871,12 +954,14 @@
     const lineup=C.SLOTS.map(slot=>{const id=r.slots[slot.id],star=C.BY_ID[id],own=r.owned[id];return star?{slot:slot.id,slotLabel:slot.label,name:star.name,tier:star.tier,tierClass:tierClass[star.tier],stars:own?.stars||1,train:own?.train||0}:null}).filter(Boolean);
     const bonds=C.activeSynergies(r).map(bond=>({name:bond.name,description:bond.description}));
     const gear=r.gear.map(id=>C.GEAR.find(item=>item.id===id)).filter(Boolean).map(item=>({id:item.id,slot:item.slot,name:item.displayName,description:item.description,rarityClass:`gear-tier-${item.rarity.toLowerCase()}`}));
-    return {goat:Math.round(r.maxGoat||r.lastBattle?.goat||C.goatScore(r)),stage:r.lastBattle?.stage||r.stage,wins:r.wins,losses:r.losses,lineup,bonds,gear,recruits:stats.recruits||0,prizeIncome:stats.prizeIncome||0,gearPurchases:stats.gearPurchases||0,legendEarned:r.settlement?.points??r.lastBattle?.legendEarned??breakdown.total,formula:breakdown.formula,currentLegend:game.profile.legend,reviveUsed:r.reviveUsed===true,canRevive:r.morale<=0&&r.lastBattle?.won===false&&r.reviveUsed!==true,posterRewarded:r.posterRewarded===true};
+    return {ovr:Math.round(Math.max(r.maxOvr||0,r.lastBattle?.rating||0)||C.fused(r).rating),stage:r.lastBattle?.stage||r.stage,wins:r.wins,losses:r.losses,lineup,bonds,gear,recruits:stats.recruits||0,prizeIncome:stats.prizeIncome||0,gearPurchases:stats.gearPurchases||0,legendEarned:r.settlement?.points??r.lastBattle?.legendEarned??breakdown.total,formula:breakdown.formula,currentLegend:game.profile.legend,reviveUsed:r.reviveUsed===true,canRevive:r.morale<=0&&r.lastBattle?.won===false&&r.reviveUsed!==true,posterRewarded:r.posterRewarded===true};
   }
   function renderCareerReport(){
     const summary=careerReportSummary();if(!summary||!game.run?.ended){go('home');return}
-    if(window.SupFusionReactScreens?.renderCareerReport){window.SupFusionReactScreens.renderCareerReport(els.report,{summary,posterBusy:posterPhase==='rendering'||posterPhase==='uploading'||posterPhase==='opening',reviveBusy:reportReviveBusy,reviveMessage:reportReviveMessage});return}
-    els.report.markup=`<div class="career-report-content"><div class="career-report-overview"><div class="panel career-report-hero"><span>第 ${summary.stage} 关</span><h1>${summary.goat}</h1><small>GOAT 分数</small></div><section class="panel career-advanced"><div><span>胜负记录<b>${summary.wins} 胜 ${summary.losses} 负</b></span><span>招募球员<b>${summary.recruits} 次</b></span><span>累计奖金收入<b>${summary.prizeIncome} 奖金</b></span><span>购买装备<b>${summary.gearPurchases} 次</b></span></div></section></div></div><div class="career-report-actions"><div class="career-action-row"><button class="btn wide career-revive${reportReviveBusy?' ad-busy':''}" data-act="report-revive" ${summary.canRevive&&!reportReviveBusy?'':'disabled'}>${reportReviveBusy?'<i class="ad-loading-icon" aria-hidden="true"></i>':''}${summary.reviveUsed?'本局已使用体力恢复':summary.canRevive?'看视频恢复体力':'当前无需恢复体力'}</button><button class="btn wide dark" data-act="report-new">返回首页</button></div><button class="btn wide career-poster" data-act="report-poster">${!summary.posterRewarded&&summary.wins+summary.losses>0?"生成海报·首次分享获得100传奇点":"生成海报"}</button></div>`;
+    const run=game.run,failureMessages={validation:'成绩验证未通过，记录已保留；可重试或联系开发者检查。',account:'成绩已保留，请登录原虎扑账号后同步。',storage:'设备保存失败，成绩记录仍保留在当前页面，请检查存储后重试。',network:'成绩暂未同步，记录已保留，将在后台重试。'};
+    const syncMessage=run.cloudRankError?(failureMessages[run.cloudSyncFailure]||failureMessages.network):run.cloudFinished?'成绩已同步':run.cloudStartPending||run.cloudOutbox?.length?'成绩正在后台同步，可以继续游玩。':'';
+    if(window.SupFusionReactScreens?.renderCareerReport){window.SupFusionReactScreens.renderCareerReport(els.report,{summary,syncMessage,syncRetry:!!run.cloudRankError,posterBusy:posterPhase==='rendering'||posterPhase==='uploading'||posterPhase==='opening',reviveBusy:reportReviveBusy,reviveMessage:reportReviveMessage});return}
+    els.report.markup=`<div class="career-report-content"><div class="career-report-overview"><div class="panel career-report-hero"><span>第 ${summary.stage} 关</span><h1>${summary.ovr}</h1><small>本局最高 OVR</small></div><section class="panel career-advanced"><div><span>胜负记录<b>${summary.wins} 胜 ${summary.losses} 负</b></span><span>招募球员<b>${summary.recruits} 次</b></span><span>累计奖金收入<b>${summary.prizeIncome} 奖金</b></span><span>购买装备<b>${summary.gearPurchases} 次</b></span></div></section></div></div><div class="career-report-actions"><div class="career-action-row"><button class="btn wide career-revive${reportReviveBusy?' ad-busy':''}" data-act="report-revive" ${summary.canRevive&&!reportReviveBusy?'':'disabled'}>${reportReviveBusy?'<i class="ad-loading-icon" aria-hidden="true"></i>':''}${summary.reviveUsed?'本局已使用体力恢复':summary.canRevive?'看视频恢复体力':'当前无需恢复体力'}</button><button class="btn wide dark" data-act="report-new">返回首页</button></div><button class="btn wide career-poster" data-act="report-poster">${!summary.posterRewarded&&summary.wins+summary.losses>0?"生成海报·首次分享获得100传奇点":"生成海报"}</button></div>`;
   }
   function posterRoundRect(ctx,x,y,width,height,radius){
     const r=Math.min(radius,width/2,height/2);
@@ -904,8 +989,8 @@
     const background=ctx.createLinearGradient(0,0,1080,canvas.height);background.addColorStop(0,'#35210c');background.addColorStop(.35,'#171819');background.addColorStop(1,'#090a0c');ctx.fillStyle=background;ctx.fillRect(0,0,1080,canvas.height);
     posterRoundRect(ctx,48,48,984,348,22);ctx.fillStyle='#201b16';ctx.fill();ctx.strokeStyle='#856329';ctx.lineWidth=2;ctx.stroke();
     ctx.fillStyle='#ffc557';ctx.font='900 38px sans-serif';ctx.fillText('我的球星融合系统 · 生涯报告',76,106);
-    ctx.fillStyle='#fff1d4';ctx.font='900 144px sans-serif';ctx.fillText(String(summary.goat),76,256);
-    ctx.fillStyle='#cbb68c';ctx.font='800 27px sans-serif';ctx.fillText('GOAT 分数',82,295);
+    ctx.fillStyle='#fff1d4';ctx.font='900 144px sans-serif';ctx.fillText(String(summary.ovr),76,256);
+    ctx.fillStyle='#cbb68c';ctx.font='800 27px sans-serif';ctx.fillText('本局最高 OVR',82,295);
     ctx.fillStyle='#f9deb1';ctx.font='800 31px sans-serif';ctx.fillText(`达到第 ${summary.stage} 关   ·   ${summary.wins} 胜 ${summary.losses} 负`,362,284);
     ctx.strokeStyle='#73552b';ctx.beginPath();ctx.moveTo(76,315);ctx.lineTo(1004,315);ctx.stroke();
     const stats=[`招募 ${summary.recruits} 次`,`累计奖金 ${summary.prizeIncome}`,`购买装备 ${summary.gearPurchases} 次`];
@@ -1120,7 +1205,7 @@
     const row=(label,value)=>'<div class="income-row"><span>'+escapeText(label)+'</span><b>'+Math.round(value*100)/100+'</b></div>';
     const list=(title,rows)=>'<section class="income-group"><h3>'+title+'</h3>'+rows.map(([label,value])=>row(label,value)).join('')+'</section>';
     const defenseId=r.slots.def,defense=defenseId?C.playerScore(C.BY_ID[defenseId],r.owned[defenseId],'def',r):0;
-    return '<section class="modal-card income-sheet" role="dialog" aria-modal="true" aria-labelledby="income-title"><div class="income-header"><div class="recruit-sheet-head"><h2 id="income-title">奖金明细</h2><button class="button-8" data-act="income-close" aria-label="关闭奖金明细">×</button></div><div class="income-balance">当前奖金 <b>'+r.cash+'</b></div></div><div class="income-scroll-frame"><div class="income-details-scroll" tabindex="0" role="region" aria-label="奖金明细数据">'+list('当前利息',[['每15奖金产生1利息',Math.floor(r.cash/15)],['利息上限',income.interestCap],['实际利息',income.interest]])+list('利息上限来源',[['基础',3],['局外成长',r.metaInterestCap||0],['开局天赋',(r.talent==='economy'?1:0)+(opening.interestCap||0)],['防守位达到90',defense>=90?1:0],['无尽关卡',Math.min(10,Math.max(0,r.stage-10))]])+list('胜利奖金组成',[['基础奖励（含开局天赋调整）',income.victoryBase],['阵容收入',income.lineupIncome],['利息',income.interest],['已激活羁绊',bond],['球员胜利加成',sum('winCash')],['装备胜利加成',equipment.winCash],['开局天赋羁绊加成',openingBond],['徽章胜利加成',skill.winCash],['球员战后加成',sum('postBattleCash')],['装备战后加成',equipment.battleCash],['开局天赋战后加成',openingBattle],['徽章战后加成',skill.battleCash],['徽章每关奖励',stageCash]])+list('结算参考',[['胜利预计到账（不含条件奖励）',r.balanceRulesVersion>=5?Math.min(90,gross):gross],['失败基础补偿',income.lossBase],['装备失败加成',equipment.lossCash],['失败预计到账（不含条件奖励）',Math.max(0,income.lossBase+common+equipment.lossCash)],['战术克制成功额外奖励',equipment.counterCash]])+'</div><div class="income-scrollbar" aria-hidden="true"><div class="income-scrollbar-track"><div class="income-scrollbar-thumb"></div></div></div></div><p class="income-note">按当前阵容与奖金计算，支出或换阵后会变化。战术克制奖励需战斗触发；胜利奖金最高90，实际以赛后结算为准。</p></section>';
+    return '<section class="modal-card income-sheet" role="dialog" aria-modal="true" aria-labelledby="income-title"><div class="income-header"><div class="recruit-sheet-head"><h2 id="income-title">奖金明细</h2><button class="button-8" data-act="income-close" aria-label="关闭奖金明细">×</button></div><div class="income-balance">当前奖金 <b>'+r.cash+'</b></div></div><div class="income-scroll-frame"><div class="income-details-scroll" tabindex="0" role="region" aria-label="奖金明细数据">'+list('当前利息',[['每15奖金产生1利息',Math.floor(r.cash/15)],['利息上限',income.interestCap],['实际利息',income.interest]])+list('利息上限来源',[['基础',3],['局外成长',r.metaInterestCap||0],['开局天赋',(r.talent==='economy'?1:0)+(opening.interestCap||0)],['防守位达到90',defense>=90?1:0],['无尽关卡',Math.min(10,Math.max(0,r.stage-10))]])+list('胜利奖金组成',[['基础奖励（含开局天赋调整）',income.victoryBase],['阵容收入',income.lineupIncome],['利息',income.interest],['已激活羁绊',bond],['球员胜利加成',sum('winCash')],['装备胜利加成',equipment.winCash],['开局天赋羁绊加成',openingBond],['徽章胜利加成',skill.winCash],['球员战后加成',sum('postBattleCash')],['装备战后加成',equipment.battleCash],['开局天赋战后加成',openingBattle],['徽章战后加成',skill.battleCash],['徽章每关奖励',stageCash]])+list('结算参考',[['胜利预计到账（不含条件奖励）',r.balanceRulesVersion>=5?Math.min(C.victoryRewardCap(r),gross):gross],['失败基础补偿',income.lossBase],['装备失败加成',equipment.lossCash],['失败预计到账（不含条件奖励）',Math.max(0,income.lossBase+common+equipment.lossCash)],['战术克制成功额外奖励',equipment.counterCash]])+'</div><div class="income-scrollbar" aria-hidden="true"><div class="income-scrollbar-track"><div class="income-scrollbar-thumb"></div></div></div></div><p class="income-note">按当前阵容与奖金计算，支出或换阵后会变化。战术克制奖励需战斗触发；胜利奖金最高'+C.victoryRewardCap(r)+'，实际以赛后结算为准。</p></section>';
   }
   function bindIncomeScrollbar(){
     const frame=modal.querySelector('.income-scroll-frame');
@@ -1214,7 +1299,7 @@
       const busy=posterPhase==='rendering'||posterPhase==='uploading'||posterPhase==='opening';
       const status=posterMessage?`<p class="career-poster-status" role="status">${escapeText(posterMessage)}</p>`:'';
       modal.className='game-modal open';
-      modal.markup=`<section class="modal-card career-poster-modal" role="dialog" aria-modal="true" aria-labelledby="career-poster-title"><div class="modal-head"><div><span>本局生涯报告</span><h2 id="career-poster-title">结果海报</h2></div><button type="button" class="button-8" data-act="poster-close" aria-label="关闭海报预览" ${busy?'disabled':''}>×</button></div><div class="career-poster-result">第 ${r.lastBattle?.stage||r.stage} 关 · GOAT ${Math.round(r.maxGoat||r.lastBattle?.goat||C.goatScore(r))} · ${r.wins} 胜 ${r.losses} 负</div>${posterPreviewUrl?`<div class="career-poster-preview"><img src="${posterPreviewUrl}" alt="本局生涯报告海报预览"></div>`:`<div class="career-poster-placeholder">${posterPhase==='error'?'预览不可用，请关闭后重试。':'正在生成海报预览…'}</div>`}${status}<div class="career-poster-actions"><button class="btn button-1" data-act="poster-share" ${busy||!posterBlob?'disabled':''}>${busy?'<i class="ad-loading-icon" aria-hidden="true"></i>':''}发帖分享</button></div></section>`;
+      modal.markup=`<section class="modal-card career-poster-modal" role="dialog" aria-modal="true" aria-labelledby="career-poster-title"><div class="modal-head"><div><span>本局生涯报告</span><h2 id="career-poster-title">结果海报</h2></div><button type="button" class="button-8" data-act="poster-close" aria-label="关闭海报预览" ${busy?'disabled':''}>×</button></div><div class="career-poster-result">第 ${r.lastBattle?.stage||r.stage} 关 · OVR ${careerReportSummary().ovr} · ${r.wins} 胜 ${r.losses} 负</div>${posterPreviewUrl?`<div class="career-poster-preview"><img src="${posterPreviewUrl}" alt="本局生涯报告海报预览"></div>`:`<div class="career-poster-placeholder">${posterPhase==='error'?'预览不可用，请关闭后重试。':'正在生成海报预览…'}</div>`}${status}<div class="career-poster-actions"><button class="btn button-1" data-act="poster-share" ${busy||!posterBlob?'disabled':''}>${busy?'<i class="ad-loading-icon" aria-hidden="true"></i>':''}发帖分享</button></div></section>`;
       return;
     }
     if(showRecruitSheet&&screen==='roster'&&r){renderRecruitSheet(r);return}
@@ -1226,7 +1311,7 @@
     }
     if(showNewJourneyConfirm&&screen==='home'){
       modal.className='game-modal open';
-      modal.markup=`<div class="modal-card new-journey-modal" role="dialog" aria-modal="true" aria-labelledby="new-journey-title"><div class="modal-head"><div><span>旅程确认</span><h2 id="new-journey-title">开启另一段旅程？</h2></div><button data-act="new-cancel" aria-label="关闭">×</button></div><p>当前第 ${r.stage} 关的旅程将按自动认输结算：GOAT 峰值、传奇点和本局图鉴会先写入档案。</p><div class="expand-actions"><button class="btn dark" data-act="new-cancel">取消</button><button class="btn" data-act="new-confirm">确认开启</button></div></div>`;
+      modal.markup=`<div class="modal-card new-journey-modal" role="dialog" aria-modal="true" aria-labelledby="new-journey-title"><div class="modal-head"><div><span>旅程确认</span><h2 id="new-journey-title">开启另一段旅程？</h2></div><button data-act="new-cancel" aria-label="关闭">×</button></div><p>当前第 ${r.stage} 关的旅程将按自动认输结算：OVR 峰值、传奇点和本局图鉴会先写入档案。</p><div class="expand-actions"><button class="btn dark" data-act="new-cancel">取消</button><button class="btn" data-act="new-confirm">确认开启</button></div></div>`;
       return;
     }
     if(showTalentCatalog&&screen==='talent'){
@@ -1240,6 +1325,13 @@
       const opening=C.openingEffect(r);
       const penalty=opening.ignoreStrategyPenalty?'无惩罚':`-${4+(opening.strategyPenalty||0)}%`;
       modal.markup=`<div class="modal-card strategy-modal" role="dialog" aria-modal="true" aria-labelledby="strategy-modal-title"><div class="modal-head"><div><span>本关对手 · ${foe.name}</span><h2 id="strategy-modal-title">选择本场策略</h2></div><button data-act="close-strategy" aria-label="关闭">×</button></div><p>结合对球员打法的了解，选择一项策略后立即开始单挑。</p><div class="strategy-options">${Object.entries(C.STRATEGIES).map(([strategyId,item])=>`<button data-act="strategy" data-id="${strategyId}"><b>${item.name}</b><small>${item.description.replace('-4%',penalty)}</small></button>`).join('')}</div></div>`;
+      return;
+    }
+    if(showSSRRotation&&screen==='home'){modal.className='game-modal open ssr-rotation-overlay';modal.markup=ssrRotationMarkup();return}
+    if(showBenchOperationGuide&&screen==='roster'&&r){
+      const demo={...r,lastBattle:null,owned:{...r.owned,air_jordan:{stars:1,train:0,trainedAt:0}}};
+      modal.className='game-modal open';
+      modal.markup=`<section class="modal-card bench-operation-guide ${benchModeDraft==='new'?'mode-new':'mode-classic'}" role="dialog" aria-modal="true" aria-labelledby="bench-operation-guide-title"><div class="modal-head"><h2 id="bench-operation-guide-title">操作模式</h2><button data-act="bench-operation-guide-close" aria-label="关闭">×</button></div><div class="bench-mode-selector" role="group" aria-label="选择操作模式" style="--mode-index:${benchModeDraft==='new'?1:0}"><span aria-hidden="true"></span><button data-act="bench-mode-select" data-id="original" aria-pressed="${benchModeDraft!=='new'}">经典</button><button data-act="bench-mode-select" data-id="new" aria-pressed="${benchModeDraft==='new'}">新版</button></div><div class="bench-operation-demo" inert><div class="bench-grid">${benchCard('air_jordan',0,demo,true)}</div></div><p>${benchModeDraft==='new'?'按住球员卡片左侧红框内的三条杠，拖动到目标位置即可换位。':'按住整个球员卡片拖动'}</p>${benchModeDraft==='new'?'<small>卡片其他区域不会触发拖动。</small>':''}<div class="bench-scroll-setting"><div><strong>右侧常驻滚动条</strong><small>显示轨道，拖动滑块快速浏览球员</small></div><button class="bench-scroll-switch" role="switch" aria-checked="${benchScrollbarDraft}" data-act="bench-scrollbar-toggle"><span>${benchScrollbarDraft?'已开启':'已关闭'}</span><i aria-hidden="true"></i></button></div><button class="btn wide" data-act="bench-operation-confirm">确认</button></section>`;
       return;
     }
     if(showExpandConfirm&&screen==='roster'&&r){
@@ -1352,6 +1444,7 @@
     if(screen!=='roster'||!button||!game.run||game.run.lastBattle)return;
     const place=placeFromElement(button);
     if(!place||event.isPrimary===false||event.button>0)return;
+    if(place.kind==='bench'&&game.profile.benchOperationMode==='new'&&!event.target.closest('.bench-drag-handle'))return;
     const source=button.closest('.slot,.bench-card');
     dragStart=hasPlayer(game.run,place)?{place,x:event.clientX,y:event.clientY,source,button,pointerId:event.pointerId,moved:false}:null;
     if(dragStart&&event.isTrusted&&button.setPointerCapture)button.setPointerCapture(event.pointerId);
@@ -1394,7 +1487,7 @@
     const profile=game.profile,legend=profile.legend,owned=[...(profile[field]||[])];pointShopPurchaseBusy=true;
     try{
       const item=unlock(profile);if(!item)return null;
-      if(!await save()){profile.legend=legend;profile[field]=owned;return null}
+      if(!await save({backup:true})){profile.legend=legend;profile[field]=owned;return null}
       return item;
     }finally{pointShopPurchaseBusy=false}
   }
@@ -1404,6 +1497,39 @@
   async function performAction(action,button){
     const r=game.run,id=button.dataset.id;
     if(hundredPurchaseBusy)return;
+    if(action==='ssr-rotation-open'){
+      if(!C.ssrRotationUnlocked(game.profile))return;ssrRotationDraft=C.normalizeSSRRotation(game.profile,game.profile.ssrRotation);ssrRotationMessage='';showSSRRotation=true;renderPending();return;
+    }
+    if(action.startsWith('ssr-rotation-')){
+      if(!showSSRRotation||ssrRotationBusy)return;
+      if(action==='ssr-rotation-close'){showSSRRotation=false;renderPending();return}
+      const pool=C.availableSSRPlayers(game.profile),allowed=new Set(pool.map(star=>star.id));
+      if(action==='ssr-rotation-all'){ssrRotationDraft=[...allowed];ssrRotationMessage='';renderPending();return}
+      if(action==='ssr-rotation-select'){const id=button.dataset.id;if(!allowed.has(id))return;ssrRotationDraft=ssrRotationDraft.includes(id)?ssrRotationDraft.filter(item=>item!==id):[...ssrRotationDraft,id];ssrRotationMessage='';renderPending();return}
+      if(action==='ssr-rotation-confirm'){
+        if(!C.ssrRotationUnlocked(game.profile)||new Set(ssrRotationDraft).size<10)return;
+        const previous=game.profile.ssrRotation;game.profile.ssrRotation=C.normalizeSSRRotation(game.profile,ssrRotationDraft);ssrRotationBusy=true;renderPending();
+        const saved=await save();ssrRotationBusy=false;
+        if(!saved){game.profile.ssrRotation=previous;ssrRotationMessage='保存失败，请重试';renderPending();return}
+        showSSRRotation=false;renderPending();return;
+      }
+      return;
+    }
+    if(action==='bench-scrollbar-toggle'){benchScrollbarDraft=!benchScrollbarDraft;renderPending();return}
+    if(action==='bench-mode-select'){if(button.dataset.id==='new'||button.dataset.id==='original'){benchModeDraft=button.dataset.id;renderPending()}return}
+    if(action==='bench-operation-guide-close'){showBenchOperationGuide=false;renderPending();return}
+    if(action==='bench-operation-toggle'){
+      clearDrag();benchModeDraft=game.profile.benchOperationMode==='new'?'new':'original';benchScrollbarDraft=game.profile.benchScrollbarEnabled===true;showBenchOperationGuide=true;
+      game.profile.benchOperationNoticeSeen=true;renderRoster({preserveScroll:true});renderPending();void save();return;
+    }
+    if(action==='bench-operation-confirm'){
+      if(!showBenchOperationGuide)return;
+      const previousMode=game.profile.benchOperationMode,previousScrollbar=game.profile.benchScrollbarEnabled;
+      game.profile.benchOperationMode=benchModeDraft;game.profile.benchScrollbarEnabled=benchScrollbarDraft;
+      if(!await save()){game.profile.benchOperationMode=previousMode;game.profile.benchScrollbarEnabled=previousScrollbar;notify('操作模式保存失败，请重试');return}
+      showBenchOperationGuide=false;renderRoster({preserveScroll:true});renderPending();return;
+    }
+    if(action==='cloud-sync-retry'){if(r){r.cloudSyncFailure='';void finishCloudRun(r)}return}
     if(action.startsWith('hundred-')&&await hundredRecruit.handle(action,button.dataset)){renderPending();top();return}
     if(hundredRecruit.isBusy())return;
     if(action==='restore-retry'){if(!restoring){restoring=true;await init()}return}
@@ -1544,12 +1670,12 @@
       pointShopPurchaseBusy=true;renderPointShop();
       try{
         await saveQueue;
-        if(!await save())throw new Error('Training save failed');pointShopMessage='';
+        if(!await save({backup:true}))throw new Error('Training save failed');pointShopMessage='';
       }catch(error){game.profile.legend=before.legend;game.profile.trainingBase=before.trainingBase;pointShopMessage='存档写入失败，已退回传奇点，请稍后重试';}
       finally{pointShopPurchaseBusy=false;renderPointShop()}return;
     }
-    if(action==='meta-upgrade'){if(C.buyMetaUpgrade(game.profile,id)){save();renderPointShop()}return}
-    if(action==='meta-unlock'){if(C.buyMetaUnlock(game.profile,id)){save();renderPointShop()}return}
+    if(action==='meta-upgrade'){if(C.buyMetaUpgrade(game.profile,id)){save({backup:true});renderPointShop()}return}
+    if(action==='meta-unlock'){if(C.buyMetaUnlock(game.profile,id)){save({backup:true});renderPointShop()}return}
     if(action==='jersey-unlock'){
       if(jerseyUnlockResult)return;
       const item=await persistProfileUnlock(C.unlockJersey,'jerseyUnlocks');
@@ -1589,9 +1715,11 @@
       const talent=selectedTalent||talentOffer[0].id;
       archiveCloudRun(game.run);
       const progress={...(game.profile.upgrades||{}),jerseyUnlocks:[...(game.profile.jerseyUnlocks||[])],gearUnlocks:[...(game.profile.gearUnlocks||[])],playerUnlocks:[...(game.profile.playerUnlocks||[])],trainingBase:C.normalizeTrainingBase(game.profile.trainingBase)},seed=localSeed();
-      game.run=C.createRun(talent,seed,progress);
+      const ssrRotation=Array.isArray(game.profile.ssrRotation)?C.normalizeSSRRotation(game.profile,game.profile.ssrRotation):null;
+      game.run=C.createRun(talent,seed,{...progress,ssrRotation});
       const run=game.run;run.cloudProofVersion=cloudEnabled()?3:0;run.cloudSequence=0;run.cloudOperations=[];run.cloudOutbox=[];
-      if(cloudEnabled())run.cloudStartPending={requestId:requestId(),talent,seed,displayName:playerName,progress,balanceRulesVersion:C.BALANCE_RULES_VERSION};
+      run.cloudCreatedAt=Date.now();run.cloudOwnerPuid=playerPuid;
+      if(cloudEnabled())run.cloudStartPending={requestId:requestId(),talent,seed,displayName:playerName,progress,ssrRotation,balanceRulesVersion:C.BALANCE_RULES_VERSION};
       selectedPlace=null;selectedOffer='';rosterTraining=false;strategy='collapse';save();go('recruit');
       // Persist validation intent even before SDK readiness; registration never blocks play.
       if(run.cloudStartPending)void syncCloudRun(run);
@@ -1813,6 +1941,8 @@
     syncSaveBackup();
     void syncPendingRuns(true);
   }
-  window.addEventListener('online',()=>{void syncPendingRuns(true)});
+  function resumeCloudSync(){if(restoring)return;syncSaveBackup();if(cloudRetryTimer!==null)clearTimeout(cloudRetryTimer);cloudRetryTimer=null;cloudRetryAttempt=0;void syncPendingRuns(true)}
+  window.addEventListener('online',resumeCloudSync);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeCloudSync()});
   init();
 })();

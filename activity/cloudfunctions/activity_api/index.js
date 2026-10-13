@@ -157,6 +157,8 @@ async function handle(req, res) {
   if (req.method === 'POST' && path === '/runs/start') {
     const puid = puidOf(req);
     const body = await jsonBody(req);
+    for(const key of ['startedAt','completedAt'])if(body[key]!=null&&(!Number.isSafeInteger(body[key])||body[key]<=0))fail('对局时间记录无效');
+    if(body.excludeWeekly!=null&&typeof body.excludeWeekly!=='boolean')fail('周榜同步标记无效');
     if (!C.KNOWN_TALENTS.some(item => item.id === body.talent)) fail('天赋无效');
     const displayName = typeof body.displayName === 'string' ? body.displayName.trim().slice(0, 40) : '玩家';
     const runId=body.requestId;
@@ -176,12 +178,21 @@ async function handle(req, res) {
     }
     if(!C.talentUnlocked(selectedTalent,profile))fail('该天赋尚无云端解锁记录；可继续本地游戏。',409);
     const seed=body.seed;
-    const state=C.createRun(body.talent,seed,progress,balanceRulesVersion);
+    if(body.ssrRotation!=null){
+      const selected=body.ssrRotation,allowed=new Set(C.availableSSRPlayers(progress).map(star=>star.id));
+      if(balanceRulesVersion<20||!C.ssrRotationUnlocked(progress)||!Array.isArray(selected)||selected.length<10||new Set(selected).size!==selected.length||selected.some(id=>!allowed.has(id)))fail('SSR轮换名单无效');
+    }
+    const state=C.createRun(body.talent,seed,{...progress,ssrRotation:body.ssrRotation},balanceRulesVersion);
+    // Client times may only exclude a late registration; they never grant a
+    // historical week or reopen a closed ranking. The boundary uses server time.
+    const now=Date.now(),shifted=new Date(now+8*3600000);
+    const weekStart=Date.UTC(shifted.getUTCFullYear(),shifted.getUTCMonth(),shifted.getUTCDate())-((shifted.getUTCDay()+6)%7)*86400000-8*3600000;
+    if(body.excludeWeekly===true||body.startedAt!=null&&body.startedAt<weekStart||body.completedAt!=null&&body.completedAt<weekStart)state.weeklyLeaderboardExcluded=true;
     const result=await rpc('start_verified_game_run',{
       p_puid:puid,p_run_id:runId,p_talent:body.talent,p_display_name:displayName||'玩家',p_seed:seed,
       p_state:state,p_progress:progress,p_cost:cost,p_previous:context.progress||{}
     });
-    return {code:0,message:'success',data:{...result,balanceRulesVersion}};
+    return {code:0,message:'success',data:{...result,balanceRulesVersion,weeklyExcluded:state.weeklyLeaderboardExcluded===true}};
   }
   if(req.method==='POST'&&path==='/profile/jersey'){
     const puid=puidOf(req),body=await jsonBody(req);
