@@ -1,0 +1,22 @@
+#pointshop .pointshop-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+#pointshop .pointshop-tabs i{width:calc((100% - 6px)/3)}
+.training-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:18px 0 8px}
+.training-heading h2{font-size:13px;color:#efe1c4;margin:0}
+.training-heading small{font-size:8px;color:#bca979}
+.training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.training-tile{min-width:0;padding:12px;border:1px solid #695734;border-radius:11px;background:radial-gradient(ellipse at 100% 0,#ae81321c,transparent 70%),linear-gradient(145deg,#2a2820,#181b1c)}
+.training-tile header{display:flex;justify-content:space-between;align-items:center;gap:4px;margin-bottom:9px}
+.training-tile strong{display:flex;align-items:center;gap:5px;color:#e7c172;font-size:11px}
+.training-tile svg{width:19px;height:19px;flex:none}
+.training-tile header small{color:#b6a078;font-size:9px;white-space:nowrap}
+.training-effect{font-size:9px;color:#bcb3a1}
+.training-effect b{font-size:20px;color:#f0d397}
+.training-levels{display:flex;gap:4px;margin:8px 0 11px}
+.training-levels i{height:4px;flex:1;border-radius:2px;background:#393932}
+.training-levels i.filled{background:linear-gradient(90deg,#c28e35,#f2d48a)}
+#pointshop .training-tile .btn{width:100%;min-width:0;min-height:0;height:auto;margin:0;padding:8px 4px;font-size:11px;font-weight:800;border:1px solid #fce4a5;border-radius:8px;color:#190f04;background:linear-gradient(110deg,#cb963b,#f5d77d 55%,#d0a046)}
+.training-tile.dimensional{border-color:#60516c;background:radial-gradient(ellipse at 100% 0,#9675ad1c,transparent 70%),linear-gradient(145deg,#292430,#181b1c)}
+.training-tile.dimensional strong{color:#cebce5}
+.training-tile.dimensional .training-effect b{color:#d5c1ee}
+.training-tile.dimensional .filled{background:linear-gradient(90deg,#987bc1,#ccb5ed)}
+.training-note{border-top:1px solid #3e382b;margin-top:18px;padding-top:12px;display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#b7a783}

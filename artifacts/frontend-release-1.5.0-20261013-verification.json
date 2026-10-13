@@ -1,0 +1,121 @@
+{
+  "version": "1.5.0",
+  "readyForFrontendUpload": true,
+  "frontendPublished": false,
+  "zip": "artifacts/frontend-release-1.5.0-20261013.zip",
+  "sha256": "ce58caa659a4c68eee67cbea0cfabe62ded2bb19b2b0d2485c644db445c90965",
+  "files": 68,
+  "backend": {
+    "date": "2026-10-13",
+    "verifiedAt": "2026-10-13T08:33:58.154Z",
+    "releaseVersion": "1.5.0",
+    "rulesVersion": 18,
+    "supportedRulesVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "reason": "Hundred recruitment with atomic batch handling; reject unfinished batch settlement",
+    "configurationPreserved": true,
+    "backup": ".local-tools/rule18-before-online.zip",
+    "deployedZipSha256": "1935cac4103ab3c11ab6c455f4e4d397154f893a40280c0b4e41f9a3ddc0cb41",
+    "deployedBusinessSourceFilesMatched": 10,
+    "legacyComparison": {
+      "runs": 68,
+      "rules": "1-17",
+      "match": true
+    },
+    "fullTests": {
+      "total": 489,
+      "passed": 487,
+      "failed": 2,
+      "knownFailure": "Two existing protected historical event-data snapshot checksum mismatches; snapshot bytes match HEAD"
+    },
+    "targetedTests": {
+      "total": 156,
+      "passed": 156,
+      "failed": 0
+    },
+    "authenticatedGameplayVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "cumulativeBoardsChecked": [
+      "legend",
+      "ovr"
+    ],
+    "weeklyMinimumRulesVersion": 6,
+    "hundredScenarios": [
+      "all-sale",
+      "mixed",
+      "retry"
+    ],
+    "hundredSeededTemporaryFixtures": true,
+    "hundredServerFinalStateMatched": true,
+    "frontendBrowserChecks": [
+      "more-scroll",
+      "20-stage-switches",
+      "footer-gap-300-390",
+      "save-failure-rollback",
+      "commit-roster-replacement"
+    ],
+    "testDataRemoved": true,
+    "testAccountsCleaned": 24,
+    "evidence": ".local-tools/rule18-postdeploy-live.json",
+    "databaseMigrationApplied": false,
+    "frontendPublished": false
+  },
+  "targetedTests": {
+    "total": 156,
+    "passed": 156,
+    "failed": 0
+  },
+  "fullTests": {
+    "total": 489,
+    "passed": 487,
+    "failed": 2,
+    "knownFailure": "Two existing protected historical event-data snapshot checksum mismatches; snapshot bytes match HEAD"
+  },
+  "browserChecks": {
+    "moreScrollCheck": "passed",
+    "footerGapCheck": "passed",
+    "footerGaps": "[{\"label\":\"more-300\",\"gap\":24},{\"label\":\"last-card-300\",\"gap\":32},{\"label\":\"arrange-300\",\"gap\":36.21875},{\"label\":\"review-300\",\"gap\":23.71875},{\"label\":\"wrapped-footer-300\",\"gap\":23.71875},{\"label\":\"more-390\",\"gap\":24},{\"label\":\"last-card-390\",\"gap\":32},{\"label\":\"arrange-390\",\"gap\":36.21875},{\"label\":\"review-390\",\"gap\":23.71875},{\"label\":\"wrapped-footer-390\",\"gap\":23.71875}]",
+    "commitFlowCheck": "passed",
+    "stageSwitchCheck": "passed",
+    "stageSwitchCycles": "20",
+    "stageHeights": "{\"arranged\":469,\"reviewed\":529}"
+  },
+  "adminCredentialScanPassed": true,
+  "testDataRemaining": 0
+}

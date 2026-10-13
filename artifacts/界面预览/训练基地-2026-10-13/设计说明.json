@@ -1,0 +1,146 @@
+{
+  "status": "design previews only; game code unchanged",
+  "slots": [
+    {
+      "name": "三分训练馆",
+      "effect": "三分槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    },
+    {
+      "name": "中投训练馆",
+      "effect": "中投槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    },
+    {
+      "name": "突破训练馆",
+      "effect": "突破槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    },
+    {
+      "name": "篮下训练馆",
+      "effect": "篮下槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    },
+    {
+      "name": "防守训练馆",
+      "effect": "防守槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    },
+    {
+      "name": "控球训练馆",
+      "effect": "控球槽能力",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "prices": [
+        600,
+        1200,
+        2200,
+        3800,
+        6200
+      ]
+    }
+  ],
+  "dimensions": [
+    {
+      "name": "投射威胁",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "provisionalPrices": [
+        1200,
+        2400,
+        4400,
+        7600,
+        12400
+      ]
+    },
+    {
+      "name": "持球创造",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "provisionalPrices": [
+        1200,
+        2400,
+        4400,
+        7600,
+        12400
+      ]
+    },
+    {
+      "name": "禁区终结",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "provisionalPrices": [
+        1200,
+        2400,
+        4400,
+        7600,
+        12400
+      ]
+    },
+    {
+      "name": "外线限制",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "provisionalPrices": [
+        1200,
+        2400,
+        4400,
+        7600,
+        12400
+      ]
+    },
+    {
+      "name": "护框强度",
+      "levels": 5,
+      "perLevelPercent": 1,
+      "provisionalPrices": [
+        1200,
+        2400,
+        4400,
+        7600,
+        12400
+      ]
+    }
+  ],
+  "note": "Five-dimension prices are proposed, not yet approved. Shown levels and balance are illustrative."
+}

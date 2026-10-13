@@ -13,7 +13,7 @@ test('rule 9 keeps prior opponent curves intact and applies a smooth bounded inc
  const a=C.createRun('captain',81101,{},8),b=C.createRun('captain',81101,{},9);b.balanceRulesVersion=8;assert.deepEqual(b,a);
 });
 test('rule 8 opening values change while rule 7 retains its previous talent effects',()=>{
- assert.equal(C.BALANCE_RULES_VERSION, 16);assert.equal(C.createRun('reserve_fund',911).cash,27);assert.equal(C.createRun('reserve_fund',911,{},7).cash,20);
+ assert.equal(C.BALANCE_RULES_VERSION,18);assert.equal(C.createRun('reserve_fund',911).cash,27);assert.equal(C.createRun('reserve_fund',911,{},7).cash,20);
  assert.equal(C.openingEffect(C.createRun('scouting_network',911)).paidRecruitDelta,1);assert.equal(C.openingEffect(C.createRun('scouting_network',911,{},7)).paidRecruitDelta,2);
  assert.equal(C.createRun('star_workshop',911).benchLimit,4);assert.equal(C.createRun('star_workshop',911,{},7).benchLimit,5);
  assert.equal(C.talentForRun(C.createRun('win_bonus',911,{},7)).name,'赢球奖金');assert.equal(C.talentForRun(C.createRun('win_bonus',911)).name,'巨星传承');

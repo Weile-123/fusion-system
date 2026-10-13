@@ -131,8 +131,15 @@ test('server replays legal choices and rejects bypass, wrong ids and repeated pa
   C.resolveRandomEvent(g,'P01','main');C.acknowledgeRandomEvent(g,'P01');const result=V.replay(state,ops,'battle','outside');const report=C.battle(g,'outside');assert.deepEqual(result.report,report);assert.deepEqual(result.state,g.run);
   for(const operations of [[{action:'makeOffer',args:[]}],[{action:'resolveRandomEvent',args:['P02','main']}],[ops[0],ops[0]]])assert.throws(()=>V.replay(state,operations,'finish'),/验证失败/);
 });
-test('frontend and cloud use byte-identical core, event data and event engine',()=>{
-  for(const file of ['game-core.js','game-data.js','gear-catalog.js','event-data.js','event-system.js','player-economy.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'),file);
+test('frontend preserves deployed rule 1–16 behavior and byte-identical shared event data',()=>{
+  for(const file of ['game-data.js','gear-catalog.js','event-data.js','event-system.js','player-economy.js'])assert.equal(fs.readFileSync('h5/'+file,'utf8'),fs.readFileSync('activity/cloudfunctions/activity_api/game/'+file,'utf8'),file);
+  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');
+  for(let version=1;version<=backend.BALANCE_RULES_VERSION;version++){
+    const local=C.createRun('steady_interest',911,{},version),remote=backend.createRun('steady_interest',911,{},version);assert.deepEqual(local,remote,'rule '+version+' initial state');
+    for(let i=0;i<6;i++){const id=local.offer[0];C.recruit(local,id);backend.recruit(remote,id);if(i<5){C.makeOffer(local);backend.makeOffer(remote)}}
+    assert.deepEqual(C.fused(local,'outside','collapse'),backend.fused(remote,'outside','collapse'),'rule '+version+' combat values');
+    const a=C.createGame(),b=backend.createGame();a.run=local;b.run=remote;assert.deepEqual(C.battle(a,'outside'),backend.battle(b,'outside'),'rule '+version+' battle result');assert.deepEqual(local,remote,'rule '+version+' post-battle state');
+  }
 });
 
 test('all event stage, cash, seen and loss gates reject without granting rewards',()=>{

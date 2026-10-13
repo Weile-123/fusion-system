@@ -52,8 +52,12 @@
     async readLocal() {
       this.localReadError = '';
       await (this.localQueue || Promise.resolve()).catch(() => {});
-      if (window.indexedDB) { try { const raw = await withStorageTimeout(fusionLocalStore.get(saveKey)), value = decodeSave(raw); if (value) return value; if (raw != null) this.localReadError = '设备存档格式无法识别'; } catch (_) {} }
-      try { const raw = window.localStorage?.getItem(saveKey), value = decodeSave(raw); if (value) { this.localReadError = ''; return value; } if (raw != null) this.localReadError = '设备存档格式无法识别'; return null; } catch (_) { return null; }
+      let local=null, indexed=null;
+      try { const raw=window.localStorage?.getItem(saveKey);local=decodeSave(raw);if(raw!=null&&!local)this.localReadError='设备存档格式无法识别'; } catch (_) { this.localReadError='设备存档读取失败'; }
+      if (window.indexedDB) { try { const raw=await withStorageTimeout(fusionLocalStore.get(saveKey));indexed=decodeSave(raw);if(raw!=null&&!indexed)this.localReadError='设备存档格式无法识别'; } catch (_) { this.localReadError='设备存档读取失败'; } }
+      const value=local&&indexed?((Number(local.savedAt)||0)>=(Number(indexed.savedAt)||0)?local:indexed):local||indexed;
+      if(value)this.localReadError='';
+      return value;
     },
     async load() {
       this.loadError = '';
@@ -80,9 +84,12 @@
     },
     async save(value) {
       const snapshot = JSON.parse(JSON.stringify(value));
+      // Keep a synchronous device mirror before a native ad can suspend this WebView.
+      let mirrored=false;
+      try { if(window.localStorage){window.localStorage.setItem(saveKey,JSON.stringify(snapshot));mirrored=true} } catch (_) {}
       this.localQueue = (this.localQueue || Promise.resolve()).catch(() => {}).then(async () => {
         if (window.indexedDB) { try { await withStorageTimeout(fusionLocalStore.set(saveKey, snapshot)); return; } catch (_) {} }
-        if (window.localStorage) { window.localStorage.setItem(saveKey, JSON.stringify(snapshot)); return; }
+        if (mirrored) return;
         throw new Error('Device storage unavailable');
       });
       return this.localQueue;

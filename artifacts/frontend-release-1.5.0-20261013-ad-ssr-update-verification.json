@@ -1,0 +1,74 @@
+{
+  "version": "1.5.0",
+  "readyForFrontendUpload": true,
+  "frontendPublished": false,
+  "zip": "artifacts/frontend-release-1.5.0-20261013-ad-ssr-update.zip",
+  "sha256": "cbb12d8280fd4a0413b9f40836a75a86e5326b71f70bbb6cd54dad2f9c421b00",
+  "files": 68,
+  "bytes": 3829689,
+  "matchesDist": true,
+  "productionBuildPassed": true,
+  "credentialScanPassed": true,
+  "tests": {
+    "targetedTotal": 139,
+    "targetedPassed": 139,
+    "targetedFailed": 0,
+    "storageAfterFinalTimestampChange": 12,
+    "oldRuleComparisonCases": 68
+  },
+  "advertisement": {
+    "storageAwaitBeforeNativeAd": false,
+    "cloudAwaitBeforeNativeAd": false,
+    "pendingAndFailedStorageStillOpens": true,
+    "deviceMirror": true,
+    "failedReadsNeverTreatedAsEmpty": true,
+    "webviewRecreationReturnsToRun": true,
+    "unverifiedRewardsNotGranted": true,
+    "playerFeedbackRootCauseConfirmed": false
+  },
+  "ssrReplacement": {
+    "sameIdentityOnly": true,
+    "selectedBaseCopiesUpgradeBeforeSale": true,
+    "duplicateTargetsRejected": true,
+    "removedBaseNeverReadded": true
+  },
+  "backend": {
+    "deployed": true,
+    "rulesVersion": 18,
+    "supportedRulesVersions": "1–18",
+    "configurationPreserved": true,
+    "sourceFilesMatched": 10,
+    "backup": ".local-tools/ad-ssr-before-online.zip",
+    "deployedCodeSHA256": "7de34501b5d7e36b55406bbf5fc876e42e3dc7d43a1193c07dd15b994207c0d5",
+    "allVersionsLiveBattleFinishLeaderboardPassed": true,
+    "ssrLive": {
+      "ok": true,
+      "actualDraws": 100,
+      "seed": 11,
+      "baseCopies": 1,
+      "ssrCopies": 1,
+      "upgradeThenSale": true,
+      "weeklyWrite": true,
+      "retryIdempotent": true,
+      "expectedCash": 1673
+    },
+    "finalStateMatched": true
+  },
+  "cleanup": {
+    "explicitTemporaryAccounts": 19,
+    "remaining": 0,
+    "tables": [
+      "weekly_ovr_snapshots",
+      "weekly_ovr_entries",
+      "leaderboard_runs",
+      "leaderboard_entries",
+      "verified_game_progress",
+      "verified_jersey_purchases"
+    ]
+  },
+  "previousVerification": "artifacts/frontend-release-1.5.0-20261013-confirm-update-verification.json",
+  "limitations": [
+    "玩家反馈缺少设备及复现信息，无法确认真实原因；需真机广告返回验证",
+    "本次未重新运行全量测试；前次两项历史快照哈希失败保留，见原验收报告"
+  ]
+}

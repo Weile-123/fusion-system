@@ -133,3 +133,22 @@ test('failed SDK reads and corrupt local saves are distinguished from an empty s
     assert.equal(await empty.load(),null);assert.equal(empty.loadError,'');
   }
 });
+
+test('device read failures remain errors even when the cloud reports no save',async()=>{
+ const store=storageFor({indexedDB:{open(){throw Error('unavailable')}},localStorage:{getItem(){return null}},ColorboxAI:{storage:{getValue:async()=>({code:200,data:null}),setValue:async()=>{}}}});
+ assert.equal(await store.load(),null);assert.match(store.loadError,/读取失败/);
+});
+
+test('device mirror exists before pending IndexedDB writes and recovers the newest checkpoint',async()=>{
+ const values=new Map(),indexedDB=fakeIndexedDB();
+ const localStorage={getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)};
+ const first=storageFor({indexedDB,localStorage});
+ await first.save({version:1,savedAt:1,run:{cash:100}});
+ const blocked=storageFor({indexedDB:{open(){return {}}},localStorage});
+ const pending=blocked.save({version:1,savedAt:2,run:{cash:80},adReturnScreen:'roster'});
+ assert.equal(JSON.parse(values.get('mySupFusionGameV1')).adReturnScreen,'roster');
+ // A reopened WebView can have stale IndexedDB while the mirror already contains the checkpoint.
+ const reload=storageFor({indexedDB,localStorage});assert.equal((await reload.load()).run.cash,80);
+ // Avoid waiting for the deliberately stalled write in this test.
+ void pending;
+});

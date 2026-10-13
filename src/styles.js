@@ -28,3 +28,6 @@ import '../h5/styles/recruit-cards.css';
 import '../h5/styles/home-gold.css';
 import '../h5/styles/shop-purchase.css';
 import '../h5/styles/legendary-player-unlock.css';
+
+import '../h5/styles/training-base.css';
+import '../h5/styles/hundred-recruit.css';

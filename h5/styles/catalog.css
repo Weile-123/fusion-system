@@ -448,7 +448,7 @@
   min-height: 0;
   margin-top: var(--screen-top-offset, var(--game-top-height, 32px));
   padding-top: var(--screen-edge-gap, 15px);
-  padding-bottom: 12px
+  padding-bottom: var(--screen-bottom-gap, 12px)
 }
 
 .app.opening-mode{--screen-top-offset:0px}

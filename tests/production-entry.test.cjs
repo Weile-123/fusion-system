@@ -19,8 +19,8 @@ test('production chunks initialize event globals before the browser game core', 
       assert.equal(context.window.SupFusionEventData.length, 36);
       assert.equal(typeof context.window.SupFusionEventSystem.createSystem, 'function');
       assert.equal(core.EVENTS.length, 36);
-      assert.equal(core.BALANCE_RULES_VERSION, 16);
-      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 16);
+      assert.equal(core.BALANCE_RULES_VERSION, 18);
+      assert.equal(core.createRun('steady_interest', 911).balanceRulesVersion, 18);
       assert.equal(core.STARS.length, 135);
       assert.equal(core.SYNERGIES.length, 108);
       assert.equal(core.RANDOM_SKILLS.length, 112);

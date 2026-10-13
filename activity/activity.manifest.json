@@ -43,7 +43,7 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 16,
+    "rulesVersion": 18,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
@@ -72,15 +72,25 @@
     "legacyRules1To10Checked": true,
     "legacyRules1To14Checked": true,
     "legacyRules1To15Checked": true,
-    "legacyRules1To16Checked": true
+    "legacyRules1To16Checked": true,
+    "trainingBaseChecked": true,
+    "trainingCostChecked": true,
+    "oldClientTrainingProgressPreserved": true,
+    "legacyRules1To17Checked": true,
+    "hundredRecruitChecked": true,
+    "hundredUnfinishedSettlementRejected": true,
+    "hundredReplayChecked": true,
+    "hundredConcurrentRetryChecked": true,
+    "oldAndNewLeaderboardWritesChecked": true
   },
   "activity": {
     "status": "verified"
   },
   "lastFunctionUpdate": {
     "date": "2026-10-13",
-    "verifiedAt": "2026-10-12T16:23:31.368Z",
-    "rulesVersion": 16,
+    "verifiedAt": "2026-10-13T09:29:42.297Z",
+    "releaseVersion": "1.5.0",
+    "rulesVersion": 18,
     "supportedRulesVersions": [
       1,
       2,
@@ -97,36 +107,80 @@
       13,
       14,
       15,
-      16
+      16,
+      17,
+      18
     ],
-    "reason": "S rewarded recruitment counts toward SSR guarantee",
+    "reason": "Rule18 SSR same-identity replacement accepts selected base upgrades; old client rules 1–18 remain compatible",
     "configurationPreserved": true,
-    "backup": ".local-tools/rule16/production-before.zip",
-    "deployedZipSha256": "172dc10719a86cc791022a6ab6704f40fde4a88a22b2bb96d7a2a039e7ec16cf",
+    "backup": ".local-tools/ad-ssr-before-online.zip",
+    "deployedZipSha256": "1935cac4103ab3c11ab6c455f4e4d397154f893a40280c0b4e41f9a3ddc0cb41",
+    "deployedBusinessSourceFilesMatched": 10,
     "legacyComparison": {
-      "runs": 225,
-      "rules": "1-15",
+      "runs": 68,
+      "rules": "1-17",
       "match": true
     },
     "fullTests": {
-      "total": 460,
-      "passed": 459,
-      "failed": 1,
-      "knownFailure": "Protected historical UI snapshot checksum mismatch"
+      "total": 489,
+      "passed": 487,
+      "failed": 2,
+      "knownFailure": "Two existing protected historical event-data snapshot checksum mismatches; snapshot bytes match HEAD"
     },
-    "normalFlow": {
-      "runs": 9,
-      "battles": 251,
-      "actions": 3597,
-      "death": 4,
-      "censored": 5,
-      "stageBoundary": 30
+    "targetedTests": {
+      "total": 156,
+      "passed": 156,
+      "failed": 0
     },
-    "authoritativeStatesChecked": 3,
+    "authenticatedGameplayVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "cumulativeBoardsChecked": [
+      "legend",
+      "ovr"
+    ],
+    "weeklyMinimumRulesVersion": 6,
+    "hundredScenarios": [
+      "all-sale",
+      "mixed",
+      "retry"
+    ],
+    "hundredSeededTemporaryFixtures": true,
+    "hundredServerFinalStateMatched": true,
+    "frontendBrowserChecks": [
+      "more-scroll",
+      "20-stage-switches",
+      "footer-gap-300-390",
+      "save-failure-rollback",
+      "commit-roster-replacement"
+    ],
     "testDataRemoved": true,
-    "evidence": ".local-tools/rule16/live-verification.json",
+    "testAccountsCleaned": 24,
+    "evidence": "artifacts/frontend-release-1.5.0-20261013-ad-ssr-update-verification.json",
     "databaseMigrationApplied": false,
-    "frontendPublished": false
+    "frontendPublished": false,
+    "codeSha256": "7de34501b5d7e36b55406bbf5fc876e42e3dc7d43a1193c07dd15b994207c0d5",
+    "sourceFilesMatched": 10,
+    "oldRuleComparisonCases": 68,
+    "allRulesLiveChecked": true,
+    "ssrSameIdentityLiveChecked": true
   },
   "deployment": {
     "date": "2026-10-08",
@@ -168,9 +222,9 @@
     "evidence": ".local-tools/weekly-min-evidence-20261012.json"
   },
   "previousFunctionUpdate": {
-    "date": "2026-10-12",
-    "verifiedAt": "2026-10-12T15:53:15.094Z",
-    "rulesVersion": 15,
+    "date": "2026-10-13",
+    "verifiedAt": "2026-10-13T03:38:53.361Z",
+    "rulesVersion": 17,
     "supportedRulesVersions": [
       1,
       2,
@@ -186,34 +240,48 @@
       12,
       13,
       14,
-      15
+      15,
+      16,
+      17
     ],
-    "reason": "SSR recruitment probability and 100-draw guarantee",
+    "reason": "Training base: six slots and five combat dimensions, 2% per level",
     "configurationPreserved": true,
-    "backup": ".local-tools/rule15/production-before.zip",
-    "deployedZipSha256": "9af9a3a55898511588798f7e2b393b556794a8f98b9f6f2eb86920c4181f4921",
+    "backup": ".local-tools/rule17-before-online.zip",
+    "deployedZipSha256": "b8c8aa33480374170208b9d6f45ab903decd7de1398222e331aa9832977adb1a",
     "legacyComparison": {
-      "runs": 210,
-      "rules": "1-14",
+      "runs": 64,
+      "rules": "1-16",
       "match": true
     },
     "fullTests": {
-      "total": 455,
-      "passed": 454,
-      "failed": 1,
-      "knownFailure": "Protected historical UI snapshot checksum mismatch"
+      "total": 472,
+      "passed": 470,
+      "failed": 2,
+      "knownFailure": "Existing protected historical event-data snapshot checksum mismatch in two audit tests"
     },
-    "normalFlow": {
-      "runs": 9,
-      "battles": 251,
-      "actions": 3619,
-      "death": 4,
-      "censored": 5,
-      "stageBoundary": 30
+    "targetedTests": {
+      "total": 96,
+      "passed": 96,
+      "failed": 0
     },
-    "authoritativeStatesChecked": 3,
+    "authenticatedGameplayVersions": [
+      1,
+      6,
+      9,
+      11,
+      12,
+      14,
+      15,
+      16,
+      17
+    ],
+    "fullTrainingCost": 224000,
+    "trainingReplayChecked": true,
+    "oldClientTrainingProgressPreserved": true,
+    "weeklyMinimumRulesVersion": 6,
+    "resumeChecked": true,
     "testDataRemoved": true,
-    "evidence": ".local-tools/rule15/live-verification.json",
+    "evidence": ".local-tools/rule17-live-result.json",
     "databaseMigrationApplied": false,
     "frontendPublished": false
   },
@@ -319,6 +387,212 @@
       "authoritativeStatesChecked": 3,
       "testDataRemoved": true,
       "evidence": ".local-tools/rule15/live-verification.json",
+      "databaseMigrationApplied": false,
+      "frontendPublished": false
+    },
+    {
+      "date": "2026-10-13",
+      "verifiedAt": "2026-10-12T16:23:31.368Z",
+      "rulesVersion": 16,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "reason": "S rewarded recruitment counts toward SSR guarantee",
+      "configurationPreserved": true,
+      "backup": ".local-tools/rule16/production-before.zip",
+      "deployedZipSha256": "172dc10719a86cc791022a6ab6704f40fde4a88a22b2bb96d7a2a039e7ec16cf",
+      "legacyComparison": {
+        "runs": 225,
+        "rules": "1-15",
+        "match": true
+      },
+      "fullTests": {
+        "total": 460,
+        "passed": 459,
+        "failed": 1,
+        "knownFailure": "Protected historical UI snapshot checksum mismatch"
+      },
+      "normalFlow": {
+        "runs": 9,
+        "battles": 251,
+        "actions": 3597,
+        "death": 4,
+        "censored": 5,
+        "stageBoundary": 30
+      },
+      "authoritativeStatesChecked": 3,
+      "testDataRemoved": true,
+      "evidence": ".local-tools/rule16/live-verification.json",
+      "databaseMigrationApplied": false,
+      "frontendPublished": false
+    },
+    {
+      "date": "2026-10-13",
+      "verifiedAt": "2026-10-13T03:38:53.361Z",
+      "rulesVersion": 17,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "reason": "Training base: six slots and five combat dimensions, 2% per level",
+      "configurationPreserved": true,
+      "backup": ".local-tools/rule17-before-online.zip",
+      "deployedZipSha256": "b8c8aa33480374170208b9d6f45ab903decd7de1398222e331aa9832977adb1a",
+      "legacyComparison": {
+        "runs": 64,
+        "rules": "1-16",
+        "match": true
+      },
+      "fullTests": {
+        "total": 472,
+        "passed": 470,
+        "failed": 2,
+        "knownFailure": "Existing protected historical event-data snapshot checksum mismatch in two audit tests"
+      },
+      "targetedTests": {
+        "total": 96,
+        "passed": 96,
+        "failed": 0
+      },
+      "authenticatedGameplayVersions": [
+        1,
+        6,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16,
+        17
+      ],
+      "fullTrainingCost": 224000,
+      "trainingReplayChecked": true,
+      "oldClientTrainingProgressPreserved": true,
+      "weeklyMinimumRulesVersion": 6,
+      "resumeChecked": true,
+      "testDataRemoved": true,
+      "evidence": ".local-tools/rule17-live-result.json",
+      "databaseMigrationApplied": false,
+      "frontendPublished": false
+    },
+    {
+      "date": "2026-10-13",
+      "verifiedAt": "2026-10-13T08:33:58.154Z",
+      "releaseVersion": "1.5.0",
+      "rulesVersion": 18,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "reason": "Hundred recruitment with atomic batch handling; reject unfinished batch settlement",
+      "configurationPreserved": true,
+      "backup": ".local-tools/rule18-before-online.zip",
+      "deployedZipSha256": "1935cac4103ab3c11ab6c455f4e4d397154f893a40280c0b4e41f9a3ddc0cb41",
+      "deployedBusinessSourceFilesMatched": 10,
+      "legacyComparison": {
+        "runs": 68,
+        "rules": "1-17",
+        "match": true
+      },
+      "fullTests": {
+        "total": 489,
+        "passed": 487,
+        "failed": 2,
+        "knownFailure": "Two existing protected historical event-data snapshot checksum mismatches; snapshot bytes match HEAD"
+      },
+      "targetedTests": {
+        "total": 156,
+        "passed": 156,
+        "failed": 0
+      },
+      "authenticatedGameplayVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "cumulativeBoardsChecked": [
+        "legend",
+        "ovr"
+      ],
+      "weeklyMinimumRulesVersion": 6,
+      "hundredScenarios": [
+        "all-sale",
+        "mixed",
+        "retry"
+      ],
+      "hundredSeededTemporaryFixtures": true,
+      "hundredServerFinalStateMatched": true,
+      "frontendBrowserChecks": [
+        "more-scroll",
+        "20-stage-switches",
+        "footer-gap-300-390",
+        "save-failure-rollback",
+        "commit-roster-replacement"
+      ],
+      "testDataRemoved": true,
+      "testAccountsCleaned": 24,
+      "evidence": ".local-tools/rule18-postdeploy-live.json",
       "databaseMigrationApplied": false,
       "frontendPublished": false
     }

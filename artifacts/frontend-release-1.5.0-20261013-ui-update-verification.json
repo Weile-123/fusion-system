@@ -1,0 +1,43 @@
+{
+  "version": "1.5.0",
+  "readyForFrontendUpload": true,
+  "frontendPublished": false,
+  "zip": "artifacts/frontend-release-1.5.0-20261013-ui-update.zip",
+  "sha256": "0f5d0f6b0979f92e6182f926840ebffa6cad7cc7c4310383acc5c77025b48f2f",
+  "files": 68,
+  "bytes": 3829146,
+  "matchesDist": true,
+  "previousReleaseVerification": "artifacts/frontend-release-1.5.0-20261013-verification.json",
+  "backend": {
+    "productionRulesVersion": 18,
+    "changedByThisUIUpdate": false,
+    "redeploymentRequired": false
+  },
+  "currentTargetedTests": {
+    "total": 109,
+    "passed": 109,
+    "failed": 0
+  },
+  "productionBuildPassed": true,
+  "browser": {
+    "moreScrollCheck": "passed",
+    "selectionScrollCheck": "passed",
+    "footerGapCheck": "passed",
+    "footerGaps": "[{\"label\":\"more-300\",\"gap\":24},{\"label\":\"last-card-300\",\"gap\":32},{\"label\":\"arrange-300\",\"gap\":36.21875},{\"label\":\"review-300\",\"gap\":23.71875},{\"label\":\"wrapped-footer-300\",\"gap\":23.71875},{\"label\":\"more-390\",\"gap\":24},{\"label\":\"last-card-390\",\"gap\":32},{\"label\":\"arrange-390\",\"gap\":36.21875},{\"label\":\"review-390\",\"gap\":23.71875},{\"label\":\"wrapped-footer-390\",\"gap\":23.71875}]",
+    "commitFlowCheck": "passed",
+    "stageSwitchCheck": "passed",
+    "stageSwitchCycles": "20",
+    "stageHeights": "{\"arranged\":469,\"reviewed\":529}"
+  },
+  "changes": [
+    "揭晓进度移动至右上角，移除上方重复跳过按钮及独立揭晓标题",
+    "缩小揭晓卡片内边距及文本间距",
+    "数量加减、勾选及快捷操作恢复结果页滚动位置",
+    "已有球员结果卡隐藏羁绊标签"
+  ],
+  "credentialScanPassed": true,
+  "limitations": [
+    "未重新运行全量测试；此前全量489项中两个历史快照哈希失败保留，详见原验收记录",
+    "App真机登录、广告和线上资源加载仍需上传前端后核对"
+  ]
+}

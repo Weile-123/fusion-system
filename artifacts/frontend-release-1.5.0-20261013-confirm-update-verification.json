@@ -1,0 +1,42 @@
+{
+  "version": "1.5.0",
+  "readyForFrontendUpload": true,
+  "frontendPublished": false,
+  "zip": "artifacts/frontend-release-1.5.0-20261013-confirm-update.zip",
+  "sha256": "f7978c2595e809cc690b5570678d937eaa34f341f3b7c00a9e816c48648e85c6",
+  "files": 68,
+  "bytes": 3829134,
+  "matchesDist": true,
+  "previousReleaseVerification": "artifacts/frontend-release-1.5.0-20261013-ui-update-verification.json",
+  "backend": {
+    "productionRulesVersion": 18,
+    "changedByThisUIUpdate": false,
+    "redeploymentRequired": false
+  },
+  "currentTargetedTests": {
+    "total": 112,
+    "passed": 112,
+    "failed": 0
+  },
+  "productionBuildPassed": true,
+  "browser": {
+    "moreScrollCheck": "passed",
+    "selectionScrollCheck": "passed",
+    "footerGapCheck": "passed",
+    "footerGaps": "[{\"label\":\"more-300\",\"gap\":24},{\"label\":\"last-card-300\",\"gap\":32},{\"label\":\"arrange-300\",\"gap\":36.21875},{\"label\":\"review-300\",\"gap\":23.71875},{\"label\":\"wrapped-footer-300\",\"gap\":23.71875},{\"label\":\"more-390\",\"gap\":24},{\"label\":\"last-card-390\",\"gap\":32},{\"label\":\"arrange-390\",\"gap\":36.21875},{\"label\":\"review-390\",\"gap\":23.71875},{\"label\":\"wrapped-footer-390\",\"gap\":23.71875}]",
+    "commitFlowCheck": "passed",
+    "stageSwitchCheck": "passed",
+    "stageSwitchCycles": "20",
+    "stageHeights": "{\"arranged\":469,\"reviewed\":529}"
+  },
+  "changes": [
+    "普通招募出售、替换备战席和融合面板球员均需确认，取消不改变对局",
+    "按备战席和融合面板中的球员判断百连卡片新球员状态；重复新卡保留新球员标签和羁绊",
+    "验证满星球员排除、接近满星球员可抽取额外卡片及超额自动回收规则"
+  ],
+  "credentialScanPassed": true,
+  "limitations": [
+    "未重新运行全量测试；此前全量489项中两个历史快照哈希失败保留，详见原验收记录",
+    "App真机登录、广告和线上资源加载仍需上传前端后核对"
+  ]
+}

@@ -46,5 +46,5 @@ test('phase specializations affect combat dimensions and have equal summed bonus
   }
 });
 test('client and deployment backend preserve matching catalogs for every supported rule version',()=>{
-  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');assert.equal(backend.BALANCE_RULES_VERSION,16);assert.equal(C.BALANCE_RULES_VERSION,16);for(let version=1;version<=16;version++){assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).STARS,backend.catalogForRun({balanceRulesVersion:version}).STARS);assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).SYNERGIES,backend.catalogForRun({balanceRulesVersion:version}).SYNERGIES);}
+  const backend=require('../activity/cloudfunctions/activity_api/game/game-core.js');assert.equal(backend.BALANCE_RULES_VERSION,18);assert.equal(C.BALANCE_RULES_VERSION,18);for(let version=1;version<=18;version++){assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).STARS,backend.catalogForRun({balanceRulesVersion:version}).STARS);assert.deepEqual(C.catalogForRun({balanceRulesVersion:version}).SYNERGIES,backend.catalogForRun({balanceRulesVersion:version}).SYNERGIES);}
 });

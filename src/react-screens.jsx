@@ -32,14 +32,14 @@ const reactAttributeNames = {
   'font-weight': 'fontWeight'
 };
 const booleanAttributes = new Set(['disabled', 'hidden', 'checked', 'selected', 'multiple', 'readonly']);
-const allowedTags = new Set(['article', 'b', 'br', 'button', 'div', 'em', 'h1', 'h2', 'h3', 'header', 'i', 'img', 'p', 'path', 'section', 'small', 'span', 'strong', 'svg', 'text']);
+const allowedTags = new Set(['article', 'b', 'br', 'button', 'div', 'em', 'h1', 'h2', 'h3', 'header', 'i', 'img', 'input', 'p', 'path', 'section', 'small', 'span', 'strong', 'svg', 'text']);
 const allowedAttributes = new Set([
   'alt', 'class', 'colspan', 'd', 'disabled', 'fill', 'fill-opacity', 'font-family', 'font-size',
-  'font-weight', 'height', 'hidden', 'id', 'key', 'opacity', 'paint-order', 'preserveaspectratio',
+  'font-weight', 'height', 'hidden', 'id', 'key', 'opacity', 'paint-order', 'placeholder', 'preserveaspectratio',
   'readonly', 'role', 'rowspan', 'src', 'stroke', 'stroke-linecap', 'stroke-linejoin', 'stroke-width',
   'style', 'tabindex', 'text-anchor', 'title', 'type', 'value', 'viewbox', 'width', 'x', 'y'
 ]);
-const voidTags = new Set(['br', 'img']);
+const voidTags = new Set(['br', 'img', 'input']);
 const entityValues = { amp: '&', apos: "'", gt: '>', lt: '<', nbsp: '\u00a0', quot: '"' };
 
 function decodeEntities(value) {
@@ -162,8 +162,20 @@ function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread })
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新版本 · 1.3.1 · 2026.10.13</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新版本 · 1.5.0 · 2026.10.13</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">1.5.0 · 2026.10.13 · 百连招募开放</h3>
+      <h3>百连招募</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 新增<strong>百连招募</strong>，一次招募100张球员卡，享受<strong>9折</strong>优惠，每抽沿用本局SSR概率与保底计数。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 分组揭晓球员，同名卡合并显示，可按评级、升星、羁绊和选择状态筛选。</p>
+      <p className="announcement-note">百连招募从本版本新开局开放，已有对局继续使用原规则。原有训练、解锁收藏与排行榜记录保留。</p>
+      <h3 className="announcement-version">1.4.0 · 2026.10.13 · 训练基地开放</h3>
+      <h3>新增局外成长</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 点数商店新增<strong>训练基地</strong>，使用传奇点进行永久训练，分别培养六槽能力与单挑五维。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> <strong>专项训练馆</strong>：三分、中投、突破、篮下、防守、控球分别升级，提高对应槽位的能力值。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> <strong>单挑五维训练</strong>:投射威胁、持球创造、禁区终结、外线限制、护框强度分别升级，提高融合后的对应单挑维度。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 每项训练<strong>最高5级</strong>，<strong>每级＋2%</strong>，<strong>单项满级＋10%</strong>；升级进度永久保留，满级后不能继续购买。</p>
+      <p className="announcement-note">训练加成从下次新开局生效，正在进行的对局不受影响。原有传奇点、解锁收藏与生涯记录保留。</p>
       <h3 className="announcement-version">1.3.1 · 2026.10.13 · SSR招募概率与保底调整</h3>
       <h3>SSR概率提升</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> SSR招募概率最高值由2%提升至<strong>3%</strong>；选择开局天赋<strong>「球探网络」</strong>后提升至<strong>4%</strong>。第1—20关概率保持原有计算方式。</p>
@@ -174,7 +186,7 @@ function AnnouncementScreen() {
       <h3>球星与羁绊扩充</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 调整并扩充球员属性、技能和羁绊，新增至135张球员卡、108组羁绊。</p>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 点数商店新增传奇球员解锁，每次花费400传奇点随机解锁一名全星SSR球员，解锁后从下次新开局进入招募池。</p>
-      <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次新增球员：<span className="announcement-new-players">维克托·文班亚马、约翰·哈夫利切克、杰伦·布朗、邓肯·罗宾逊、JJ·雷迪克、巴姆·阿德巴约、贾森·特里 + <span style={{"text-decoration": "underline"}}>10名隐藏SSR球员</span>。</span></p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次新增球员：<span className="announcement-new-players">维克托·文班亚马、约翰·哈夫利切克、杰伦·布朗、邓肯·罗宾逊、JJ·雷迪克、巴姆·阿德巴约、贾森·特里 + <span style={{ "text-decoration": "underline" }}>10名隐藏SSR球员</span>。</span></p>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 本次新增羁绊：<span className="announcement-new-bonds">六十年代宿敌、洛城首冠、冠军致敬、波士顿复兴、灯泡组合、西决巨人战、绿军连冠骨干、六九总决赛、法国引路人、上将点拨、绿军双探花、绿军FMVP、热火黑八、迈城谢幕季、空接之城后场、快船空间走廊、迈城更衣室、迈城总决赛、2011夺冠搭档、1969抢七大战、达拉斯冠军五人组。</span></p>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 删除羁绊：<span className="announcement-removed-bonds">万花筒、四大神射、圣城四柱、全能大前锋、湖人四代核心、绿军四代基石、锋卫得分王、节奏掌控者、禁区统治者、芝城侧翼网、洛城快攻链、达拉斯空间链、纳什转换链。</span></p>
       <h3>奖金明细与招募确认</h3>
