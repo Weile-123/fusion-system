@@ -1,0 +1,732 @@
+{
+  "rng": 1524176658,
+  "cash": 25,
+  "free": 3,
+  "gear": [
+    "core_robe",
+    "kobe_sleeve",
+    "team_jersey",
+    "dynasty_ring",
+    "clutch_shoes",
+    "iverson_sleeve"
+  ],
+  "seed": 993848287,
+  "wins": 2216,
+  "bench": [
+    "kobe",
+    "longley",
+    "fisher",
+    "fox",
+    "rodman",
+    "durant",
+    "horry",
+    "klay",
+    "green",
+    "pippen",
+    "iguodala"
+  ],
+  "ended": true,
+  "offer": [],
+  "owned": {
+    "fox": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "klay": {
+      "stars": 3,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "kobe": {
+      "stars": 3,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "green": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "horry": {
+      "stars": 2,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "durant": {
+      "stars": 5,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "fisher": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "pippen": {
+      "stars": 4,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "rodman": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "longley": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "iguodala": {
+      "stars": 1,
+      "train": 0,
+      "trainedAt": 0
+    },
+    "air_jordan": {
+      "stars": 10,
+      "train": 500,
+      "trainedAt": 2200
+    },
+    "chef_curry": {
+      "stars": 10,
+      "train": 500,
+      "trainedAt": 2200
+    },
+    "diesel_shaq": {
+      "stars": 10,
+      "train": 408,
+      "trainedAt": 2217
+    },
+    "king_lebron": {
+      "stars": 10,
+      "train": 500,
+      "trainedAt": 1706
+    },
+    "stone_duncan": {
+      "stars": 10,
+      "train": 500,
+      "trainedAt": 1915
+    },
+    "showtime_magic": {
+      "stars": 10,
+      "train": 500,
+      "trainedAt": 2217
+    }
+  },
+  "slots": {
+    "def": "stone_duncan",
+    "mid": "air_jordan",
+    "drive": "king_lebron",
+    "three": "chef_curry",
+    "handle": "showtime_magic",
+    "inside": "diesel_shaq"
+  },
+  "stage": 2217,
+  "stats": {
+    "recruits": 6032,
+    "eventIncome": 18,
+    "prizeIncome": 202140,
+    "eventSpending": 33,
+    "gearPurchases": 30
+  },
+  "boosts": [],
+  "losses": 444,
+  "maxOvr": 10415,
+  "morale": 13,
+  "talent": "scouting_network",
+  "awarded": true,
+  "endless": true,
+  "maxGoat": 52073,
+  "pending": null,
+  "gearLimit": 6,
+  "offerMode": "normal",
+  "offerOdds": null,
+  "batchQueue": [],
+  "benchLimit": 11,
+  "eventState": {
+    "seen": [
+      "P01",
+      "P05",
+      "C05",
+      "R01",
+      "X01",
+      "P07",
+      "T03",
+      "T11",
+      "P06",
+      "P03",
+      "C03",
+      "T04",
+      "T16",
+      "T05",
+      "T01",
+      "P02",
+      "C01",
+      "T02"
+    ],
+    "misses": 0,
+    "bonuses": {
+      "rimStop": 10,
+      "creation": 3,
+      "finishing": 13,
+      "perimeterStop": 6
+    },
+    "jerseys": 0,
+    "recovered": true,
+    "lastBattle": 66
+  },
+  "lastBattle": null,
+  "noSSRDraws": 29,
+  "reviveUsed": false,
+  "settlement": {
+    "wins": 2216,
+    "points": 110500,
+    "clearAward": 1
+  },
+  "shopOffers": {
+    "gear": [
+      "veteran_ring",
+      "footwork_shoes",
+      "deep_wrist"
+    ],
+    "boost": [
+      "paint",
+      "composure",
+      "touch",
+      "stopper"
+    ]
+  },
+  "endlessWins": 2206,
+  "gearReserve": [
+    "king_double_wrist",
+    "dirk_mavericks_jersey",
+    "iverson_sixers_jersey",
+    "durant_sleeve",
+    "giannis_shoes",
+    "harden_rockets_jersey",
+    "jordan_playbook",
+    "shaq_jersey",
+    "allen_celtics_jersey",
+    "curry_wrist",
+    "westbrook_shoes",
+    "duncan_jersey",
+    "kobe_wrist",
+    "magic_ring",
+    "jordan_sleeve",
+    "giannis_bucks_jersey"
+  ],
+  "randomEvent": null,
+  "rarityBonus": 5,
+  "refreshFree": 1,
+  "skillAdPick": null,
+  "recruitDraws": 6032,
+  "roleSkillMap": {
+    "fox": [
+      "sk_cb_9"
+    ],
+    "pau": [
+      "sk_str_2"
+    ],
+    "rip": [
+      "sk_cb_10"
+    ],
+    "bird": [
+      "sk_inc_4"
+    ],
+    "dirk": [
+      "sk_pln_2"
+    ],
+    "kidd": [
+      "sk_gold_5"
+    ],
+    "klay": [
+      "sk_cmd_1"
+    ],
+    "kobe": [
+      "sk_cmd_4"
+    ],
+    "nash": [
+      "sk_disc_5"
+    ],
+    "paul": [
+      "sk_cb_28"
+    ],
+    "shai": [
+      "sk_win_5"
+    ],
+    "shaq": [
+      "sk_str_4"
+    ],
+    "tmac": [
+      "sk_mat_2"
+    ],
+    "wade": [
+      "sk_cmd_5"
+    ],
+    "west": [
+      "sk_def_1"
+    ],
+    "wilt": [
+      "sk_cb_25"
+    ],
+    "curry": [
+      "sk_see_3"
+    ],
+    "davis": [
+      "sk_mall_5"
+    ],
+    "ewing": [
+      "sk_att_1"
+    ],
+    "green": [
+      "sk_pln_5"
+    ],
+    "horry": [
+      "sk_cla_1"
+    ],
+    "isiah": [
+      "sk_cb_28"
+    ],
+    "jokic": [
+      "sk_att_5"
+    ],
+    "magic": [
+      "sk_str_5"
+    ],
+    "moses": [
+      "sk_cb_7"
+    ],
+    "oscar": [
+      "sk_att_1"
+    ],
+    "baylor": [
+      "sk_str_4"
+    ],
+    "caruso": [
+      "sk_sus_3"
+    ],
+    "doncic": [
+      "sk_cmd_1"
+    ],
+    "duncan": [
+      "sk_cb_4"
+    ],
+    "durant": [
+      "sk_att_1"
+    ],
+    "embiid": [
+      "sk_cb_11"
+    ],
+    "erving": [
+      "sk_cb_17"
+    ],
+    "fisher": [
+      "sk_sus_5"
+    ],
+    "hakeem": [
+      "sk_cla_5"
+    ],
+    "harden": [
+      "sk_pln_1"
+    ],
+    "howard": [
+      "sk_cb_11"
+    ],
+    "irving": [
+      "sk_cb_4"
+    ],
+    "jordan": [
+      "sk_cb_30"
+    ],
+    "kareem": [
+      "sk_cb_14"
+    ],
+    "korver": [
+      "sk_cb_30"
+    ],
+    "lebron": [
+      "sk_rg_4b"
+    ],
+    "malone": [
+      "sk_sus_1"
+    ],
+    "pippen": [
+      "sk_sus_1"
+    ],
+    "reggie": [
+      "sk_cb_7"
+    ],
+    "rodman": [
+      "sk_sus_1"
+    ],
+    "anunoby": [
+      "sk_heal_3"
+    ],
+    "barkley": [
+      "sk_str_5"
+    ],
+    "battier": [
+      "sk_cb_9"
+    ],
+    "garnett": [
+      "sk_rg_4"
+    ],
+    "giannis": [
+      "sk_cb_28"
+    ],
+    "griffin": [
+      "sk_see_3"
+    ],
+    "holiday": [
+      "sk_str_3"
+    ],
+    "iverson": [
+      "sk_mcl_2"
+    ],
+    "longley": [
+      "sk_def_3"
+    ],
+    "russell": [
+      "sk_atk_4"
+    ],
+    "wilkins": [
+      "sk_pln_3"
+    ],
+    "havlicek": [
+      "sk_inc_1"
+    ],
+    "iguodala": [
+      "sk_rg_4"
+    ],
+    "rayallen": [
+      "sk_str_2"
+    ],
+    "robinson": [
+      "sk_eall_5"
+    ],
+    "stockton": [
+      "sk_cmd_5"
+    ],
+    "logo_west": [
+      "sk_all_5"
+    ],
+    "air_jordan": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "chef_curry": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "wembanyama": [
+      "sk_cla_5"
+    ],
+    "diesel_shaq": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "king_lebron": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "beard_harden": [
+      "sk_str_5"
+    ],
+    "dream_hakeem": [
+      "sk_win_1"
+    ],
+    "ring_russell": [
+      "sk_cb_30"
+    ],
+    "stone_duncan": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "showtime_magic": [
+      "sk_cb_30",
+      "sk_mall_5"
+    ],
+    "skyhook_kareem": [
+      "sk_pln_1"
+    ],
+    "duncan_robinson": [
+      "sk_cmd_4"
+    ],
+    "alien_wembanyama": [
+      "sk_mat_2"
+    ]
+  },
+  "trainingBase": {
+    "slots": {
+      "def": 0,
+      "mid": 0,
+      "drive": 0,
+      "three": 0,
+      "handle": 0,
+      "inside": 0
+    },
+    "dimensions": {
+      "rimStop": 0,
+      "creation": 0,
+      "shooting": 0,
+      "finishing": 0,
+      "perimeterStop": 0
+    }
+  },
+  "unlockedGear": [
+    "legacy_counter_wrist",
+    "legacy_recovery_ring"
+  ],
+  "batchSelected": [],
+  "gearRefreshes": 0,
+  "metaFilmStudy": 3,
+  "noAPlusGroups": 0,
+  "noSPlusGroups": 4,
+  "playerEconomy": {
+    "window": 2661,
+    "freeBoosts": 0,
+    "identities": {}
+  },
+  "recruitGroups": 6032,
+  "shopRefreshes": 0,
+  "gearSoldOffers": [],
+  "posterRewarded": false,
+  "recruitCredits": 0,
+  "bonusSkillSlots": {},
+  "gearRefreshFree": 0,
+  "metaInterestCap": 5,
+  "skillAdPickUsed": {
+    "jordan": [
+      true
+    ],
+    "air_jordan": [
+      true,
+      true
+    ],
+    "chef_curry": [
+      true,
+      true
+    ],
+    "diesel_shaq": [
+      true,
+      true
+    ],
+    "king_lebron": [
+      true,
+      true
+    ],
+    "stone_duncan": [
+      true,
+      true
+    ],
+    "showtime_magic": [
+      true,
+      true
+    ]
+  },
+  "unlockedJerseys": [
+    "dirk_mavericks_jersey",
+    "harden_rockets_jersey",
+    "giannis_bucks_jersey",
+    "iverson_sixers_jersey",
+    "allen_celtics_jersey"
+  ],
+  "unlockedPlayers": [
+    "wolf_garnett",
+    "logo_west",
+    "dream_hakeem",
+    "big_bird",
+    "skyhook_kareem",
+    "alien_wembanyama",
+    "flash_wade",
+    "beard_harden",
+    "ring_russell",
+    "marshal_wilt"
+  ],
+  "collectedJerseys": [
+    "jordan_sleeve",
+    "magic_ring",
+    "giannis_bucks_jersey",
+    "kobe_wrist",
+    "kobe_sleeve",
+    "king_double_wrist",
+    "dirk_mavericks_jersey",
+    "iverson_sixers_jersey",
+    "durant_sleeve",
+    "giannis_shoes",
+    "harden_rockets_jersey",
+    "jordan_playbook",
+    "shaq_jersey",
+    "allen_celtics_jersey",
+    "curry_wrist",
+    "westbrook_shoes",
+    "duncan_jersey"
+  ],
+  "collectedPlayers": [
+    "griffin",
+    "holiday",
+    "horry",
+    "longley",
+    "fox",
+    "nash",
+    "pau",
+    "giannis",
+    "moses",
+    "fisher",
+    "west",
+    "battier",
+    "davis",
+    "paul",
+    "klay",
+    "wembanyama",
+    "magic",
+    "iverson",
+    "tmac",
+    "wade",
+    "ewing",
+    "jokic",
+    "rayallen",
+    "hakeem",
+    "jordan",
+    "wilt",
+    "isiah",
+    "garnett",
+    "wilkins",
+    "duncan",
+    "lebron",
+    "pippen",
+    "kobe",
+    "king_lebron",
+    "havlicek",
+    "bird",
+    "kareem",
+    "kidd",
+    "caruso",
+    "russell",
+    "shaq",
+    "harden",
+    "duncan_robinson",
+    "malone",
+    "curry",
+    "barkley",
+    "durant",
+    "reggie",
+    "beard_harden",
+    "alien_wembanyama",
+    "erving",
+    "stone_duncan",
+    "diesel_shaq",
+    "air_jordan",
+    "green",
+    "robinson",
+    "rodman",
+    "baylor",
+    "shai",
+    "chef_curry",
+    "showtime_magic",
+    "skyhook_kareem",
+    "korver",
+    "anunoby",
+    "embiid",
+    "irving",
+    "stockton",
+    "dream_hakeem",
+    "doncic",
+    "dirk",
+    "logo_west",
+    "iguodala",
+    "howard",
+    "oscar",
+    "ring_russell",
+    "rip"
+  ],
+  "forceRareRecruit": false,
+  "gearHealCounters": {},
+  "gearReserveLimit": 7,
+  "metaPolicyOffers": 1,
+  "playerShopOffers": [
+    "tmac",
+    "kidd",
+    "ewing"
+  ],
+  "skillHealGranted": {},
+  "boostBoughtOffers": [],
+  "draftSkillPreview": {
+    "yao": "sk_cla_4",
+    "bosh": "sk_cb_6",
+    "kemp": "sk_atk_5",
+    "love": "sk_pln_2",
+    "melo": "sk_eall_4",
+    "peja": "sk_pln_1",
+    "amare": "sk_cb_10",
+    "bowen": "sk_cla_2",
+    "kawhi": "sk_disc_5",
+    "lopez": "sk_cb_24",
+    "penny": "sk_def_1",
+    "rondo": "sk_mcl_2",
+    "tatum": "sk_inc_1",
+    "terry": "sk_mpl_4",
+    "white": "sk_win_1",
+    "artest": "sk_cb_18",
+    "booker": "sk_see_3",
+    "butler": "sk_heal_5",
+    "carter": "sk_def_1",
+    "dumars": "sk_cb_7",
+    "george": "sk_gold_3",
+    "gobert": "sk_gold_3",
+    "harper": "sk_def_1",
+    "marion": "sk_cb_15",
+    "mchale": "sk_cb_7",
+    "mullin": "sk_str_1",
+    "murray": "sk_ctr_4",
+    "parish": "sk_def_1",
+    "parker": "sk_def_2",
+    "payton": "sk_inc_4",
+    "pierce": "sk_mat_2",
+    "redick": "sk_att_1",
+    "webber": "sk_cb_25",
+    "worthy": "sk_win_1",
+    "adebayo": "sk_cmd_1",
+    "billups": "sk_win_1",
+    "brunson": "sk_cb_27",
+    "deandre": "sk_att_1",
+    "drexler": "sk_cmd_2",
+    "edwards": "sk_all_3",
+    "lillard": "sk_cb_16",
+    "mutombo": "sk_pln_3",
+    "rasheed": "sk_disc_3",
+    "ac_green": "sk_disc_5",
+    "big_bird": "sk_cb_13",
+    "chandler": "sk_cb_18",
+    "ginobili": "sk_cb_21",
+    "laimbeer": "sk_mat_2",
+    "westbrook": "sk_cla_2",
+    "benwallace": "sk_sus_4",
+    "flash_wade": "sk_cb_27",
+    "grant_hill": "sk_inc_3",
+    "mamba_kobe": "sk_cb_5",
+    "byron_scott": "sk_cb_20",
+    "aaron_gordon": "sk_mat_4",
+    "jaylen_brown": "sk_inc_4",
+    "marshal_wilt": "sk_inc_4",
+    "wolf_garnett": "sk_cb_16",
+    "reaper_durant": "sk_win_5"
+  },
+  "gearPaidRefreshes": 0,
+  "metaTrainingBoost": 3,
+  "skillHealCounters": {},
+  "skillRefreshCount": {},
+  "openingAPlusGroups": 2,
+  "skillStageCashPaid": 2216,
+  "balanceRulesVersion": 17,
+  "bondWinHealCounters": {
+    "royal_recovery": 1,
+    "champion_recovery": 3
+  },
+  "rewardedRecruitUsed": false,
+  "playerShopSoldOffers": [],
+  "talentWinHealGranted": 0,
+  "skillFreeRefreshStage": 0,
+  "playerShopOffersInitialized": true
+}

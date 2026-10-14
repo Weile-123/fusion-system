@@ -1,0 +1,80 @@
+{
+  "fetchedAt": "2026-10-14T02:30:44.299Z",
+  "url": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com/api/leaderboard?board=ovr&scope=weekly&limit=10",
+  "status": 200,
+  "response": {
+    "code": 0,
+    "message": "success",
+    "data": {
+      "scope": "weekly",
+      "endsAt": "2026-10-19T00:00:00+08:00",
+      "period": "current",
+      "weekId": "2026-10-12",
+      "enabled": true,
+      "entries": [
+        {
+          "rank": 1,
+          "score": 10415,
+          "stage": 2201,
+          "displayName": "云晟a"
+        },
+        {
+          "rank": 2,
+          "score": 2870,
+          "stage": 279,
+          "displayName": "我不是小蛇哦"
+        },
+        {
+          "rank": 3,
+          "score": 2833,
+          "stage": 263,
+          "displayName": "蠢狗滚"
+        },
+        {
+          "rank": 4,
+          "score": 2775,
+          "stage": 272,
+          "displayName": "hupu_1e7d409eb18edb7e"
+        },
+        {
+          "rank": 5,
+          "score": 2775,
+          "stage": 293,
+          "displayName": "足坛詹姆斯"
+        },
+        {
+          "rank": 6,
+          "score": 2768,
+          "stage": 260,
+          "displayName": "老马包子铺"
+        },
+        {
+          "rank": 7,
+          "score": 2713,
+          "stage": 271,
+          "displayName": "猪卷卷"
+        },
+        {
+          "rank": 8,
+          "score": 2644,
+          "stage": 235,
+          "displayName": "在林中狂飙"
+        },
+        {
+          "rank": 9,
+          "score": 2366,
+          "stage": 222,
+          "displayName": "虎扑JR1520603374"
+        },
+        {
+          "rank": 10,
+          "score": 2319,
+          "stage": 273,
+          "displayName": "支付宝马云"
+        }
+      ],
+      "startsAt": "2026-10-12T00:00:00+08:00",
+      "serverTime": "2026-10-14T10:30:44.350971+08:00"
+    }
+  }
+}

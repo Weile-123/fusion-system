@@ -1,0 +1,41 @@
+{
+  "fetchedAt": "2026-10-14T02:30:44.101Z",
+  "url": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com/api/health",
+  "status": 200,
+  "response": {
+    "code": 0,
+    "message": "ok",
+    "data": {
+      "rulesVersion": 20,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "randomEvents": 36,
+      "synergies": 108,
+      "recoveryVersion": 1,
+      "proofVersion": 3,
+      "backgroundSyncVersion": 1,
+      "weeklyLeaderboardVersion": 1,
+      "talents": 20
+    }
+  }
+}

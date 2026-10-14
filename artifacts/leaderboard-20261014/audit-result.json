@@ -1,0 +1,331 @@
+{
+  "label": "服务端最终阵容的单关对照夹具；解除已结束标记，独立种子单关抽样，不是完整对局复现",
+  "replays": 18,
+  "battles": 18000,
+  "results": [
+    {
+      "version": 17,
+      "mode": "original",
+      "stage": 2217,
+      "player": 10727,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.30000000000000004,
+        "clutchBonus": 0.30000000000000004,
+        "opponentPenalty": 0.30000000000000004,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 801,
+          "n": 1000,
+          "winRate": 0.801
+        },
+        {
+          "strategy": "drive",
+          "wins": 836,
+          "n": 1000,
+          "winRate": 0.836
+        },
+        {
+          "strategy": "collapse",
+          "wins": 819,
+          "n": 1000,
+          "winRate": 0.819
+        }
+      ]
+    },
+    {
+      "version": 17,
+      "mode": "remove-decisive",
+      "stage": 2217,
+      "player": 10727,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.12000000000000001,
+        "clutchBonus": 0.12000000000000001,
+        "opponentPenalty": 0.12000000000000001,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 271,
+          "n": 1000,
+          "winRate": 0.271
+        },
+        {
+          "strategy": "drive",
+          "wins": 278,
+          "n": 1000,
+          "winRate": 0.278
+        },
+        {
+          "strategy": "collapse",
+          "wins": 250,
+          "n": 1000,
+          "winRate": 0.25
+        }
+      ]
+    },
+    {
+      "version": 17,
+      "mode": "remove-both",
+      "stage": 2217,
+      "player": 10004,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 0,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0,
+        "clutchBonus": 0,
+        "opponentPenalty": 0,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 41,
+          "n": 1000,
+          "winRate": 0.041
+        },
+        {
+          "strategy": "drive",
+          "wins": 38,
+          "n": 1000,
+          "winRate": 0.038
+        },
+        {
+          "strategy": "collapse",
+          "wins": 36,
+          "n": 1000,
+          "winRate": 0.036
+        }
+      ]
+    },
+    {
+      "version": 20,
+      "mode": "original",
+      "stage": 2217,
+      "player": 10727,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.30000000000000004,
+        "clutchBonus": 0.30000000000000004,
+        "opponentPenalty": 0.30000000000000004,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 801,
+          "n": 1000,
+          "winRate": 0.801
+        },
+        {
+          "strategy": "drive",
+          "wins": 836,
+          "n": 1000,
+          "winRate": 0.836
+        },
+        {
+          "strategy": "collapse",
+          "wins": 819,
+          "n": 1000,
+          "winRate": 0.819
+        }
+      ]
+    },
+    {
+      "version": 20,
+      "mode": "remove-decisive",
+      "stage": 2217,
+      "player": 10727,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.12000000000000001,
+        "clutchBonus": 0.12000000000000001,
+        "opponentPenalty": 0.12000000000000001,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 271,
+          "n": 1000,
+          "winRate": 0.271
+        },
+        {
+          "strategy": "drive",
+          "wins": 278,
+          "n": 1000,
+          "winRate": 0.278
+        },
+        {
+          "strategy": "collapse",
+          "wins": 250,
+          "n": 1000,
+          "winRate": 0.25
+        }
+      ]
+    },
+    {
+      "version": 20,
+      "mode": "remove-both",
+      "stage": 2217,
+      "player": 10004,
+      "enemy": 54249489,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 0,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0,
+        "clutchBonus": 0,
+        "opponentPenalty": 0,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "rates": [
+        {
+          "strategy": "outside",
+          "wins": 41,
+          "n": 1000,
+          "winRate": 0.041
+        },
+        {
+          "strategy": "drive",
+          "wins": 38,
+          "n": 1000,
+          "winRate": 0.038
+        },
+        {
+          "strategy": "collapse",
+          "wins": 36,
+          "n": 1000,
+          "winRate": 0.036
+        }
+      ]
+    }
+  ],
+  "training": {
+    "first": [
+      {
+        "name": "石佛·邓肯",
+        "stars": 10,
+        "train": 500,
+        "trainedAt": 1915
+      },
+      {
+        "name": "GOAT·乔丹",
+        "stars": 10,
+        "train": 500,
+        "trainedAt": 2200
+      },
+      {
+        "name": "天选·詹姆斯",
+        "stars": 10,
+        "train": 500,
+        "trainedAt": 1706
+      },
+      {
+        "name": "三分王·库里",
+        "stars": 10,
+        "train": 500,
+        "trainedAt": 2200
+      },
+      {
+        "name": "魔术师·约翰逊",
+        "stars": 10,
+        "train": 500,
+        "trainedAt": 2217
+      },
+      {
+        "name": "大鲨鱼·奥尼尔",
+        "stars": 10,
+        "train": 408,
+        "trainedAt": 2217
+      }
+    ],
+    "second": [
+      {
+        "name": "石佛·邓肯",
+        "stars": 10,
+        "train": 73,
+        "trainedAt": 264
+      },
+      {
+        "name": "LOGO·韦斯特",
+        "stars": 10,
+        "train": 97,
+        "trainedAt": 264
+      },
+      {
+        "name": "天选·詹姆斯",
+        "stars": 10,
+        "train": 184,
+        "trainedAt": 280
+      },
+      {
+        "name": "大鸟·伯德",
+        "stars": 10,
+        "train": 20,
+        "trainedAt": 276
+      },
+      {
+        "name": "魔术师·约翰逊",
+        "stars": 10,
+        "train": 12,
+        "trainedAt": 256
+      },
+      {
+        "name": "大鲨鱼·奥尼尔",
+        "stars": 10,
+        "train": 15,
+        "trainedAt": 264
+      }
+    ]
+  }
+}

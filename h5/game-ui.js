@@ -23,7 +23,7 @@
   let showBenchOperationGuide=false,benchModeDraft='original',benchScrollbarDraft=false;
   let cloudRetryTimer=null,cloudRetryAttempt=0,playerPuid='';
   let hundredPurchaseConfirm=false,hundredPurchaseBusy=false;
-  const ANNOUNCEMENT_VERSION='1.5.1';
+  const ANNOUNCEMENT_VERSION='1.5.2';
   const LEGENDARY_STORE_NOTICE_VERSION='1.3.0';
   const TRAINING_BASE_NOTICE_VERSION='1.4.0';
   let showAnnouncement=false;
@@ -727,7 +727,8 @@
     const batch=r.offerMode==='ten-batch';
     if(!batch&&!r.offer.includes(selectedOffer))selectedOffer=r.offer[0]||'';
     const selected=C.BY_ID[selectedOffer],odds=r.offerOdds||C.recruitProbabilitySummary(r),pct=value=>Number.isInteger(value)?value:String(value.toFixed(1)).replace(/\.0$/,'');
-    const ssrProbability=r.offerMode==='rewarded-s'?(r.balanceRulesVersion>=16&&r.offer.some(id=>C.BY_ID[id].tier==='SSR')?100:0):safeSSRProbability(odds.SSR,C.recruitProbabilitySummary(r).SSR,r);
+    const ssrUnavailable=C.recruitableSSRPlayers(r).length===0;
+    const ssrProbability=r.offerMode==='rewarded-s'?(r.balanceRulesVersion>=16&&r.offer.some(id=>C.BY_ID[id].tier==='SSR')?100:0):ssrUnavailable?0:safeSSRProbability(odds.SSR,C.recruitProbabilitySummary(r).SSR,r);
     els.recruit.classList.add('draft-style-material');
     els.recruit.classList.toggle('draft-ten-mode',batch);
     els.recruit.classList.toggle('batch-reveal',batch&&batchRevealPending);
@@ -737,7 +738,7 @@
       <button class="inline-back" data-act="roster">← 返回融合球场</button>
       <div class="draft-heading"><div><h1>DRAFT <small>${batch?`十连招募 · 已选 ${batchCount}/10`:'招募'}</small></h1></div></div>
       <div class="draft-odds"><span class="draft-odd" aria-label="SSR 概率 ${pct(ssrProbability)}%"><span class="tier-dot legend-dot"></span>${pct(ssrProbability)}%</span><span class="draft-odd" aria-label="S 概率 ${pct(odds.S)}%"><span class="tier-dot s-dot"></span>${pct(odds.S)}%</span><span class="draft-odd" aria-label="A 概率 ${pct(odds.A)}%"><span class="tier-dot a-dot"></span>${pct(odds.A)}%</span><span class="draft-odd" aria-label="B 概率 ${pct(odds.B)}%"><span class="tier-dot b-dot"></span>${pct(odds.B)}%</span><span class="draft-odd" aria-label="C 概率 ${pct(odds.C)}%"><span class="tier-dot c-dot"></span>${pct(odds.C)}%</span></div>
-      ${r.balanceRulesVersion>=15?`<p class="footer-note">普通招募计1抽 · 十连计10抽 · SSR保底还需 ${Math.max(0,100-(r.noSSRDraws||0))} 抽</p>`:''}
+      ${!batch&&r.balanceRulesVersion>=15?`<p class="footer-note">${ssrUnavailable?'当前轮换池暂无可招募SSR（均已满星或没有可用球员），保底进度保留':'普通招募计1抽 · 十连计10抽 · SSR保底还需 '+Math.max(0,100-(r.noSSRDraws||0))+' 抽'}</p>`:''}
       ${batch?'<p class="batch-recruit-hint">默认全部拿走 · 点击卡片取消，取消的球员将直接出售</p>':''}
       <div class="choicegrid grid grid-cols-2">${r.offer.map((id,index)=>draftCard(id,index,r)).join('')}</div>
       ${batch?'':`<div class="floatingaction"><button class="btn wide" data-act="pick" ${!canSingleRecruit(r)?'disabled':''}>${r.offerMode==='rewarded-s'?`S级球员 4 选 1 · 选入 ${selected?selected.name:''} →`:!canSingleRecruit(r)?'奖金不足，无法招募':'确定选入 '+(selected?selected.name:'')+' →'}</button></div>`}`;
@@ -1152,7 +1153,7 @@
     const adUnavailable=r.rewardedRecruitUsed;
     const normalMeta=r.offerMode==='rewarded-s'?'已获得':r.recruitCredits>0?'招募券':r.free>0?'免费':`${normalCost} 奖金`;
     const normalDescription=r.offerMode==='rewarded-s'?'选择已获得的 S 级候选':r.recruitCredits>0?`还可使用 ${r.recruitCredits} 次招募券`:r.free>0?`本轮还可免费招募 ${r.free} 次`:'从本轮候选球星中选择 1 名';
-    modal.markup=`<section class="modal-card recruit-sheet" role="dialog" aria-modal="true" aria-labelledby="recruit-sheet-title"><div class="recruit-sheet-head"><div class="recruit-sheet-heading"><span>球星招募</span><h2 id="recruit-sheet-title">选择招募方式</h2></div><button type="button" data-act="recruit-sheet-close" aria-label="关闭招募方式">×</button></div><p class="recruit-sheet-balance"><span class="recruit-sheet-cash">当前奖金 <b>${r.cash}</b></span>${r.balanceRulesVersion>=15?`<span class="recruit-sheet-pity">SSR保底 <strong>${Math.max(0,Math.min(100,r.noSSRDraws||0))}/100</strong></span>`:''}</p><div class="recruit-sheet-actions">${actionButton('recruit-normal','普通招募',normalMeta,normalDescription,!canSingleRecruit(r))}${actionButton('recruit-ten','十连招募',`${packCost} 奖金`,'连续招募10位球员',r.cash<packCost)}${r.balanceRulesVersion>=18?actionButton('recruit-hundred','百连招募',`${C.recruitPackCost(r,100)} 奖金`,'连续招募100张 · 9折 · 批量处理',r.cash<C.recruitPackCost(r,100)):''}${actionButton('recruit-ad','看广告招募','',r.balanceRulesVersion>=16?'S级球员4选1，计入SSR保底（每回合一次）':'S级球员4选1（每回合一次）',rewardVideoBusy||adUnavailable)}</div>${recruitSheetMessage?`<p class="recruit-sheet-message" role="status">${escapeText(recruitSheetMessage)}</p>`:''}</section>`;
+    modal.markup=`<section class="modal-card recruit-sheet" role="dialog" aria-modal="true" aria-labelledby="recruit-sheet-title"><div class="recruit-sheet-head"><div class="recruit-sheet-heading"><span>球星招募</span><h2 id="recruit-sheet-title">选择招募方式</h2></div><button type="button" data-act="recruit-sheet-close" aria-label="关闭招募方式">×</button></div><p class="recruit-sheet-balance"><span class="recruit-sheet-cash">当前奖金 <b>${r.cash}</b></span>${r.balanceRulesVersion>=15?`<span class="recruit-sheet-pity">${C.recruitableSSRPlayers(r).length?'SSR保底 <strong>'+Math.max(0,Math.min(100,r.noSSRDraws||0))+'/100</strong>':'暂无可招募SSR · 保底进度保留'}</span>`:''}</p><div class="recruit-sheet-actions">${actionButton('recruit-normal','普通招募',normalMeta,normalDescription,!canSingleRecruit(r))}${actionButton('recruit-ten','十连招募',`${packCost} 奖金`,'连续招募10位球员',r.cash<packCost)}${r.balanceRulesVersion>=18?actionButton('recruit-hundred','百连招募',`${C.recruitPackCost(r,100)} 奖金`,'连续招募100张 · 9折 · 批量处理',r.cash<C.recruitPackCost(r,100)):''}${actionButton('recruit-ad','看广告招募','',r.balanceRulesVersion>=16?'S级球员4选1，计入SSR保底（每回合一次）':'S级球员4选1（每回合一次）',rewardVideoBusy||adUnavailable)}</div>${recruitSheetMessage?`<p class="recruit-sheet-message" role="status">${escapeText(recruitSheetMessage)}</p>`:''}</section>`;
   }
   function startNewJourney(){
     const pool=[...C.availableTalents(game.profile)];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
@@ -1193,7 +1194,7 @@
   function playerSkillSection(run,id){
     if(!C.hasRandomSkills(run))return '';
     const entries=C.getRoleSkills(run,id),manage=skillManagementAllowed(run,id),locked=run.ended||run.lastBattle||run.pending||run.randomEvent||skillAdBusy;
-    return `<section class="detail-section random-skill-section"><span>本局随机徽章</span>${entries.map(({skill,slot})=>{const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=C.SKILL_REFRESH_COSTS[used],bonus=run.bonusSkillSlots?.[id]===slot;return `<div class="random-skill-entry skill-star-${skill.star}"><h3><span class="draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span></h3><p>${escapeText(skill.description)}</p>${bonus?'<p class="bonus-skill-note">满星补授 · 不可重随或广告替换</p>':manage?`<div class="random-skill-actions"><button class="button-7" data-act="skill-refresh" data-id="${id}" data-slot="${slot}" ${locked||cost===undefined||run.cash<cost?'disabled':''}>${cost===undefined?'重随次数已用完':`重随 · ${cost}奖金（${used}/3）`}</button><button class="button-4" data-act="skill-ad" data-id="${id}" data-slot="${slot}" ${locked?'disabled':''}>${skillAdBusy?'广告加载中…':'看广告 · 自选5星'}</button></div>`:''}</div>`}).join('')||'<p>本局首次招募出现时分配。</p>'}${manage&&skillMessage?`<p role="status">${escapeText(skillMessage)}</p>`:''}</section>`;
+    return `<section class="detail-section random-skill-section"><span>本局随机徽章</span>${run.balanceRulesVersion>=21?'<p class="bonus-skill-note">徽章的关键分命中率、对手命中率降低与失误率降低，同类仅取最高一项生效。</p>':''}${entries.map(({skill,slot})=>{const used=run.skillRefreshCount[id]?.[slot-1]||0,cost=C.SKILL_REFRESH_COSTS[used],bonus=run.bonusSkillSlots?.[id]===slot;return `<div class="random-skill-entry skill-star-${skill.star}"><h3><span class="draft-skill-badge skill-star-${skill.star}" title="${escapeText(skill.name)}"><span>${escapeText(skill.name)}</span><b aria-label="${skill.star}星">${'★'.repeat(skill.star)}</b></span></h3><p>${escapeText(skill.description)}</p>${bonus?'<p class="bonus-skill-note">满星补授 · 不可重随或广告替换</p>':manage?`<div class="random-skill-actions"><button class="button-7" data-act="skill-refresh" data-id="${id}" data-slot="${slot}" ${locked||cost===undefined||run.cash<cost?'disabled':''}>${cost===undefined?'重随次数已用完':`重随 · ${cost}奖金（${used}/3）`}</button><button class="button-4" data-act="skill-ad" data-id="${id}" data-slot="${slot}" ${locked?'disabled':''}>${skillAdBusy?'广告加载中…':'看广告 · 自选5星'}</button></div>`:''}</div>`}).join('')||'<p>本局首次招募出现时分配。</p>'}${manage&&skillMessage?`<p role="status">${escapeText(skillMessage)}</p>`:''}</section>`;
   }
   function incomeDetailsMarkup(r){
     const income=C.incomeBreakdown(r),own=C.fused(r),opening=C.openingEffect(r),equipment={winCash:0,lossCash:0,battleCash:0,counterCash:0};
@@ -1260,7 +1261,7 @@
     }
     if(legendaryPlayerUnlockResult){
       const star=C.LEGENDARY_PLAYERS.find(star=>star.id===legendaryPlayerUnlockResult);modal.className='game-modal open';
-      modal.markup=`<section class="modal-card legendary-player-unlock" role="dialog" aria-modal="true" aria-labelledby="legendary-player-unlock-title"><span class="legendary-player-rarity">SSR</span><div class="legendary-player-eyebrow">NEW LEGEND</div><h2 id="legendary-player-unlock-title">获得传奇球员</h2><div class="legendary-player-stage"><img src="assets/legacy-player-showcase-v2.png" alt="传奇球员卡"></div><h3 class="legendary-player-name">${escapeText(star.name)}</h3><div class="legendary-player-note"><strong>已加入传奇解锁收藏</strong><p>下次新开局进入球员池<br>在游戏内获得后，收录球员图鉴</p></div><button class="btn button-1 wide legendary-player-confirm" data-act="legendary-player-unlock-confirm">确认</button></section>`;return;
+      modal.markup=`<section class="modal-card legendary-player-unlock" role="dialog" aria-modal="true" aria-labelledby="legendary-player-unlock-title"><span class="legendary-player-rarity">SSR</span><div class="legendary-player-eyebrow">NEW LEGEND</div><h2 id="legendary-player-unlock-title">获得传奇球员</h2><div class="legendary-player-stage"><img src="assets/legacy-player-showcase-v2.png" alt="传奇球员卡"></div><h3 class="legendary-player-name">${escapeText(star.name)}</h3><div class="legendary-player-note"><strong>已加入传奇解锁收藏</strong><p>已自动加入下次新局球员池<br>可在首页轮换名单调整；招募获得后收录图鉴</p></div><button class="btn button-1 wide legendary-player-confirm" data-act="legendary-player-unlock-confirm">确认</button></section>`;return;
     }
     if(legendaryGearUnlockResult){
       const item=C.GEAR.find(gear=>gear.id===legendaryGearUnlockResult);modal.className='game-modal open';
@@ -1400,10 +1401,10 @@
     if(!id){modal.className='game-modal';modal.markup='';return}
     const s=C.BY_ID[id],batchRemaining=(r.batchQueue?.length||0)+1,pendingKey=`${id}:${r.batchQueue?.length||0}`;modal.className='game-modal open';
     const replacementRow=(old,place,attributes)=>{const star=C.BY_ID[old];return `<div class="pending-player-row ${tierClass[star.tier]}"><button class="pending-player-replace" data-act="resolve" data-pending-key="${pendingKey}" ${attributes}><span class="pending-player-tier">${tierName[star.tier]}</span><span class="pending-player-copy"><b>${star.name}</b><small>${place} · ${r.owned[old]?.stars||1}★</small></span><em>出售 ${C.saleValue(old,r.owned[old]?.stars,r)} 奖金</em></button><button class="pending-player-detail" data-act="star-detail" data-id="${old}">查看详情</button></div>`};
-    modal.markup=`<div key="pending-${pendingKey}" class="modal-card pending-recruit-modal"><h2>备战席已满，决定${s.name}的去留</h2>${r.batchQueue?.length?`<div class="pending-batch-remaining">十连还需处理 ${batchRemaining} 张</div>`:''}${pendingPlayerPreview(id,r)}<p>选择融合面板或备战席中的一名球员替换并出售，也可以直接出售这名新球员。</p><div class="pending-replacements-scroll">
+    modal.markup=`<div key="pending-${pendingKey}" class="modal-card pending-recruit-modal"><h2>备战席已满，决定${s.name}的去留</h2>${r.batchQueue?.length?`<div class="pending-batch-remaining">十连还需处理 ${batchRemaining} 张</div>`:''}${pendingPlayerPreview(id,r)}<button class="btn wide pending-sell-new" data-act="resolve" data-mode="sell" data-pending-key="${pendingKey}">出售${s.name}，保留当前阵容</button><p>选择融合面板或备战席中的一名球员替换并出售，也可以直接出售这名新球员。</p><div class="pending-replacements-scroll">
       <section class="pending-replace-section"><h3>替换备战席球员</h3><div class="modal-list">${r.bench.map((old,i)=>replacementRow(old,'备战席',`data-mode="replace" data-index="${i}"`)).join('')}</div></section>
       <section class="pending-replace-section"><h3>替换融合面板球员</h3><div class="modal-list pending-slot-list">${C.SLOTS.map(slot=>{const old=r.slots[slot.id];return old?replacementRow(old,`${slot.label}位`,`data-mode="replace-slot" data-slot="${slot.id}"`):''}).join('')}</div></section></div>
-      <button class="btn wide pending-sell-new" data-act="resolve" data-mode="sell" data-pending-key="${pendingKey}">出售${s.name}，保留当前阵容</button></div>`;
+      </div>`;
   }
   function placeFromElement(element){
     if(!element||element.dataset.act!=='place')return null;
@@ -1484,10 +1485,10 @@
   });
   document.addEventListener('pointercancel',clearDrag);
   async function persistProfileUnlock(unlock,field){
-    const profile=game.profile,legend=profile.legend,owned=[...(profile[field]||[])];pointShopPurchaseBusy=true;
+    const profile=game.profile,legend=profile.legend,owned=[...(profile[field]||[])],previousRotation=profile.ssrRotation;pointShopPurchaseBusy=true;
     try{
       const item=unlock(profile);if(!item)return null;
-      if(!await save({backup:true})){profile.legend=legend;profile[field]=owned;return null}
+      if(!await save({backup:true})){profile.legend=legend;profile[field]=owned;profile.ssrRotation=previousRotation;return null}
       return item;
     }finally{pointShopPurchaseBusy=false}
   }
@@ -1819,7 +1820,7 @@
       const mode=confirmed?pendingSellConfirm.mode:button.dataset.mode,target=confirmed?pendingSellConfirm.target:mode==='replace-slot'?button.dataset.slot:Number(button.dataset.index);
       const oldId=mode==='replace-slot'?r.slots[target]:mode==='replace'?r.bench[target]:null;
       if(confirmed&&mode!=='sell'&&oldId!==pendingSellConfirm.oldId){pendingSellConfirm=null;renderPending();return}
-      if(!confirmed){if(mode!=='sell'&&!oldId)return;pendingSellConfirm={run:r,id:r.pending,key,mode,target,oldId};renderPending();return}
+      if(!confirmed&&mode!=='sell'){if(!oldId)return;pendingSellConfirm={run:r,id:r.pending,key,mode,target,oldId};renderPending();return}
       pendingSellConfirm=null;
       if(!C.resolvePending(r,mode,target))return;
       selectedPlace=null;save();notify(mode==='sell'?'新球星已出售':'阵容已替换');

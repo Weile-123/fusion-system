@@ -1,0 +1,86 @@
+{
+  "mode": "prebuilt-single-stage-paired-seeds",
+  "battles": 6000,
+  "rows": [
+    {
+      "version": 17,
+      "stage": 2217,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.30000000000000004,
+        "clutchBonus": 0.30000000000000004,
+        "opponentPenalty": 0.30000000000000004,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "player": 10727,
+      "enemy": 54249489,
+      "rates": [
+        {
+          "strategy": "outside",
+          "n": 1000,
+          "wins": 801,
+          "rate": 0.801
+        },
+        {
+          "strategy": "drive",
+          "n": 1000,
+          "wins": 836,
+          "rate": 0.836
+        },
+        {
+          "strategy": "collapse",
+          "n": 1000,
+          "wins": 819,
+          "rate": 0.819
+        }
+      ]
+    },
+    {
+      "version": 21,
+      "stage": 2217,
+      "effects": {
+        "dimensions": {},
+        "allDimensions": 30,
+        "outsideCounterBonus": 0,
+        "turnoverReduction": 0.03,
+        "clutchBonus": 0.03,
+        "opponentPenalty": 0.03,
+        "battleCash": 0,
+        "winCash": 0,
+        "stageCash": 0,
+        "shopDiscount": 0,
+        "ignoreStrategyPenalty": false,
+        "freeGearRefresh": false
+      },
+      "player": 10727,
+      "enemy": 54249489,
+      "rates": [
+        {
+          "strategy": "outside",
+          "n": 1000,
+          "wins": 63,
+          "rate": 0.063
+        },
+        {
+          "strategy": "drive",
+          "n": 1000,
+          "wins": 68,
+          "rate": 0.068
+        },
+        {
+          "strategy": "collapse",
+          "n": 1000,
+          "wins": 60,
+          "rate": 0.06
+        }
+      ]
+    }
+  ]
+}

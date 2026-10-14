@@ -162,8 +162,17 @@ function HomeScreen({ active, stage, announcementUnread, legendaryStoreUnread, r
 
 function AnnouncementScreen() {
   return <section className="modal-card announcement-modal" role="dialog" aria-modal="true" aria-labelledby="announcement-title">
-    <div className="modal-head"><div><small>最新版本 · 1.5.1 · 2026.10.14</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
+    <div className="modal-head"><div><small>最新版本 · 1.5.2 · 2026.10.14</small><h2 id="announcement-title">更新公告</h2></div><button type="button" className="button-8" data-act="announcement-close" aria-label="关闭公告">×</button></div>
     <div className="announcement-content">
+      <h3 className="announcement-version">1.5.2 · 2026.10.14 · 无尽节奏与徽章平衡</h3>
+      <h3>无尽阶段式成长</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 无尽阶段：从<strong>第50关</strong>开始，改为<strong>每10关一个阶段</strong>：阶段内减缓对手OVR成长，整体数值不变。</p>
+      <h3>徽章概率效果调整</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 全队徽章中的<strong>关键分命中率增加、对手命中率降低、我方失误率降低</strong>，同类效果<strong>仅取最高的一项</strong>生效；重复徽章及不同徽章中的同类词条不再叠加。</p>
+      <h3>SSR招募与解锁修复</h3>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 修复普通候选与保底SSR为同一人物时，SSR被过滤、保底未兑现的问题；现在会用SSR替换对应普通版候选。</p>
+      <p><span className="announcement-bullet" aria-hidden="true">·</span> 传奇商店新解锁的SSR会<strong>自动加入下一局轮换名单</strong>；购买保存失败时，传奇点、解锁记录与名单一起回退。此前被手动名单排除的球员，可在首页轮换页面勾选或全选加入。</p>
+      <p className="announcement-note">阶段式难度、徽章叠加限制与保底算法修复适用于新开局；已有对局继续使用原规则。传奇点、已解锁球员、装备、球衣与生涯记录保留。</p>
       <h3 className="announcement-version">1.5.1 · 2026.10.14 · 球员轮换与操作优化</h3>
       <h3>【新】SSR球员自由轮换</h3>
       <p><span className="announcement-bullet" aria-hidden="true">·</span> 首页新增<strong>轮换球员</strong>入口：已解锁传奇球员且可用SSR球员池达到<strong>11名</strong>时显示。</p>

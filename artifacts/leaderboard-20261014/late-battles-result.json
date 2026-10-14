@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"success\": true,\n  \"data\": {\n    \"columns\": [\n      \"run_id\",\n      \"battles\",\n      \"wins\",\n      \"first_stage\",\n      \"last_stage\",\n      \"min_rating\",\n      \"max_rating\"\n    ],\n    \"rows\": [\n      {\n        \"run_id\": \"ebf2698f-b088-45cc-bc3b-643f432bd79c\",\n        \"battles\": \"263\",\n        \"wins\": \"217\",\n        \"first_stage\": \"2000\",\n        \"last_stage\": \"2216\",\n        \"min_rating\": \"8941\",\n        \"max_rating\": \"10415\"\n      }\n    ],\n    \"returnedRows\": 1,\n    \"truncated\": false,\n    \"truncatedCount\": 0,\n    \"command\": \"SELECT\",\n    \"rowCount\": 0\n  },\n  \"message\": \"只读 SQL 执行成功。\",\n  \"nextActions\": [\n    {\n      \"tool\": \"queryPgDatabase\",\n      \"action\": \"schema\",\n      \"suggested_args\": {\n        \"action\": \"schema\",\n        \"objectName\": \"public.leaderboard_battles\"\n      },\n      \"reason\": \"如需调整 join、过滤或变更，请查看表结构。\"\n    }\n  ]\n}"
+    }
+  ]
+}

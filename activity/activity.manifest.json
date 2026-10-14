@@ -43,7 +43,7 @@
     "testDataRemoved": true,
     "hupuAppEndToEndChecked": false,
     "proofVersion": 3,
-    "rulesVersion": 20,
+    "rulesVersion": 22,
     "recoveryVersion": 1,
     "backgroundSyncVersion": 1,
     "migrationsApplied": [
@@ -86,12 +86,159 @@
     "legacyRules1To20Checked": true,
     "ssrRotationChecked": true,
     "victoryReward120Checked": true,
-    "lateWeeklyExclusionChecked": true
+    "lateWeeklyExclusionChecked": true,
+    "legacyRules1To22Checked": true,
+    "serverFinalStatesMatched": 22,
+    "stageStepChecked": true,
+    "ssrPityIdentityConflictChecked": true,
+    "badgeProbabilityMaximumChecked": true
   },
   "activity": {
     "status": "verified"
   },
   "lastFunctionUpdate": {
+    "date": "2026-10-14",
+    "verifiedAt": "2026-10-14T04:17:07.487Z",
+    "releaseVersion": "1.5.2",
+    "rulesVersion": 22,
+    "supportedRulesVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "reason": "Stage-step endless curve, global probability badge maximum, SSR pity identity conflict fix; old-version replay preserved",
+    "configurationPreserved": true,
+    "backup": ".local-tools/release152/before.zip",
+    "deployedZipSha256": "7019bdbf60c5a6659b5a999d47ca419390961d1c1a413a9388555f8008256577",
+    "deployedBusinessSourceSemanticChanges": [
+      "game/game-core.js"
+    ],
+    "packageNormalization": "CRLF/LF normalization and npm internal lock metadata; installed dependency bytes unchanged",
+    "legacyComparison": {
+      "rules": "1-20",
+      "naturalTraces": 180,
+      "totalComparisons": 420,
+      "match": true
+    },
+    "fullTests": {
+      "total": 533,
+      "passed": 531,
+      "failed": 2,
+      "knownFailure": "Protected historical event-data snapshot checksum differs from reference; file bytes match HEAD"
+    },
+    "targetedTests": {
+      "total": 147,
+      "passed": 147,
+      "failed": 0
+    },
+    "authenticatedGameplayVersions": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "serverFinalStatesMatched": 22,
+    "featureServerFinalStatesMatched": 3,
+    "liveFeatureFixtures": [
+      "stage59",
+      "stage60",
+      "ssr-pity"
+    ],
+    "frontendBrowserChecks": [
+      "production boot and announcement",
+      "normal immediate sale / card position",
+      "ten-batch immediate sale / card position",
+      "s-ad immediate sale / card position",
+      "320px replacement confirmation and cancel",
+      "legendary SSR unlock joins existing manual rotation"
+    ],
+    "frontendBrowserStorageMocked": true,
+    "hupuAppEndToEndChecked": false,
+    "testDataRemoved": true,
+    "testAccountsCleaned": 27,
+    "frontendArtifact": "artifacts/frontend-release-1.5.2-20261014.zip",
+    "frontendZipSha256": "8d943327ea04619d08bfaf0b9e0b1a61ae43956d4d165017c69652accea69aae",
+    "frontendFileCount": 68,
+    "frontendPublished": false,
+    "evidence": "artifacts/leaderboard-20261014/release152-verification.json"
+  },
+  "deployment": {
+    "date": "2026-10-08",
+    "reason": "Repair frontend/backend leaderboard protocol mismatch",
+    "oldFunctionBackup": ".local-tools/function-before.zip",
+    "functionTimeoutSeconds": 30
+  },
+  "weeklyLeaderboard": {
+    "enabled": true,
+    "enabledAt": "2026-10-10T22:40:22.203452+08:00",
+    "firstWeekId": "2026-10-05",
+    "firstEndsAt": "2026-10-12T00:00:00+08:00",
+    "serverTimezone": "Asia/Shanghai",
+    "archiveMode": "lazy immutable top50 snapshots",
+    "automaticWeeklyBoundary": true,
+    "frontendPublished": false,
+    "oldCumulativeEndpointsPreserved": true,
+    "verifiedAt": "2026-10-10T14:43:42.291Z",
+    "firstWeekHistoricalScoresIncluded": true,
+    "firstWeekPreActivationRunsIncluded": true,
+    "firstWeekBackfillScript": "activity/releases/weekly-ovr/backfill_first_week.sql",
+    "firstWeekBackfillVerifiedPlayers": 8210,
+    "firstWeekBackfillScoreMismatches": 0,
+    "firstWeekBackfillStageMismatches": 0,
+    "recurringHistoricalImport": false
+  },
+  "lastWeeklyRulesUpdate": {
+    "verifiedAt": "2026-10-12 10:24:42.573498+08",
+    "minimumRulesVersion": 6,
+    "removedCurrentWeekEntries": 71,
+    "ineligibleCurrentWeekEntries": 0,
+    "top50RulesCounts": {
+      "6": 50
+    },
+    "previousSnapshotsPreserved": true,
+    "liveRules3And6Checked": true,
+    "testDataRemoved": true,
+    "migrationTaskId": "task-bbcf9f6f",
+    "evidence": ".local-tools/weekly-min-evidence-20261012.json"
+  },
+  "previousFunctionUpdate": {
     "date": "2026-10-13",
     "verifiedAt": "2026-10-13T09:29:42.297Z",
     "releaseVersion": "1.5.0",
@@ -186,109 +333,6 @@
     "oldRuleComparisonCases": 68,
     "allRulesLiveChecked": true,
     "ssrSameIdentityLiveChecked": true
-  },
-  "deployment": {
-    "date": "2026-10-08",
-    "reason": "Repair frontend/backend leaderboard protocol mismatch",
-    "oldFunctionBackup": ".local-tools/function-before.zip",
-    "functionTimeoutSeconds": 30
-  },
-  "weeklyLeaderboard": {
-    "enabled": true,
-    "enabledAt": "2026-10-10T22:40:22.203452+08:00",
-    "firstWeekId": "2026-10-05",
-    "firstEndsAt": "2026-10-12T00:00:00+08:00",
-    "serverTimezone": "Asia/Shanghai",
-    "archiveMode": "lazy immutable top50 snapshots",
-    "automaticWeeklyBoundary": true,
-    "frontendPublished": false,
-    "oldCumulativeEndpointsPreserved": true,
-    "verifiedAt": "2026-10-10T14:43:42.291Z",
-    "firstWeekHistoricalScoresIncluded": true,
-    "firstWeekPreActivationRunsIncluded": true,
-    "firstWeekBackfillScript": "activity/releases/weekly-ovr/backfill_first_week.sql",
-    "firstWeekBackfillVerifiedPlayers": 8210,
-    "firstWeekBackfillScoreMismatches": 0,
-    "firstWeekBackfillStageMismatches": 0,
-    "recurringHistoricalImport": false
-  },
-  "lastWeeklyRulesUpdate": {
-    "verifiedAt": "2026-10-12 10:24:42.573498+08",
-    "minimumRulesVersion": 6,
-    "removedCurrentWeekEntries": 71,
-    "ineligibleCurrentWeekEntries": 0,
-    "top50RulesCounts": {
-      "6": 50
-    },
-    "previousSnapshotsPreserved": true,
-    "liveRules3And6Checked": true,
-    "testDataRemoved": true,
-    "migrationTaskId": "task-bbcf9f6f",
-    "evidence": ".local-tools/weekly-min-evidence-20261012.json"
-  },
-  "previousFunctionUpdate": {
-    "date": "2026-10-13",
-    "verifiedAt": "2026-10-13T03:38:53.361Z",
-    "rulesVersion": 17,
-    "supportedRulesVersions": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17
-    ],
-    "reason": "Training base: six slots and five combat dimensions, 2% per level",
-    "configurationPreserved": true,
-    "backup": ".local-tools/rule17-before-online.zip",
-    "deployedZipSha256": "b8c8aa33480374170208b9d6f45ab903decd7de1398222e331aa9832977adb1a",
-    "legacyComparison": {
-      "runs": 64,
-      "rules": "1-16",
-      "match": true
-    },
-    "fullTests": {
-      "total": 472,
-      "passed": 470,
-      "failed": 2,
-      "knownFailure": "Existing protected historical event-data snapshot checksum mismatch in two audit tests"
-    },
-    "targetedTests": {
-      "total": 96,
-      "passed": 96,
-      "failed": 0
-    },
-    "authenticatedGameplayVersions": [
-      1,
-      6,
-      9,
-      11,
-      12,
-      14,
-      15,
-      16,
-      17
-    ],
-    "fullTrainingCost": 224000,
-    "trainingReplayChecked": true,
-    "oldClientTrainingProgressPreserved": true,
-    "weeklyMinimumRulesVersion": 6,
-    "resumeChecked": true,
-    "testDataRemoved": true,
-    "evidence": ".local-tools/rule17-live-result.json",
-    "databaseMigrationApplied": false,
-    "frontendPublished": false
   },
   "functionUpdateHistory": [
     {
@@ -600,6 +644,102 @@
       "evidence": ".local-tools/rule18-postdeploy-live.json",
       "databaseMigrationApplied": false,
       "frontendPublished": false
+    },
+    {
+      "date": "2026-10-13",
+      "verifiedAt": "2026-10-13T09:29:42.297Z",
+      "releaseVersion": "1.5.0",
+      "rulesVersion": 18,
+      "supportedRulesVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "reason": "Rule18 SSR same-identity replacement accepts selected base upgrades; old client rules 1–18 remain compatible",
+      "configurationPreserved": true,
+      "backup": ".local-tools/ad-ssr-before-online.zip",
+      "deployedZipSha256": "1935cac4103ab3c11ab6c455f4e4d397154f893a40280c0b4e41f9a3ddc0cb41",
+      "deployedBusinessSourceFilesMatched": 10,
+      "legacyComparison": {
+        "runs": 68,
+        "rules": "1-17",
+        "match": true
+      },
+      "fullTests": {
+        "total": 489,
+        "passed": 487,
+        "failed": 2,
+        "knownFailure": "Two existing protected historical event-data snapshot checksum mismatches; snapshot bytes match HEAD"
+      },
+      "targetedTests": {
+        "total": 156,
+        "passed": 156,
+        "failed": 0
+      },
+      "authenticatedGameplayVersions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "cumulativeBoardsChecked": [
+        "legend",
+        "ovr"
+      ],
+      "weeklyMinimumRulesVersion": 6,
+      "hundredScenarios": [
+        "all-sale",
+        "mixed",
+        "retry"
+      ],
+      "hundredSeededTemporaryFixtures": true,
+      "hundredServerFinalStateMatched": true,
+      "frontendBrowserChecks": [
+        "more-scroll",
+        "20-stage-switches",
+        "footer-gap-300-390",
+        "save-failure-rollback",
+        "commit-roster-replacement"
+      ],
+      "testDataRemoved": true,
+      "testAccountsCleaned": 24,
+      "evidence": "artifacts/frontend-release-1.5.0-20261013-ad-ssr-update-verification.json",
+      "databaseMigrationApplied": false,
+      "frontendPublished": false,
+      "codeSha256": "7de34501b5d7e36b55406bbf5fc876e42e3dc7d43a1193c07dd15b994207c0d5",
+      "sourceFilesMatched": 10,
+      "oldRuleComparisonCases": 68,
+      "allRulesLiveChecked": true,
+      "ssrSameIdentityLiveChecked": true
     }
   ]
 }

@@ -1,0 +1,36 @@
+{
+  "fetchedAt": "2026-10-14T02:30:44.506Z",
+  "url": "https://app-656cf66d07-d4grmvx6yaf70dad0-1252166086.ap-shanghai.app.tcloudbase.com/api/leaderboard?board=legend&limit=5",
+  "status": 200,
+  "response": {
+    "code": 0,
+    "message": "success",
+    "data": [
+      {
+        "rank": 1,
+        "displayName": "天不蓝123",
+        "score": 149720
+      },
+      {
+        "rank": 2,
+        "displayName": "云晟a",
+        "score": 132280
+      },
+      {
+        "rank": 3,
+        "displayName": "一条咸鱼丫",
+        "score": 108500
+      },
+      {
+        "rank": 4,
+        "displayName": "哈佛九阿哥",
+        "score": 80900
+      },
+      {
+        "rank": 5,
+        "displayName": "虎扑JR1251922603",
+        "score": 80680
+      }
+    ]
+  }
+}

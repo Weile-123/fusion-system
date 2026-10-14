@@ -1,0 +1,1 @@
+{"action":"sql","sql":"select run_id,count(*) as battles,sum(case when won then 1 else 0 end) as wins,min(stage) as first_stage,max(stage) as last_stage,min(rating) as min_rating,max(rating) as max_rating from public.leaderboard_battles where run_id in ('ebf2698f-b088-45cc-bc3b-643f432bd79c') and stage>=2000 group by run_id"}
